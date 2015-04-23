@@ -34,6 +34,20 @@
             <artifactId>jme3-networking</artifactId>
             <version>3.0.10</version>
         </dependency>
+
+        <!-- Cobertura dependencies -->
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -44,5 +58,13 @@
         </repository>
     </repositories>
 
-
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
