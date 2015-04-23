@@ -7,8 +7,9 @@ Context Project, Games, Group 4
 
 ##### Team:
 
-Ben Los
-Jurgen van Schagen
-Nick Cleintuar
-Martijn Gribnau
+Ben Los,
+Jurgen van Schagen,
+Nick Cleintuar,
+Martijn Gribnau,
 Jean de Leeuw
+
