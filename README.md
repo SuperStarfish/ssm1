@@ -13,15 +13,20 @@ Nick Cleintuar,
 Martijn Gribnau,
 Jean de Leeuw
 
+##### Contact information (TA, Coordinators)
+
+[games.project.delft@gmail.com](games.project.delft@gmail.com)
+
+
 ##### Tools:
 
 ###### Static analysis:
-[PMD](http://pmd.sourceforge.net/)
-[Find bugs](http://findbugs.sourceforge.net/)
-[CheckStyle](http://checkstyle.sourceforge.net/)
+* [PMD](http://pmd.sourceforge.net/)
+* [Find bugs](http://findbugs.sourceforge.net/)
+* [CheckStyle](http://checkstyle.sourceforge.net/)
 
 ###### Code coverage:
-[Cobertura](http://cobertura.github.io/cobertura/)
+* [Cobertura](http://cobertura.github.io/cobertura/)
 
 ###### Continuous integration
-See 'Build'.
+* See 'Build'.
