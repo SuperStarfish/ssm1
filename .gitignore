@@ -72,3 +72,7 @@ build/
 # build
 
 *.apk
+
+# generated files
+
+android/project.properties
