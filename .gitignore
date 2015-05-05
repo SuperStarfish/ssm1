@@ -76,4 +76,5 @@ build/
 # generated files
 
 android/*.properties
-/bin/
+bin/
+build/
