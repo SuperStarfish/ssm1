@@ -75,4 +75,4 @@ build/
 
 # generated files
 
-android/project.properties
+android/*.properties
