@@ -25,11 +25,7 @@ public class StandUp extends ApplicationAdapter {
 		batch.end();
 	}
 	
-	public static void main(String[] args) {
-		int x = testMethod();
-	}
-	
-	public static int testMethod() {
-		return 5;
+	public static int testerooni() {
+		return 2;
 	}
 }

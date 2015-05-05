@@ -2,7 +2,7 @@ sudo: required
 language: java
 jdk: oraclejdk7
 
-before_script:
+before_install:
     - chmod +x gradlew
 script:
     - ./gradlew build

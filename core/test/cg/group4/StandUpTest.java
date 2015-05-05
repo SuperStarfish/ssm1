@@ -8,6 +8,12 @@ public class StandUpTest {
 
 	@Test
 	public void test() {
-		assertTrue(StandUp.testMethod() == 5);
+		int x = 5;
+		assertTrue(x == 5);
+	}
+	
+	@Test
+	public void test1() {
+		assertTrue(StandUp.testerooni() == 2);
 	}
 }
