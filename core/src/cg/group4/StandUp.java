@@ -24,4 +24,12 @@ public class StandUp extends ApplicationAdapter {
 		batch.draw(img, 0, 0);
 		batch.end();
 	}
+	
+	public static void main(String[] args) {
+		int x = testMethod();
+	}
+	
+	public static int testMethod() {
+		return 5;
+	}
 }
