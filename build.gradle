@@ -15,7 +15,7 @@ plugins {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
-
+	
     // application version
     // for our project, the major version is incremented each week
     version = '2.0'
@@ -29,6 +29,7 @@ allprojects {
 
         // testing & analysis tools
         junitVersion = '4.11'
+        mockitoVersion = '2.0.6-beta'
     }
 
     repositories {
@@ -36,16 +37,20 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+    
+   	
 }
 
 project(":core") {
     apply plugin: "java"
-
-
+	
+	apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
+	
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
         testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
     }
 }
 
@@ -78,3 +83,4 @@ project(":android") {
 tasks.eclipse.doLast {
     delete ".project"
 }
+
