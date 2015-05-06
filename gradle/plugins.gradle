@@ -9,7 +9,6 @@ cobertura {
     
     rootProject.subprojects.each {
      coverageDirs << file("${it.name}/build/classes/main")
-     coverageDirs << file("${it.name}/build/classes/main")
    }
 }
 
