@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * This class handles all the cycles that LibGDX goes through and thus
  * serves as the backbone of the entire application.
  */
-public class StandUp extends ApplicationAdapter {
+public class Launcher extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture background;
     TextButton button;
