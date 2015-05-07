@@ -52,29 +52,6 @@ public class StandUp extends ApplicationAdapter {
         });
 
         stage.addActor(button);
-//		stage = new Stage();
-//		Gdx.input.setInputProcessor(stage);
-//
-//		BitmapFont font = new BitmapFont();
-//		skin = new Skin();
-//		skin.add("default", font);
-//
-//		Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
-//		pixmap.setColor(Color.WHITE);
-//		pixmap.fill();
-//		skin.add("background",new Texture(pixmap));
-//
-//		TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-//		textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
-//		textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-//		textButtonStyle.checked = skin.newDrawable("background", Color.DARK_GRAY);
-//		textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
-//		textButtonStyle.font = skin.getFont("default");
-//		skin.add("default", textButtonStyle);
-//
-//		TextButton newGameButton = new TextButton("New game", skin);
-//        newGameButton.setPosition(Gdx.graphics.getWidth()/2 - Gdx.graphics.getWidth()/8 , Gdx.graphics.getHeight()/2);
-//        stage.addActor(newGameButton);
 	}
 
     /**
@@ -94,7 +71,6 @@ public class StandUp extends ApplicationAdapter {
         long time = (timeInFive - System.currentTimeMillis()) / 1000;
         if(time < 0) setTimer(2);
         font.draw(batch, Long.toString(time), width / 2f - 10, height - 100);
-//		stage.act();
 		batch.end();
 
         stage.draw();
