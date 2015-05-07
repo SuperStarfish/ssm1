@@ -1,9 +1,5 @@
 apply plugin: 'checkstyle'
 
-task checkstyle(type: Checkstyle) {
-    checkstyleMain   
-}
-
 checkstyleMain {
     configFile file("${rootProject.rootDir}/config/checkstyle.xml")
     
@@ -25,6 +21,3 @@ checkstyleTest {
     }
     ignoreFailures = true
 }
-
-
-check.dependsOn 'checkstyle'
