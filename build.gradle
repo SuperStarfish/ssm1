@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'org.slf4j:slf4j-simple:1.7.6'
     }
 }
 
@@ -48,7 +49,8 @@ project(":core") {
 	
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-
+		compile "org.slf4j:slf4j-simple:1.7.6"
+		
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
     }
@@ -78,6 +80,12 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
     }
+}
+
+subprojects {
+
+	
+
 }
 
 tasks.eclipse.doLast {
