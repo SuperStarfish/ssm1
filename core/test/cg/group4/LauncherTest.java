@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class StandUpTest {
+public class LauncherTest {
 
 	@Test
 	public void test() {
@@ -14,6 +14,6 @@ public class StandUpTest {
 	
 	@Test
 	public void test1() {
-		assertTrue(StandUp.testerooni() == 2);
+		assertTrue(Launcher.testerooni() == 2);
 	}
 }
