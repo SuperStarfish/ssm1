@@ -14,3 +14,46 @@ cobertura {
 
 
 test.finalizedBy(project.tasks.cobertura)
+
+
+// PMD
+// config: http://gradle.org/docs/current/dsl/org.gradle.api.plugins.quality.Pmd.html
+// rulesets: http://pmd.sourceforge.net/pmd-4.3.0/rules/index.html
+apply plugin: 'pmd'
+
+pmdMain {
+
+    source = fileTree('src')
+    
+    ruleSets = [
+        "java-basic",
+        "java-braces",
+        "java-strings",
+        "java-codesize",
+        "java-coupling",
+        "java-design",
+        "java-imports"
+    ]
+    
+    ignoreFailures = true
+        
+}
+
+pmdTest {
+
+    source = fileTree('test')
+    
+    ruleSets = [
+        "java-basic",
+        "java-braces",
+        "java-strings",
+        "java-codesize",
+        "java-coupling",
+        "java-design",
+        "java-imports"
+    ]
+    
+    ignoreFailures = true
+        
+}
+
