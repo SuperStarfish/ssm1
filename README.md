@@ -7,7 +7,10 @@ Context Project, Games, Group 4
 
 
 ##### Build:
-[![Build Status](https://magnum.travis-ci.com/foresterre/ContextProject.svg?token=H8sHLqstbVHvE3TKAiub&branch=master)](https://magnum.travis-ci.com/foresterre/ContextProject)
+[Travis CI](https://travis-ci.org/foresterre/ContextProject)
+
+###### Master
+[![Build Status](https://travis-ci.org/foresterre/ContextProject.svg?branch=master)](https://travis-ci.org/foresterre/ContextProject)
 
 ##### Team:
 
