@@ -1,3 +1,7 @@
+// Plugins for gradle, applied to each sub project
+// (Except Android due to incompatibilities)
+
+// Checkstyle
 apply plugin: 'checkstyle'
 
 checkstyleMain {
@@ -20,4 +24,25 @@ checkstyleTest {
         xml { destination file("${buildDir}/reports/checkstyle/test/report.xml") }
     }
     ignoreFailures = true
+}
+
+// FindBugs
+// http://gradle.org/docs/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
+apply plugin: 'findbugs'
+
+findbugsMain {
+
+    reports {
+        html { enabled = true }
+        // find bugs can have only one report enabled at a time
+        xml.enabled = !html.enabled
+        
+        
+        html.destination "${buildDir}/reports/findbugs/report.html"
+        xml.destination "${buildDir}/reports/findbugs/report.xml"
+    }
+    effort = "default"
+    reportLevel = "medium"
+    ignoreFailures = true
+
 }
