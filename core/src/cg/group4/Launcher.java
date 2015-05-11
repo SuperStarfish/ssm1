@@ -1,5 +1,7 @@
 package cg.group4;
 
+import cg.group4.util.Timer.TimeKeeper;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,13 +27,18 @@ public class Launcher extends ApplicationAdapter {
     BitmapFont font;
     long timeInFive;
     int width, height;
-	
+	TimeKeeper timeKeeper;
+
 	@Override
 	public void create () {
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         stage = new Stage();
 		batch = new SpriteBatch();
 		background = new Texture(Gdx.files.internal("demobackground.jpg"));
         Gdx.input.setInputProcessor(stage);
+
+        timeKeeper = new TimeKeeper();
 
         setTimer(1);
 

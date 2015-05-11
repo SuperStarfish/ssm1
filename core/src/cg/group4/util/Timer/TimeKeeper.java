@@ -1,6 +1,7 @@
 package cg.group4.util.Timer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,26 @@ public class TimeKeeper {
         Gdx.app.debug(TAG, "New instance created.");
         strollInterval = new ArrayList<TimerListener>();
         strollTimer = new ArrayList<TimerListener>();
+        initTimers();
+    }
+
+    protected void initTimers(){
+        Preferences prefs = Gdx.app.getPreferences("Timers");
+        checkTimer(prefs, Timers.STROLL_INTERVAL);
+        checkTimer(prefs, Timers.STROLL_TIME);
+        prefs.flush();
+    }
+
+    protected long checkTimer(Preferences prefs, Timers timer){
+        if(prefs.contains(timer.name())){
+            Gdx.app.debug(TAG, "Using timestamp found in preferences for: " + timer.name() + ".");
+            return prefs.getLong(timer.name());
+        } else{
+            long time = System.currentTimeMillis();
+            Gdx.app.debug(TAG, timer.name() + " not found in preferences, creating a new timer!");
+            prefs.putLong(timer.name(), time);
+            return time;
+        }
     }
 
     /**
@@ -48,6 +69,10 @@ public class TimeKeeper {
                 }
                 break;
         }
+    }
+
+    public void onNotify(Timers.STROLL_TIME){
+
     }
 
     /**
