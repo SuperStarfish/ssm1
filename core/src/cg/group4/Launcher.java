@@ -1,6 +1,7 @@
 package cg.group4;
 
 import cg.group4.util.timer.TimeKeeper;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,39 +27,38 @@ public class Launcher extends ApplicationAdapter {
     BitmapFont font;
     long timeInFive;
     int width, height;
-    TimeKeeper timeKeeper;
 	
 	@Override
 	public void create () {
-        timeKeeper = new TimeKeeper();
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        TimeKeeper.instance.init();
 
-
-        stage = new Stage();
-		batch = new SpriteBatch();
-		background = new Texture(Gdx.files.internal("demobackground.jpg"));
-        Gdx.input.setInputProcessor(stage);
-
-        setTimer(1);
-
-        font = new BitmapFont();
-
-        TextButtonStyle style = new TextButtonStyle();
-        style.font = font;
-        button = new TextButton("Other Scene", style);
-        width = Gdx.graphics.getWidth();
-        height = Gdx.graphics.getHeight();
-
-        button.setPosition(width / 2f - button.getWidth() / 2f, height / 2f);
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("test");
-            }
-        });
-
-
-
-        stage.addActor(button);
+//        stage = new Stage();
+//		batch = new SpriteBatch();
+//		background = new Texture(Gdx.files.internal("demobackground.jpg"));
+//        Gdx.input.setInputProcessor(stage);
+//
+//        setTimer(1);
+//
+//        font = new BitmapFont();
+//
+//        TextButtonStyle style = new TextButtonStyle();
+//        style.font = font;
+//        button = new TextButton("Other Scene", style);
+//        width = Gdx.graphics.getWidth();
+//        height = Gdx.graphics.getHeight();
+//
+//        button.setPosition(width / 2f - button.getWidth() / 2f, height / 2f);
+//        button.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//                System.out.println("test");
+//            }
+//        });
+//
+//
+//
+//        stage.addActor(button);
 	}
 
     /**
@@ -74,24 +74,17 @@ public class Launcher extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        timeKeeper.checkTimers();
+        TimeKeeper.instance.update();
 
-		batch.begin();
-        batch.draw(background, 0, 0);
-        long time = (timeInFive - System.currentTimeMillis()) / 1000;
-        if(time < 0) setTimer(2);
-        font.draw(batch, Long.toString(time), width / 2f - 10, height - 100);
-		batch.end();
 
-        stage.draw();
+//		batch.begin();
+//        batch.draw(background, 0, 0);
+//        long time = (timeInFive - System.currentTimeMillis()) / 1000;
+//        if(time < 0) setTimer(2);
+//        font.draw(batch, Long.toString(time), width / 2f - 10, height - 100);
+//		batch.end();
+//
+//        stage.draw();
 	}
 
-    /**
-     * A really simple test method in order to make sure that tests work.
-     * Will be removed later.
-     * @return 2
-     */
-	public static int testerooni() {
-		return 2;
-	}
 }

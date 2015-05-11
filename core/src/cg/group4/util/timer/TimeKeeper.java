@@ -3,32 +3,43 @@ package cg.group4.util.timer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class TimeKeeper {
-    Timer c_intervalTimer, c_strollTimer;
+    public static final TimeKeeper instance = new TimeKeeper();
+    public static final String TAG = TimeKeeper.class.getSimpleName();
 
-    private final int INTERVAL_TIME = 60 * 60,
-                        STROLL_TIME = 5 * 60;
+    Set<Timer> c_timers;
 
-    Preferences c_preferences;
-
-    public TimeKeeper(){
-        c_preferences = Gdx.app.getPreferences("TIMERS");
-        c_intervalTimer = new Timer();
-        c_strollTimer = new Timer();
+    private TimeKeeper(){
     }
 
-    public void checkTimers(){
-        long setOn = c_preferences.getLong("INTERVAL_TIMER");
-
-        c_preferences.putLong("EVENT_TIMER", System.currentTimeMillis() + 1000);
-        c_preferences.flush();
+    public void init(){
+        Gdx.app.debug(TAG, "Created a new TimeKeeper!");
+        c_timers = new HashSet<Timer>();
+        instance.addTimer(new Timer("INTERVAL", 60 * 60, true));
+        instance.addTimer(new Timer("STROLL", 5 * 60, true));
     }
 
-    public Timer getIntervalTimer(){
-        return c_intervalTimer;
+    public void update(){
+        for(Timer timer : c_timers){
+            timer.update();
+        }
     }
 
-    public Timer getStrollTimer(){
-        return c_strollTimer;
+    public void addTimer(Timer timer){
+        if(c_timers.add(timer)) {
+            Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
+        }
+    }
+
+    public Timer getTimer(String name){
+        for(Timer timer : c_timers){
+            if(timer.getName().equals(name)){
+                return timer;
+            }
+        }
+        return null;
     }
 }
