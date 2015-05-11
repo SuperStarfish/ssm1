@@ -1,5 +1,6 @@
 package cg.group4;
 
+import cg.group4.util.timer.TimeKeeper;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,9 +26,13 @@ public class Launcher extends ApplicationAdapter {
     BitmapFont font;
     long timeInFive;
     int width, height;
+    TimeKeeper timeKeeper;
 	
 	@Override
 	public void create () {
+        timeKeeper = new TimeKeeper();
+
+
         stage = new Stage();
 		batch = new SpriteBatch();
 		background = new Texture(Gdx.files.internal("demobackground.jpg"));
@@ -51,6 +56,8 @@ public class Launcher extends ApplicationAdapter {
             }
         });
 
+
+
         stage.addActor(button);
 	}
 
@@ -66,6 +73,9 @@ public class Launcher extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        timeKeeper.checkTimers();
+
 		batch.begin();
         batch.draw(background, 0, 0);
         long time = (timeInFive - System.currentTimeMillis()) / 1000;
