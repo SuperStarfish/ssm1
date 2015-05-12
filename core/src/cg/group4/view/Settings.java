@@ -34,7 +34,7 @@ public class Settings implements Screen {
 
 		buttonResetInterval.setPosition(width / 2f - buttonResetInterval.getWidth() / 2f, height / 2f+10);
 		buttonResetStroll.setPosition(width / 2f - buttonResetStroll.getWidth() / 2f, height / 2f-10);
-        buttonBack.setPosition(width / 2f - buttonResetStroll.getWidth() / 2f, 20);
+        buttonBack.setPosition(width / 2f - buttonBack.getWidth() / 2f, 20);
 
 		buttonResetInterval.addListener(new ChangeListener() {
             @Override
