@@ -8,11 +8,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * The StandUp class serves as an input point for the LibGDX application.
@@ -31,7 +28,10 @@ public class Launcher extends ApplicationAdapter {
 	@Override
 	public void create () {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        TimeKeeper.instance.init();
+        TimeKeeper.getInstance();
+
+
+
 
 //        stage = new Stage();
 //		batch = new SpriteBatch();
@@ -74,7 +74,7 @@ public class Launcher extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        TimeKeeper.instance.update();
+        TimeKeeper.getInstance().update();
 
 
 //		batch.begin();
