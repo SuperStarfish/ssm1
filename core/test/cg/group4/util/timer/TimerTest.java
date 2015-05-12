@@ -7,8 +7,9 @@ import static org.junit.Assert.*;
 public class TimerTest {
     Timer timer;
     @Before public void setUp(){
-        timer = new Timer();
+        timer = new Timer("TEST", 5);
     }
+
     @Test public void testAddTimerTask(){
 
     }

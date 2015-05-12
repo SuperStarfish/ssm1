@@ -19,8 +19,9 @@ public class TimeKeeper {
         System.out.println(TimeKeeper.class.getSimpleName());
         Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
         c_timers = new LinkedHashSet<Timer>();
-        addTimer(new Timer(Timer.Name.INTERVAL.name(), Timer.Name.INTERVAL.getDuration(), true));
-        addTimer(new Timer(Timer.Name.STROLL.name(), Timer.Name.STROLL.getDuration(), true));
+        for(Timer.Global timer : Timer.Global.values()){
+            addTimer(new Timer(timer.name(), timer.getDuration(), true));
+        }
         c_previousTick = System.currentTimeMillis();
     }
 
