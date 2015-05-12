@@ -14,7 +14,7 @@ import java.util.Set;
  * @author Benjamin Los
  * @author Jurgen van Schagen
  */
-class Timer {
+public class Timer {
     public static final String TAG = Timer.class.getSimpleName();
     protected String c_name;                // required
     protected Set<TimerTask> c_timerTasks;  // always created
@@ -59,6 +59,7 @@ class Timer {
         c_persistent = persistent;
         c_preferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
+        TimeKeeper.getInstance().addTimer(this);
     }
 
     /**
@@ -67,7 +68,6 @@ class Timer {
     protected void setFinishTime() {
         if (c_persistent && c_preferences.contains(c_name)) {
             c_finishTime = c_preferences.getLong(c_name);
-            System.out.println((c_finishTime - System.currentTimeMillis()) / 1000);
             if (System.currentTimeMillis() > c_finishTime) {
                 stop();
             } else {
@@ -106,7 +106,7 @@ class Timer {
     /**
      * Notifies the listeners that a Tick event occurred.
      *
-     * @param remainingTime
+     * @param remainingTime Time until timer finishes
      */
     protected void notifyTick(int remainingTime) {
         for (TimerTask task : c_timerTasks) {
@@ -159,7 +159,7 @@ class Timer {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj == null || !(obj instanceof Timer)) && c_name.equals(((Timer) obj).getName());
+        return !(obj == null || !(obj instanceof Timer)) && c_name.equals(((Timer) obj).getName());
     }
 
     @Override
@@ -170,13 +170,18 @@ class Timer {
     public void subscribe(TimerTask task) {
         c_timerTasks.add(task);
         task.setTimer(this);
+        if(c_running){
+            notifyStart();
+        } else {
+            notifyStop();
+        }
     }
 
     /**
      * This enum defines timers that are global, meaning that the timers are created on startup and by default are persistent.
      */
     public enum Global {
-        INTERVAL(60 * 60), STROLL(5 * 60);
+        INTERVAL(6 * 6), STROLL(5 * 60);
 
         private int e_duration;
 

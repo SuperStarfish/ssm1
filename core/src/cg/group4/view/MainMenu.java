@@ -1,5 +1,7 @@
 package cg.group4.view;
 
+import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.TimerTask;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -30,9 +32,14 @@ public class MainMenu implements Screen {
 	Texture background = new Texture(Gdx.files.internal("demobackground.jpg"));
     
 	/**
-	 * A button, for testing events.
+	 * A button to go to the settings.
 	 */
-	TextButton button;
+	TextButton buttonSettings;
+
+    /**
+     * A button to start a stroll.
+     */
+    TextButton buttonStroll;
 	
 	/**
 	 *  
@@ -40,7 +47,7 @@ public class MainMenu implements Screen {
 	Stage stage = new Stage();
 	BitmapFont font = new BitmapFont();
     
-	int width, height, time;
+	int width, height;
 
 	@Override
 	public void show() {
@@ -48,30 +55,60 @@ public class MainMenu implements Screen {
 
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
-        button = new TextButton("Settings", style);
+        buttonSettings = new TextButton("Settings", style);
+        buttonStroll = new TextButton("Stroll",style);
+
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
 
-        button.setPosition(width / 2f - button.getWidth() / 2f, height / 2f);
-        button.addListener(new ChangeListener() {
+        buttonSettings.setPosition(width / 2f - buttonSettings.getWidth() / 2f, height / 2f);
+        buttonStroll.setPosition(width / 2f - buttonStroll.getWidth() / 2f, height / 2f+20);
+
+        buttonSettings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-				((Game)Gdx.app.getApplicationListener()).setScreen(new Settings());
-               System.out.println("Settings");
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
+                Gdx.app.debug("Button", "Settings");
+            }
+        });
+        buttonStroll.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.debug("Button", "Stroll");
             }
         });
 
-        stage.addActor(button);
+        stage.addActor(buttonSettings);
+        stage.addActor(buttonStroll);
+
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void onTick(int seconds) {
+                buttonStroll.setText("Stroll: " +seconds);
+            }
+
+            @Override
+            public void onStart() {
+                buttonStroll.setText("Stroll: ");
+                buttonStroll.setDisabled(true);
+            }
+
+            @Override
+            public void onStop() {
+                buttonStroll.setText("Stroll");
+                buttonStroll.setDisabled(false);
+            }
+        };
+        TimeKeeper.getInstance().getTimer("INTERVAL").subscribe(timerTask);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		batch.begin();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
         batch.draw(background, 0, 0);
-        font.draw(batch, Long.toString(time), width / 2f - 10, height - 100);
 		batch.end();
 		
 		stage.act();

@@ -16,13 +16,15 @@ public class TimeKeeper {
     private long c_previousTick;
 
     private TimeKeeper(){
-        System.out.println(TimeKeeper.class.getSimpleName());
-        Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
         c_timers = new LinkedHashSet<Timer>();
-        for(Timer.Global timer : Timer.Global.values()){
-            addTimer(new Timer(timer.name(), timer.getDuration(), true));
-        }
         c_previousTick = System.currentTimeMillis();
+        Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
+    }
+
+    public void init(){
+        for(Timer.Global timer : Timer.Global.values()){
+            new Timer(timer.name(), timer.getDuration(), true);
+        }
     }
 
     public void update(){
@@ -45,7 +47,7 @@ public class TimeKeeper {
         return false;
     }
 
-    public void addTimer(Timer timer){
+    void addTimer(Timer timer){
         if(c_timers.add(timer)){
             Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
         }
