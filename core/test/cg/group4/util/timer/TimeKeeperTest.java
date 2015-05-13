@@ -18,52 +18,33 @@ public class TimeKeeperTest {
 
     @Before
     public void setUp(){
-        timeKeeper.c_timers = new HashSet<Timer>();
+        timeKeeper.cTimers = new HashSet<Timer>();
         timer = new Timer("TEST", 60);
     }
 
     @Test
     public void testInitGlobalTimers(){
-        int count = TimeKeeper.getInstance().c_timers.size();
+        int count = TimeKeeper.getInstance().cTimers.size();
         timeKeeper.init();
-        assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().c_timers.size());
+        assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
     }
 
     @Test
     public void testAddTimer(){
-        int size = timeKeeper.c_timers.size();
+        int size = timeKeeper.cTimers.size();
         timeKeeper.addTimer(new Timer("Test2", 5));
-        assertEquals(size + 1, timeKeeper.c_timers.size());
-    }
-
-    @Test
-    public void testContainsTimerTrue(){
-        assertTrue(timeKeeper.containsTimer("TEST"));
-    }
-
-    @Test
-    public void testContainsTimerFalse(){
-        assertFalse(timeKeeper.containsTimer("TEST2"));
+        assertEquals(size + 1, timeKeeper.cTimers.size());
     }
 
     @Test
     public void testGetTimer(){
         timeKeeper.addTimer(timer);
-        assertTrue(timer.equals(timeKeeper.getTimer(timer.c_name)));
+        assertTrue(timer.equals(timeKeeper.getTimer(timer.cName)));
     }
 
     @Test
     public void testGetTimerNull(){
         timeKeeper.addTimer(timer);
         assertNull(timeKeeper.getTimer("TAD"));
-    }
-
-    @Test
-    public void testUpdate(){
-        Timer timer = mock(Timer.class);
-        timeKeeper.addTimer(timer);
-        timeKeeper.c_previousTick = System.currentTimeMillis() - 2000;
-        timeKeeper.update();
-        verify(timer, times(1)).tick(Mockito.anyLong());
     }
 }

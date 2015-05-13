@@ -28,7 +28,7 @@ public class TimerTest {
     @Test
     public void testAddTimerTask() {
         timer.subscribe(timerTask);
-        assertEquals(1, timer.c_timerTasks.size());
+        assertEquals(1, timer.cTimerTasks.size());
     }
 
     @Test
@@ -67,16 +67,16 @@ public class TimerTest {
         timer.subscribe(timerTask);
         long timeStamp = System.currentTimeMillis();
         timer.tick(timeStamp);
-        verify(timerTask, times(1)).onTick((int) (timer.c_finishTime - timeStamp) / 1000);
+        verify(timerTask, times(1)).onTick((int) (timer.cFinishTime - timeStamp) / 1000);
     }
 
     @Test
     public void testOnTickWhenFinished(){
         timer.subscribe(timerTask);
         long timeStamp = System.currentTimeMillis();
-        timer.c_finishTime = timeStamp - timer.c_duration;
+        timer.cFinishTime = timeStamp - timer.cDuration;
         timer.tick(timeStamp);
-        assertFalse(timer.c_running);
+        assertFalse(timer.cRunning);
     }
 
     @Test
@@ -90,23 +90,23 @@ public class TimerTest {
     @Test public void testSetFinishTimePersistent(){
         timer = new Timer("TEST", 60, true);
         timer = new Timer("TEST", 60, true);
-        assertTrue(timer.c_running);
+        assertTrue(timer.cRunning);
     }
 
     @Test public void testSetFinishTimePersistentFinished(){
         timer = new Timer("TEST", 60, true);
-        timer.c_preferences.putLong(timer.c_name, System.currentTimeMillis() - timer.c_duration);
+        timer.cPreferences.putLong(timer.cName, System.currentTimeMillis() - timer.cDuration);
         timer = new Timer("TEST", 60, true);
-        assertFalse(timer.c_running);
+        assertFalse(timer.cRunning);
     }
 
     @Test public void testResetFinishTime(){
         try{
             Timer timer = new Timer("BLABLA", 60, true);
-            long time = timer.c_preferences.getLong(timer.c_name);
+            long time = timer.cPreferences.getLong(timer.cName);
             Thread.sleep(1000);
             timer.resetFinishTime();
-            assertTrue(timer.c_preferences.getLong(timer.c_name) > time);
+            assertTrue(timer.cPreferences.getLong(timer.cName) > time);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
@@ -114,7 +114,7 @@ public class TimerTest {
 
     @Test
     public void testSubscribeOnNotRunningTimer() {
-        timer.c_preferences = mock(Preferences.class);
+        timer.cPreferences = mock(Preferences.class);
         timer.stop();
         timer.subscribe(timerTask);
         verify(timerTask, times(1)).onStop();
