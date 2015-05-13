@@ -11,11 +11,28 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * Screen where users can set their settings.
+ * @author Ben
+ */
 public class Settings implements Screen {
-
+	
+	/**
+	 * Create the stage for adding all the various actions.
+	 */
 	Stage stage = new Stage();
+	
+	/**
+	 * Development button to reset the 
+	 */
 	TextButton buttonResetInterval;
+	
+	
 	TextButton buttonResetStroll;
+	
+	/**
+	 * Button to go back to the main menu.
+	 */
     TextButton buttonBack;
 
 	@Override
@@ -38,19 +55,19 @@ public class Settings implements Screen {
 
 		buttonResetInterval.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 TimeKeeper.getInstance().getTimer("INTERVAL").reset();
             }
         });
 		buttonResetStroll.addListener(new ChangeListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
+			public void changed(final ChangeEvent event, final Actor actor) {
 				TimeKeeper.getInstance().getTimer("STROLL").reset();
 			}
 		});
         buttonBack.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
                 Gdx.app.debug("Button", "MainMenu");
             }

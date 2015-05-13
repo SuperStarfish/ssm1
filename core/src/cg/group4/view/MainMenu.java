@@ -56,7 +56,7 @@ public class MainMenu implements Screen {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
         buttonSettings = new TextButton("Settings", style);
-        buttonStroll = new TextButton("Stroll",style);
+        buttonStroll = new TextButton("Stroll", style);
 
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();

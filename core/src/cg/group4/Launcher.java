@@ -23,7 +23,7 @@ public class Launcher extends Game {
     }
 
     @Override
-    public void render(){
+    public void render() {
         timeKeeper.update();
         super.render();
     }
