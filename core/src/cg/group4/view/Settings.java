@@ -11,63 +11,80 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * Screen where users can set their settings.
+ * @author Ben
+ */
 public class Settings implements Screen {
-
-	Stage stage = new Stage();
-	TextButton buttonResetInterval;
-	TextButton buttonResetStroll;
-    TextButton buttonBack;
+	
+	/**
+	 * Create the stage for adding all the various actions.
+	 */
+	Stage cStage = new Stage();
+	
+	/**
+	 * Development button to reset the interval timer.
+	 */
+	TextButton cButtonResetInterval;
+	
+	
+	TextButton cButtonResetStroll;
+	
+	/**
+	 * Button to go back to the main menu.
+	 */
+    TextButton cButtonBack;
 
 	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
+	public final void show() {
+		Gdx.input.setInputProcessor(cStage);
 
 		TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
 		style.font = new BitmapFont();
 
-		buttonResetInterval = new TextButton("Reset interval", style);
-		buttonResetStroll = new TextButton("Reset stroll", style);
-        buttonBack = new TextButton("Back", style);
+		cButtonResetInterval = new TextButton("Reset interval", style);
+		cButtonResetStroll = new TextButton("Reset stroll", style);
+        cButtonBack = new TextButton("Back", style);
 
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 
-		buttonResetInterval.setPosition(width / 2f - buttonResetInterval.getWidth() / 2f, height / 2f+10);
-		buttonResetStroll.setPosition(width / 2f - buttonResetStroll.getWidth() / 2f, height / 2f-10);
-        buttonBack.setPosition(width / 2f - buttonBack.getWidth() / 2f, 20);
+		cButtonResetInterval.setPosition(width / 2f - cButtonResetInterval.getWidth() / 2f, height / 2f + 10);
+		cButtonResetStroll.setPosition(width / 2f - cButtonResetStroll.getWidth() / 2f, height / 2f - 10);
+        cButtonBack.setPosition(width / 2f - cButtonBack.getWidth() / 2f, 20);
 
-		buttonResetInterval.addListener(new ChangeListener() {
+		cButtonResetInterval.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 TimeKeeper.getInstance().getTimer("INTERVAL").reset();
             }
         });
-		buttonResetStroll.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				TimeKeeper.getInstance().getTimer("STROLL").reset();
-			}
-		});
-        buttonBack.addListener(new ChangeListener() {
+		cButtonResetStroll.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
+                TimeKeeper.getInstance().getTimer("STROLL").reset();
+            }
+        });
+        cButtonBack.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
                 Gdx.app.debug("Button", "MainMenu");
             }
         });
 
-		stage.addActor(buttonResetInterval);
-		stage.addActor(buttonResetStroll);
-        stage.addActor(buttonBack);	}
+		cStage.addActor(cButtonResetInterval);
+		cStage.addActor(cButtonResetStroll);
+        cStage.addActor(cButtonBack);	}
 
 	@Override
-	public void render(float delta) {
+	public final void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.act();
+        cStage.act();
 
-		stage.draw();
+		cStage.draw();
 	}
 
 	@Override
@@ -87,8 +104,8 @@ public class Settings implements Screen {
 	}
 
 	@Override
-	public void dispose() {
-        stage.dispose();
+	public final void dispose() {
+        cStage.dispose();
 	}
 
 }

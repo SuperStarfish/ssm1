@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 public class LauncherTest {
 
-	@Test
-	public void test() {
-		int x = 5;
-		assertTrue(x == 5);
-	}
+    @Test
+    public void test() {
+        int x = 5;
+        assertTrue(x == 5);
+    }
 }

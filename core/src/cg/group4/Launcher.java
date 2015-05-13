@@ -15,7 +15,7 @@ public class Launcher extends Game {
     private TimeKeeper timeKeeper;
 
     @Override
-    public void create() {
+    public final void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         timeKeeper = TimeKeeper.getInstance();
         timeKeeper.init();
@@ -23,7 +23,7 @@ public class Launcher extends Game {
     }
 
     @Override
-    public void render(){
+    public final void render() {
         timeKeeper.update();
         super.render();
     }
