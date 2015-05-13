@@ -17,21 +17,20 @@ import java.util.Set;
 public class Timer {
 	
 	/**
-	 * The amount of milliseconds in a second.
-	 */
-	protected static final int MILLISEC_IN_SEC = 1000;
-	
-	/**
 	 * Tag used for debugging.
 	 */
     public static final String TAG = Timer.class.getSimpleName();
-    protected String c_name;                // required
-    protected Set<TimerTask> c_timerTasks;  // always created
-    protected int c_duration;               // required
-    protected long c_finishTime;            // implicit - depends on c_duration
-    protected boolean c_persistent;         // required
-    protected Preferences c_preferences;    // implicit - depends on c_persistent
-    protected boolean c_running;            // implicit - depends on state
+	/**
+	 * The amount of milliseconds in a second.
+	 */
+	protected static final int MILLISEC_IN_SEC = 1000;
+    protected String cName;                // required
+    protected Set<TimerTask> cTimerTasks;  // always created
+    protected int cDuration;               // required
+    protected long cFinishTime;            // implicit - depends on cDuration
+    protected boolean cPersistent;         // required
+    protected Preferences cPreferences;    // implicit - depends on cPersistent
+    protected boolean cRunning;            // implicit - depends on state
 
 
     /**
@@ -62,12 +61,12 @@ public class Timer {
      * @param duration   The duration this Timer will run in seconds.
      * @param persistent Does the timer have to exist after the game is exited?
      */
-    protected void init(final String name, final int duration, final boolean persistent) {
-        c_name = name;
-        c_duration = duration;
-        c_timerTasks = new HashSet<TimerTask>();
-        c_persistent = persistent;
-        c_preferences = Gdx.app.getPreferences("TIMER");
+    protected final void init(final String name, final int duration, final boolean persistent) {
+        cName = name;
+        cDuration = duration;
+        cTimerTasks = new HashSet<TimerTask>();
+        cPersistent = persistent;
+        cPreferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
         TimeKeeper.getInstance().addTimer(this);
     }
@@ -75,13 +74,13 @@ public class Timer {
     /**
      * Sets the timer finish time to current time + its duration.
      */
-    protected void setFinishTime() {
-        if (c_persistent && c_preferences.contains(c_name)) {
-            c_finishTime = c_preferences.getLong(c_name);
-            if (System.currentTimeMillis() > c_finishTime) {
+    protected final void setFinishTime() {
+        if (cPersistent && cPreferences.contains(cName)) {
+            cFinishTime = cPreferences.getLong(cName);
+            if (System.currentTimeMillis() > cFinishTime) {
                 stop();
             } else {
-                c_running = true;
+                cRunning = true;
             }
         } else {
             reset();
@@ -94,7 +93,7 @@ public class Timer {
      * @return The name of the timer.
      */
     public final String getName() {
-        return c_name;
+        return cName;
     }
 
     /**
@@ -103,12 +102,12 @@ public class Timer {
      * @param timeStamp The current time.
      */
     protected final void tick(final long timeStamp) {
-        if (c_running) {
-            if (timeStamp > c_finishTime) {
-                c_running = false;
+        if (cRunning) {
+            if (timeStamp > cFinishTime) {
+                cRunning = false;
                 notifyStop();
             } else {
-                notifyTick((int) (c_finishTime - timeStamp) / MILLISEC_IN_SEC);
+                notifyTick((int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC);
             }
         }
     }
@@ -119,7 +118,7 @@ public class Timer {
      * @param remainingTime Time until timer finishes
      */
     protected final void notifyTick(final int remainingTime) {
-        for (TimerTask task : c_timerTasks) {
+        for (TimerTask task : cTimerTasks) {
             task.onTick(remainingTime);
         }
     }
@@ -128,7 +127,7 @@ public class Timer {
      * Notifies the listeners that a Stop event occurred.
      */
     protected final void notifyStop() {
-        for (TimerTask task : c_timerTasks) {
+        for (TimerTask task : cTimerTasks) {
             task.onStop();
         }
     }
@@ -137,7 +136,7 @@ public class Timer {
      * Notifies the listeners that a Start event occurred.
      */
     protected final void notifyStart() {
-        for (TimerTask task : c_timerTasks) {
+        for (TimerTask task : cTimerTasks) {
             task.onStart();
         }
     }
@@ -146,9 +145,9 @@ public class Timer {
      * Stops the current timer.
      */
     public final void stop() {
-        c_preferences.putLong(c_name, System.currentTimeMillis());
-        c_preferences.flush();
-        c_running = false;
+        cPreferences.putLong(cName, System.currentTimeMillis());
+        cPreferences.flush();
+        cRunning = false;
         notifyStop();
     }
     
@@ -158,9 +157,9 @@ public class Timer {
     public final void reset() {
         resetFinishTime();
         Gdx.app.debug(TAG, "Set " + getName() 
-        		+ "-Timer to finish " + ((c_finishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC) 
+        		+ "-Timer to finish " + ((cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC)
         		+ " seconds from now.");
-        c_running = true;
+        cRunning = true;
         notifyStart();
     }
     
@@ -168,31 +167,31 @@ public class Timer {
      * Resets the time it should end.
      */
     protected final void resetFinishTime() {
-        c_finishTime = System.currentTimeMillis() + c_duration * MILLISEC_IN_SEC;
-        if (c_persistent) {
-            c_preferences.putLong(c_name, c_finishTime);
-            c_preferences.flush();
+        cFinishTime = System.currentTimeMillis() + cDuration * MILLISEC_IN_SEC;
+        if (cPersistent) {
+            cPreferences.putLong(cName, cFinishTime);
+            cPreferences.flush();
         }
     }
     
     @Override
     public final boolean equals(final Object obj) {
-        return !(obj == null || !(obj instanceof Timer)) && c_name.equals(((Timer) obj).getName());
+        return !(obj == null || !(obj instanceof Timer)) && cName.equals(((Timer) obj).getName());
     }
 
     @Override
     public final int hashCode() {
-        return c_name.hashCode();
+        return cName.hashCode();
     }
     
     /**
      * Method that adds a TimerTask to the current timer.
      * @param task 	Which task should be added to
      */
-    public void subscribe(TimerTask task) {
-        c_timerTasks.add(task);
+    public final void subscribe(TimerTask task) {
+        cTimerTasks.add(task);
         task.setTimer(this);
-        if (c_running) {
+        if (cRunning) {
             notifyStart();
         } else {
             notifyStop();
@@ -206,14 +205,22 @@ public class Timer {
     public enum Global {
         INTERVAL(6 * 6), STROLL(5 * 60);
 
-        private int e_duration;
+        private int eDuration;
 
+        /**
+         * Set the duration of a global timer.
+         * @param duration The duration in seconds
+         */
         Global(int duration) {
-            e_duration = duration;
+            eDuration = duration;
         }
 
+        /**
+         * Get the duration of a global timer.
+         * @return The duration in seconds
+         */
         public int getDuration() {
-            return e_duration;
+            return eDuration;
         }
     }
 }

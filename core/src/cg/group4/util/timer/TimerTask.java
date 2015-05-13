@@ -6,18 +6,21 @@ package cg.group4.util.timer;
  * @author Benjamin Los
  */
 public abstract class TimerTask {
-    private Timer c_timer;
-    
-    
-    public void setTimer(Timer timer){
-        c_timer = timer;
-    }
+    private Timer cTimer;
     
     /** Returns the timer it belongs too.
      * @return	The timer this task belongs too.
      */
-    public Timer getTimer(){
-        return c_timer;
+    public final Timer getTimer() {
+        return cTimer;
+    }
+
+    /**
+     * Sets the timer the task belongs to.
+     * @param timer The timer the task belongs to
+     */
+    public final void setTimer(Timer timer) {
+        cTimer = timer;
     }
     
     /**
@@ -28,8 +31,10 @@ public abstract class TimerTask {
     
     /**
      * Abstract method for what a task should do on startup of the timer.
-     * @param seconds	What should it do after this amount of seconds?
      */
     public abstract void onStart();
+    /**
+     * Abstract method for what a task should do on the ending of the timer.
+     */
     public abstract void onStop();
 }
