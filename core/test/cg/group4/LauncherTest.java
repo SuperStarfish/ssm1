@@ -10,10 +10,5 @@ public class LauncherTest {
 	public void test() {
 		int x = 5;
 		assertTrue(x == 5);
-	}
-	
-	@Test
-	public void test1() {
-		assertTrue(Launcher.testerooni() == 2);
-	}
+	}	
 }
