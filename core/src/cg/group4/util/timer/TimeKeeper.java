@@ -2,7 +2,8 @@ package cg.group4.util.timer;
 
 import com.badlogic.gdx.Gdx;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Singleton timekeeper which keeps track of every individual timer.
@@ -20,10 +21,22 @@ public final class TimeKeeper {
      * Creates a single instance of the timekeeper. This is a singleton, because of the fact
      * that we want all timers to be tracked by one 'person'.
      */
-    private static final TimeKeeper INSTANCE = new TimeKeeper();
-    LinkedHashSet<Timer> cTimers;
-    private long cPreviousTick;
+    protected static final TimeKeeper INSTANCE = new TimeKeeper();
 
+
+    /**
+     * Set of all the timers.
+     */
+    protected Set<Timer> cTimers;
+
+    /**
+     * Previous tick that the timers were called
+     */
+    protected long cPreviousTick;
+
+    /**
+     * Amount
+     */
     protected final long cMillisInSecond = 1000;
 
 
@@ -31,7 +44,7 @@ public final class TimeKeeper {
      * Keeps track of the timers and updates them every second.
      */
     private TimeKeeper() {
-        cTimers = new LinkedHashSet<Timer>();
+        cTimers = new HashSet<Timer>();
         cPreviousTick = System.currentTimeMillis();
         Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
     }
@@ -63,7 +76,7 @@ public final class TimeKeeper {
             for (Timer timer : cTimers) {
                 timer.tick(timeStamp);
             }
-            cPreviousTick = timeStamp;
+            cPreviousTick += cMillisInSecond;
         }
     }
 
