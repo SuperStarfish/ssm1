@@ -2,7 +2,9 @@ package cg.group4.util.timer;
 
 import com.badlogic.gdx.Gdx;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class TimeKeeper {
     public static final String TAG = TimeKeeper.class.getSimpleName();
@@ -12,11 +14,11 @@ public class TimeKeeper {
     }
 
 
-    LinkedHashSet<Timer> c_timers;
-    private long c_previousTick;
+    protected Set<Timer> c_timers;
+    protected long c_previousTick;
 
-    private TimeKeeper(){
-        c_timers = new LinkedHashSet<Timer>();
+    protected TimeKeeper(){
+        c_timers = new HashSet<Timer>();
         c_previousTick = System.currentTimeMillis();
         Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
     }
@@ -33,7 +35,7 @@ public class TimeKeeper {
             for (Timer timer : c_timers) {
                 timer.tick(timeStamp);
             }
-            c_previousTick = timeStamp;
+            c_previousTick += 1000;
         }
     }
 
