@@ -1,5 +1,8 @@
 package cg.group4.view;
 
+import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.TimerTask;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -30,17 +33,29 @@ public class MainMenu implements Screen {
 	protected Texture cBackground;
     
 	/**
-	 * A button, for testing events.
+	 * A button to go to the settings.
 	 */
-	protected TextButton cButton;
+	protected TextButton cButtonSettings;
 	
 	/**
-	 *  
+	 * A button to start a stroll.
+	 */
+	protected TextButton cButtonStroll;
+	
+	/**
+	 * The stage of the screen.
 	 */
 	protected Stage cStage;
+	
+	/**
+	 * Font for the screen.
+	 */
 	protected BitmapFont cFont;
-    
-	protected int cWidth, cHeight, cTime;
+	
+    /**
+     * Width and height of the window.
+     */
+	protected int cWidth, cHeight;
 
 	@Override
 	public void show() {
@@ -53,22 +68,55 @@ public class MainMenu implements Screen {
 
         TextButtonStyle style = new TextButtonStyle();
         style.font = cFont;
-        cButton = new TextButton("Settings", style);
+        cButtonSettings = new TextButton("Settings", style);
+        cButtonStroll = new TextButton("Stroll", style);
         cWidth = Gdx.graphics.getWidth();
         cHeight = Gdx.graphics.getHeight();
-
-        cButton.setPosition(cWidth / 2f - cButton.getWidth() / 2f, cHeight / 2f);
-        cButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
-               System.out.println("Settings");
-            }
+        
+        cButtonSettings.setPosition(cWidth / 2f - cButtonSettings.getWidth() / 2f, cHeight / 2f);
+        cButtonStroll.setPosition(cWidth / 2f - cButtonStroll.getWidth() / 2f, cHeight / 2f + 20);
+        
+        cButtonSettings.addListener(new ChangeListener() {
+        	@Override
+        	public void changed(ChangeEvent event, Actor actor) {
+        		((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
+        		Gdx.app.debug("Button", "Settings");
+        	}
         });
-
-        cStage.addActor(cButton);
+        cButtonStroll.addListener(new ChangeListener() {
+        	@Override
+        	public void changed(ChangeEvent event, Actor actor) {
+        		Gdx.app.debug("Button", "Stroll");
+        	}
+        });
+        
+        cStage.addActor(cButtonSettings);
+        cStage.addActor(cButtonStroll);
+        
+        TimerTask timerTask = new TimerTask() {
+        	@Override
+        	public void onTick(int seconds) {
+        		cButtonStroll.setText("Stroll: " + seconds);
+        	}
+        	
+        	@Override
+        	public void onStart() {
+        		cButtonStroll.setText("Stroll: ");
+        		cButtonStroll.setDisabled(true);
+        	}
+        	
+        	@Override
+        	public void onStop() {
+        		cButtonStroll.setText("Stroll");
+        		cButtonStroll.setDisabled(false);
+        	}
+        };
+        TimeKeeper.getInstance().getTimer("INTERVAL").subscribe(timerTask);
 	}
-
+	
+	/**
+	 * @param delta Delta time
+	 */
 	@Override
 	public void render(float delta) {
 		final float red = 0f;
@@ -81,7 +129,6 @@ public class MainMenu implements Screen {
 		
 		cBatch.begin();
         cBatch.draw(cBackground, 0, 0);
-        cFont.draw(cBatch, Long.toString(cTime), cWidth / 2f - 10, cHeight - 100);
 		cBatch.end();
 		
 		cStage.act();
