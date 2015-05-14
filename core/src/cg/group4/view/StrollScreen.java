@@ -14,8 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class StrollScreen implements Screen{
+/**
+ * Screen that gets shown when someone is on a stroll.
+ * @author Nick Cleintuar
+ * @author Jean de Leeuw
+ */
+public class StrollScreen implements Screen {
 	
+	/**
+	 * Stage for adding hierarchies of actors.
+	 */
 	protected Stage strollStage;
 	protected SpriteBatch strollSpriteBatch;
 	protected Texture strollBackground;
@@ -56,7 +64,7 @@ public class StrollScreen implements Screen{
 	}
 
 	@Override
-	public void render(float delta) {
+	public final void render(final float delta) {
 		// TODO Auto-generated method stub
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -96,13 +104,16 @@ public class StrollScreen implements Screen{
 	}
 
 	@Override
-	public void dispose() {
+	public final void dispose() {
 		backButtonFont.dispose();
 		strollSpriteBatch.dispose();
 		strollBackground.dispose();
 		strollStage.dispose();
 	}
 	
+	/**
+	 * Method that shows a dialog that the stroll is complete.
+	 */
 	public void displayStrollComplete() {
 		WindowStyle style = new WindowStyle();
 		style.titleFont = new BitmapFont();
