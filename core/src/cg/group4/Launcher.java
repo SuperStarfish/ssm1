@@ -1,6 +1,7 @@
 package cg.group4;
 
 import cg.group4.view.MainMenu;
+import cg.group4.view.TestScreen;
 import com.badlogic.gdx.Game;
 
 /**
@@ -12,6 +13,6 @@ public class Launcher extends Game {
 
     @Override
     public void create() {
-        setScreen(new MainMenu());
+        setScreen(new TestScreen());
     }
 }

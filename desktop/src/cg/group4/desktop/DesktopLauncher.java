@@ -10,8 +10,13 @@ import cg.group4.Launcher;
  * on Android.
  */
 public class DesktopLauncher {
+    public static final int DESKTOP_WIDTH = 1280;
+    public static final int DESKTOP_HEIGHT = 720;
+
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = DESKTOP_WIDTH;
+        config.height = DESKTOP_HEIGHT;
 		new LwjglApplication(new Launcher(), config);
 	}
 }
