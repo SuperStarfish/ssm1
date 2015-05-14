@@ -35,7 +35,7 @@ public class MainMenu implements Screen {
 	TextButton button;
 	
 	/**
-	 *  
+	 * Stage containing all the actors.
 	 */
 	Stage stage = new Stage();
 	BitmapFont font = new BitmapFont();
@@ -43,7 +43,7 @@ public class MainMenu implements Screen {
 	int width, height, time;
 
 	@Override
-	public void show() {
+	public final void show() {
 		Gdx.input.setInputProcessor(stage);
 
         TextButtonStyle style = new TextButtonStyle();
@@ -55,8 +55,8 @@ public class MainMenu implements Screen {
         button.setPosition(width / 2f - button.getWidth() / 2f, height / 2f);
         button.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-				((Game)Gdx.app.getApplicationListener()).setScreen(new Settings());
+            public void changed(final ChangeEvent event, final Actor actor) {
+				((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
                System.out.println("Settings");
             }
         });
@@ -65,7 +65,7 @@ public class MainMenu implements Screen {
 	}
 
 	@Override
-	public void render(float delta) {
+	public final void render(final float delta) {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

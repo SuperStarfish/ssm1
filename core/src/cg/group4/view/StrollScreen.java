@@ -10,8 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
@@ -21,17 +25,45 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  */
 public class StrollScreen implements Screen {
 	
+	/**
+	 * Stage containing all the actors.
+	 */
 	protected Stage cStrollStage;
+	
+	/**
+	 * Sprite batch containing all the sprites.
+	 */
 	protected SpriteBatch cStrollSpriteBatch;
+	
+	
+	/**
+	 * Texture for the background.
+	 */
 	protected Texture cStrollBackground;
 	
+	/**
+	 * Skin used for creating the dialog.
+	 */
+	protected Skin skin;
+	
+	/**
+	 * A screen for the strolls has a current stroll backend.
+	 */
+	protected Stroll stroll;
+	
+	/**
+	 * Buttonfont.
+	 */
 	protected BitmapFont cBackButtonFont;
 	
+	/**
+	 * Variables for keeping track of the window sizes and time.
+	 */
 	protected int cScreenWidth, cScreenHeight, cTime;
 	
 
 	@Override
-	public void show() {
+	public final void show() {
 		// TODO Auto-generated method stub
 		cStrollStage = new Stage();
 		Gdx.input.setInputProcessor(cStrollStage);
@@ -39,20 +71,45 @@ public class StrollScreen implements Screen {
 		cScreenWidth = Gdx.graphics.getWidth();
 		cScreenHeight = Gdx.graphics.getHeight();
 		
+		stroll = new Stroll(cStrollStage);
+		
+		skin = new Skin();
+		
 		cStrollSpriteBatch = new SpriteBatch();
 		cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
 		
+		
+		// Code below here should be replaced to a place where we can initialise the skin.
 		cBackButtonFont = new BitmapFont();
 		TextButtonStyle backButtonStyle = new TextButtonStyle();
 		backButtonStyle.font = cBackButtonFont;
 		TextButton backButton = new TextButton("Back", backButtonStyle);
+		WindowStyle wstyle = new WindowStyle();
+		LabelStyle lstyle = new LabelStyle();
+		lstyle.font = cBackButtonFont;
+		wstyle.titleFont = cBackButtonFont;
+		//
+		
+		skin.add("dialog", backButton, TextButton.class);
+		skin.add("dialog", backButtonStyle, TextButtonStyle.class);
+		skin.add("dialog", cBackButtonFont, BitmapFont.class);
+		skin.add("dialog", wstyle, WindowStyle.class);
+		skin.add("default", lstyle, LabelStyle.class);
+		skin.add("default", backButton, TextButton.class);
+		skin.add("default", backButtonStyle, TextButtonStyle.class);
+		skin.add("default", cBackButtonFont, BitmapFont.class);
+		skin.add("default", wstyle, WindowStyle.class);
 		
 		backButton.setPosition(cScreenWidth / 2f - backButton.getWidth() / 2f, 0);
 		backButton.addListener(new ChangeListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
+			public void changed(final ChangeEvent event, final Actor actor) {
 //				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());;
-				Stroll sc = new Stroll(cStrollStage);
+				new Dialog("Some Dialog", skin, "dialog") {
+				    protected void result(final Object object) {
+				        
+				    }
+				}.text("An event has started!").button("OK!", true).show(cStrollStage);
 			}
 		});
 		
@@ -67,7 +124,8 @@ public class StrollScreen implements Screen {
 		
 		cStrollSpriteBatch.begin();
         cStrollSpriteBatch.draw(cStrollBackground, 0, 0);
-        cBackButtonFont.draw(cStrollSpriteBatch, Long.toString(cTime), cScreenWidth / 2f - 10, cScreenHeight - 100);
+        cBackButtonFont.draw(cStrollSpriteBatch, Long.toString(cTime)
+        		, cScreenWidth / 2f - 10, cScreenHeight - 100);
 		cStrollSpriteBatch.end();
 		
 		cStrollStage.act();
@@ -76,7 +134,7 @@ public class StrollScreen implements Screen {
 	}
 
 	@Override
-	public void resize(int width, int height) {
+	public void resize(final int width, final int height) {
 		// TODO Auto-generated method stub
 		
 	}
