@@ -1,5 +1,7 @@
 package cg.group4.view;
 
+import cg.group4.stroll.Stroll;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,10 +10,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
@@ -21,46 +21,42 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  */
 public class StrollScreen implements Screen {
 	
-	/**
-	 * Stage for adding hierarchies of actors.
-	 */
-	protected Stage strollStage;
-	protected SpriteBatch strollSpriteBatch;
-	protected Texture strollBackground;
+	protected Stage cStrollStage;
+	protected SpriteBatch cStrollSpriteBatch;
+	protected Texture cStrollBackground;
 	
-	protected BitmapFont backButtonFont;
+	protected BitmapFont cBackButtonFont;
 	
-	protected int screenWidth, screenHeight, time;
+	protected int cScreenWidth, cScreenHeight, cTime;
 	
 
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		strollStage = new Stage();
-		Gdx.input.setInputProcessor(strollStage);
+		cStrollStage = new Stage();
+		Gdx.input.setInputProcessor(cStrollStage);
 		
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
+		cScreenWidth = Gdx.graphics.getWidth();
+		cScreenHeight = Gdx.graphics.getHeight();
 		
-		strollSpriteBatch = new SpriteBatch();
-		strollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
+		cStrollSpriteBatch = new SpriteBatch();
+		cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
 		
-		backButtonFont = new BitmapFont();
+		cBackButtonFont = new BitmapFont();
 		TextButtonStyle backButtonStyle = new TextButtonStyle();
-		backButtonStyle.font = backButtonFont;
+		backButtonStyle.font = cBackButtonFont;
 		TextButton backButton = new TextButton("Back", backButtonStyle);
 		
-		backButton.setPosition(screenWidth / 2f - backButton.getWidth() / 2f, 0);
+		backButton.setPosition(cScreenWidth / 2f - backButton.getWidth() / 2f, 0);
 		backButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-//				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
-				displayStrollComplete();
-				//Stroll sc = new Stroll(this);
+//				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());;
+				Stroll sc = new Stroll(cStrollStage);
 			}
 		});
 		
-		strollStage.addActor(backButton);
+		cStrollStage.addActor(backButton);
 	}
 
 	@Override
@@ -69,14 +65,14 @@ public class StrollScreen implements Screen {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		strollSpriteBatch.begin();
-        strollSpriteBatch.draw(strollBackground, 0, 0);
-        backButtonFont.draw(strollSpriteBatch, Long.toString(time), screenWidth / 2f - 10, screenHeight - 100);
-		strollSpriteBatch.end();
+		cStrollSpriteBatch.begin();
+        cStrollSpriteBatch.draw(cStrollBackground, 0, 0);
+        cBackButtonFont.draw(cStrollSpriteBatch, Long.toString(cTime), cScreenWidth / 2f - 10, cScreenHeight - 100);
+		cStrollSpriteBatch.end();
 		
-		strollStage.act();
+		cStrollStage.act();
 		
-        strollStage.draw();
+        cStrollStage.draw();
 	}
 
 	@Override
@@ -105,20 +101,9 @@ public class StrollScreen implements Screen {
 
 	@Override
 	public final void dispose() {
-		backButtonFont.dispose();
-		strollSpriteBatch.dispose();
-		strollBackground.dispose();
-		strollStage.dispose();
-	}
-	
-	/**
-	 * Method that shows a dialog that the stroll is complete.
-	 */
-	public void displayStrollComplete() {
-		WindowStyle style = new WindowStyle();
-		style.titleFont = new BitmapFont();
-		Dialog dialog = new Dialog("STROLL COMPLETE BITCHES!", style);
-		strollStage.addActor(dialog);
-	}
-
+		cBackButtonFont.dispose();
+		cStrollSpriteBatch.dispose();
+		cStrollBackground.dispose();
+		cStrollStage.dispose();
+	}	
 }
