@@ -107,7 +107,7 @@ public class TimerTest {
             Thread.sleep(1000);
             timer.resetFinishTime();
             assertTrue(timer.cPreferences.getLong(timer.cName) > time);
-        } catch(InterruptedException e){
+        } catch (InterruptedException e){
             e.printStackTrace();
         }
     }

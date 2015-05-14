@@ -12,6 +12,10 @@ import com.badlogic.gdx.Gdx;
  * serves as the backbone of the entire application.
  */
 public class Launcher extends Game {
+	
+	/**
+	 * Keeps track of all the timers made.
+	 */
     private TimeKeeper timeKeeper;
 
     @Override

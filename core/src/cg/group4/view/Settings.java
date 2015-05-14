@@ -20,23 +20,27 @@ public class Settings implements Screen {
 	/**
 	 * Create the stage for adding all the various actions.
 	 */
-	Stage cStage = new Stage();
+	protected Stage cStage;
 	
 	/**
 	 * Development button to reset the interval timer.
 	 */
-	TextButton cButtonResetInterval;
+	protected TextButton cButtonResetInterval;
 	
-	
-	TextButton cButtonResetStroll;
+	/**
+	 * Development button to reset the stroll timer.
+	 */
+	protected TextButton cButtonResetStroll;
 	
 	/**
 	 * Button to go back to the main menu.
 	 */
-    TextButton cButtonBack;
+    protected TextButton cButtonBack;
 
 	@Override
 	public final void show() {
+		cStage = new Stage();
+		
 		Gdx.input.setInputProcessor(cStage);
 
 		TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
@@ -49,9 +53,10 @@ public class Settings implements Screen {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 
-		cButtonResetInterval.setPosition(width / 2f - cButtonResetInterval.getWidth() / 2f, height / 2f + 10);
-		cButtonResetStroll.setPosition(width / 2f - cButtonResetStroll.getWidth() / 2f, height / 2f - 10);
-        cButtonBack.setPosition(width / 2f - cButtonBack.getWidth() / 2f, 20);
+		final int offset = 10;
+		cButtonResetInterval.setPosition(width / 2f - cButtonResetInterval.getWidth() / 2f, height / 2f + offset);
+		cButtonResetStroll.setPosition(width / 2f - cButtonResetStroll.getWidth() / 2f, height / 2f - offset);
+        cButtonBack.setPosition(width / 2f - cButtonBack.getWidth() / 2f, 2 * offset);
 
 		cButtonResetInterval.addListener(new ChangeListener() {
             @Override
@@ -79,7 +84,12 @@ public class Settings implements Screen {
 
 	@Override
 	public final void render(float delta) {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+		final float red = 1f;
+		final float green = 0f;
+		final float blue = 0f;
+		final float alpha = 1f;
+		
+        Gdx.gl.glClearColor(red, green, blue, alpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cStage.act();
