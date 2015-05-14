@@ -1,6 +1,5 @@
 package cg.group4.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,10 +8,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 public class StrollScreen implements Screen{
 	
@@ -46,7 +46,9 @@ public class StrollScreen implements Screen{
 		backButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+//				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+				displayStrollComplete();
+				//Stroll sc = new Stroll(this);
 			}
 		});
 		
@@ -99,6 +101,13 @@ public class StrollScreen implements Screen{
 		strollSpriteBatch.dispose();
 		strollBackground.dispose();
 		strollStage.dispose();
+	}
+	
+	public void displayStrollComplete() {
+		WindowStyle style = new WindowStyle();
+		style.titleFont = new BitmapFont();
+		Dialog dialog = new Dialog("STROLL COMPLETE BITCHES!", style);
+		strollStage.addActor(dialog);
 	}
 
 }
