@@ -13,6 +13,9 @@ android {
 
         instrumentTest.setRoot('tests')
     }
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 // needed to add JNI shared libraries to APK when compiling on CLI
