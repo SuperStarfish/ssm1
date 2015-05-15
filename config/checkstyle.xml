@@ -184,7 +184,18 @@
             <property name="severity" value="ignore"/>
         </module>
         <module name="UpperEll"/>
+        
 
+    </module>
+    
+    <!-- Use this only when justified. -->
+    <!-- E.g. generated code, or problematic code such as Class<?> where either Class<?> or Class< ? > both fail against checkstyle -->
+    <!-- Don't forget to reactivate checkstyle! -->
+    <!-- See http://checkstyle.sourceforge.net/config.html#SuppressionCommentFilter -->
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="\s?checkstyle.off\: ([\w\|]+)"/>
+        <property name="onCommentFormat" value="\s?checkstyle.on\: ([\w\|]+)"/>
+        <property name="checkFormat" value="$1"/>
     </module>
 
 </module>
