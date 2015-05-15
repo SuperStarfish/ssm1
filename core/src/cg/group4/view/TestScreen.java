@@ -12,17 +12,23 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class TestScreen implements Screen, InputProcessor{
     SpriteBatch batch;
     Sprite sprite;
+
     OrthographicCamera camera;
+    Viewport viewport;
 
     int width, height;
 
     final float GAME_WORLD_WIDTH = 160f;
     final float GAME_WORLD_HEIGHT = 90f;
-    float aspectratio;
+
+    float aspectRatio;
 
     TextButton button;
     Stage stage;
@@ -40,15 +46,18 @@ public class TestScreen implements Screen, InputProcessor{
 
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        aspectratio = (float)height / width;
+        aspectRatio = (float)width / height;
 
         batch = new SpriteBatch();
         sprite = new Sprite(new Texture(Gdx.files.internal("testbackground.jpg")));
         sprite.setPosition(0, 0);
         sprite.setSize(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 
-        camera = new OrthographicCamera(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+        Gdx.app.debug("TEST", "Aspect ratio:" + aspectRatio);
+
+        camera = new OrthographicCamera(GAME_WORLD_HEIGHT * aspectRatio, GAME_WORLD_HEIGHT);
         camera.position.set(GAME_WORLD_WIDTH / 2, GAME_WORLD_HEIGHT / 2, 0);
+        //viewport = new ExtendViewport(120f, 90f, camera);
 
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
