@@ -53,8 +53,6 @@ public class TestScreen implements Screen, InputProcessor{
         sprite.setPosition(0, 0);
         sprite.setSize(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 
-        Gdx.app.debug("TEST", "Aspect ratio:" + aspectRatio);
-
         camera = new OrthographicCamera(GAME_WORLD_HEIGHT * aspectRatio, GAME_WORLD_HEIGHT);
         camera.position.set(GAME_WORLD_WIDTH / 2, GAME_WORLD_HEIGHT / 2, 0);
         //viewport = new ExtendViewport(120f, 90f, camera);
