@@ -86,7 +86,7 @@ public class MainMenu implements Screen {
         cButtonStroll.addListener(new ChangeListener() {
         	@Override
         	public void changed(ChangeEvent event, Actor actor) {
-        		Gdx.app.debug("Button", "Stroll");
+        		Gdx.app.debug("Button", "Clicked on the stroll button");
         	}
         });
         
