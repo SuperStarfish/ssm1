@@ -14,6 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
+/**
+ * Class for screen that gets show after the stroll has ended.
+ * @author Jean de Leeuw
+ */
 public class RewardScreen implements Screen {
 	
 	protected Stage cRewardStage;
@@ -29,7 +33,7 @@ public class RewardScreen implements Screen {
 	}
 
 	@Override
-	public void show() {
+	public final void show() {
 		cRewardStage = new Stage();
 		Gdx.input.setInputProcessor(cRewardStage);
 		
@@ -47,8 +51,8 @@ public class RewardScreen implements Screen {
 		acceptButton.setPosition(cScreenWidth / 2f - acceptButton.getWidth() / 2f, cScreenHeight / 3f);
 		acceptButton.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+            public void changed(final ChangeEvent event, final Actor actor) {
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
             }
         });
 		
@@ -57,7 +61,7 @@ public class RewardScreen implements Screen {
 	}
 
 	@Override
-	public void render(float delta) {
+	public final void render(final float delta) {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -71,7 +75,7 @@ public class RewardScreen implements Screen {
 	}
 
 	@Override
-	public void resize(int width, int height) {
+	public void resize(final int width, final int height) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -89,13 +93,13 @@ public class RewardScreen implements Screen {
 	}
 
 	@Override
-	public void hide() {
+	public final void hide() {
 		// TODO Auto-generated method stub
 		dispose();	
 	}
 
 	@Override
-	public void dispose() {
+	public final void dispose() {
 		cAcceptButtonFont.dispose();
 		cRewardSpriteBatch.dispose();
 		cRewardBackground.dispose();

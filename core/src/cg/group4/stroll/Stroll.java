@@ -17,11 +17,27 @@ public class Stroll {
 	 */
 	private static final String TAG = "[STROLL]";
 	
+	/**
+	 * Chance that an event will occur.
+	 */
 	protected final float cEventChance = 0.2f;
+	
+	/**
+	 * Amount of events completed, placeholder for the rewards.
+	 */
 	protected int cEventsCompleted;
+	
+	/**
+	 * Stage containing all the actors. Given with the constructor
+	 */
 	protected Stage cStrollStage;
 	
-	public Stroll(Stage strollStage) {
+	/**
+	 * Constructor, creates a new Stroll object.
+	 * @param strollStage 	Stage needed to update the actors when the Stroll object has been modified.
+	 */
+	public Stroll(final Stage strollStage) {
+		Gdx.app.log(TAG, "Creating new stroll");
 		cEventsCompleted = 0;
 		cStrollStage = strollStage;
 		//this.onComplete();

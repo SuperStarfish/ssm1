@@ -13,6 +13,11 @@ import cg.group4.view.StrollScreen;
 public class TestStrollEvent implements StrollEvent {
 	
 	/**
+	 * Tag used for debugging.
+	 */
+	private static final String TAG = "TESTSTROLLEVENT";
+	
+	/**
 	 * Saves the current stroll.
 	 */
 	protected Stroll cCurrentStroll;
@@ -39,6 +44,7 @@ public class TestStrollEvent implements StrollEvent {
 
 	@Override
 	public final void onComplete() {
+		Gdx.app.log(TAG, "Event completed");
 		cCurrentStroll.increaseEventsCompleted();
 		((Game) Gdx.app.getApplicationListener()).setScreen(new StrollScreen());
 	}
