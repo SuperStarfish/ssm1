@@ -1,4 +1,4 @@
 /**
- * Package containing all the classes regarding the UI.
+ * Package containing all classes regarding the user interface.
  */
 package cg.group4.view;
