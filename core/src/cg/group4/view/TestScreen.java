@@ -1,14 +1,18 @@
 package cg.group4.view;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -33,12 +37,13 @@ public class TestScreen implements Screen, InputProcessor{
     TextButton button;
     Stage stage;
     BitmapFont font;
+    Label title;
 
 
     @Override
     public void show() {
         stage = new Stage();
-        font = new BitmapFont();
+
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(this);
@@ -57,7 +62,22 @@ public class TestScreen implements Screen, InputProcessor{
         camera.position.set(GAME_WORLD_WIDTH / 2, GAME_WORLD_HEIGHT / 2, 0);
         //viewport = new ExtendViewport(120f, 90f, camera);
 
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/blow.ttf"));
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        Color color = new Color(Color.valueOf("ffff00"));
+        parameter.borderColor = Color.BLACK;
+        parameter.borderWidth = 1;
+        parameter.size = 58;
+        parameter.color = color;
+
         TextButtonStyle style = new TextButtonStyle();
+        font = generator.generateFont(parameter);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, color);
+        title = new Label("Super Startfish Mania", labelStyle);
+        title.setPosition(width / 2 - title.getWidth() / 2f,
+                height - title.getHeight());
+
         style.font = font;
         button = new TextButton("Settings", style);
         button.debug();
@@ -87,6 +107,8 @@ public class TestScreen implements Screen, InputProcessor{
 
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
+        font.draw(batch, "Super Starfish Mania", 200, 200);
+        title.draw(batch, 1);
         sprite.draw(batch);
         batch.end();
         stage.act();

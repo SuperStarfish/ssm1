@@ -10,14 +10,14 @@ import cg.group4.Launcher;
  * on Android.
  */
 public class DesktopLauncher {
-    public static final Aspect aspect = Aspect.RATIO16_9;
+    public static final Aspect aspect = Aspect.RATIO_DEV;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = aspect.getWidth();
         config.height = aspect.getHeight();
 		new LwjglApplication(new Launcher(), config);
-	}
+    }
 
     /**
      * These enums can be used to see how the game looks on different aspect ratios.
@@ -26,6 +26,7 @@ public class DesktopLauncher {
         RATIO16_9(1280, 720),
         RATIO5_3(1280, 768),
         RATIO16_10(1280, 800),
+        RATIO_DEV(1280, 840),
         RATIO3_2(1278, 852),
         RATIO4_3(1280, 960);
         protected int cWidth, cHeight;
