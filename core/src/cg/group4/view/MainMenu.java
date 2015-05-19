@@ -1,5 +1,8 @@
 package cg.group4.view;
 
+import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.TimerTask;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,65 +25,120 @@ public class MainMenu implements Screen {
 	/**
 	 * Stores the background for drawing on the screen.
 	 */
-	SpriteBatch batch = new SpriteBatch();
+	protected SpriteBatch cBatch;
 	
 	/**
 	 * Background image of the main menu.
 	 */
-	Texture background = new Texture(Gdx.files.internal("demobackground.jpg"));
+	protected Texture cBackground;
     
 	/**
-	 * A button, for testing events.
+	 * A button to go to the settings.
 	 */
-	TextButton button;
+	protected TextButton cButtonSettings;
 	
 	/**
-	 *  
+	 * A button to start a stroll.
 	 */
-	Stage stage = new Stage();
-	BitmapFont font = new BitmapFont();
-    
-	int width, height, time;
+	protected TextButton cButtonStroll;
+	
+	/**
+	 * The stage of the screen.
+	 */
+	protected Stage cStage;
+	
+	/**
+	 * Font for the screen.
+	 */
+	protected BitmapFont cFont;
+	
+    /**
+     * Width and height of the window.
+     */
+	protected int cWidth, cHeight;
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(stage);
+		cBatch = new SpriteBatch();
+		cBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
+		cStage = new Stage();
+		cFont = new BitmapFont();
+		
+		Gdx.input.setInputProcessor(cStage);
 
         TextButtonStyle style = new TextButtonStyle();
-        style.font = font;
-        button = new TextButton("Settings", style);
-        width = Gdx.graphics.getWidth();
-        height = Gdx.graphics.getHeight();
-
-        button.setPosition(width / 2f - button.getWidth() / 2f, height / 2f);
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-				((Game)Gdx.app.getApplicationListener()).setScreen(new Settings());
-               System.out.println("Settings");
-            }
+        style.font = cFont;
+        cButtonSettings = new TextButton("Settings", style);
+        cButtonStroll = new TextButton("Stroll", style);
+        cWidth = Gdx.graphics.getWidth();
+        cHeight = Gdx.graphics.getHeight();
+        
+        cButtonSettings.setPosition(cWidth / 2f - cButtonSettings.getWidth() / 2f, cHeight / 2f);
+        cButtonStroll.setPosition(cWidth / 2f - cButtonStroll.getWidth() / 2f, cHeight / 2f + 20);
+        
+        cButtonSettings.addListener(new ChangeListener() {
+        	@Override
+        	public void changed(ChangeEvent event, Actor actor) {
+        		((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
+        		Gdx.app.debug("Button", "Settings");
+        	}
         });
-
-        stage.addActor(button);
+        cButtonStroll.addListener(new ChangeListener() {
+        	@Override
+        	public void changed(ChangeEvent event, Actor actor) {
+        		Gdx.app.debug("Button", "Stroll");
+        	}
+        });
+        
+        cStage.addActor(cButtonSettings);
+        cStage.addActor(cButtonStroll);
+        
+        TimerTask timerTask = new TimerTask() {
+        	@Override
+        	public void onTick(int seconds) {
+        		cButtonStroll.setText("Stroll: " + seconds);
+        	}
+        	
+        	@Override
+        	public void onStart() {
+        		cButtonStroll.setText("Stroll: ");
+        		cButtonStroll.setDisabled(true);
+        	}
+        	
+        	@Override
+        	public void onStop() {
+        		cButtonStroll.setText("Stroll");
+        		cButtonStroll.setDisabled(false);
+        	}
+        };
+        TimeKeeper.getInstance().getTimer("INTERVAL").subscribe(timerTask);
 	}
-
+	
+	/**
+	 * @param delta Delta time
+	 */
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
+		final float red = 0f;
+		final float green = 132 / 255f;
+		final float blue = 197 / 255f;
+		final float alpha = 0f;
+		
+		Gdx.gl.glClearColor(red, green, blue, alpha);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		batch.begin();
-        batch.draw(background, 0, 0);
-        font.draw(batch, Long.toString(time), width / 2f - 10, height - 100);
-		batch.end();
+		cBatch.begin();
+        cBatch.draw(cBackground, 0, 0);
+		cBatch.end();
 		
-		stage.act();
+		cStage.act();
 		
-        stage.draw();
+        cStage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		
 	}
 
 	@Override
@@ -97,9 +155,9 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void dispose() {
-		font.dispose();
-		batch.dispose();
-		background.dispose();
-		stage.dispose();
+		cFont.dispose();
+		cBatch.dispose();
+		cBackground.dispose();
+		cStage.dispose();
 	}
 }

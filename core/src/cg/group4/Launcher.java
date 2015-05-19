@@ -1,5 +1,6 @@
 package cg.group4;
 
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.MainMenu;
 import cg.group4.view.TestScreen;
 import com.badlogic.gdx.Application;
@@ -13,9 +14,31 @@ import com.badlogic.gdx.Gdx;
  */
 public class Launcher extends Game {
 
-    @Override
-    public void create() {
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        setScreen(new TestScreen());
-    }
+	/**
+	 * Keeps track of all the timers made.
+	 */
+	private TimeKeeper timeKeeper;
+
+	/**
+	 * Initializes the application.
+	 * Does so by creating the TimeKeeper (if non-existent) and setting the
+	 * screen to the main menu.
+	 */
+	@Override
+	public final void create() {
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		timeKeeper = TimeKeeper.getInstance();
+		timeKeeper.init();
+		setScreen(new MainMenu());
+	}
+
+	/**
+	 * Called every frame.
+	 * Renders one frame and updates the TimeKeeper accordingly.
+	 */
+	@Override
+	public final void render() {
+		timeKeeper.update();
+		super.render();
+	}
 }
