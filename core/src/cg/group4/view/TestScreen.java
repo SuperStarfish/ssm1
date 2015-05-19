@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -43,7 +44,7 @@ public class TestScreen implements Screen, InputProcessor{
         batch = new SpriteBatch();
         stage = new Stage();
 
-        background = new Sprite(new Texture(Gdx.files.internal("images/16cut.jpg")));
+        background = new Sprite(new Texture(Gdx.files.internal("testbackground.jpg")));
         background.setSize(16f, 9f);
         background.setOrigin(background.getWidth() / 2f, background.getHeight() / 2f);
 
@@ -66,14 +67,13 @@ public class TestScreen implements Screen, InputProcessor{
         wrapper.setFillParent(true);
 
         table = new Table();
-        table.setBackground(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("badlogic.jpg")))));
+        table.setBackground(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/redpixel.png")))));
         table.setSize(viewport.getScreenHeight() * (4 / 3f), viewport.getScreenHeight());
         table.debugAll();
         table.add(label);
         table.add(label2);
 
         wrapper.add(table);
-        System.out.println(wrapper.getCell(table).getExpandX());
         stage.addActor(wrapper);
     }
 
@@ -97,8 +97,8 @@ public class TestScreen implements Screen, InputProcessor{
         viewport.update(width, height);
         background.setScale(viewport.getWorldHeight() / background.getHeight());
         //table.setSize(viewport.getScreenHeight() * (4 / 3f), viewport.getScreenHeight());
-        wrapper.getCell(table).expand((int)(viewport.getScreenHeight() * (4 / 3f)), viewport.getScreenHeight());
-
+        int playWidth = (int)(viewport.getScreenHeight() * (4 / 3f));
+        wrapper.getCell(table).prefWidth(playWidth).prefHeight(viewport.getScreenHeight());
 //        table.setScale(wrapper.getHeight() / table.getHeight());
     }
 
