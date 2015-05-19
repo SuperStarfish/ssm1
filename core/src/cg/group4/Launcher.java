@@ -1,8 +1,10 @@
 package cg.group4;
 
+import cg.group4.util.camera.WorldRenderer;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.MainMenu;
 import cg.group4.view.TestScreen;
+import cg.group4.view.TestScreen2;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +15,10 @@ import com.badlogic.gdx.Gdx;
  * serves as the backbone of the entire application.
  */
 public class Launcher extends Game {
+	/**
+	 * Handles viewport and camera. Also draws sprites properly in the game world.
+	 */
+	private WorldRenderer cWorldRenderer;
 
 	/**
 	 * Keeps track of all the timers made.
@@ -27,9 +33,10 @@ public class Launcher extends Game {
 	@Override
 	public final void create() {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        cWorldRenderer = new WorldRenderer();
 		timeKeeper = TimeKeeper.getInstance();
 		timeKeeper.init();
-		setScreen(new TestScreen());
+		setScreen(new TestScreen2(this));
 	}
 
 	/**
@@ -41,4 +48,8 @@ public class Launcher extends Game {
 		timeKeeper.update();
 		super.render();
 	}
+
+    public WorldRenderer getWorldRenderer(){
+        return cWorldRenderer;
+    }
 }
