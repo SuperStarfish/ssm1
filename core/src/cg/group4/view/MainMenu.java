@@ -18,6 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * Displays the main menu screen.
+ * @author Jean de Leeuw
+ * @author Nick Cleintuar
+ * @author Martijn Gribnau
+ * @author Benjamin Los
+ * @author Jurgen van Schagen
  */
 public class MainMenu implements Screen {
 	
@@ -85,8 +90,8 @@ public class MainMenu implements Screen {
         cButtonStroll.addListener(new ChangeListener() {
         	@Override
         	public void changed(ChangeEvent event, Actor actor) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new StrollScreen());
 				Gdx.app.debug("Button", "Stroll");
+                StandUp.getInstance().startStroll();
         	}
         });
         

@@ -1,24 +1,29 @@
 package cg.group4.stroll;
 
-import cg.group4.util.timer.TimeKeeper;
+import cg.group4.StandUp;
+import cg.group4.stroll.events.StrollEvent;
+import cg.group4.stroll.events.TestStrollEvent;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.RewardScreen;
-
+import cg.group4.view.StrollScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 
+import java.util.Random;
 
+/**
+ * @author Martijn Gribnau
+ * @author Benjamin Los
+ */
 public class Stroll {
 	
 	/**
 	 * Tag used for debugging.
 	 */
-	private static final String TAG = "[STROLL]";
+	private static final String TAG = Stroll.class.getSimpleName();
 	
 	/**
 	 * Chance that an event will occur.
@@ -26,9 +31,9 @@ public class Stroll {
 	protected final float cEventChance = 0.2f;
 	
 	/**
-	 * Amount of events completed, placeholder for the rewards.
+	 * Amount of rewards collected.
 	 */
-	protected int cEventsCompleted;
+	protected int cRewards;
 	
 	/**
 	 * Stage containing all the actors. Given with the constructor
@@ -38,72 +43,84 @@ public class Stroll {
 	/**
 	 * Whether or not you're busy with an event.
 	 */
-	protected boolean cEventOccured;
+	protected boolean cEventGoing;
+
+	protected Screen cScreen;
+	protected Timer cStrollTimer;
+    protected Boolean cFinished;
+    protected StrollEvent cEvent;
 	
 	/**
 	 * Constructor, creates a new Stroll object.
-	 * @param strollStage 	Stage needed to update the actors when the Stroll object has been modified.
 	 */
-	public Stroll(final Stage strollStage) {
-		Gdx.app.log(TAG, "Creating new stroll");
-		cEventsCompleted = 0;
-		cStrollStage = strollStage;
-		cEventOccured = false;
-		
-		//this.onComplete();
-		//timerUpdate();
-		//INSERT TIMER THAT COUNTS DOWN
-		
-		Timer timer = new Timer("stroll", 300 , true);
-		
-		TimerTask stroll = new TimerTask() {
+	public Stroll() {
+		Gdx.app.log(TAG, "Initializing new stroll");
+		cRewards = 0;
+		cEventGoing = false;
+
+		cScreen = new StrollScreen();
+		((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+
+		cStrollTimer = StandUp.getInstance().getTimeKeeper().getTimer("STROLL");
+		cStrollTimer.subscribe(new TimerTask() {
 			@Override
-			public void onTick(final int seconds) {
-				if (!cEventOccured) {
-					generatePossEvent();
-				}
+			public void onTick(int seconds) {
+				if(!cEventGoing){
+					generatePossibleEvent();
+				} else {
+                    cEvent.update();
+                }
 			}
 
 			@Override
 			public void onStart() {
-				//What to do onStart??
+				cFinished = false;
 			}
 
 			@Override
 			public void onStop() {
-				onComplete();
+                cFinished = true;
+				if(!cEventGoing) {
+                    onComplete();
+                }
 			}
-			
-		};
-	}
-	
-//	public void timerUpdate() {
-//		WindowStyle w = new WindowStyle();
-//		w.titleFont = new BitmapFont();
-//		Dialog d = new Dialog("An event occured.", w);
-//		d.button("Accept");
-//		cStrollStage.addActor(d);
-//	}
-	
-	private void generatePossEvent() {
-		// TODO Auto-generated method stub
-		
+		});
+		cStrollTimer.reset();
 	}
 
-	/**
-	 * Method that increments the amount of events completed.
-	 */
-	public final void increaseEventsCompleted() {
-		Gdx.app.log(TAG, "Old amount of events completed = " + cEventsCompleted);
-		cEventsCompleted++;
-		Gdx.app.log(TAG, "New amount of events completed = " + cEventsCompleted);
+    /**
+     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
+     */
+    private void generatePossibleEvent() {
+        Random rnd = new Random();
+        if(rnd.nextFloat() < .1) {
+            System.out.println("jep");
+            cEventGoing = true;
+            cEvent = new TestStrollEvent();
+        }
 	}
+
+    /**
+     * Handles completion of an event.
+     * @param rewards Reward(s) given on completion of an event
+     */
+    public void eventFinished(int rewards) {
+        cRewards += rewards;
+        cEventGoing = false;
+        cEvent = null;
+
+        if(cFinished) {
+            onComplete();
+        }
+    }
+
+
 	
 	/**
 	 * Method that gets called when the stroll has ended/completed.
 	 */
 	public final void onComplete() {
 		Gdx.app.log(TAG, "Stroll has been completed.");
-		((Game) Gdx.app.getApplicationListener()).setScreen(new RewardScreen(cEventsCompleted));
+		((Game) Gdx.app.getApplicationListener()).setScreen(new RewardScreen(cRewards));
 	}
 }

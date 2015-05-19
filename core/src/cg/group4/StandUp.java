@@ -49,6 +49,11 @@ public class StandUp {
     }
 
 
+    public void startStroll(){
+        cTimeKeeper.getTimer("INTERVAL").reset();
+        cStroll = new Stroll();
+    }
+
     /**
      * Getter for StandUp instance.
      * @return cInstance

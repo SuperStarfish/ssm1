@@ -1,7 +1,9 @@
 package cg.group4.view;
 
+import cg.group4.StandUp;
 import cg.group4.stroll.Stroll;
-
+import cg.group4.util.timer.TimerTask;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -22,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * Screen that gets shown when someone is on a stroll.
  * @author Nick Cleintuar
  * @author Jean de Leeuw
+ * @author Martijn Gribnau
+ * @author Benjamin Los
  */
 public class StrollScreen implements Screen {
 	
@@ -64,20 +67,33 @@ public class StrollScreen implements Screen {
 
 	@Override
 	public final void show() {
-		// TODO Auto-generated method stub
 		cStrollStage = new Stage();
 		Gdx.input.setInputProcessor(cStrollStage);
 		
 		cScreenWidth = Gdx.graphics.getWidth();
 		cScreenHeight = Gdx.graphics.getHeight();
 		
-		stroll = new Stroll(cStrollStage);
-		
 		skin = new Skin();
 		
 		cStrollSpriteBatch = new SpriteBatch();
 		cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
-		
+
+		StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(new TimerTask() {
+            @Override
+            public void onTick(int seconds) {
+                cTime = seconds;
+            }
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onStop() {
+
+            }
+        });
 		
 		// Code below here should be replaced to a place where we can initialise the skin.
 		cBackButtonFont = new BitmapFont();
@@ -104,12 +120,7 @@ public class StrollScreen implements Screen {
 		backButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(final ChangeEvent event, final Actor actor) {
-//				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());;
-				new Dialog("Some Dialog", skin, "dialog") {
-				    protected void result(final Object object) {
-				        
-				    }
-				}.text("An event has started!").button("OK!", true).show(cStrollStage);
+				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
 			}
 		});
 		
@@ -118,7 +129,6 @@ public class StrollScreen implements Screen {
 
 	@Override
 	public final void render(final float delta) {
-		// TODO Auto-generated method stub
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
