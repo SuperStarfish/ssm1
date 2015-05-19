@@ -62,6 +62,23 @@ public class StrollScreen implements Screen {
 	 */
 	protected int cScreenWidth, cScreenHeight, cTime;
 
+    protected final TimerTask cTimerTask = new TimerTask() {
+        @Override
+        public void onTick(int seconds) {
+            cTime = seconds;
+        }
+
+        @Override
+        public void onStart(int seconds) {
+
+        }
+
+        @Override
+        public void onStop() {
+
+        }
+    };
+
     /**
      * Back button on the screen.
      */
@@ -76,22 +93,7 @@ public class StrollScreen implements Screen {
         cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
         cFont = new BitmapFont();
 
-        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(new TimerTask() {
-            @Override
-            public void onTick(int seconds) {
-                cTime = seconds;
-            }
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onStop() {
-
-            }
-        });
+        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
 
 
         TextButtonStyle backButtonStyle = new TextButtonStyle();
@@ -156,6 +158,7 @@ public class StrollScreen implements Screen {
 
 	@Override
 	public final void dispose() {
+        cTimerTask.dispose();
 		cFont.dispose();
 		cSpriteBatch.dispose();
 		cStrollBackground.dispose();

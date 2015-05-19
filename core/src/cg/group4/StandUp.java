@@ -50,9 +50,18 @@ public class StandUp {
 
 
     public void startStroll(){
-        cTimeKeeper.getTimer("INTERVAL").reset();
-        cStroll = new Stroll();
+        if(cStroll == null) {
+            cTimeKeeper.getTimer("INTERVAL").reset();
+            cStroll = new Stroll();
+        } else {
+            cStroll.resume();
+        }
     }
+
+    public void endStroll(int cRewards) {
+        cStroll = null;
+    }
+
 
     /**
      * Getter for StandUp instance.
@@ -77,4 +86,5 @@ public class StandUp {
     public Stroll getStroll() {
         return cStroll;
     }
+
 }

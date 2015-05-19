@@ -28,6 +28,14 @@ public abstract class TimerTask {
 	}
 
 	/**
+	 * Disposes the timer task.
+	 */
+	public final void dispose() {
+        cTimer.unsubscribe(this);
+		cTimer = null;
+	}
+
+	/**
 	 * Abstract method for what a task should do on a certain amount of ticks.
 	 * @param seconds	What should it do after this amount of seconds?
 	 */
@@ -36,7 +44,7 @@ public abstract class TimerTask {
 	/**
 	 * Abstract method for what a task should do on startup of the timer.
 	 */
-	public abstract void onStart();
+	public abstract void onStart(int seconds);
 	/**
 	 * Abstract method for what a task should do on the ending of the timer.
 	 */

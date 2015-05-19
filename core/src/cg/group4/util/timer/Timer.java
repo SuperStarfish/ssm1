@@ -32,10 +32,20 @@ public class Timer {
 	 */
 	protected String cName;                // required
 
+    /**
+     * Set of TimerTasks to be subscriber from this timer.
+     */
+    protected Set<TimerTask> cSubscribe;  // always created
+
 	/**
-	 * Set of TimerTasks.
+	 * Set of TimerTasks that are subscribed to this timer.
 	 */
 	protected Set<TimerTask> cTimerTasks;  // always created
+
+    /**
+     * Set of TimerTasks to be unsubscriber from this timer.
+     */
+    protected Set<TimerTask> cUnsubscribe;  // always created
 
 	/**
 	 * Duration of the timer (in seconds).
@@ -94,7 +104,9 @@ public class Timer {
 	protected final void init(final String name, final int duration, final boolean persistent) {
 		cName = name;
 		cDuration = duration;
+        cSubscribe = new HashSet<TimerTask>();
 		cTimerTasks = new HashSet<TimerTask>();
+        cUnsubscribe = new HashSet<TimerTask>();
 		cPersistent = persistent;
 		cPreferences = Gdx.app.getPreferences("TIMER");
 		setFinishTime();
@@ -157,9 +169,10 @@ public class Timer {
 	 * Notifies the listeners that a Stop event occurred.
 	 */
 	protected final void notifyStop() {
-		for (TimerTask task : cTimerTasks) {
-			task.onStop();
+		for(TimerTask task : cTimerTasks) {
+            task.onStop();
 		}
+
 	}
 
 	/**
@@ -167,7 +180,7 @@ public class Timer {
 	 */
 	protected final void notifyStart() {
 		for (TimerTask task : cTimerTasks) {
-			task.onStart();
+			task.onStart(cDuration);
 		}
 	}
 
@@ -206,6 +219,10 @@ public class Timer {
 		}
 	}
 
+    public final Boolean isRunning() {
+        return cRunning;
+    }
+
 	@Override
 	public final boolean equals(final Object obj) {
 		return !(obj == null || !(obj instanceof Timer)) && cName.equals(((Timer) obj).getName());
@@ -221,14 +238,25 @@ public class Timer {
 	 * @param task 	Which task should be added
 	 */
 	public final void subscribe(final TimerTask task) {
-		cTimerTasks.add(task);
+		cSubscribe.add(task);
 		task.setTimer(this);
-        if(cRunning){
-            task.onStart();
-        } else {
-            task.onStop();
-        }
 	}
+
+    /**
+     * Method that removes a TimerTask from the current subscribers.
+     * @param task 	Which task should be removed
+     */
+    public final void unsubscribe(final TimerTask task) {
+        cUnsubscribe.add(task);
+        task.setTimer(null);
+    }
+
+    public final void resolve() {
+        cTimerTasks.removeAll(cUnsubscribe);
+        cUnsubscribe = new HashSet<TimerTask>();
+        cTimerTasks.addAll(cSubscribe);
+        cSubscribe = new HashSet<TimerTask>();
+    }
 
 	/**
 	 * This enum defines timers that are global. 

@@ -55,13 +55,16 @@ public final class TimeKeeper {
 	/**
 	 * Looks whether a second has past since the last update.
 	 * If so it will update the timers.
+	 * Afterwards it will call resolve to resolve any conflicts.
 	 */
 	public void update() {
 		long timeStamp = System.currentTimeMillis();
 
+
 		if (timeStamp - cPreviousTick > cMillisInSecond) {
 			for (Timer timer : cTimers) {
 				timer.tick(timeStamp);
+                timer.resolve();
 			}
 			cPreviousTick += cMillisInSecond;
 		}

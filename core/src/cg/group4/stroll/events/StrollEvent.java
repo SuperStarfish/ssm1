@@ -12,26 +12,26 @@ import com.badlogic.gdx.Screen;
  * @author Martijn Gribnau
  */
 public abstract class StrollEvent {
+    protected final TimerTask cTimerTask = new TimerTask() {
+        @Override
+        public void onTick(int seconds) {
+            update();
+        }
+
+        @Override
+        public void onStart(int seconds) {
+        }
+
+        @Override
+        public void onStop() {
+            dispose();
+        }
+    };
 
     public StrollEvent(){
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
-//        StandUp.getInstance().getTimeKeeper().getTimer("EVENT").reset(); BROKEN
-        StandUp.getInstance().getTimeKeeper().getTimer("EVENT").subscribe(new TimerTask() {
-            @Override
-            public void onTick(int seconds) {
-                update();
-            }
-
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onStop() {
-                done();
-
-            }
-        });
+        StandUp.getInstance().getTimeKeeper().getTimer("EVENT").subscribe(cTimerTask);
+        cTimerTask.getTimer().reset();
     }
 
 	/**
@@ -52,11 +52,13 @@ public abstract class StrollEvent {
 	public abstract void update();
 	
 	/**
-	 * Method that gets called when the stroll event is completed.
+	 * Method that gets called to dispose of the event.
 	 */
-	public void done() {
+	public void dispose() {
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
+        cTimerTask.dispose();
 
-		StandUp.getInstance().getStroll().eventFinished(getReward());
+        getScreen().dispose();
+        StandUp.getInstance().getStroll().eventFinished(getReward());
 	}
 }

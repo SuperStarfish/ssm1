@@ -3,7 +3,6 @@ package cg.group4.stroll;
 import cg.group4.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
-import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.RewardScreen;
 import cg.group4.view.StrollScreen;
@@ -46,7 +45,27 @@ public class Stroll {
 	protected boolean cEventGoing;
 
 	protected Screen cScreen;
-	protected Timer cStrollTimer;
+	protected final TimerTask cTimerTask = new TimerTask() {
+        @Override
+        public void onTick(int seconds) {
+            if (!cEventGoing) {
+                generatePossibleEvent();
+            }
+        }
+
+        @Override
+        public void onStart(int seconds) {
+            cFinished = false;
+        }
+
+        @Override
+        public void onStop() {
+            cFinished = true;
+            if (!cEventGoing) {
+                done();
+            }
+        }
+    };
     protected Boolean cFinished;
     protected StrollEvent cEvent;
 	
@@ -54,37 +73,22 @@ public class Stroll {
 	 * Constructor, creates a new Stroll object.
 	 */
 	public Stroll() {
-		Gdx.app.log(TAG, "Initializing new stroll");
+		Gdx.app.log(TAG, "Started new stroll");
 		cRewards = 0;
 		cEventGoing = false;
+        cFinished = false;
 
 		cScreen = new StrollScreen();
-		((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+        ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 
-        cStrollTimer = StandUp.getInstance().getTimeKeeper().getTimer("STROLL");
-        cStrollTimer.reset();
-        cStrollTimer.subscribe(new TimerTask() {
-            @Override
-            public void onTick(int seconds) {
-                if (!cEventGoing) {
-                    generatePossibleEvent();
-                }
-            }
-
-            @Override
-            public void onStart() {
-                cFinished = false;
-            }
-
-            @Override
-            public void onStop() {
-                cFinished = true;
-                if (!cEventGoing) {
-                    done();
-                }
-            }
-        });
+        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
+        cTimerTask.getTimer().reset();
 	}
+
+    public void resume() {
+        Gdx.app.log(TAG, "Resumed stroll");
+        ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+    }
 
     /**
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
@@ -94,7 +98,6 @@ public class Stroll {
         if(rnd.nextFloat() < .1) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
-            cScreen.pause();
             ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
         }
 	}
@@ -125,6 +128,8 @@ public class Stroll {
 	public final void done() {
 		Gdx.app.log(TAG, "Stroll has ended.");
 		cScreen.dispose();
-		((Game) Gdx.app.getApplicationListener()).setScreen(new RewardScreen(cRewards));
+        cTimerTask.dispose();
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new RewardScreen(cRewards));
+        StandUp.getInstance().endStroll(cRewards);
 	}
 }

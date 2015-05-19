@@ -30,9 +30,6 @@ public class Launcher extends Game {
 	 */
 	@Override
 	public final void create() {
-        Gdx.app.getPreferences("TIMER").clear();
-        Gdx.app.getPreferences("TIMER").flush();
-
 		cStandUp = StandUp.getInstance();
         cStandUp.init();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -45,7 +42,7 @@ public class Launcher extends Game {
 	 */
 	@Override
 	public final void render() {
-        cStandUp.getTimeKeeper().update();
 		super.render();
+		cStandUp.getTimeKeeper().update();
 	}
 }

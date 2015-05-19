@@ -28,6 +28,6 @@ public class TestStrollEvent extends StrollEvent {
 
     @Override
     public void update(){
-        done();
+        dispose();
     }
 }

@@ -59,63 +59,87 @@ public class MainMenu implements Screen {
     /**
      * Width and height of the window.
      */
-	protected int cWidth, cHeight;
+	protected int cScreenWidth, cScreenHeight;
 
-	@Override
-	public final void show() {
+
+
+    /**
+     * TimerTask for the Stroll timer.
+     */
+    protected final TimerTask cStrollTimerTask = new TimerTask() {
+        @Override
+        public void onTick(int seconds) {
+        }
+
+        @Override
+        public void onStart(int seconds) {
+        }
+
+        @Override
+        public void onStop() {
+
+        }
+    };
+
+    /**
+     * TimerTask for the interval timer (hourly).
+     */
+	protected final TimerTask cIntervalTimerTask = new TimerTask() {
+		@Override
+		public void onTick(int seconds) {
+			cButtonStroll.setText("Stroll: " + seconds);
+		}
+
+		@Override
+		public void onStart(int seconds) {
+		}
+
+		@Override
+		public void onStop() {
+			cButtonStroll.setText("Stroll");
+			cButtonStroll.setDisabled(false);
+		}
+	};
+
+	public MainMenu() {
+		super();
+
 		cBatch = new SpriteBatch();
 		cBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
 		cStage = new Stage();
 		cFont = new BitmapFont();
-		
-		Gdx.input.setInputProcessor(cStage);
 
-        TextButtonStyle style = new TextButtonStyle();
-        style.font = cFont;
-        cButtonSettings = new TextButton("Settings", style);
+		TextButtonStyle style = new TextButtonStyle();
+		style.font = cFont;
+		cButtonSettings = new TextButton("Settings", style);
         cButtonStroll = new TextButton("Stroll", style);
-        cWidth = Gdx.graphics.getWidth();
-        cHeight = Gdx.graphics.getHeight();
-        
-        cButtonSettings.setPosition(cWidth / 2f - cButtonSettings.getWidth() / 2f, cHeight / 2f);
-        cButtonStroll.setPosition(cWidth / 2f - cButtonStroll.getWidth() / 2f, cHeight / 2f + 20);
-        
-        cButtonSettings.addListener(new ChangeListener() {
-        	@Override
-        	public void changed(ChangeEvent event, Actor actor) {
-        		((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
-        		Gdx.app.debug("Button", "Settings");
-        	}
-        });
-        cButtonStroll.addListener(new ChangeListener() {
-        	@Override
-        	public void changed(ChangeEvent event, Actor actor) {
-				Gdx.app.debug("Button", "Stroll");
-                StandUp.getInstance().startStroll();
-        	}
-        });
-        
-        cStage.addActor(cButtonSettings);
-        cStage.addActor(cButtonStroll);
 
-        StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").subscribe(new TimerTask() {
-			@Override
-			public void onTick(int seconds) {
-				cButtonStroll.setText("Stroll: " + seconds);
-			}
 
-			@Override
-			public void onStart() {
-				cButtonStroll.setText("Stroll: ");
-				cButtonStroll.setDisabled(true);
-			}
+        StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").subscribe(cIntervalTimerTask);
+        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cStrollTimerTask);
 
+		cButtonSettings.addListener(new ChangeListener() {
 			@Override
-			public void onStop() {
-				cButtonStroll.setText("Stroll");
-				cButtonStroll.setDisabled(false);
+			public void changed(ChangeEvent event, Actor actor) {
+				((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
+				Gdx.app.debug("Button", "Settings");
 			}
 		});
+		cButtonStroll.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Gdx.app.debug("Button", "Stroll");
+				StandUp.getInstance().startStroll();
+			}
+		});
+
+		cStage.addActor(cButtonSettings);
+		cStage.addActor(cButtonStroll);
+	}
+
+	@Override
+	public final void show() {
+		Gdx.input.setInputProcessor(cStage);
 	}
 	
 	/**
@@ -142,7 +166,11 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		cScreenWidth = width;
+		cScreenHeight = height;
+
+		cButtonSettings.setPosition(cScreenWidth / 2f - cButtonSettings.getWidth() / 2f, cScreenHeight / 2f);
+		cButtonStroll.setPosition(cScreenWidth / 2f - cButtonStroll.getWidth() / 2f, cScreenHeight / 2f + 20);
 	}
 
 	@Override
@@ -159,6 +187,7 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void dispose() {
+		cIntervalTimerTask.dispose();
 		cFont.dispose();
 		cBatch.dispose();
 		cBackground.dispose();
