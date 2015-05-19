@@ -1,8 +1,7 @@
 package cg.group4.view;
 
-import cg.group4.util.timer.TimeKeeper;
+import cg.group4.StandUp;
 import cg.group4.util.timer.TimerTask;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -86,7 +85,8 @@ public class MainMenu implements Screen {
         cButtonStroll.addListener(new ChangeListener() {
         	@Override
         	public void changed(ChangeEvent event, Actor actor) {
-        		Gdx.app.debug("Button", "Clicked on the stroll button");
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new StrollScreen());
+				Gdx.app.debug("Button", "Stroll");
         	}
         });
         
@@ -111,7 +111,7 @@ public class MainMenu implements Screen {
         		cButtonStroll.setDisabled(false);
         	}
         };
-        TimeKeeper.getInstance().getTimer("INTERVAL").subscribe(timerTask);
+        StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").subscribe(timerTask);
 	}
 	
 	/**

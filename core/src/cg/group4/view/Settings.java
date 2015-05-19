@@ -1,6 +1,6 @@
 package cg.group4.view;
 
-import cg.group4.util.timer.TimeKeeper;
+import cg.group4.StandUp;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * Screen where users can set their settings.
- * @author Ben
+ * @author Benjamin Los
+ * @author Martijn Gribnau
  */
 public class Settings implements Screen {
 	
@@ -61,13 +62,13 @@ public class Settings implements Screen {
 		cButtonResetInterval.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer("INTERVAL").reset();
+                StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").reset();
             }
         });
 		cButtonResetStroll.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer("STROLL").reset();
+				StandUp.getInstance().getTimeKeeper().getTimer("STROLL").reset();
             }
         });
         cButtonBack.addListener(new ChangeListener() {

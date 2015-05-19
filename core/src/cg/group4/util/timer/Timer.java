@@ -1,10 +1,11 @@
 package cg.group4.util.timer;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import cg.group4.StandUp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of the Timer class. Contains a list of subscribers.
@@ -97,7 +98,7 @@ public class Timer {
 		cPersistent = persistent;
 		cPreferences = Gdx.app.getPreferences("TIMER");
 		setFinishTime();
-		TimeKeeper.getInstance().addTimer(this);
+		StandUp.getInstance().getTimeKeeper().addTimer(this);
 	}
 
 	/**
