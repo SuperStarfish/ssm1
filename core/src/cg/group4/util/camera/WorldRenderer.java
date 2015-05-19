@@ -72,9 +72,8 @@ public class WorldRenderer implements Screen {
         cBackgroundSprite.draw(cBatch);
         cBatch.end();
 
-        cPlayView.apply();
-        cPlayCamera.update();
-        cBatch.setProjectionMatrix(cPlayCamera.combined);
+//        cPlayView.apply();
+//        cPlayCamera.update();
         cStage.act();
         cStage.draw();
     }
