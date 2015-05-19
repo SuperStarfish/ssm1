@@ -1,22 +1,13 @@
 package cg.group4.stroll.events;
 
+import cg.group4.view.MainMenu;
+import com.badlogic.gdx.Screen;
+
 /**
  * Stroll event used for testing.
  * @author Nick Cleintuar
  */
 public class TestStrollEvent extends StrollEvent {
-	
-	/**
-	 * Tag used for debugging.
-	 */
-	private static final String TAG = TestStrollEvent.class.getSimpleName();
-
-	private static final int REWARD = 10;
-	
-	/**
-	 * Basic variable that makes the event always complete.
-	 */
-	protected boolean cComplete = true;
 	
 	/**
 	 * Constructor for a test event. Does nothing.
@@ -25,4 +16,18 @@ public class TestStrollEvent extends StrollEvent {
 
 	}
 
+    @Override
+    public int getReward() {
+        return 10;
+    }
+
+    @Override
+    public Screen getScreen() {
+        return new MainMenu();
+    }
+
+    @Override
+    public void update(){
+        done();
+    }
 }

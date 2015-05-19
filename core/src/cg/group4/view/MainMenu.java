@@ -97,26 +97,25 @@ public class MainMenu implements Screen {
         
         cStage.addActor(cButtonSettings);
         cStage.addActor(cButtonStroll);
-        
-        TimerTask timerTask = new TimerTask() {
-        	@Override
-        	public void onTick(int seconds) {
-        		cButtonStroll.setText("Stroll: " + seconds);
-        	}
-        	
-        	@Override
-        	public void onStart() {
-        		cButtonStroll.setText("Stroll: ");
-        		cButtonStroll.setDisabled(true);
-        	}
-        	
-        	@Override
-        	public void onStop() {
-        		cButtonStroll.setText("Stroll");
-        		cButtonStroll.setDisabled(false);
-        	}
-        };
-        StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").subscribe(timerTask);
+
+        StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").subscribe(new TimerTask() {
+			@Override
+			public void onTick(int seconds) {
+				cButtonStroll.setText("Stroll: " + seconds);
+			}
+
+			@Override
+			public void onStart() {
+				cButtonStroll.setText("Stroll: ");
+				cButtonStroll.setDisabled(true);
+			}
+
+			@Override
+			public void onStop() {
+				cButtonStroll.setText("Stroll");
+				cButtonStroll.setDisabled(false);
+			}
+		});
 	}
 	
 	/**

@@ -175,10 +175,12 @@ public class Timer {
 	 * Stops the current timer.
 	 */
 	public final void stop() {
-		cPreferences.putLong(cName, System.currentTimeMillis());
-		cPreferences.flush();
-		cRunning = false;
-		notifyStop();
+		if(cRunning) {
+			cPreferences.putLong(cName, System.currentTimeMillis());
+			cPreferences.flush();
+			cRunning = false;
+			notifyStop();
+		}
 	}
 
 	/**
@@ -215,17 +217,17 @@ public class Timer {
 	}
 
 	/**
-	 * Method that adds a TimerTask to the current timer.
-	 * @param task 	Which task should be added to
+	 * Method that adds a TimerTask to the current subscribers.
+	 * @param task 	Which task should be added
 	 */
 	public final void subscribe(final TimerTask task) {
 		cTimerTasks.add(task);
 		task.setTimer(this);
-		if (cRunning) {
-			notifyStart();
-		} else {
-			notifyStop();
-		}
+        if(cRunning){
+            task.onStart();
+        } else {
+            task.onStop();
+        }
 	}
 
 	/**
@@ -236,13 +238,19 @@ public class Timer {
 		/**
 		 * Length definition of one interval.
 		 */
-		INTERVAL(6 * 6), 
+		INTERVAL(60 * 60),
 
 		/**
 		 * Length definition of one stroll.
 		 * (5 * 60 seconds = 5 minutes)
 		 */
-		STROLL(5 * 60);
+		STROLL(5 * 3),
+
+
+        /**
+         * Max length of an event is 1 min (60 seconds).
+         */
+        EVENT(60);
 
 		/**
 		 * Duration of the global timer.

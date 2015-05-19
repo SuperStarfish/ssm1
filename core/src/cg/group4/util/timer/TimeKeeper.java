@@ -48,7 +48,7 @@ public final class TimeKeeper {
 	 */
 	public void init() {
 		for (Timer.Global timer : Timer.Global.values()) {
-			new Timer(timer.name(), timer.getDuration(), true);
+			new Timer(timer.name(), timer.getDuration(), true).stop();
 		}
 	}
 

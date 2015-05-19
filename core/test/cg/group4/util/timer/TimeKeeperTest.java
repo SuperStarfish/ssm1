@@ -1,6 +1,7 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.StandUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
 public class TimeKeeperTest {
-    TimeKeeper timeKeeper = TimeKeeper.getInstance();
+    TimeKeeper timeKeeper = StandUp.getInstance().getTimeKeeper();
     Timer timer;
 
     @Before
@@ -24,7 +25,7 @@ public class TimeKeeperTest {
 
     @Test
     public void testInitGlobalTimers(){
-        int count = TimeKeeper.getInstance().cTimers.size();
+        int count = StandUp.getInstance().getTimeKeeper().cTimers.size();
         timeKeeper.init();
         assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
     }

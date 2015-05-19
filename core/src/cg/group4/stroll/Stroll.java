@@ -61,31 +61,29 @@ public class Stroll {
 		cScreen = new StrollScreen();
 		((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 
-		cStrollTimer = StandUp.getInstance().getTimeKeeper().getTimer("STROLL");
-		cStrollTimer.subscribe(new TimerTask() {
-			@Override
-			public void onTick(int seconds) {
-				if(!cEventGoing){
-					generatePossibleEvent();
-				} else {
-                    cEvent.update();
+        cStrollTimer = StandUp.getInstance().getTimeKeeper().getTimer("STROLL");
+        cStrollTimer.reset();
+        cStrollTimer.subscribe(new TimerTask() {
+            @Override
+            public void onTick(int seconds) {
+                if (!cEventGoing) {
+                    generatePossibleEvent();
                 }
-			}
+            }
 
-			@Override
-			public void onStart() {
-				cFinished = false;
-			}
+            @Override
+            public void onStart() {
+                cFinished = false;
+            }
 
-			@Override
-			public void onStop() {
+            @Override
+            public void onStop() {
                 cFinished = true;
-				if(!cEventGoing) {
-                    onComplete();
+                if (!cEventGoing) {
+                    done();
                 }
-			}
-		});
-		cStrollTimer.reset();
+            }
+        });
 	}
 
     /**
@@ -94,9 +92,10 @@ public class Stroll {
     private void generatePossibleEvent() {
         Random rnd = new Random();
         if(rnd.nextFloat() < .1) {
-            System.out.println("jep");
             cEventGoing = true;
             cEvent = new TestStrollEvent();
+            cScreen.pause();
+            ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
         }
 	}
 
@@ -105,13 +104,17 @@ public class Stroll {
      * @param rewards Reward(s) given on completion of an event
      */
     public void eventFinished(int rewards) {
+//        Gdx.app.log(cEvent.getClass().getSimpleName(), "Event completed!");
+
         cRewards += rewards;
         cEventGoing = false;
         cEvent = null;
 
         if(cFinished) {
-            onComplete();
-        }
+            done();
+		} else {
+			((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+		}
     }
 
 
@@ -119,8 +122,9 @@ public class Stroll {
 	/**
 	 * Method that gets called when the stroll has ended/completed.
 	 */
-	public final void onComplete() {
-		Gdx.app.log(TAG, "Stroll has been completed.");
+	public final void done() {
+		Gdx.app.log(TAG, "Stroll has ended.");
+		cScreen.dispose();
 		((Game) Gdx.app.getApplicationListener()).setScreen(new RewardScreen(cRewards));
 	}
 }

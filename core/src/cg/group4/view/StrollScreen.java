@@ -12,11 +12,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
@@ -31,12 +29,12 @@ public class StrollScreen implements Screen {
 	/**
 	 * Stage containing all the actors.
 	 */
-	protected Stage cStrollStage;
+	protected Stage cStage;
 	
 	/**
 	 * Sprite batch containing all the sprites.
 	 */
-	protected SpriteBatch cStrollSpriteBatch;
+	protected SpriteBatch cSpriteBatch;
 	
 	
 	/**
@@ -57,28 +55,28 @@ public class StrollScreen implements Screen {
 	/**
 	 * Buttonfont.
 	 */
-	protected BitmapFont cBackButtonFont;
+	protected BitmapFont cFont;
 	
 	/**
 	 * Variables for keeping track of the window sizes and time.
 	 */
 	protected int cScreenWidth, cScreenHeight, cTime;
-	
 
-	@Override
-	public final void show() {
-		cStrollStage = new Stage();
-		Gdx.input.setInputProcessor(cStrollStage);
-		
-		cScreenWidth = Gdx.graphics.getWidth();
-		cScreenHeight = Gdx.graphics.getHeight();
-		
-		skin = new Skin();
-		
-		cStrollSpriteBatch = new SpriteBatch();
-		cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
+    /**
+     * Back button on the screen.
+     */
+    protected TextButton cBackButton;
 
-		StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(new TimerTask() {
+	public StrollScreen(){
+		super();
+
+		cStage = new Stage();
+        skin = new Skin();
+        cSpriteBatch = new SpriteBatch();
+        cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
+        cFont = new BitmapFont();
+
+        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(new TimerTask() {
             @Override
             public void onTick(int seconds) {
                 cTime = seconds;
@@ -94,37 +92,25 @@ public class StrollScreen implements Screen {
 
             }
         });
-		
-		// Code below here should be replaced to a place where we can initialise the skin.
-		cBackButtonFont = new BitmapFont();
-		TextButtonStyle backButtonStyle = new TextButtonStyle();
-		backButtonStyle.font = cBackButtonFont;
-		TextButton backButton = new TextButton("Back", backButtonStyle);
-		WindowStyle wstyle = new WindowStyle();
-		LabelStyle lstyle = new LabelStyle();
-		lstyle.font = cBackButtonFont;
-		wstyle.titleFont = cBackButtonFont;
-		//
-		
-		skin.add("dialog", backButton, TextButton.class);
-		skin.add("dialog", backButtonStyle, TextButtonStyle.class);
-		skin.add("dialog", cBackButtonFont, BitmapFont.class);
-		skin.add("dialog", wstyle, WindowStyle.class);
-		skin.add("default", lstyle, LabelStyle.class);
-		skin.add("default", backButton, TextButton.class);
-		skin.add("default", backButtonStyle, TextButtonStyle.class);
-		skin.add("default", cBackButtonFont, BitmapFont.class);
-		skin.add("default", wstyle, WindowStyle.class);
-		
-		backButton.setPosition(cScreenWidth / 2f - backButton.getWidth() / 2f, 0);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(final ChangeEvent event, final Actor actor) {
-				((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
-			}
-		});
-		
-		cStrollStage.addActor(backButton);
+
+
+        TextButtonStyle backButtonStyle = new TextButtonStyle();
+        backButtonStyle.font = cFont;
+        cBackButton = new TextButton("Back", backButtonStyle);
+        cBackButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+            }
+        });
+
+        cStage.addActor(cBackButton);
+	}
+	
+
+	@Override
+	public final void show() {
+        Gdx.input.setInputProcessor(cStage);
 	}
 
 	@Override
@@ -132,21 +118,22 @@ public class StrollScreen implements Screen {
 		Gdx.gl.glClearColor(0, 132 / 255f, 197 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		cStrollSpriteBatch.begin();
-        cStrollSpriteBatch.draw(cStrollBackground, 0, 0);
-        cBackButtonFont.draw(cStrollSpriteBatch, Long.toString(cTime)
-        		, cScreenWidth / 2f - 10, cScreenHeight - 100);
-		cStrollSpriteBatch.end();
+		cSpriteBatch.begin();
+        cSpriteBatch.draw(cStrollBackground, 0, 0);
+        cFont.draw(cSpriteBatch, Long.toString(cTime)
+                , cScreenWidth / 2f - 10, cScreenHeight - 100);
+		cSpriteBatch.end();
 		
-		cStrollStage.act();
+		cStage.act();
 		
-        cStrollStage.draw();
+        cStage.draw();
 	}
 
 	@Override
 	public void resize(final int width, final int height) {
-		// TODO Auto-generated method stub
-		
+        cScreenWidth = width;
+		cScreenHeight = height;
+        cBackButton.setPosition((cScreenWidth / 2f) - (cBackButton.getWidth() / 2f), 0);
 	}
 
 	@Override
@@ -169,9 +156,9 @@ public class StrollScreen implements Screen {
 
 	@Override
 	public final void dispose() {
-		cBackButtonFont.dispose();
-		cStrollSpriteBatch.dispose();
+		cFont.dispose();
+		cSpriteBatch.dispose();
 		cStrollBackground.dispose();
-		cStrollStage.dispose();
+		cStage.dispose();
 	}	
 }
