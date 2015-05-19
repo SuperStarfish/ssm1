@@ -81,7 +81,7 @@ public class TestScreen implements Screen, InputProcessor{
 
         TextButtonStyle buttonStyle = new TextButtonStyle();
         Sprite sprite = new Sprite(new Texture(Gdx.files.internal("images/wooden_sign.png")));
-        float scalar = (width * 0.2f) / sprite.getWidth();
+        float scalar = (width * 0.2f) / (sprite.getHeight()*1.3333333f);
         //sprite.setScale(scalar);
         System.out.println(scalar);
         sprite.setSize(scalar * sprite.getWidth(), scalar * sprite.getHeight());
@@ -110,7 +110,7 @@ public class TestScreen implements Screen, InputProcessor{
         wrapper.setFillParent(true);
 
         table = new Table();
-        table.setBackground(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/redpixel.png")))));
+        table.setBackground(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/debugpixel.png")))));
         table.setSize(viewport.getScreenHeight() * (4 / 3f), viewport.getScreenHeight());
         table.debugAll();
         table.row().expandY();
