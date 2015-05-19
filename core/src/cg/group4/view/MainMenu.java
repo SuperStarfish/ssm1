@@ -1,6 +1,7 @@
 package cg.group4.view;
 
 import cg.group4.StandUp;
+import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -61,6 +62,11 @@ public class MainMenu implements Screen {
      */
 	protected int cScreenWidth, cScreenHeight;
 
+    /**
+     * Defines it the stroll button should be clickable.
+     */
+    protected boolean cStrollClickable;
+
 
 
     /**
@@ -77,7 +83,7 @@ public class MainMenu implements Screen {
 
         @Override
         public void onStop() {
-
+            cStrollClickable = false;
         }
     };
 
@@ -87,7 +93,13 @@ public class MainMenu implements Screen {
 	protected final TimerTask cIntervalTimerTask = new TimerTask() {
 		@Override
 		public void onTick(int seconds) {
-			cButtonStroll.setText("Stroll: " + seconds);
+            if(cStrollClickable) {
+                cButtonStroll.setText("Stroll");
+                cButtonStroll.setDisabled(false);
+            } else {
+                cButtonStroll.setText("Stroll: " + seconds);
+                cButtonStroll.setDisabled(true);
+            }
 		}
 
 		@Override
@@ -96,8 +108,7 @@ public class MainMenu implements Screen {
 
 		@Override
 		public void onStop() {
-			cButtonStroll.setText("Stroll");
-			cButtonStroll.setDisabled(false);
+            cStrollClickable = true;
 		}
 	};
 
@@ -109,14 +120,22 @@ public class MainMenu implements Screen {
 		cStage = new Stage();
 		cFont = new BitmapFont();
 
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = cFont;
-		cButtonSettings = new TextButton("Settings", style);
-        cButtonStroll = new TextButton("Stroll", style);
+        TextButtonStyle style = new TextButtonStyle();
+        style.font = cFont;
+        cButtonSettings = new TextButton("Settings", style);
 
+        Timer intervalTimer = StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL");
+        Timer strollTimer = StandUp.getInstance().getTimeKeeper().getTimer("STROLL");
 
-        StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").subscribe(cIntervalTimerTask);
-        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cStrollTimerTask);
+        cStrollClickable = strollTimer.isRunning() || !intervalTimer.isRunning();
+
+        if(cStrollClickable) {
+            cButtonStroll = new TextButton("Stroll", style);
+            cButtonStroll.setDisabled(false);
+        } else {
+            cButtonStroll = new TextButton("Stroll: " + intervalTimer.getRemainingTime(), style);
+            cButtonStroll.setDisabled(true);
+        }
 
 		cButtonSettings.addListener(new ChangeListener() {
 			@Override
@@ -132,6 +151,9 @@ public class MainMenu implements Screen {
 				StandUp.getInstance().startStroll();
 			}
 		});
+
+        intervalTimer.subscribe(cIntervalTimerTask);
+        strollTimer.subscribe(cStrollTimerTask);
 
 		cStage.addActor(cButtonSettings);
 		cStage.addActor(cButtonStroll);

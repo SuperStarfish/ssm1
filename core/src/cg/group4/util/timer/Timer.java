@@ -72,6 +72,11 @@ public class Timer {
 	 */
 	protected boolean cRunning;            // implicit - depends on state
 
+    /**
+     * Time remaining to end of timer.
+     */
+    protected int cRemainingTime;
+
 
 	/**
 	 * Initializes the new Timer using the {@link #init(String, int, boolean) init} with false.
@@ -104,6 +109,7 @@ public class Timer {
 	protected final void init(final String name, final int duration, final boolean persistent) {
 		cName = name;
 		cDuration = duration;
+        cRemainingTime = duration;
         cSubscribe = new HashSet<TimerTask>();
 		cTimerTasks = new HashSet<TimerTask>();
         cUnsubscribe = new HashSet<TimerTask>();
@@ -147,9 +153,11 @@ public class Timer {
 		if (cRunning) {
 			if (timeStamp > cFinishTime) {
 				cRunning = false;
+                cRemainingTime = 0;
 				notifyStop();
 			} else {
-				notifyTick((int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC);
+                cRemainingTime = (int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC;
+				notifyTick(cRemainingTime);
 			}
 		}
 	}
@@ -161,7 +169,9 @@ public class Timer {
 	 */
 	protected final void notifyTick(final int remainingTime) {
 		for (TimerTask task : cTimerTasks) {
-			task.onTick(remainingTime);
+            if(task.isActive()) {
+                task.onTick(remainingTime);
+            }
 		}
 	}
 
@@ -170,7 +180,9 @@ public class Timer {
 	 */
 	protected final void notifyStop() {
 		for(TimerTask task : cTimerTasks) {
-            task.onStop();
+            if(task.isActive()){
+                task.onStop();
+            }
 		}
 
 	}
@@ -180,7 +192,9 @@ public class Timer {
 	 */
 	protected final void notifyStart() {
 		for (TimerTask task : cTimerTasks) {
-			task.onStart(cDuration);
+            if(task.isActive()) {
+                task.onStart(cDuration);
+            }
 		}
 	}
 
@@ -219,8 +233,15 @@ public class Timer {
 		}
 	}
 
+    /**
+     * @return Returns whether the timer is running or not.
+     */
     public final Boolean isRunning() {
         return cRunning;
+    }
+
+    public final int getRemainingTime() {
+        return cRemainingTime;
     }
 
 	@Override
@@ -240,6 +261,9 @@ public class Timer {
 	public final void subscribe(final TimerTask task) {
 		cSubscribe.add(task);
 		task.setTimer(this);
+        if(cRunning) {
+            task.onTick(cRemainingTime);
+        }
 	}
 
     /**

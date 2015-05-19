@@ -2,6 +2,7 @@ package cg.group4.view;
 
 import cg.group4.StandUp;
 import cg.group4.stroll.Stroll;
+import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -93,8 +94,10 @@ public class StrollScreen implements Screen {
         cStrollBackground = new Texture(Gdx.files.internal("demobackground.jpg"));
         cFont = new BitmapFont();
 
-        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
+        Timer strollTimer = StandUp.getInstance().getTimeKeeper().getTimer("STROLL");
+        strollTimer.subscribe(cTimerTask);
 
+        cTime = strollTimer.getRemainingTime();
 
         TextButtonStyle backButtonStyle = new TextButtonStyle();
         backButtonStyle.font = cFont;

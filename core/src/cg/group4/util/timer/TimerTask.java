@@ -10,7 +10,12 @@ public abstract class TimerTask {
 	/**
 	 * Timer belonging to this task.
 	 */
-	private Timer cTimer;
+	protected Timer cTimer;
+
+    /**
+     * If the timer task should be called on updates (if unsubscribed but not yet resolved).
+     */
+    protected boolean cActive = true;
 
 	/** Returns the timer it belongs too.
 	 * @return	The timer this task belongs too.
@@ -18,6 +23,13 @@ public abstract class TimerTask {
 	public final Timer getTimer() {
 		return cTimer;
 	}
+
+    /** Returns the timer it belongs too.
+     * @return	The timer this task belongs too.
+     */
+    public final Boolean isActive() {
+        return cActive;
+    }
 
 	/**
 	 * Sets the timer the task belongs to.
@@ -33,6 +45,7 @@ public abstract class TimerTask {
 	public final void dispose() {
         cTimer.unsubscribe(this);
 		cTimer = null;
+        cActive = false;
 	}
 
 	/**

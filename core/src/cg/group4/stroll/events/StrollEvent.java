@@ -1,6 +1,7 @@
 package cg.group4.stroll.events;
 
 import cg.group4.StandUp;
+import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -56,8 +57,9 @@ public abstract class StrollEvent {
 	 */
 	public void dispose() {
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
+        Timer timer = cTimerTask.getTimer();
         cTimerTask.dispose();
-
+        timer.stop();
         getScreen().dispose();
         StandUp.getInstance().getStroll().eventFinished(getReward());
 	}
