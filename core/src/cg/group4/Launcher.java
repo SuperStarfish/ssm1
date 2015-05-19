@@ -29,7 +29,7 @@ public class Launcher extends Game {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		timeKeeper = TimeKeeper.getInstance();
 		timeKeeper.init();
-		setScreen(new MainMenu());
+		setScreen(new TestScreen());
 	}
 
 	/**

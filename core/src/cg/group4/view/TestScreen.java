@@ -13,103 +13,80 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class TestScreen implements Screen, InputProcessor{
     SpriteBatch batch;
-    Sprite sprite;
+    Stage stage;
+
+    Sprite background;
 
     OrthographicCamera camera;
     Viewport viewport;
 
     int width, height;
 
-    final float GAME_WORLD_WIDTH = 160f;
-    final float GAME_WORLD_HEIGHT = 90f;
+    final float GAME_WORLD_WIDTH = 16f;
+    final float GAME_WORLD_HEIGHT = 9f;
 
-    float aspectRatio;
-
-    TextButton button;
-    Stage stage;
-    BitmapFont font;
-    Label title;
+    Table table, wrapper;
 
 
     @Override
     public void show() {
+        batch = new SpriteBatch();
         stage = new Stage();
 
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(stage);
-        multiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(multiplexer);
+        background = new Sprite(new Texture(Gdx.files.internal("images/16cut.jpg")));
+        background.setSize(16f, 9f);
+        background.setOrigin(background.getWidth() / 2f, background.getHeight() / 2f);
+
+        background.setPosition(background.getWidth() / -2f, background.getHeight() / -2f);
 
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        aspectRatio = (float)width / height;
 
-        batch = new SpriteBatch();
-        sprite = new Sprite(new Texture(Gdx.files.internal("testbackground.jpg")));
-        sprite.setPosition(0, 0);
-        sprite.setSize(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+        camera = new OrthographicCamera(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+        viewport = new ExtendViewport(14f, 9f, 16f, 12f, camera);
 
-        camera = new OrthographicCamera(GAME_WORLD_HEIGHT * aspectRatio, GAME_WORLD_HEIGHT);
-        camera.position.set(GAME_WORLD_WIDTH / 2, GAME_WORLD_HEIGHT / 2, 0);
-        //viewport = new ExtendViewport(120f, 90f, camera);
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        style.fontColor = Color.BLACK;
+        Label label = new Label("Charsequence", style);
+        Label label2 = new Label("Charsequence2", style);
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/blow.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        Color color = new Color(Color.valueOf("ffff00"));
-        parameter.borderColor = Color.BLACK;
-        parameter.borderWidth = 1;
-        parameter.size = 58;
-        parameter.color = color;
+        wrapper = new Table();
+        wrapper.debugAll();
+        wrapper.setFillParent(true);
 
-        TextButtonStyle style = new TextButtonStyle();
-        font = generator.generateFont(parameter);
+        table = new Table();
+        table.setBackground(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("badlogic.jpg")))));
+        table.setSize(viewport.getScreenHeight() * (4 / 3f), viewport.getScreenHeight());
+        table.debugAll();
+        table.add(label);
+        table.add(label2);
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle(font, color);
-        title = new Label("Super Startfish Mania", labelStyle);
-        title.setPosition(width / 2 - title.getWidth() / 2f,
-                height - title.getHeight());
-
-        style.font = font;
-        button = new TextButton("Settings", style);
-        button.debug();
-
-        button.setSize(width / 5f, height / 10f);
-        button.setPosition(width / 2 - button.getWidth() / 2f, height / 2 - button.getHeight() / 2f);
-
-        button.setPosition(width / 2f - button.getWidth() / 2f, button.getHeight() * 2f);
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //((Game)Gdx.app.getApplicationListener()).setScreen(new Settings());
-                System.out.println("Settings");
-            }
-        });
-
-        stage.addActor(button);
-
+        wrapper.add(table);
+        System.out.println(wrapper.getCell(table).getExpandX());
+        stage.addActor(wrapper);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
 
-        batch.begin();
         batch.setProjectionMatrix(camera.combined);
-        font.draw(batch, "Super Starfish Mania", 200, 200);
-        title.draw(batch, 1);
-        sprite.draw(batch);
+        batch.begin();
+        background.draw(batch);
         batch.end();
         stage.act();
         stage.draw();
@@ -117,7 +94,12 @@ public class TestScreen implements Screen, InputProcessor{
 
     @Override
     public void resize(int width, int height) {
+        viewport.update(width, height);
+        background.setScale(viewport.getWorldHeight() / background.getHeight());
+        //table.setSize(viewport.getScreenHeight() * (4 / 3f), viewport.getScreenHeight());
+        wrapper.getCell(table).expand((int)(viewport.getScreenHeight() * (4 / 3f)), viewport.getScreenHeight());
 
+//        table.setScale(wrapper.getHeight() / table.getHeight());
     }
 
     @Override
