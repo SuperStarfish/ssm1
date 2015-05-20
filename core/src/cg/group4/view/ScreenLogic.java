@@ -45,6 +45,10 @@ public abstract class ScreenLogic implements Disposable {
      */
     @Override
     public final void dispose() {
-        cBatch.dispose();
+        //cBatch.dispose();
     }
+    
+    public abstract void setAsActiveScreen();
+    
+    
 }

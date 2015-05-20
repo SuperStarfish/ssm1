@@ -24,9 +24,17 @@ public class EventScreen extends ScreenLogic {
 
 		cContainer.setActor(cTaskToPerform);
 		cWorldRenderer.setActor(cContainer);
+		
+		setAsActiveScreen();
 	}
 
     public Label getLabel(){
         return cTaskToPerform;
     }
+
+	@Override
+	public void setAsActiveScreen() {
+		// TODO Auto-generated method stub
+		cWorldRenderer.setActor(cContainer);
+	}
 }

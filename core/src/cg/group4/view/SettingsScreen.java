@@ -38,7 +38,7 @@ public class SettingsScreen extends ScreenLogic {
         createTable();
         createGUI();
 
-        cWorldRenderer.setActor(cTable);
+        setAsActiveScreen();
     }
 
     /**
@@ -132,4 +132,10 @@ public class SettingsScreen extends ScreenLogic {
         cTable.add(button);
         return button;
     }
+
+	@Override
+	public void setAsActiveScreen() {
+		// TODO Auto-generated method stub
+		cWorldRenderer.setActor(cTable);
+	}
 }

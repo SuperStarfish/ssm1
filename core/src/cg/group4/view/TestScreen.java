@@ -34,7 +34,7 @@ public class TestScreen extends ScreenLogic {
         initBackButton(worldRenderer);
 
         table.debugAll();
-        worldRenderer.setActor(table);
+        setAsActiveScreen();
     }
 
     /**
@@ -88,5 +88,11 @@ public class TestScreen extends ScreenLogic {
         });
         table.add(button3);
     }
+
+	@Override
+	public void setAsActiveScreen() {
+		// TODO Auto-generated method stub
+		cWorldRenderer.setActor(table);
+	}
 
 }

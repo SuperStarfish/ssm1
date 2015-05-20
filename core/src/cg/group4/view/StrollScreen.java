@@ -40,7 +40,13 @@ public class StrollScreen extends ScreenLogic {
         cTable.add(cText);
 
 
-        cWorldRenderer.setActor(cTable);
+        setAsActiveScreen();
+	}
+
+	@Override
+	public void setAsActiveScreen() {
+		// TODO Auto-generated method stub
+		cWorldRenderer.setActor(cTable);
 	}
 }
 

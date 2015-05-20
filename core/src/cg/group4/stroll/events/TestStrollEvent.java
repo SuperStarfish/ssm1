@@ -189,7 +189,6 @@ public class TestStrollEvent extends StrollEvent {
 	 * Clears the current event.
 	 */
 	public final void clearEvent() {
-		this.tasksCompleted = 0;
 		delayInputTasks.dispose();
 		cDelayInputTimer.stop();
 		Gdx.app.getPreferences("TIMER").clear();
@@ -209,7 +208,8 @@ public class TestStrollEvent extends StrollEvent {
 			switch(operationNr) {
 				case MOVE_LEFT:
 					cDelayInputTimer.reset();
-					if (accelData.x <= -delta) {
+					//if (accelData.x <= -delta) {
+					if (accelData.y >= delta) {
 						System.out.println("Left Succes!");
 						//base.x = -1 * accelData.x;
 						taskCompleted();
@@ -217,7 +217,8 @@ public class TestStrollEvent extends StrollEvent {
 					break;
 				case MOVE_RIGHT:
 					cDelayInputTimer.reset();
-					if (accelData.x >= delta) {
+					//if (accelData.x >= delta) {
+					if (accelData.y <= delta) {
 						System.out.println("Right Succes!");
 						//base.x = -1 * accelData.x;
 						taskCompleted();
@@ -225,7 +226,8 @@ public class TestStrollEvent extends StrollEvent {
 					break;
 				case MOVE_DOWN:
 					cDelayInputTimer.reset();
-					if (accelData.y <= -delta) {
+					//if (accelData.y <= -delta) {
+					if (accelData.x <= -delta) {
 						System.out.println("Down Succes!");
 						//base.y = -1 * accelData.y;
 						taskCompleted();
@@ -233,7 +235,8 @@ public class TestStrollEvent extends StrollEvent {
 					break;
 				case MOVE_UP:
 					cDelayInputTimer.reset();
-					if (accelData.y >= delta) {
+					//if (accelData.y >= delta) {
+					if (accelData.x >= delta) {
 						System.out.println("Up Succes!");
 						//base.y = -1 * accelData.y;
 						taskCompleted();

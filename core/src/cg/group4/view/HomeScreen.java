@@ -55,7 +55,7 @@ public class HomeScreen extends ScreenLogic {
         initStrollButton(worldRenderer);
         initSettingsButton(worldRenderer);
 
-        worldRenderer.setActor(cTable);
+       setAsActiveScreen();
     }
 
     /**
@@ -123,5 +123,11 @@ public class HomeScreen extends ScreenLogic {
         cTable.row().expandY();
         cTable.add(cSettingsButton);
     }
+
+	@Override
+	public void setAsActiveScreen() {
+		// TODO Auto-generated method stub
+		 cWorldRenderer.setActor(cTable);
+	}
 
 }
