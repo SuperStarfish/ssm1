@@ -135,8 +135,10 @@ public class Stroll extends GameMechanic {
         cEventGoing = false;
 
         if (cFinished) {
+        	Gdx.app.log(TAG, "Event finished and time is up, ending stroll.");
             done();
 		} else {
+			Gdx.app.log(TAG, "Event finished and there is time left, returning back to strollscreen");
 			((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 		}
     }
