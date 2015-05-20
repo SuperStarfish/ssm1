@@ -48,6 +48,11 @@ public class Stroll extends GameMechanic {
      * The screen belonging to this stroll.
      */
 	protected Screen cScreen;
+	
+	/**
+	 * The base threshold used for generating events.
+	 */
+	protected static final double BASE_THRESHOLD = 0.002;
 
     /**
      * The timertask to listen to the stroll timer.
@@ -84,7 +89,7 @@ public class Stroll extends GameMechanic {
 		cRewards = 0;
 		cEventGoing = false;
         cFinished = false;
-        cEventThreshold = 0.002;
+        cEventThreshold = BASE_THRESHOLD;
 
 		cScreen = new StrollScreen();
         ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
