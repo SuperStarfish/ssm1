@@ -5,12 +5,10 @@ import cg.group4.StandUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import java.util.HashSet;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
 public class TimeKeeperTest {
@@ -27,7 +25,7 @@ public class TimeKeeperTest {
     public void testInitGlobalTimers(){
         int count = StandUp.getInstance().getTimeKeeper().cTimers.size();
         timeKeeper.init();
-        assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
+        assertEquals(count + Timer.Global.values().length, StandUp.getInstance().getTimeKeeper().cTimers.size());
     }
 
     @Test
@@ -35,6 +33,14 @@ public class TimeKeeperTest {
         int size = timeKeeper.cTimers.size();
         timeKeeper.addTimer(new Timer("Test2", 5));
         assertEquals(size + 1, timeKeeper.cTimers.size());
+    }
+
+    @Test
+    public void testAddDuplicateTimer(){
+        timeKeeper.addTimer(new Timer("Test2", 0));
+        int size = timeKeeper.cTimers.size();
+        timeKeeper.addTimer(new Timer("Test2", 5));
+        assertEquals(size, timeKeeper.cTimers.size());
     }
 
     @Test

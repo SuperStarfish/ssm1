@@ -282,7 +282,7 @@ public class Timer {
         cSubscribe = new HashSet<TimerTask>();
     }
 
-	/**
+    /**
 	 * This enum defines timers that are global. 
 	 * This means that the timers are created on startup and by default are persistent.
 	 */
@@ -296,7 +296,7 @@ public class Timer {
 		 * Length definition of one stroll.
 		 * (5 * 60 seconds = 5 minutes)
 		 */
-		STROLL(5 * 3),
+		STROLL(5 * 60),
 
 
         /**

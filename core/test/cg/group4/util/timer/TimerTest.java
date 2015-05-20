@@ -10,9 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import static org.mockito.Mockito.*;
-
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
 public class TimerTest {
@@ -28,8 +27,43 @@ public class TimerTest {
     @Test
     public void testAddTimerTask() {
         timer.subscribe(timerTask);
+        assertEquals(1, timer.cSubscribe.size());
+        assertEquals(0, timer.cTimerTasks.size());
+        assertEquals(0, timer.cUnsubscribe.size());
+        timer.resolve();
+        assertEquals(0, timer.cSubscribe.size());
         assertEquals(1, timer.cTimerTasks.size());
+        assertEquals(0, timer.cUnsubscribe.size());
     }
+
+    @Test
+    public void testRemoveTimerTask() {
+        timer.subscribe(timerTask);
+        timer.resolve();
+        timer.unsubscribe(timerTask);
+        assertEquals(0, timer.cSubscribe.size());
+        assertEquals(1, timer.cTimerTasks.size());
+        assertEquals(1, timer.cUnsubscribe.size());
+        timer.resolve();
+        assertEquals(0, timer.cSubscribe.size());
+        assertEquals(0, timer.cTimerTasks.size());
+        assertEquals(0, timer.cUnsubscribe.size());
+    }
+
+    @Test
+    public void testDisposeTimerTask() {
+        timer.subscribe(timerTask);
+        timer.resolve();
+        timerTask.dispose();
+        assertEquals(0, timer.cSubscribe.size());
+        assertEquals(1, timer.cTimerTasks.size());
+        assertEquals(1, timer.cUnsubscribe.size());
+        timer.resolve();
+        assertEquals(0, timer.cSubscribe.size());
+        assertEquals(0, timer.cTimerTasks.size());
+        assertEquals(0, timer.cUnsubscribe.size());
+    }
+
 
     @Test
     public void testGetName() {
@@ -56,19 +90,6 @@ public class TimerTest {
         assertFalse(timer.equals(new Timer("WRONG", 5)));
     }
 
-    @Test
-    public void testSubscribeOnRunningTimer() {
-        timer.subscribe(timerTask);
-        verify(timerTask, times(1)).onStart();
-    }
-
-    @Test
-    public void testSubscribeOnTimerTick() {
-        timer.subscribe(timerTask);
-        long timeStamp = System.currentTimeMillis();
-        timer.tick(timeStamp);
-        verify(timerTask, times(1)).onTick((int) (timer.cFinishTime - timeStamp) / 1000);
-    }
 
     @Test
     public void testOnTickWhenFinished(){
@@ -112,13 +133,6 @@ public class TimerTest {
         }
     }
 
-    @Test
-    public void testSubscribeOnNotRunningTimer() {
-        timer.cPreferences = mock(Preferences.class);
-        timer.stop();
-        timer.subscribe(timerTask);
-        verify(timerTask, times(1)).onStop();
-    }
 
     @Ignore
     public void testTimerEnumINTERVAL() {
