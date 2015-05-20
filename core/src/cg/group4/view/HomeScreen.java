@@ -46,7 +46,7 @@ public class HomeScreen extends ScreenLogic {
     public HomeScreen(final WorldRenderer worldRenderer) {
         super(worldRenderer);
         cTable = new Table();
-        cTable.debugAll();
+//        cTable.debugAll();
         cTable.setFillParent(true);
 
         initHomeScreenTitle();
