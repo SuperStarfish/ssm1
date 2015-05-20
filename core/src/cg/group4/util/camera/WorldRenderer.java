@@ -1,7 +1,7 @@
 package cg.group4.util.camera;
 
 import cg.group4.view.ScreenLogic;
-import cg.group4.view.TestScreen2;
+import cg.group4.view.HomeScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
@@ -12,10 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -43,7 +39,7 @@ public class WorldRenderer implements Screen {
         cStage = new Stage();
         Gdx.input.setInputProcessor(cStage);
 
-        cScreen = new TestScreen2(this);
+        cScreen = new HomeScreen(this);
     }
 
     public void setScreen(ScreenLogic screen){

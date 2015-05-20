@@ -13,14 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-public class Skinner extends Skin {
-    protected static Skinner instance;
-    public static Skinner getInstance(){
-        if(instance == null){
-            instance = new Skinner();
-        }
-        return instance;
-    }
+public class GameSkin extends Skin {
     protected FreeTypeFontGenerator fontGenerator;
     protected String DEFAULT_FONT = "fonts/blow.ttf";
     protected int DEFAULT_BORDER_WIDTH = 2;
@@ -29,7 +22,7 @@ public class Skinner extends Skin {
     final float UIScalar;
     float UI_HEIGHT;
 
-    public Skinner(){
+    public GameSkin(){
         UI_HEIGHT = Gdx.graphics.getHeight();
         UIScalar = UI_HEIGHT / DEV_HEIGHT;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));

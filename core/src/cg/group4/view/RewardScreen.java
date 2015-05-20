@@ -45,12 +45,12 @@ public class RewardScreen implements Screen {
         acceptButton.font = cFont;
         cAcceptButton = new TextButton("Accept", acceptButton);
 
-        cAcceptButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
-            }
-        });
+//        cAcceptButton.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(final ChangeEvent event, final Actor actor) {
+//                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+//            }
+//        });
 
         cStage.addActor(cAcceptButton);
     }

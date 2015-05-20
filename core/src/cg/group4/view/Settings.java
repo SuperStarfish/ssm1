@@ -77,13 +77,13 @@ public class Settings implements Screen {
                 StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").stop();
             }
         });
-        cButtonBack.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
-                Gdx.app.debug("Button", "MainMenu");
-            }
-        });
+//        cButtonBack.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(final ChangeEvent event, final Actor actor) {
+//                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+//                Gdx.app.debug("Button", "MainMenu");
+//            }
+//        });
 
         cStage.addActor(cButtonResetInterval);
         cStage.addActor(cButtonResetStroll);

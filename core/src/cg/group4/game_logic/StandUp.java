@@ -1,6 +1,7 @@
 package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
+import cg.group4.util.camera.GameSkin;
 import cg.group4.util.timer.TimeKeeper;
 
 import java.util.HashSet;
@@ -24,6 +25,12 @@ public class StandUp {
      * Singleton of game logic handler.
      */
     protected static final StandUp cInstance = new StandUp();
+
+    /**
+     *  Contains the default skin that is used in the game.
+     */
+    protected GameSkin cGameSkin;
+
 
     /**
      * Stroll logic.
@@ -54,6 +61,7 @@ public class StandUp {
      */
     private StandUp() {
         cTimeKeeper = new TimeKeeper();
+        cGameSkin = new GameSkin();
         cGameMechanics = new HashSet<GameMechanic>();
         cSubscribersGameMechanics = new HashSet<GameMechanic>();
         cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
@@ -102,6 +110,14 @@ public class StandUp {
      */
     public TimeKeeper getTimeKeeper() {
         return cTimeKeeper;
+    }
+
+    /**
+     * Getter for the default game skin.
+     * @return cGameSkin.
+     */
+    public GameSkin getGameSkin(){
+        return cGameSkin;
     }
 
     /**

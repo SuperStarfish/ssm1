@@ -2,10 +2,6 @@ package cg.group4;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.camera.WorldRenderer;
-import cg.group4.util.timer.TimeKeeper;
-import cg.group4.view.MainMenu;
-import cg.group4.view.TestScreen;
-import cg.group4.view.TestScreen2;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

@@ -102,12 +102,12 @@ public class StrollScreen implements Screen {
         TextButtonStyle backButtonStyle = new TextButtonStyle();
         backButtonStyle.font = cFont;
         cBackButton = new TextButton("Back", backButtonStyle);
-        cBackButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
-            }
-        });
+//        cBackButton.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(final ChangeEvent event, final Actor actor) {
+//                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+//            }
+//        });
 
         cStage.addActor(cBackButton);
 	}
