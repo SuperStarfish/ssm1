@@ -49,7 +49,7 @@ public class TestStrollEvent extends StrollEvent {
 	
 	protected final Sound cCompletedTaskSound;
 	protected Timer cDelayTimer;
-	protected boolean delayAllowed;
+	protected boolean cDelayed;
 	
 	/**
 	 * Constructor for the test event.
@@ -61,7 +61,7 @@ public class TestStrollEvent extends StrollEvent {
 		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 		tasksCompleted = 0;
 		prevOperationNr = 0;
-		delayAllowed = false;
+		cDelayed = false;
 		
 		TimerTask delayTask = new TimerTask() {
 			@Override
@@ -70,17 +70,16 @@ public class TestStrollEvent extends StrollEvent {
 
 		    @Override
 		    public void onStart(int seconds) {
+		    	cDelayed = true;
 		    }
 
 		    @Override
 		    public void onStop() {
-		    	if(delayAllowed) {
-		    		doTask();
-		    	}
+		    	doTask();
 		    }
 		};
 		
-		cDelayTimer = new Timer("DELAYEVENT", 2);
+		cDelayTimer = new Timer("DELAYEVENT", 1);
 		cDelayTimer.subscribe(delayTask);
 		
 		base = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
@@ -89,8 +88,8 @@ public class TestStrollEvent extends StrollEvent {
 	}
 	
 	public final void doTask() {
-		System.out.println("DOTASK!");
-		delayAllowed = false;
+		//System.out.println("DOTASK!");
+		cDelayed = false;
 		operationNr = (int) Math.floor(Math.random() * 6 + 1);
 		if (operationNr == prevOperationNr) {
 			operationNr++;
@@ -123,10 +122,9 @@ public class TestStrollEvent extends StrollEvent {
 		this.tasksCompleted++;
 		cCompletedTaskSound.play(1.0f);
 		if (this.tasksCompleted < this.maxTasks) {
+			cDelayTimer.reset();
 			prevOperationNr = operationNr;
 			cLabel.setText("Nice!");
-			delayAllowed = true;
-			cDelayTimer.reset();
 		} else {
 			cLabel.setText("You completed the event! Good job!");
 			dispose();
@@ -216,6 +214,8 @@ public class TestStrollEvent extends StrollEvent {
         base.x = accelX;
         base.y = accelY;
         base.z = accelZ;
-        processInput(current);
+        if(!cDelayed) {
+        	processInput(current);
+        }
     }
 }
