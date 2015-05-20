@@ -1,7 +1,9 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.stroll.events.TestStrollEvent;
 import cg.group4.view.MainMenu;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -34,7 +36,8 @@ public class Launcher extends Game {
 		cStandUp = StandUp.getInstance();
         cStandUp.init();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		setScreen(new MainMenu());
+		//setScreen(new MainMenu());
+		new TestStrollEvent();
 	}
 
 	/**

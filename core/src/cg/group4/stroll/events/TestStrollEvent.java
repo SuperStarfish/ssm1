@@ -1,11 +1,16 @@
 package cg.group4.stroll.events;
 
+import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 /**
@@ -42,6 +47,10 @@ public class TestStrollEvent extends StrollEvent {
 	 */
 	protected final int maxTasks = 10;
 	
+	protected final Sound cCompletedTaskSound;
+	protected Timer cDelayTimer;
+	protected boolean delayAllowed;
+	
 	/**
 	 * Constructor for the test event.
 	 */
@@ -49,14 +58,39 @@ public class TestStrollEvent extends StrollEvent {
 		super();
 		cScreen = new EventScreen();
 		cLabel = cScreen.getLabel();
+		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 		tasksCompleted = 0;
 		prevOperationNr = 0;
+		delayAllowed = false;
+		
+		TimerTask delayTask = new TimerTask() {
+			@Override
+		    public void onTick(int seconds) {
+			}
+
+		    @Override
+		    public void onStart(int seconds) {
+		    }
+
+		    @Override
+		    public void onStop() {
+		    	if(delayAllowed) {
+		    		doTask();
+		    	}
+		    }
+		};
+		
+		cDelayTimer = new Timer("DELAYEVENT", 2);
+		cDelayTimer.subscribe(delayTask);
+		
 		base = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
 		((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 		doTask();
 	}
 	
 	public final void doTask() {
+		System.out.println("DOTASK!");
+		delayAllowed = false;
 		operationNr = (int) Math.floor(Math.random() * 6 + 1);
 		if (operationNr == prevOperationNr) {
 			operationNr++;
@@ -86,11 +120,13 @@ public class TestStrollEvent extends StrollEvent {
 	}
 	
 	public final void taskCompleted() {
-		//System.out.println("TASK COMPLETEDDDDDDDDDDDDDdd");
 		this.tasksCompleted++;
+		cCompletedTaskSound.play(1.0f);
 		if (this.tasksCompleted < this.maxTasks) {
 			prevOperationNr = operationNr;
-			doTask();
+			cLabel.setText("Nice!");
+			delayAllowed = true;
+			cDelayTimer.reset();
 		} else {
 			cLabel.setText("You completed the event! Good job!");
 			dispose();
@@ -99,7 +135,7 @@ public class TestStrollEvent extends StrollEvent {
 	
 	public final void processInput(final Vector3 accelData) {
 		//System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
-		final float delta = 2.5f;
+		final float delta = 2.0f;
 		switch(operationNr) {
 			case 1:
 				if (accelData.x <= -delta) {
