@@ -76,7 +76,7 @@ public class TestStrollEvent extends StrollEvent {
 	 * Constants used for each task case.
 	 */
 	protected static final int MOVE_LEFT = 1, MOVE_RIGHT = 2, MOVE_DOWN = 3, MOVE_UP = 4,
-			MOVE_AWAY = 5, MOVE_TOWARDS = 6;
+			MOVE_AWAY = 5, MOVE_TOWARDS = 0;
 	
 	/**
 	 * Constructor for the test event.
@@ -148,6 +148,7 @@ public class TestStrollEvent extends StrollEvent {
 				cLabel.setText("Move your phone towards you!");
 				break;
 			default:
+				cLabel.setText("Unknown Operation Number: " + operationNr);
 				break;
 		}
 	}
@@ -228,6 +229,7 @@ public class TestStrollEvent extends StrollEvent {
 					}
 					break;
 				default:
+					cLabel.setText("Unknown Operation Number: " + operationNr);
 					break;
 			}
 		}
