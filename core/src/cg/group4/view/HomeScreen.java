@@ -100,7 +100,8 @@ public class HomeScreen extends ScreenLogic {
         cStrollButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                worldRenderer.setScreen(new TestScreen(worldRenderer));
+                //worldRenderer.setScreen(new StrollScreen(worldRenderer));
+                StandUp.getInstance().startStroll();
             }
         });
         cTable.row().expandY();

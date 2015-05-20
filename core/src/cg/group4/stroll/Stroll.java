@@ -4,8 +4,10 @@ import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
+import cg.group4.util.camera.WorldRenderer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.RewardScreen;
+import cg.group4.view.ScreenLogic;
 import cg.group4.view.StrollScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -45,9 +47,14 @@ public class Stroll extends GameMechanic {
     protected Boolean cFinished;
 
     /**
+     * Pointer to the worldRenderer.
+     */
+    protected WorldRenderer cWorldRenderer;
+
+    /**
      * The screen belonging to this stroll.
      */
-	protected Screen cScreen;
+	protected ScreenLogic cScreen;
 	
 	/**
 	 * The base threshold used for generating events.
@@ -91,8 +98,11 @@ public class Stroll extends GameMechanic {
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
 
-		cScreen = new StrollScreen();
-        ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+        cWorldRenderer = StandUp.getInstance().getWorldRenderer();
+        cScreen = new StrollScreen(cWorldRenderer);
+        cWorldRenderer.setScreen(cScreen);
+//		cScreen = new StrollScreen(StandUp.getInstance());
+//        ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 
         StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
@@ -113,7 +123,7 @@ public class Stroll extends GameMechanic {
      */
     public final void resume() {
         Gdx.app.log(TAG, "Resumed stroll");
-        ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+        cWorldRenderer.setScreen(cScreen);
     }
 
     /**
@@ -124,7 +134,8 @@ public class Stroll extends GameMechanic {
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
-            ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
+            cWorldRenderer.setScreen(cEvent.getScreen());
+//            ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
         }
 	}
 
@@ -144,7 +155,7 @@ public class Stroll extends GameMechanic {
             done();
 		} else {
 			Gdx.app.log(TAG, "Event finished and there is time left, returning back to strollscreen");
-			((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+            cWorldRenderer.setScreen(cScreen);
 		}
     }
 

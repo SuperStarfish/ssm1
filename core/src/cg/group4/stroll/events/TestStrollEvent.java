@@ -1,11 +1,12 @@
 package cg.group4.stroll.events;
 
+import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;
 
+import cg.group4.view.ScreenLogic;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -19,7 +20,7 @@ public class TestStrollEvent extends StrollEvent {
 	/**
 	 * The screen where the event is displayed.
 	 */
-	protected EventScreen cScreen;
+	protected ScreenLogic cScreen;
 	
 	/**
 	 * The label where the event instructions are displayed.
@@ -90,8 +91,8 @@ public class TestStrollEvent extends StrollEvent {
 	 */
 	public TestStrollEvent() {
 		super();
-		cScreen = new EventScreen();
-		cLabel = cScreen.getLabel();
+		cScreen = new EventScreen(StandUp.getInstance().getWorldRenderer());
+		cLabel = ((EventScreen)cScreen).getLabel();
 		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 		tasksCompleted = 0;
 		prevOperationNr = 0;
@@ -283,7 +284,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final Screen getScreen() {
+    public final ScreenLogic getScreen() {
         return cScreen;
     }
 

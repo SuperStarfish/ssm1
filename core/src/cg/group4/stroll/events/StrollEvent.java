@@ -4,6 +4,7 @@ import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
+import cg.group4.view.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
@@ -53,7 +54,7 @@ public abstract class StrollEvent extends GameMechanic {
      * Returns the screen to be displayed.
      * @return the screen
      */
-    public abstract Screen getScreen();
+    public abstract ScreenLogic getScreen();
 	
 	/**
 	 * Method that gets called to dispose of the event.

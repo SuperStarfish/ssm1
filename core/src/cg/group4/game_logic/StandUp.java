@@ -2,6 +2,7 @@ package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
 import cg.group4.util.camera.GameSkin;
+import cg.group4.util.camera.WorldRenderer;
 import cg.group4.util.timer.TimeKeeper;
 
 import java.util.HashSet;
@@ -33,6 +34,10 @@ public class StandUp {
      */
     protected GameSkin cGameSkin;
 
+    /**
+     * Draws the screen and makes everything look nice.
+     */
+    protected WorldRenderer cWorldRenderer;
 
     /**
      * Stroll logic.
@@ -63,7 +68,6 @@ public class StandUp {
      */
     private StandUp() {
         cTimeKeeper = new TimeKeeper();
-        cGameSkin = new GameSkin();
         cGameMechanics = new HashSet<GameMechanic>();
         cSubscribersGameMechanics = new HashSet<GameMechanic>();
         cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
@@ -76,6 +80,8 @@ public class StandUp {
      */
     public void init() {
         cTimeKeeper.init();
+        cGameSkin = new GameSkin();
+        cWorldRenderer = new WorldRenderer();
     }
 
     /**
@@ -154,5 +160,9 @@ public class StandUp {
 
     public void unSubscribe(final GameMechanic gameMechanic) {
         cUnsubscribersGameMechanics.add(gameMechanic);
+    }
+
+    public WorldRenderer getWorldRenderer() {
+        return cWorldRenderer;
     }
 }
