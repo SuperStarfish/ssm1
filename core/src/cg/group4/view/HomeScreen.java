@@ -62,7 +62,7 @@ public class HomeScreen extends ScreenLogic {
      * Initializes the title on the home screen.
      */
     public final void initHomeScreenTitle() {
-        title = new Label("Super StartFish Mania",
+        title = new Label("Super StarFish Mania",
                 StandUp.getInstance().getGameSkin().get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
         cTable.add(title);

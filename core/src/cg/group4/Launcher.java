@@ -2,8 +2,6 @@ package cg.group4;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.camera.WorldRenderer;
-import cg.group4.stroll.events.TestStrollEvent;
-import cg.group4.view.MainMenu;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
