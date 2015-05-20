@@ -170,7 +170,7 @@ public class Stroll extends GameMechanic {
 		Gdx.app.log(TAG, "Stroll has ended.");
 		cScreen.dispose();
         cTimerTask.dispose();
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new RewardScreen(cRewards));
+        cWorldRenderer.setScreen(new RewardScreen(cWorldRenderer));
         StandUp.getInstance().endStroll(cRewards);
 	}
 }

@@ -90,6 +90,7 @@ public class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 StandUp.getInstance().getTimeKeeper().getTimer(Timer.Global.STROLL.name()).reset();
+                //cWorldRenderer.setScreen(new RewardScreen(cWorldRenderer));
             }
         };
     }
