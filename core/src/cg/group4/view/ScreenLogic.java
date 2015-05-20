@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class ScreenLogic {
     protected WorldRenderer cParent;
     protected SpriteBatch cBatch;
-    protected Actor cActor;
 
     public ScreenLogic(WorldRenderer worldRenderer){
         cParent = worldRenderer;

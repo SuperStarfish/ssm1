@@ -15,13 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class WorldRenderer implements Screen {
     SpriteBatch cBatch;
     Sprite cBackgroundSprite;
-    Container cContainer;
     Stage cStage;
 
     ScreenLogic cScreen;
@@ -43,20 +43,11 @@ public class WorldRenderer implements Screen {
         cStage = new Stage();
         Gdx.input.setInputProcessor(cStage);
 
-        createContainer();
-
         cScreen = new TestScreen2(this);
     }
 
     public void setScreen(ScreenLogic screen){
         cScreen = screen;
-    }
-
-    protected void createContainer(){
-        cContainer = new Container();
-        cContainer.setFillParent(true);
-        cContainer.debugAll();
-        cStage.addActor(cContainer);
     }
 
     public void setBackground(String fileName){
@@ -73,8 +64,8 @@ public class WorldRenderer implements Screen {
     }
 
     public void setActor(Actor actor){
-        cContainer.clearChildren();
-        cContainer.setActor(actor);
+        cStage.clear();
+        cStage.addActor(actor);
     }
 
     @Override

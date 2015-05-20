@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -26,14 +27,17 @@ public class TestScreen2 extends ScreenLogic{
 
     public TestScreen2(final WorldRenderer worldRenderer){
         super(worldRenderer);
-        cActor = Skinner.getInstance().generateDefaultMenuButton("Screen 1");
-        cActor.addListener(new ChangeListener() {
+        Container container = new Container();
+        container.setFillParent(true);
+        TextButton button = Skinner.getInstance().generateDefaultMenuButton("Screen 1");
+        button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 worldRenderer.setScreen(new TestScreen(worldRenderer));
             }
         });
-        worldRenderer.setActor(cActor);
+        container.setActor(button);
+        worldRenderer.setActor(container);
     }
 
 }

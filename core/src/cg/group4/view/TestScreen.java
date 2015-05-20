@@ -24,14 +24,40 @@ public class TestScreen extends ScreenLogic{
 
     public TestScreen(final WorldRenderer worldRenderer){
         super(worldRenderer);
-        cActor = Skinner.getInstance().generateDefaultMenuButton("Go Back");
-        cActor.addListener(new ChangeListener() {
+        Table table = new Table();
+        table.setFillParent(true);
+        table.row().expandY();
+        TextButton button1 = Skinner.getInstance().generateDefaultMenuButton("Button1");
+        button1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.debug("TAG", "TEST");
             }
         });
-        worldRenderer.setActor(cActor);
+        table.add(button1);
+
+        table.row().expandY();
+        TextButton button2 = Skinner.getInstance().generateDefaultMenuButton("Button2");
+        button2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.debug("TAG", "TEST");
+            }
+        });
+        table.add(button2);
+
+        table.row().expandY();
+        TextButton button3 = Skinner.getInstance().generateDefaultMenuButton("Go Back");
+        button3.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                worldRenderer.setScreen(new TestScreen2(worldRenderer));
+            }
+        });
+        table.add(button3);
+
+        table.debugAll();
+        worldRenderer.setActor(table);
     }
 
 }
