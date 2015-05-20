@@ -1,82 +1,63 @@
 package cg.group4.util.timer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashSet;
-
+import cg.group4.GdxTestRunner;
+import cg.group4.game_logic.StandUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cg.group4.GdxTestRunner;
+import java.util.HashSet;
 
-/**
- * Test class for the TimeKeeper.
- * 
- * @author CG/Group 4
- */
+import static org.junit.Assert.*;
+
 @RunWith(GdxTestRunner.class)
 public class TimeKeeperTest {
-	/**
-	 * Creates a timeKeeper object for every test.
-	 */
-	private final TimeKeeper timeKeeper = TimeKeeper.getInstance();
+    TimeKeeper timeKeeper = StandUp.getInstance().getTimeKeeper();
+    Timer timer;
 
-	/**
-	 * 
-	 */
-	private Timer timer;
+    @Before
+    public void setUp(){
+        timeKeeper.cTimers = new HashSet<Timer>();
+        timer = new Timer("TEST", 60);
+    }
 
-	/**
-	 * Initializes the set of timers contained by the TimeKeeper.
-	 * Creates a timer to use for testing.
-	 */
-	@Before
-	public final void setUp() {
-		final int timerTime = 60;
-		timeKeeper.cTimers = new HashSet<Timer>();
-		timer = new Timer("TEST", timerTime);
-	}
+    @Test
+    public void testInitGlobalTimers(){
+        int count = StandUp.getInstance().getTimeKeeper().cTimers.size();
+        timeKeeper.init();
+        assertEquals(count + Timer.Global.values().length, StandUp.getInstance().getTimeKeeper().cTimers.size());
+    }
 
-	/**
-	 * Tests whether after initialization of the global timer, the amount of timers is correct.
-	 * The correct amount, is the predefined amount plus one for each global timer initialization.
-	 */
-	@Test
-	public final void testInitGlobalTimers() {
-		int count = TimeKeeper.getInstance().cTimers.size();
-		timeKeeper.init();
-		assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
-	}
+    @Test
+    public void testAddTimer(){
+        int size = timeKeeper.cTimers.size();
+        timeKeeper.addTimer(new Timer("Test2", 5));
+        assertEquals(size + 1, timeKeeper.cTimers.size());
+    }
 
-	/**
-	 * Tests whether an addition of a timer occurs correctly.
-	 */
-	@Test
-	public final void testAddTimer() {
-		final int timerTime = 5;
-		int size = timeKeeper.cTimers.size();
-		timeKeeper.addTimer(new Timer("Test2", timerTime));
-		assertEquals(size + 1, timeKeeper.cTimers.size());
-	}
+    @Test
+     public void testAddDuplicateTimer(){
+        timeKeeper.addTimer(new Timer("Test2", 0));
+        int size = timeKeeper.cTimers.size();
+        timeKeeper.addTimer(new Timer("Test2", 5));
+        assertEquals(size, timeKeeper.cTimers.size());
+    }
 
-	/**
-	 * Tests the getter of the TimeKeeper getTimer method on a existing Timer.
-	 */
-	@Test
-	public final void testGetTimer() {
-		timeKeeper.addTimer(timer);
-		assertTrue(timer.equals(timeKeeper.getTimer(timer.cName)));
-	}
+    @Test
+    public void testGetTimer(){
+        timeKeeper.addTimer(timer);
+        assertTrue(timer.equals(timeKeeper.getTimer(timer.cName)));
+    }
 
-	/**
-	 * Tests the getter of the TimeKeeper getTimer method on a non existent Timer.
-	 */
-	@Test
-	public final void testGetTimerNull() {
-		timeKeeper.addTimer(timer);
-		assertNull(timeKeeper.getTimer("TAD"));
-	}
+    @Test
+    public void testGetTimerNull(){
+        timeKeeper.addTimer(timer);
+        assertNull(timeKeeper.getTimer("TAD"));
+    }
+
+    @Test
+    public void testNotifyStop(){
+        timeKeeper.addTimer(timer);
+        assertNull(timeKeeper.getTimer("TAD"));
+    }
 }

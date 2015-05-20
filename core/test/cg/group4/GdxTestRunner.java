@@ -19,28 +19,16 @@ import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
  * forums.
  * Without a proper running instance of the LibGDX application a lot of things cannot be tested.
  * The file is slightly modified for our purposes.
- * 
+ *
  * @author <a href="https://bitbucket.org/TomGrill>TomGrill</a>
  * @author <a href="http://badlogicgames.com/forum/viewtopic.php?f=17&t=1485">__nocach</a>
  * @see <a href="https://bitbucket.org/TomGrill/libgdx-testing-sample">GdxTestRunner lib</a>
  */
-public class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener {
+public class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener{
 
-	/**
-	 * Map to store notifications, which are used to notify JUnit of the progress of the running tests.
-	 */
-	private final Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<FrameworkMethod, RunNotifier>();
+	private Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<FrameworkMethod, RunNotifier>();
 
-	/**
-	 * Called class for used with the RunWith annotation.
-	 * Creates a headless application for use with JUnit tests.
-	 * 
-	 * @param klass Class to use with the test runner.
-	 * @throws InitializationError For reporting failures.
-	 */
-	//checkstyle.off: Solving CheckStyle issue Class<?> to Class< ? > introduces a new CheckStyle issue.
-	public GdxTestRunner(final Class<?> klass) throws InitializationError {
-		//checkstyle.on: Solving issue introduces issue.
+	public GdxTestRunner(Class<?> klass) throws InitializationError {
 		super(klass);
 		HeadlessApplicationConfiguration conf = new HeadlessApplicationConfiguration();
 
@@ -56,17 +44,19 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
 	}
 
 	@Override
-	public final void render() {
+	public void render() {
 		synchronized (invokeInRender) {
-			for (Map.Entry<FrameworkMethod, RunNotifier> each : invokeInRender.entrySet()) {
+			for(Map.Entry<FrameworkMethod, RunNotifier> each : invokeInRender.entrySet()){
 				super.runChild(each.getKey(), each.getValue());
 			}
 			invokeInRender.clear();
 		}
 	}
 
+
+
 	@Override
-	public void resize(final int width, final int height) {
+	public void resize(int width, int height) {
 	}
 
 	@Override
@@ -78,7 +68,7 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
 	}
 
 	@Override
-	protected final void runChild(final FrameworkMethod method, final RunNotifier notifier) {
+	protected void runChild(FrameworkMethod method, RunNotifier notifier) {
 		synchronized (invokeInRender) {
 			//add for invoking in render phase, where gl context is available
 			invokeInRender.put(method, notifier);
@@ -92,13 +82,10 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
 	 */
 	private void waitUntilInvokedInRenderMethod() {
 		try {
-			while (true) {
-				final int waitTime = 10;
-				Thread.sleep(waitTime);
+			while (true){
+				Thread.sleep(10);
 				synchronized (invokeInRender) {
-					if (invokeInRender.isEmpty()) {
-						break;
-					}
+					if (invokeInRender.isEmpty()) break;
 				}
 			}
 		} catch (InterruptedException e) {

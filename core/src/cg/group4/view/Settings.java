@@ -1,6 +1,6 @@
 package cg.group4.view;
 
-import cg.group4.util.timer.TimeKeeper;
+import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * Screen where users can set their settings.
- * @author Ben
+ * @author Benjamin Los
+ * @author Martijn Gribnau
  */
 public class Settings implements Screen {
 	
@@ -31,43 +32,49 @@ public class Settings implements Screen {
 	 * Development button to reset the stroll timer.
 	 */
 	protected TextButton cButtonResetStroll;
+
+    /**
+     * Development button to set the stroll timer to zero.
+     */
+    protected TextButton cButtonStopInterval;
 	
 	/**
 	 * Button to go back to the main menu.
 	 */
     protected TextButton cButtonBack;
 
-	@Override
-	public final void show() {
-		cStage = new Stage();
-		
-		Gdx.input.setInputProcessor(cStage);
+	protected final int cOffset = 10;
+	protected int cScreenWidth, cScreenHeight;
 
-		TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-		style.font = new BitmapFont();
+    public Settings() {
+        super();
 
-		cButtonResetInterval = new TextButton("Reset interval", style);
-		cButtonResetStroll = new TextButton("Reset stroll", style);
+        cStage = new Stage();
+
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.font = new BitmapFont();
+
+        cButtonResetInterval = new TextButton("Reset interval", style);
+        cButtonResetStroll = new TextButton("Reset stroll", style);
+        cButtonStopInterval = new TextButton("Stop interval", style);
         cButtonBack = new TextButton("Back", style);
 
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
-
-		final int offset = 10;
-		cButtonResetInterval.setPosition(width / 2f - cButtonResetInterval.getWidth() / 2f, height / 2f + offset);
-		cButtonResetStroll.setPosition(width / 2f - cButtonResetStroll.getWidth() / 2f, height / 2f - offset);
-        cButtonBack.setPosition(width / 2f - cButtonBack.getWidth() / 2f, 2 * offset);
-
-		cButtonResetInterval.addListener(new ChangeListener() {
+        cButtonResetInterval.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer("INTERVAL").reset();
+                StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").reset();
             }
         });
-		cButtonResetStroll.addListener(new ChangeListener() {
+        cButtonResetStroll.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer("STROLL").reset();
+                StandUp.getInstance().getTimeKeeper().getTimer("STROLL").reset();
+            }
+        });
+        cButtonStopInterval.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                StandUp.getInstance().getTimeKeeper().getTimer("INTERVAL").stop();
             }
         });
         cButtonBack.addListener(new ChangeListener() {
@@ -78,9 +85,16 @@ public class Settings implements Screen {
             }
         });
 
-		cStage.addActor(cButtonResetInterval);
-		cStage.addActor(cButtonResetStroll);
-        cStage.addActor(cButtonBack);	}
+        cStage.addActor(cButtonResetInterval);
+        cStage.addActor(cButtonResetStroll);
+        cStage.addActor(cButtonStopInterval);
+        cStage.addActor(cButtonBack);
+    }
+
+	@Override
+	public final void show() {
+		Gdx.input.setInputProcessor(cStage);
+    }
 
 	@Override
 	public final void render(float delta) {
@@ -99,6 +113,12 @@ public class Settings implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+        cScreenWidth = width;
+        cScreenHeight = height;
+		cButtonResetInterval.setPosition(width / 2f - cButtonResetInterval.getWidth() / 2f, height / 2f + cOffset);
+		cButtonResetStroll.setPosition(width / 2f - cButtonResetStroll.getWidth() / 2f, height / 2f - cOffset);
+        cButtonStopInterval.setPosition(width / 2f - cButtonStopInterval.getWidth() / 2f, height / 2f - 3*cOffset);
+        cButtonBack.setPosition(cScreenWidth / 2f - cButtonBack.getWidth() / 2f, 2 * cOffset);
 	}
 
 	@Override

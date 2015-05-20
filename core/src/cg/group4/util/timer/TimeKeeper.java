@@ -1,14 +1,15 @@
 package cg.group4.util.timer;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import com.badlogic.gdx.Gdx;
 
 /**
  * Singleton TimeKeeper which keeps track of every individual timer.
  * @author Jurgen van Schagen
  * @author Benjamin Los
+ * @author Martijn Gribnau
  */
 public final class TimeKeeper {
 
@@ -16,14 +17,6 @@ public final class TimeKeeper {
 	 * Tag used for debugging.
 	 */
 	public static final String TAG = TimeKeeper.class.getSimpleName();
-
-	/**
-	 * Creates a single instance of the TimeKeeper.
-	 * This is a singleton, because of the fact
-	 * that we want all timers to be tracked by one 'person'.
-	 */
-	protected static final TimeKeeper INSTANCE = new TimeKeeper();
-
 
 	/**
 	 * Set of all the timers.
@@ -44,18 +37,10 @@ public final class TimeKeeper {
 	/**
 	 * Keeps track of the timers and updates them every second.
 	 */
-	private TimeKeeper() {
+	public TimeKeeper() {
 		cTimers = new HashSet<Timer>();
 		cPreviousTick = System.currentTimeMillis();
 		Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
-	}
-
-	/**
-	 * Method that returns the singleton timekeeper.
-	 * @return Singleton TimeKeeper
-	 */
-	public static TimeKeeper getInstance() {
-		return INSTANCE;
 	}
 
 	/**
@@ -70,12 +55,15 @@ public final class TimeKeeper {
 	/**
 	 * Looks whether a second has past since the last update.
 	 * If so it will update the timers.
+	 * Afterwards it will call resolve to resolve any conflicts.
 	 */
 	public void update() {
 		long timeStamp = System.currentTimeMillis();
 
+
 		if (timeStamp - cPreviousTick > cMillisInSecond) {
 			for (Timer timer : cTimers) {
+				timer.resolve();
 				timer.tick(timeStamp);
 			}
 			cPreviousTick += cMillisInSecond;

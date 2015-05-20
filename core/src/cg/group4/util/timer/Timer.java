@@ -1,10 +1,11 @@
 package cg.group4.util.timer;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of the Timer class. Contains a list of subscribers.
@@ -31,10 +32,20 @@ public class Timer {
 	 */
 	protected String cName;                // required
 
+    /**
+     * Set of TimerTasks to be subscriber from this timer.
+     */
+    protected Set<TimerTask> cSubscribe;  // always created
+
 	/**
-	 * Set of TimerTasks.
+	 * Set of TimerTasks that are subscribed to this timer.
 	 */
 	protected Set<TimerTask> cTimerTasks;  // always created
+
+    /**
+     * Set of TimerTasks to be unsubscriber from this timer.
+     */
+    protected Set<TimerTask> cUnsubscribe;  // always created
 
 	/**
 	 * Duration of the timer (in seconds).
@@ -60,6 +71,11 @@ public class Timer {
 	 * State of the timer.
 	 */
 	protected boolean cRunning;            // implicit - depends on state
+
+    /**
+     * Time remaining to end of timer.
+     */
+    protected int cRemainingTime;
 
 
 	/**
@@ -93,11 +109,14 @@ public class Timer {
 	protected final void init(final String name, final int duration, final boolean persistent) {
 		cName = name;
 		cDuration = duration;
+        cRemainingTime = duration;
+        cSubscribe = new HashSet<TimerTask>();
 		cTimerTasks = new HashSet<TimerTask>();
+        cUnsubscribe = new HashSet<TimerTask>();
 		cPersistent = persistent;
 		cPreferences = Gdx.app.getPreferences("TIMER");
 		setFinishTime();
-		TimeKeeper.getInstance().addTimer(this);
+		StandUp.getInstance().getTimeKeeper().addTimer(this);
 	}
 
 	/**
@@ -130,13 +149,15 @@ public class Timer {
 	 *
 	 * @param timeStamp The current time.
 	 */
-	protected final void tick(final long timeStamp) {
+	protected void tick(final long timeStamp) {
 		if (cRunning) {
 			if (timeStamp > cFinishTime) {
 				cRunning = false;
+                cRemainingTime = 0;
 				notifyStop();
 			} else {
-				notifyTick((int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC);
+                cRemainingTime = (int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC;
+				notifyTick(cRemainingTime);
 			}
 		}
 	}
@@ -148,7 +169,9 @@ public class Timer {
 	 */
 	protected final void notifyTick(final int remainingTime) {
 		for (TimerTask task : cTimerTasks) {
-			task.onTick(remainingTime);
+            if(task.isActive()) {
+                task.onTick(remainingTime);
+            }
 		}
 	}
 
@@ -156,9 +179,12 @@ public class Timer {
 	 * Notifies the listeners that a Stop event occurred.
 	 */
 	protected final void notifyStop() {
-		for (TimerTask task : cTimerTasks) {
-			task.onStop();
+		for(TimerTask task : cTimerTasks) {
+            if(task.isActive()){
+                task.onStop();
+            }
 		}
+
 	}
 
 	/**
@@ -166,7 +192,9 @@ public class Timer {
 	 */
 	protected final void notifyStart() {
 		for (TimerTask task : cTimerTasks) {
-			task.onStart();
+            if(task.isActive()) {
+                task.onStart(cDuration);
+            }
 		}
 	}
 
@@ -174,10 +202,12 @@ public class Timer {
 	 * Stops the current timer.
 	 */
 	public final void stop() {
-		cPreferences.putLong(cName, System.currentTimeMillis());
-		cPreferences.flush();
-		cRunning = false;
-		notifyStop();
+		if(cRunning) {
+			cPreferences.putLong(cName, System.currentTimeMillis());
+			cPreferences.flush();
+			cRunning = false;
+			notifyStop();
+		}
 	}
 
 	/**
@@ -203,6 +233,17 @@ public class Timer {
 		}
 	}
 
+    /**
+     * @return Returns whether the timer is running or not.
+     */
+    public final Boolean isRunning() {
+        return cRunning;
+    }
+
+    public final int getRemainingTime() {
+        return cRemainingTime;
+    }
+
 	@Override
 	public final boolean equals(final Object obj) {
 		return !(obj == null || !(obj instanceof Timer)) && cName.equals(((Timer) obj).getName());
@@ -214,20 +255,34 @@ public class Timer {
 	}
 
 	/**
-	 * Method that adds a TimerTask to the current timer.
-	 * @param task 	Which task should be added to
+	 * Method that adds a TimerTask to the current subscribers.
+	 * @param task 	Which task should be added
 	 */
 	public final void subscribe(final TimerTask task) {
-		cTimerTasks.add(task);
+		cSubscribe.add(task);
 		task.setTimer(this);
-		if (cRunning) {
-			notifyStart();
-		} else {
-			notifyStop();
-		}
+        if(cRunning) {
+            task.onTick(cRemainingTime);
+        }
 	}
 
-	/**
+    /**
+     * Method that removes a TimerTask from the current subscribers.
+     * @param task 	Which task should be removed
+     */
+    public final void unsubscribe(final TimerTask task) {
+        cUnsubscribe.add(task);
+        task.setTimer(null);
+    }
+
+    public final void resolve() {
+        cTimerTasks.removeAll(cUnsubscribe);
+        cUnsubscribe.clear();
+        cTimerTasks.addAll(cSubscribe);
+        cSubscribe.clear();
+    }
+
+    /**
 	 * This enum defines timers that are global. 
 	 * This means that the timers are created on startup and by default are persistent.
 	 */
@@ -235,13 +290,19 @@ public class Timer {
 		/**
 		 * Length definition of one interval.
 		 */
-		INTERVAL(6 * 6), 
+		INTERVAL(60 * 60),
 
 		/**
 		 * Length definition of one stroll.
 		 * (5 * 60 seconds = 5 minutes)
 		 */
-		STROLL(5 * 60);
+		STROLL(5 * 60),
+
+
+        /**
+         * Max length of an event is 1 min (60 seconds).
+         */
+        EVENT(60);
 
 		/**
 		 * Duration of the global timer.
