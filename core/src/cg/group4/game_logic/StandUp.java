@@ -7,6 +7,8 @@ import cg.group4.util.timer.TimeKeeper;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
+
 /**
  * Class which handles the game logic.
  *
@@ -72,18 +74,20 @@ public class StandUp {
      * This is kept from the constructor of the StandUp, because at construction time of StandUp,
      * the TimeKeeper is not yet constructed.
      */
-    public void init(){
+    public void init() {
         cTimeKeeper.init();
     }
 
     /**
      * Starts a new stroll.
      */
-    public void startStroll(){
+    public void startStroll() {
         if (cStroll == null) {
+        	Gdx.app.log(TAG, "Starting up stroll, created new one.");
             cTimeKeeper.getTimer("INTERVAL").reset();
             cStroll = new Stroll();
         } else {
+        	Gdx.app.log(TAG, "Starting up stroll, found old one so resuming.");
             cStroll.resume();
         }
     }
@@ -92,7 +96,8 @@ public class StandUp {
      * Ends the current stroll.
      * @param cRewards rewards gained by the stroll.
      */
-    public void endStroll(int cRewards) {
+    public void endStroll(final int cRewards) {
+    	Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
     }
 

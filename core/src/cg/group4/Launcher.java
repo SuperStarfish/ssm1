@@ -2,6 +2,9 @@ package cg.group4;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.camera.WorldRenderer;
+import cg.group4.stroll.events.TestStrollEvent;
+import cg.group4.view.MainMenu;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -62,11 +65,6 @@ public class Launcher extends Game {
 		super.render();
 		StandUp.getInstance().updateGameMechanics();
 		cStandUp.getTimeKeeper().update();
-	}
-
-	@Override
-	public final void resize(int width, int height){
-        super.resize(width, height);
 	}
 
 }
