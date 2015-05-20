@@ -13,14 +13,18 @@ import com.badlogic.gdx.Screen;
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
-public abstract class StrollEvent extends GameMechanic{
+public abstract class StrollEvent extends GameMechanic {
+	
+	/**
+	 * Timer to constrain the amount of time spent on an event.
+	 */
     protected final TimerTask cTimerTask = new TimerTask() {
         @Override
-        public void onTick(int seconds) {
+        public void onTick(final int seconds) {
         }
 
         @Override
-        public void onStart(int seconds) {
+        public void onStart(final int seconds) {
         }
 
         @Override
@@ -28,8 +32,11 @@ public abstract class StrollEvent extends GameMechanic{
             dispose();
         }
     };
-
-    public StrollEvent(){
+    
+    /**
+     * Constructor, creates a new stroll event.
+     */
+    public StrollEvent() {
         super();
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getTimeKeeper().getTimer("EVENT").subscribe(cTimerTask);
@@ -51,7 +58,7 @@ public abstract class StrollEvent extends GameMechanic{
 	/**
 	 * Method that gets called to dispose of the event.
 	 */
-	public void dispose() {
+	public final void dispose() {
         super.dispose();
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         Timer timer = cTimerTask.getTimer();

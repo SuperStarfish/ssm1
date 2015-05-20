@@ -1,6 +1,6 @@
 package cg.group4.stroll.events;
 
-import cg.group4.util.timer.TimeKeeper;
+
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 /**
@@ -47,9 +46,31 @@ public class TestStrollEvent extends StrollEvent {
 	 */
 	protected final int maxTasks = 10;
 	
+	/**
+	 * Amount of reward currency thingie gained.
+	 */
+	protected static final int REWARDS = 10;
+	
+	/**
+	 * Sound effect played when a task is completed.
+	 */
 	protected final Sound cCompletedTaskSound;
+	
+	/**
+	 * Delay to avoid getting a new task immediately.
+	 */
 	protected Timer cDelayTimer;
+	
+	/**
+	 * Whether or not a delay is going on.
+	 */
 	protected boolean cDelayed;
+	
+	/**
+	 * Constants used for each task case.
+	 */
+	protected static final int MOVE_LEFT = 1, MOVE_RIGHT = 2, MOVE_DOWN = 3, MOVE_UP = 4,
+			MOVE_AWAY = 5, MOVE_TOWARDS = 6;
 	
 	/**
 	 * Constructor for the test event.
@@ -65,11 +86,11 @@ public class TestStrollEvent extends StrollEvent {
 		
 		TimerTask delayTask = new TimerTask() {
 			@Override
-		    public void onTick(int seconds) {
+		    public void onTick(final int seconds) {
 			}
 
 		    @Override
-		    public void onStart(int seconds) {
+		    public void onStart(final int seconds) {
 		    	cDelayed = true;
 		    }
 
@@ -87,6 +108,9 @@ public class TestStrollEvent extends StrollEvent {
 		doTask();
 	}
 	
+	/**
+	 * Generates the task that should be done.
+	 */
 	public final void doTask() {
 		//System.out.println("DOTASK!");
 		cDelayed = false;
@@ -95,22 +119,22 @@ public class TestStrollEvent extends StrollEvent {
 			operationNr++;
 		}
 		switch(operationNr) {
-			case 1:
+			case MOVE_LEFT:
 				cLabel.setText("Move your phone to the left!");
 				break;
-			case 2:
+			case MOVE_RIGHT:
 				cLabel.setText("Move your phone to the right!");
 				break;
-			case 3:
+			case MOVE_DOWN:
 				cLabel.setText("Move your phone down!");
 				break;
-			case 4:
+			case MOVE_UP:
 				cLabel.setText("Move your phone up!");
 				break;
-			case 5:
+			case MOVE_AWAY:
 				cLabel.setText("Move your phone away from you!");
 				break;
-			case 6:
+			case MOVE_TOWARDS:
 				cLabel.setText("Move your phone towards you!");
 				break;
 			default:
@@ -118,6 +142,9 @@ public class TestStrollEvent extends StrollEvent {
 		}
 	}
 	
+	/**
+	 * Gets called when one of the individual tasks gets completed.
+	 */
 	public final void taskCompleted() {
 		this.tasksCompleted++;
 		cCompletedTaskSound.play(1.0f);
@@ -131,46 +158,50 @@ public class TestStrollEvent extends StrollEvent {
 		}
 	}
 	
+	/**
+	 * Checks if one of the individual tasks gets completed.
+	 * @param accelData 	Vector containing the acceleration in the x,y and z direction.
+	 */
 	public final void processInput(final Vector3 accelData) {
 		//System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
 		final float delta = 2.0f;
 		switch(operationNr) {
-			case 1:
+			case MOVE_LEFT:
 				if (accelData.x <= -delta) {
 					System.out.println("Left Succes!");
 					base.x = -1 * accelData.x;
 					taskCompleted();
 				}
 				break;
-			case 2:
+			case MOVE_RIGHT:
 				if (accelData.x >= delta) {
 					System.out.println("Right Succes!");
 					base.x = -1 * accelData.x;
 					taskCompleted();
 				}
 				break;
-			case 3:
+			case MOVE_DOWN:
 				if (accelData.y <= -delta) {
 					System.out.println("Down Succes!");
 					base.y = -1 * accelData.y;
 					taskCompleted();
 				}
 				break;
-			case 4:
+			case MOVE_UP:
 				if (accelData.y >= delta) {
 					System.out.println("Up Succes!");
 					base.y = -1 * accelData.y;
 					taskCompleted();
 				}
 				break;
-			case 5:
+			case MOVE_AWAY:
 				if (accelData.z <= -delta) {
 					System.out.println("Away Succes!");
 					base.z = -1 * accelData.z;
 					taskCompleted();
 				}
 				break;
-			case 6:
+			case MOVE_TOWARDS:
 				if (accelData.z >= delta) {
 					System.out.println("Toward Succes!");
 					base.z = -1 * accelData.z;
@@ -184,7 +215,7 @@ public class TestStrollEvent extends StrollEvent {
 
     @Override
     public final int getReward() {
-        return 10;
+        return REWARDS;
     }
 
     @Override
@@ -193,7 +224,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final void update(){
+    public final void update() {
         final float accelX = Gdx.input.getAccelerometerX();
         final float accelY = Gdx.input.getAccelerometerY();
         final float accelZ = Gdx.input.getAccelerometerZ();
@@ -214,7 +245,7 @@ public class TestStrollEvent extends StrollEvent {
         base.x = accelX;
         base.y = accelY;
         base.z = accelZ;
-        if(!cDelayed) {
+        if (!cDelayed) {
         	processInput(current);
         }
     }

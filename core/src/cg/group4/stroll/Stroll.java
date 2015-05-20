@@ -17,7 +17,7 @@ import java.util.Random;
  * @author Martijn Gribnau
  * @author Benjamin Los
  */
-public class Stroll extends GameMechanic{
+public class Stroll extends GameMechanic {
 	
 	/**
 	 * Tag used for debugging.
@@ -54,11 +54,11 @@ public class Stroll extends GameMechanic{
      */
 	protected final TimerTask cTimerTask = new TimerTask() {
         @Override
-        public void onTick(int seconds) {
+        public void onTick(final int seconds) {
         }
 
         @Override
-        public void onStart(int seconds) {
+        public void onStart(final int seconds) {
             cFinished = false;
         }
 
@@ -92,15 +92,21 @@ public class Stroll extends GameMechanic{
         StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
 	}
-
+	
+	/**
+	 * Every cycle, as long as there is no event going on, we want to generate an event.
+	 */
     @Override
-    public void update() {
-        if(!cEventGoing) {
+    public final void update() {
+        if (!cEventGoing) {
             generatePossibleEvent();
         }
     }
-
-    public void resume() {
+    
+    /**
+     * Resumes the scroll if it is somehow paused.
+     */
+    public final void resume() {
         Gdx.app.log(TAG, "Resumed stroll");
         ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
     }
@@ -108,9 +114,9 @@ public class Stroll extends GameMechanic{
     /**
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
-    protected void generatePossibleEvent() {
+    protected final void generatePossibleEvent() {
         Random rnd = new Random();
-        if(rnd.nextFloat() < cEventThreshold) {
+        if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
             ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
@@ -121,14 +127,14 @@ public class Stroll extends GameMechanic{
      * Handles completion of an event.
      * @param rewards Reward(s) given on completion of an event
      */
-    public void eventFinished(int rewards) {
-//        Gdx.app.log(cEvent.getClass().getSimpleName(), "Event completed!");
+    public final void eventFinished(final int rewards) {
+    	Gdx.app.log(TAG, "Event completed!");
 
         cRewards += rewards;
         cEvent = null;
         cEventGoing = false;
 
-        if(cFinished) {
+        if (cFinished) {
             done();
 		} else {
 			((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
