@@ -36,7 +36,7 @@ public class Launcher extends Game {
         cWorldRenderer = new WorldRenderer();
 		timeKeeper = TimeKeeper.getInstance();
 		timeKeeper.init();
-		setScreen(new TestScreen2(this));
+		setScreen(new WorldRenderer());
 	}
 
 	/**
@@ -46,13 +46,11 @@ public class Launcher extends Game {
 	@Override
 	public final void render() {
 		timeKeeper.update();
-		cWorldRenderer.render(Gdx.graphics.getDeltaTime());
 		super.render();
 	}
 
 	@Override
 	public final void resize(int width, int height){
-		cWorldRenderer.resize(width, height);
         super.resize(width, height);
 	}
 

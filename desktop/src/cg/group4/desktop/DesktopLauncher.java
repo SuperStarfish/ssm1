@@ -24,11 +24,10 @@ public class DesktopLauncher {
      */
     public enum Aspect{
         RATIO16_9(1280, 720),
-        RATIO5_3(1280, 768),
-        RATIO16_10(1280, 800),
-        RATIO_DEV(1280, 840),
-        RATIO3_2(1278, 852),
-        RATIO4_3(1280, 960);
+        RATIO5_3(1200, 720),
+        RATIO16_10(1152, 720),
+        RATIO3_2(1080, 720),
+        RATIO4_3(960, 720);
         protected int cWidth, cHeight;
         Aspect(int width, int height){
             cWidth = width;
