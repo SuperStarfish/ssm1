@@ -1,5 +1,6 @@
 package cg.group4.stroll.events;
 
+import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
@@ -76,7 +77,12 @@ public class TestStrollEvent extends StrollEvent {
 	 * Constants used for each task case.
 	 */
 	protected static final int MOVE_LEFT = 1, MOVE_RIGHT = 2, MOVE_DOWN = 3, MOVE_UP = 4,
-			MOVE_AWAY = 5, MOVE_TOWARDS = 0;
+			MOVE_AWAY = 5, MOVE_TOWARDS = 6;
+	
+	/**
+	 * Tasks which will execute when a delay is initiated and stopped.
+	 */
+	TimerTask delayInputTasks;
 	
 	/**
 	 * Constructor for the test event.
@@ -89,7 +95,7 @@ public class TestStrollEvent extends StrollEvent {
 		tasksCompleted = 0;
 		prevOperationNr = 0;
 		
-		TimerTask delayNewInput = new TimerTask() {
+		delayInputTasks = new TimerTask() {
 			@Override
 		    public void onTick(int seconds) {
 			}
@@ -107,12 +113,12 @@ public class TestStrollEvent extends StrollEvent {
 		};
 		
 		cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
-		cDelayInputTimer.subscribe(delayNewInput);
+		cDelayInputTimer.subscribe(delayInputTasks);
 		cDelayNewInput = false;
 		
 		
 		base = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
-		((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+		//((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 		doTask();
 	}
 	
@@ -148,7 +154,7 @@ public class TestStrollEvent extends StrollEvent {
 				cLabel.setText("Move your phone towards you!");
 				break;
 			default:
-				cLabel.setText("Unknown Operation Number: " + operationNr);
+				cLabel.setText("doTask Unknown Operation Number: " + operationNr);
 				break;
 		}
 	}
@@ -162,12 +168,20 @@ public class TestStrollEvent extends StrollEvent {
 		if (this.tasksCompleted < this.maxTasks) {
 			//cDelayTaskTimer.reset();
 			prevOperationNr = operationNr;
-			cLabel.setText("Nice!");
+			//cLabel.setText("Nice!");
 			doTask();
 		} else {
-			cLabel.setText("You completed the event! Good job!");
-			dispose();
+			//cLabel.setText("You completed the event! Good job!");
+			clearEvent();
 		}
+	}
+	
+	public final void clearEvent() {
+		delayInputTasks.dispose();
+		cDelayInputTimer.stop();
+		Gdx.app.getPreferences("TIMER").clear();
+		Gdx.app.getPreferences("TIMER").flush();
+		dispose();
 	}
 	
 	/**
@@ -229,7 +243,7 @@ public class TestStrollEvent extends StrollEvent {
 					}
 					break;
 				default:
-					cLabel.setText("Unknown Operation Number: " + operationNr);
+					cLabel.setText("processInput Unknown Operation Number: " + operationNr);
 					break;
 			}
 		}
