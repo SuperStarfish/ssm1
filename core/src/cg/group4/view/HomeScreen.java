@@ -62,8 +62,8 @@ public class HomeScreen extends ScreenLogic {
      * Initializes the title on the home screen.
      */
     public final void initHomeScreenTitle() {
-        title = new Label("Super StartFish Mania", StandUp.getInstance().getGameSkin().get("default_labelStyle",
-                                                                                           Label.LabelStyle.class));
+        title = new Label("Super StartFish Mania",
+                StandUp.getInstance().getGameSkin().get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
         cTable.add(title);
     }
@@ -82,14 +82,10 @@ public class HomeScreen extends ScreenLogic {
             }
 
             @Override
-            public void onStart(final int seconds) {
-
-            }
+            public void onStart(final int seconds) {}
 
             @Override
-            public void onStop() {
-
-            }
+            public void onStop() {}
         });
         cTable.row().expandY();
         cTable.add(timer);

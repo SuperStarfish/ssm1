@@ -45,9 +45,9 @@ public class GameSkin extends Skin {
     final float DEV_HEIGHT = 720;
 
     /**
-     * UI Scalar used to scale fonts.
-     * This is needed because otherwise fonts will look the same on every screen, no matter the amount of pixels
-     * the screen contains.
+     * UI Scalar used to scale UI components.
+     * This is needed because otherwise components will always have the same size. Higher resolution devices
+     * will have a tiny UI if not scaled properly.
      * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
      */
     final float UI_SCALAR;
@@ -98,7 +98,7 @@ public class GameSkin extends Skin {
 
     /**
      * The default title font.
-     * @return BitmapFont; Minus point of the BitmapFont is that it does not scale by default. However, a ui scalar
+     * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
      *         has been used to fix this issue.
      */
     protected final BitmapFont generateDefaultTitleFont() {
@@ -124,7 +124,7 @@ public class GameSkin extends Skin {
 
     /**
      * The default text font.
-     * @return BitmapFont; Minus point of the BitmapFont is that it does not scale by default. However, a ui scalar
+     * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
      *         has been used to fix this issue.
      */
     protected final BitmapFont generateDefaultFont() {

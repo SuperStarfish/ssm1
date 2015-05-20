@@ -69,7 +69,4 @@ public class Launcher extends Game {
         super.resize(width, height);
 	}
 
-    public WorldRenderer getWorldRenderer(){
-        return cWorldRenderer;
-    }
 }
