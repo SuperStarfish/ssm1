@@ -1,7 +1,11 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.camera.WorldRenderer;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.MainMenu;
+import cg.group4.view.TestScreen;
+import cg.group4.view.TestScreen2;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -16,8 +20,13 @@ import com.badlogic.gdx.Gdx;
  *
  * @author Benjamin Los
  * @author Martijn Gribnau
+ * @author Jurgen van Schagen
  */
 public class Launcher extends Game {
+	/**
+	 * Handles viewport and camera. Also draws sprites properly in the game world.
+	 */
+	private WorldRenderer cWorldRenderer;
 
 	/**
 	 * Keeps track of the game mechanics.
@@ -47,4 +56,13 @@ public class Launcher extends Game {
 		StandUp.getInstance().updateGameMechanics();
 		cStandUp.getTimeKeeper().update();
 	}
+
+	@Override
+	public final void resize(int width, int height){
+        super.resize(width, height);
+	}
+
+    public WorldRenderer getWorldRenderer(){
+        return cWorldRenderer;
+    }
 }

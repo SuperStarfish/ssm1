@@ -10,8 +10,38 @@ import cg.group4.Launcher;
  * on Android.
  */
 public class DesktopLauncher {
+    public static final Aspect aspect = Aspect.RATIO16_9;
+
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = aspect.getWidth();
+        config.height = aspect.getHeight();
 		new LwjglApplication(new Launcher(), config);
-	}
+    }
+
+    /**
+     * These enums can be used to see how the game looks on different aspect ratios.
+     */
+    public enum Aspect{
+        RATIO16_9(1280, 720),
+        RATIO5_3(1200, 720),
+        RATIO16_10(1152, 720),
+        RATIO3_2(1080, 720),
+        RATIO4_3(960, 720);
+        protected int cWidth, cHeight;
+        Aspect(int width, int height){
+            cWidth = width;
+            cHeight = height;
+        }
+
+        public int getWidth(){
+            return cWidth;
+        }
+
+        public int getHeight(){
+            return cHeight;
+        }
+
+        public float getRatio() { return cWidth / (float)cHeight; }
+    }
 }
