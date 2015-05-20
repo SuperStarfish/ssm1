@@ -48,7 +48,7 @@ public final class TimeKeeper {
 	 */
 	public void init() {
 		for (Timer.Global timer : Timer.Global.values()) {
-			new Timer(timer.name(), timer.getDuration(), true).stop();
+			new Timer(timer.name(), timer.getDuration(), true);
 		}
 	}
 
@@ -63,8 +63,8 @@ public final class TimeKeeper {
 
 		if (timeStamp - cPreviousTick > cMillisInSecond) {
 			for (Timer timer : cTimers) {
+				timer.resolve();
 				timer.tick(timeStamp);
-                timer.resolve();
 			}
 			cPreviousTick += cMillisInSecond;
 		}

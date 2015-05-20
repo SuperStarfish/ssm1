@@ -1,7 +1,10 @@
-package cg.group4;
+package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
 import cg.group4.util.timer.TimeKeeper;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class which handles the game logic.
@@ -33,10 +36,27 @@ public class StandUp {
     protected TimeKeeper cTimeKeeper;
 
     /**
+     * list of all the subscribed game mechanics.
+     */
+    protected Set<GameMechanic> cGameMechanics;
+
+    /**
+     * list of all the game mechanics that need to be added.
+     */
+    protected Set<GameMechanic> cSubscribersGameMechanics;
+    /**
+     * list of all the game mechanics that need to be removed.
+     */
+    protected Set<GameMechanic> cUnsubscribersGameMechanics;
+
+    /**
      * Instantiate StandUp and TimeKeeper.
      */
     private StandUp() {
         cTimeKeeper = new TimeKeeper();
+        cGameMechanics = new HashSet<GameMechanic>();
+        cSubscribersGameMechanics = new HashSet<GameMechanic>();
+        cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
     }
 
     /**
@@ -48,7 +68,9 @@ public class StandUp {
         cTimeKeeper.init();
     }
 
-
+    /**
+     * Starts a new stroll.
+     */
     public void startStroll(){
         if(cStroll == null) {
             cTimeKeeper.getTimer("INTERVAL").reset();
@@ -58,10 +80,13 @@ public class StandUp {
         }
     }
 
+    /**
+     * Ends the current stroll.
+     * @param cRewards rewards gained by the stroll.
+     */
     public void endStroll(int cRewards) {
         cStroll = null;
     }
-
 
     /**
      * Getter for StandUp instance.
@@ -87,4 +112,26 @@ public class StandUp {
         return cStroll;
     }
 
+    /**
+     * Goes over all the subscribed game machenics and updates them.
+     */
+    public void updateGameMechanics() {
+        cGameMechanics.removeAll(cUnsubscribersGameMechanics);
+        cGameMechanics.addAll(cSubscribersGameMechanics);
+        cUnsubscribersGameMechanics.clear();
+        cSubscribersGameMechanics.clear();
+
+        for(GameMechanic gm : cGameMechanics) {
+            gm.update();
+        }
+
+    }
+
+    public void subscribe(GameMechanic gameMechanic) {
+        cSubscribersGameMechanics.add(gameMechanic);
+    }
+
+    public void unSubscribe(GameMechanic gameMechanic) {
+        cUnsubscribersGameMechanics.add(gameMechanic);
+    }
 }

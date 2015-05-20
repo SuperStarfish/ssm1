@@ -1,6 +1,6 @@
 package cg.group4.view;
 
-import cg.group4.StandUp;
+import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.Stroll;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;

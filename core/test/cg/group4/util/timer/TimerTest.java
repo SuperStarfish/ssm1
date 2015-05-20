@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -34,6 +33,7 @@ public class TimerTest {
         assertEquals(0, timer.cSubscribe.size());
         assertEquals(1, timer.cTimerTasks.size());
         assertEquals(0, timer.cUnsubscribe.size());
+        assertEquals(timer,timerTask.getTimer());
     }
 
     @Test
@@ -48,6 +48,7 @@ public class TimerTest {
         assertEquals(0, timer.cSubscribe.size());
         assertEquals(0, timer.cTimerTasks.size());
         assertEquals(0, timer.cUnsubscribe.size());
+        assertNull(timerTask.getTimer());
     }
 
     @Test
@@ -62,6 +63,7 @@ public class TimerTest {
         assertEquals(0, timer.cSubscribe.size());
         assertEquals(0, timer.cTimerTasks.size());
         assertEquals(0, timer.cUnsubscribe.size());
+        assertNull( timerTask.getTimer());
     }
 
 
@@ -121,20 +123,29 @@ public class TimerTest {
         assertFalse(timer.cRunning);
     }
 
+    @Test public  void testSubscriptionTickRunning() {
+        TimerTask tt = mock(TimerTask.class);
+        timer.subscribe(tt);
+        verify(tt, times(1)).onTick(anyInt());
+    }
+
+    @Test public  void testSubscriptionTickStop() {
+        timer.stop();
+        TimerTask tt = mock(TimerTask.class);
+        timer.subscribe(tt);
+        verify(tt, never()).onTick(anyInt());
+    }
+
     @Test public void testResetFinishTime(){
-        try{
-            Timer timer = new Timer("BLABLA", 60, true);
-            long time = timer.cPreferences.getLong(timer.cName);
-            Thread.sleep(1000);
-            timer.resetFinishTime();
-            assertTrue(timer.cPreferences.getLong(timer.cName) > time);
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
+        Timer timer = new Timer("BLABLA", 60, true);
+        long time = timer.cPreferences.getLong(timer.cName);
+        timer.tick(System.currentTimeMillis()+1000);
+        timer.resetFinishTime();
+        assertTrue(timer.cPreferences.getLong(timer.cName) > time);
     }
 
 
-    @Ignore
+    @Test
     public void testTimerEnumINTERVAL() {
         assertEquals(60 * 60, Timer.Global.INTERVAL.getDuration());
     }

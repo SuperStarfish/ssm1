@@ -1,6 +1,6 @@
 package cg.group4.util.timer;
 
-import cg.group4.StandUp;
+import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -149,7 +149,7 @@ public class Timer {
 	 *
 	 * @param timeStamp The current time.
 	 */
-	protected final void tick(final long timeStamp) {
+	protected void tick(final long timeStamp) {
 		if (cRunning) {
 			if (timeStamp > cFinishTime) {
 				cRunning = false;
@@ -277,9 +277,9 @@ public class Timer {
 
     public final void resolve() {
         cTimerTasks.removeAll(cUnsubscribe);
-        cUnsubscribe = new HashSet<TimerTask>();
+        cUnsubscribe.clear();
         cTimerTasks.addAll(cSubscribe);
-        cSubscribe = new HashSet<TimerTask>();
+        cSubscribe.clear();
     }
 
     /**

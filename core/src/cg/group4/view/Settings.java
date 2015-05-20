@@ -1,6 +1,6 @@
 package cg.group4.view;
 
-import cg.group4.StandUp;
+import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

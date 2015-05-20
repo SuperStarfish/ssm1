@@ -1,6 +1,7 @@
 package cg.group4.stroll;
 
-import cg.group4.StandUp;
+import cg.group4.game_logic.GameMechanic;
+import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
 import cg.group4.util.timer.TimerTask;
@@ -9,7 +10,6 @@ import cg.group4.view.StrollScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.Random;
 
@@ -17,7 +17,7 @@ import java.util.Random;
  * @author Martijn Gribnau
  * @author Benjamin Los
  */
-public class Stroll {
+public class Stroll extends GameMechanic{
 	
 	/**
 	 * Tag used for debugging.
@@ -25,32 +25,36 @@ public class Stroll {
 	private static final String TAG = Stroll.class.getSimpleName();
 	
 	/**
-	 * Chance that an event will occur.
-	 */
-	protected final float cEventChance = 0.2f;
-	
-	/**
 	 * Amount of rewards collected.
 	 */
 	protected int cRewards;
-	
-	/**
-	 * Stage containing all the actors. Given with the constructor
-	 */
-	protected Stage cStrollStage;
+
+    /**
+     * The chance of an event happening this second.
+     */
+    protected double cEventThreshold;
 	
 	/**
 	 * Whether or not you're busy with an event.
 	 */
 	protected boolean cEventGoing;
 
+    /**
+     * Whether the stroll has ended or not.
+     */
+    protected Boolean cFinished;
+
+    /**
+     * The screen belonging to this stroll.
+     */
 	protected Screen cScreen;
+
+    /**
+     * The timertask to listen to the stroll timer.
+     */
 	protected final TimerTask cTimerTask = new TimerTask() {
         @Override
         public void onTick(int seconds) {
-            if (!cEventGoing) {
-                generatePossibleEvent();
-            }
         }
 
         @Override
@@ -66,9 +70,12 @@ public class Stroll {
             }
         }
     };
-    protected Boolean cFinished;
+
+    /**
+     * The current event being played.
+     */
     protected StrollEvent cEvent;
-	
+
 	/**
 	 * Constructor, creates a new Stroll object.
 	 */
@@ -77,6 +84,7 @@ public class Stroll {
 		cRewards = 0;
 		cEventGoing = false;
         cFinished = false;
+        cEventThreshold = 0.002;
 
 		cScreen = new StrollScreen();
         ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
@@ -84,6 +92,13 @@ public class Stroll {
         StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
 	}
+
+    @Override
+    public void update() {
+        if(!cEventGoing) {
+            generatePossibleEvent();
+        }
+    }
 
     public void resume() {
         Gdx.app.log(TAG, "Resumed stroll");
@@ -93,9 +108,9 @@ public class Stroll {
     /**
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
-    private void generatePossibleEvent() {
+    protected void generatePossibleEvent() {
         Random rnd = new Random();
-        if(rnd.nextFloat() < .1) {
+        if(rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
             ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
@@ -110,8 +125,8 @@ public class Stroll {
 //        Gdx.app.log(cEvent.getClass().getSimpleName(), "Event completed!");
 
         cRewards += rewards;
-        cEventGoing = false;
         cEvent = null;
+        cEventGoing = false;
 
         if(cFinished) {
             done();
@@ -126,6 +141,7 @@ public class Stroll {
 	 * Method that gets called when the stroll has ended/completed.
 	 */
 	public final void done() {
+        StandUp.getInstance().unSubscribe(this);
 		Gdx.app.log(TAG, "Stroll has ended.");
 		cScreen.dispose();
         cTimerTask.dispose();

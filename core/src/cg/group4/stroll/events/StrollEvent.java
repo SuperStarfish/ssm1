@@ -1,6 +1,7 @@
 package cg.group4.stroll.events;
 
-import cg.group4.StandUp;
+import cg.group4.game_logic.GameMechanic;
+import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import com.badlogic.gdx.Gdx;
@@ -12,11 +13,10 @@ import com.badlogic.gdx.Screen;
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
-public abstract class StrollEvent {
+public abstract class StrollEvent extends GameMechanic{
     protected final TimerTask cTimerTask = new TimerTask() {
         @Override
         public void onTick(int seconds) {
-            update();
         }
 
         @Override
@@ -30,6 +30,7 @@ public abstract class StrollEvent {
     };
 
     public StrollEvent(){
+        super();
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getTimeKeeper().getTimer("EVENT").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
@@ -48,14 +49,10 @@ public abstract class StrollEvent {
     public abstract Screen getScreen();
 	
 	/**
-	 * Method that gets called every update cycle. 
-	 */
-	public abstract void update();
-	
-	/**
 	 * Method that gets called to dispose of the event.
 	 */
 	public void dispose() {
+        super.dispose();
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         Timer timer = cTimerTask.getTimer();
         cTimerTask.dispose();

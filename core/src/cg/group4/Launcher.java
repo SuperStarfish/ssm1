@@ -1,5 +1,6 @@
 package cg.group4;
 
+import cg.group4.game_logic.StandUp;
 import cg.group4.view.MainMenu;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
@@ -43,6 +44,7 @@ public class Launcher extends Game {
 	@Override
 	public final void render() {
 		super.render();
+		StandUp.getInstance().updateGameMechanics();
 		cStandUp.getTimeKeeper().update();
 	}
 }

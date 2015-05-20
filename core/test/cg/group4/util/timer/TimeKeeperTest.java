@@ -1,7 +1,7 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.StandUp;
+import cg.group4.game_logic.StandUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +36,7 @@ public class TimeKeeperTest {
     }
 
     @Test
-    public void testAddDuplicateTimer(){
+     public void testAddDuplicateTimer(){
         timeKeeper.addTimer(new Timer("Test2", 0));
         int size = timeKeeper.cTimers.size();
         timeKeeper.addTimer(new Timer("Test2", 5));
@@ -51,6 +51,12 @@ public class TimeKeeperTest {
 
     @Test
     public void testGetTimerNull(){
+        timeKeeper.addTimer(timer);
+        assertNull(timeKeeper.getTimer("TAD"));
+    }
+
+    @Test
+    public void testNotifyStop(){
         timeKeeper.addTimer(timer);
         assertNull(timeKeeper.getTimer("TAD"));
     }
