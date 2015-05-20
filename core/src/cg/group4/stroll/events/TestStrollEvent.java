@@ -1,17 +1,13 @@
 package cg.group4.stroll.events;
 
-import cg.group4.game_logic.StandUp;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 /**
@@ -46,7 +42,12 @@ public class TestStrollEvent extends StrollEvent {
 	/**
 	 * Number of tasks that the player must complete before the event is considered a success.
 	 */
-	protected final int maxTasks = 10;
+	protected static final int MAX_TASKS = 10;
+	
+	/**
+	 * Amount of different tasks.
+	 */
+	protected static final int AMOUNT_OF_TASKS = 6;
 
 	/**
 	 * Number of tasks that the player must complete before the event is considered a success.
@@ -82,7 +83,7 @@ public class TestStrollEvent extends StrollEvent {
 	/**
 	 * Tasks which will execute when a delay is initiated and stopped.
 	 */
-	TimerTask delayInputTasks;
+	protected TimerTask delayInputTasks;
 	
 	/**
 	 * Constructor for the test event.
@@ -97,11 +98,11 @@ public class TestStrollEvent extends StrollEvent {
 		
 		delayInputTasks = new TimerTask() {
 			@Override
-		    public void onTick(int seconds) {
+		    public void onTick(final int seconds) {
 			}
 
 		    @Override
-		    public void onStart(int seconds) {
+		    public void onStart(final int seconds) {
 		    	cLabel.setText("Wrong! Try " + direction + " again!");
 		    	cDelayNewInput = true;
 		    }
@@ -122,11 +123,14 @@ public class TestStrollEvent extends StrollEvent {
 		doTask();
 	}
 	
+	/**
+	 * Sets the new operation that should be done.
+	 */
 	public final void doTask() {
 		//System.out.println("DOTASK!");
-		operationNr = (int) Math.floor(Math.random() * 6 + 1);
+		operationNr = (int) Math.floor(Math.random() * AMOUNT_OF_TASKS + 1);
 		if (operationNr == prevOperationNr) {
-			if(operationNr == 6) {
+			if (operationNr == AMOUNT_OF_TASKS) {
 				operationNr = 1;
 			} else {
 				operationNr++;
@@ -169,7 +173,7 @@ public class TestStrollEvent extends StrollEvent {
 	public final void taskCompleted() {
 		this.tasksCompleted++;
 		cCompletedTaskSound.play(1.0f);
-		if (this.tasksCompleted < this.maxTasks) {
+		if (this.tasksCompleted < MAX_TASKS) {
 			//cDelayTaskTimer.reset();
 			prevOperationNr = operationNr;
 			//cLabel.setText("Nice!");
@@ -180,6 +184,9 @@ public class TestStrollEvent extends StrollEvent {
 		}
 	}
 	
+	/**
+	 * Clears the current event.
+	 */
 	public final void clearEvent() {
 		this.tasksCompleted = 0;
 		delayInputTasks.dispose();
@@ -197,7 +204,7 @@ public class TestStrollEvent extends StrollEvent {
 //		//System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
 		final float delta = 2.0f;
 		float highestAccel = determineHighestAccelerationComponent(accelData);
-		if(highestAccel >= delta) {
+		if (highestAccel >= delta) {
 			switch(operationNr) {
 				case MOVE_LEFT:
 					cDelayInputTimer.reset();
@@ -254,7 +261,12 @@ public class TestStrollEvent extends StrollEvent {
 		}
 	}
 	
-	public float determineHighestAccelerationComponent(Vector3 accelData) {
+	/**
+	 * Determines the highest acceleration component to disable the ability to cheat this event.
+	 * @param accelData Vector containing the acceleration in the x, y and z direction.
+	 * @return Returns the highest acceleration.
+	 */
+	public final float determineHighestAccelerationComponent(final Vector3 accelData) {
 		float result = Math.abs(accelData.x);
 		if (result < Math.abs(accelData.y)) {
 			result = Math.abs(accelData.y);
