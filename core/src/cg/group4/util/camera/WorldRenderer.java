@@ -47,6 +47,7 @@ public class WorldRenderer implements Screen {
     }
 
     public void setScreen(ScreenLogic screen){
+        cScreen.dispose();
         cScreen = screen;
     }
 

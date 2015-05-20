@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -31,10 +32,11 @@ public class Skinner extends Skin {
     public Skinner(){
         UI_HEIGHT = Gdx.graphics.getHeight();
         UIScalar = UI_HEIGHT / DEV_HEIGHT;
-        System.out.println(UIScalar);
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));
         this.add("default_font", generateDefaultFont());
         this.add("default_textButtonStyle", generateDefaultTextButton());
+        this.add("default_titleFont", generateDefaultTitleFont());
+        this.add("default_labelStyle", generateDefaultLabelStyle());
     }
 
     protected TextButton.TextButtonStyle generateDefaultTextButton(){
@@ -52,13 +54,27 @@ public class Skinner extends Skin {
         return buttonStyle;
     }
 
+    protected BitmapFont generateDefaultTitleFont(){
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.borderColor = Color.BLACK;
+        fontParameter.borderWidth = (int)(DEFAULT_BORDER_WIDTH * UIScalar);
+        fontParameter.color = Color.WHITE;
+        fontParameter.size = (int)(DEFAULT_FONT_SIZE * UIScalar * 1.2f);
+        return fontGenerator.generateFont(fontParameter);
+    }
+
+    protected Label.LabelStyle generateDefaultLabelStyle(){
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = this.get("default_titleFont", BitmapFont.class);
+        return labelStyle;
+    }
+
     protected BitmapFont generateDefaultFont(){
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
         fontParameter.borderWidth = (int)(DEFAULT_BORDER_WIDTH * UIScalar);
         fontParameter.color = Color.WHITE;
         fontParameter.size = (int)(DEFAULT_FONT_SIZE * UIScalar);
-        System.out.println(fontParameter.size);
         return fontGenerator.generateFont(fontParameter);
     }
 

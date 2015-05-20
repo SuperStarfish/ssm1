@@ -1,43 +1,75 @@
 package cg.group4.view;
 
-import cg.group4.Launcher;
+import cg.group4.game_logic.StandUp;
 import cg.group4.util.camera.Skinner;
 import cg.group4.util.camera.WorldRenderer;
-import com.badlogic.gdx.Game;
+import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerTask;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 
 public class TestScreen2 extends ScreenLogic{
-
-
+    Table table;
+    TextButton strollButton, settingsButton;
+    Label title, timer;
 
     public TestScreen2(final WorldRenderer worldRenderer){
         super(worldRenderer);
-        Container container = new Container();
-        container.setFillParent(true);
-        TextButton button = Skinner.getInstance().generateDefaultMenuButton("Screen 1");
-        button.addListener(new ChangeListener() {
+        table = new Table();
+        table.center();
+        table.debugAll();
+        table.setFillParent(true);
+
+        title = new Label("Super StartFish Mania", Skinner.getInstance().get("default_labelStyle", Label.LabelStyle.class));
+        table.row().expandY();
+        table.add(title);
+
+        timer = new Label("306", Skinner.getInstance().get("default_labelStyle", Label.LabelStyle.class));
+        StandUp.getInstance().getTimeKeeper().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
+            @Override
+            public void onTick(int seconds) {
+                timer.setText(Integer.toString(seconds));
+            }
+
+            @Override
+            public void onStart(int seconds) {
+
+            }
+
+            @Override
+            public void onStop() {
+
+            }
+        });
+        table.row().expandY();
+        table.add(timer);
+
+        strollButton = Skinner.getInstance().generateDefaultMenuButton("Stroll");
+        strollButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 worldRenderer.setScreen(new TestScreen(worldRenderer));
             }
         });
-        container.setActor(button);
-        worldRenderer.setActor(container);
+        table.row().expandY();
+        table.add(strollButton);
+
+        settingsButton = Skinner.getInstance().generateDefaultMenuButton("Settings");
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                worldRenderer.setScreen(new TestScreen(worldRenderer));
+            }
+        });
+        table.row().expandY();
+        table.add(settingsButton);
+
+
+        worldRenderer.setActor(table);
     }
 
 }

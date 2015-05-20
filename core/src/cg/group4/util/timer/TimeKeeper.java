@@ -60,7 +60,6 @@ public final class TimeKeeper {
 	public void update() {
 		long timeStamp = System.currentTimeMillis();
 
-
 		if (timeStamp - cPreviousTick > cMillisInSecond) {
 			for (Timer timer : cTimers) {
 				timer.resolve();
