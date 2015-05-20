@@ -211,6 +211,17 @@ public class Timer {
 	}
 
 	/**
+	 * Disposes the current timer.
+	 */
+	public final void dispose() {
+		stop();
+		for(TimerTask task : cTimerTasks) {
+			task.dispose();
+		}
+		StandUp.getInstance().getTimeKeeper().removeTimer(this);
+	}
+
+	/**
 	 * Resets the current timer.
 	 */
 	public final void reset() {

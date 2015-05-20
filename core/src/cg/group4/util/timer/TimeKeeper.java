@@ -80,6 +80,16 @@ public final class TimeKeeper {
 	}
 
 	/**
+	 * Removes a timer from the timeKeeper.
+	 * @param timer Timer to be removed from the timekeeper
+	 */
+	void removeTimer(final Timer timer) {
+		if (cTimers.remove(timer)) {
+			Gdx.app.debug(TAG, "Removed Timer '" + timer.getName() + "'.");
+		}
+	}
+
+	/**
 	 * Returns a timer called `name` if controlled by the TimeKeeper.
 	 * @param name Name of a timer
 	 * @return Returns the timer with the specified name

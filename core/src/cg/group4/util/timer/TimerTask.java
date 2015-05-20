@@ -43,9 +43,11 @@ public abstract class TimerTask {
 	 * Disposes the timer task.
 	 */
 	public final void dispose() {
-        cTimer.unsubscribe(this);
-		cTimer = null;
-        cActive = false;
+		if(cActive) {
+			cTimer.unsubscribe(this);
+			cTimer = null;
+			cActive = false;
+		}
 	}
 
 	/**

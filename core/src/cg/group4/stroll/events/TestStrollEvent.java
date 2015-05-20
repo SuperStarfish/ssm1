@@ -4,7 +4,6 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;
-
 import cg.group4.view.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -120,7 +119,6 @@ public class TestStrollEvent extends StrollEvent {
 		
 		
 		base = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
-		//((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
 		doTask();
 	}
 	
@@ -128,7 +126,6 @@ public class TestStrollEvent extends StrollEvent {
 	 * Sets the new operation that should be done.
 	 */
 	public final void doTask() {
-		//System.out.println("DOTASK!");
 		operationNr = (int) Math.floor(Math.random() * AMOUNT_OF_TASKS + 1);
 		if (operationNr == prevOperationNr) {
 			if (operationNr == AMOUNT_OF_TASKS) {
@@ -189,11 +186,9 @@ public class TestStrollEvent extends StrollEvent {
 	 * Clears the current event.
 	 */
 	public final void clearEvent() {
+        super.dispose();
 		delayInputTasks.dispose();
-		cDelayInputTimer.stop();
-		Gdx.app.getPreferences("TIMER").clear();
-		Gdx.app.getPreferences("TIMER").flush();
-		dispose();
+		cDelayInputTimer.dispose();
 	}
 	
 	/**
