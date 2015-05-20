@@ -126,7 +126,11 @@ public class TestStrollEvent extends StrollEvent {
 		//System.out.println("DOTASK!");
 		operationNr = (int) Math.floor(Math.random() * 6 + 1);
 		if (operationNr == prevOperationNr) {
-			operationNr++;
+			if(operationNr == 6) {
+				operationNr = 1;
+			} else {
+				operationNr++;
+			}
 		}
 		switch(operationNr) {
 			case MOVE_LEFT:
@@ -177,6 +181,7 @@ public class TestStrollEvent extends StrollEvent {
 	}
 	
 	public final void clearEvent() {
+		this.tasksCompleted = 0;
 		delayInputTasks.dispose();
 		cDelayInputTimer.stop();
 		Gdx.app.getPreferences("TIMER").clear();
