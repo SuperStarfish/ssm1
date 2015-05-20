@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class EventScreen implements Screen {
-	
+
 	protected Stage cStage;
 	protected SpriteBatch cSpriteBatch;
 	protected Texture cBackground;
@@ -93,7 +93,7 @@ public class EventScreen implements Screen {
 		cBackground.dispose();
 		cStage.dispose();
 	}
-	
+
 	public Label getLabel() {
 		return cLabel;
 	}

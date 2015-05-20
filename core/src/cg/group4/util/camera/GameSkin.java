@@ -6,78 +6,150 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
+/**
+ * The default skin details for the application.
+ *
+ * @author Jurgen van Schagen
+ * @author Martijn Gribnau
+ */
 public class GameSkin extends Skin {
+    /**
+     * Font generator for the skin.
+     */
     protected FreeTypeFontGenerator fontGenerator;
+
+    /**
+     * Path to the default font.
+     */
     protected String DEFAULT_FONT = "fonts/blow.ttf";
+
+    /**
+     * Default border width.
+     */
     protected int DEFAULT_BORDER_WIDTH = 2;
-    protected int DEFAULT_FONT_SIZE = 42;
+
+    /**
+     * Default font size.
+     */
+    final protected int DEFAULT_FONT_SIZE = 42;
+
+    /**
+     * Default dev height.
+     * It is used to scale against the height used to develop the skin for.
+     */
     final float DEV_HEIGHT = 720;
-    final float UIScalar;
+
+    /**
+     * UI Scalar used to scale fonts.
+     * This is needed because otherwise fonts will look the same on every screen, no matter the amount of pixels
+     * the screen contains.
+     * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
+     */
+    final float UI_SCALAR;
+
+    /**
+     * The height of the screen.
+     */
     float UI_HEIGHT;
 
-    public GameSkin(){
+    /**
+     * Initializes the skin.
+     */
+    public GameSkin() {
         UI_HEIGHT = Gdx.graphics.getHeight();
-        UIScalar = UI_HEIGHT / DEV_HEIGHT;
+        UI_SCALAR = UI_HEIGHT / DEV_HEIGHT;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));
+
+        addFonts();
+    }
+
+    /**
+     * Adds different fonts and their styles to the skin, to choose from.
+     */
+    protected final void addFonts() {
         this.add("default_font", generateDefaultFont());
         this.add("default_textButtonStyle", generateDefaultTextButton());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
     }
 
-    protected TextButton.TextButtonStyle generateDefaultTextButton(){
+    /**
+     * The default text button skin.
+     * @return TextButtonStyle
+     */
+    protected final TextButton.TextButtonStyle generateDefaultTextButton() {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.fontColor = Color.GREEN;
         buttonStyle.font = this.get("default_font", BitmapFont.class);
 
         Sprite sprite = new Sprite(new Texture(Gdx.files.internal("images/wooden_sign.png")));
-        float scalar = 0.42f;
-        sprite.setSize(sprite.getWidth() * scalar * UIScalar, sprite.getHeight() * scalar * UIScalar);
+        final float scalar = 0.42f;
+        sprite.setSize(sprite.getWidth() * scalar * UI_SCALAR, sprite.getHeight() * scalar * UI_SCALAR);
 
-        SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
-        buttonStyle.up = spriteDrawable;
+        buttonStyle.up = new SpriteDrawable(sprite);
 
         return buttonStyle;
     }
 
-    protected BitmapFont generateDefaultTitleFont(){
+    /**
+     * The default title font.
+     * @return BitmapFont; Minus point of the BitmapFont is that it does not scale by default. However, a ui scalar
+     *         has been used to fix this issue.
+     */
+    protected final BitmapFont generateDefaultTitleFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int)(DEFAULT_BORDER_WIDTH * UIScalar);
+        fontParameter.borderWidth = (int) (DEFAULT_BORDER_WIDTH * UI_SCALAR);
         fontParameter.color = Color.WHITE;
-        fontParameter.size = (int)(DEFAULT_FONT_SIZE * UIScalar * 1.2f);
+
+        final float scale = 1.2f;
+        fontParameter.size = (int) (DEFAULT_FONT_SIZE * UI_SCALAR * scale);
         return fontGenerator.generateFont(fontParameter);
     }
 
-    protected Label.LabelStyle generateDefaultLabelStyle(){
+    /**
+     * The default label style.
+     * @return LabelStyle
+     */
+    protected final Label.LabelStyle generateDefaultLabelStyle() {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = this.get("default_titleFont", BitmapFont.class);
         return labelStyle;
     }
 
-    protected BitmapFont generateDefaultFont(){
+    /**
+     * The default text font.
+     * @return BitmapFont; Minus point of the BitmapFont is that it does not scale by default. However, a ui scalar
+     *         has been used to fix this issue.
+     */
+    protected final BitmapFont generateDefaultFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int)(DEFAULT_BORDER_WIDTH * UIScalar);
+        fontParameter.borderWidth = (int) (DEFAULT_BORDER_WIDTH * UI_SCALAR);
         fontParameter.color = Color.WHITE;
-        fontParameter.size = (int)(DEFAULT_FONT_SIZE * UIScalar);
+        fontParameter.size = (int) (DEFAULT_FONT_SIZE * UI_SCALAR);
         return fontGenerator.generateFont(fontParameter);
     }
 
-    public TextButton generateDefaultMenuButton(String label){
-        TextButton button = new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        return button;
+    /**
+     * Used to generate text buttons using the default text button style.
+     * @param label label text of the text button
+     * @return TextButton
+     */
+    public TextButton generateDefaultMenuButton(final String label) {
+        return new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
     }
 
+    /**
+     * Disposes data of the game skin.
+     */
     @Override
-    public void dispose(){
+    public void dispose() {
         fontGenerator.dispose();
         super.dispose();
     }

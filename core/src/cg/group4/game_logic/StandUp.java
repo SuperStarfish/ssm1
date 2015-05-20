@@ -80,7 +80,7 @@ public class StandUp {
      * Starts a new stroll.
      */
     public void startStroll(){
-        if(cStroll == null) {
+        if (cStroll == null) {
             cTimeKeeper.getTimer("INTERVAL").reset();
             cStroll = new Stroll();
         } else {
@@ -137,17 +137,17 @@ public class StandUp {
         cUnsubscribersGameMechanics.clear();
         cSubscribersGameMechanics.clear();
 
-        for(GameMechanic gm : cGameMechanics) {
+        for (GameMechanic gm : cGameMechanics) {
             gm.update();
         }
 
     }
 
-    public void subscribe(GameMechanic gameMechanic) {
+    public void subscribe(final GameMechanic gameMechanic) {
         cSubscribersGameMechanics.add(gameMechanic);
     }
 
-    public void unSubscribe(GameMechanic gameMechanic) {
+    public void unSubscribe(final GameMechanic gameMechanic) {
         cUnsubscribersGameMechanics.add(gameMechanic);
     }
 }
