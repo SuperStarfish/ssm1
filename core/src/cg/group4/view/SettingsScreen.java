@@ -47,7 +47,7 @@ public class SettingsScreen extends ScreenLogic {
     protected final void createTable() {
         cTable = new Table();
         cTable.setFillParent(true);
-        cTable.debugAll();
+//        cTable.debugAll();
     }
 
     /**
