@@ -36,8 +36,7 @@ public class Launcher extends Game {
 		cStandUp = StandUp.getInstance();
         cStandUp.init();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		//setScreen(new MainMenu());
-		new TestStrollEvent();
+		setScreen(new MainMenu());
 	}
 
 	/**
