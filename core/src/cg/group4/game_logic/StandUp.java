@@ -1,14 +1,13 @@
 package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
-import cg.group4.util.camera.GameSkin;
-import cg.group4.util.camera.WorldRenderer;
 import cg.group4.util.timer.TimeKeeper;
+import cg.group4.view.screen_mechanics.GameSkin;
+import cg.group4.view.screen_mechanics.ScreenStore;
+import com.badlogic.gdx.Gdx;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.badlogic.gdx.Gdx;
 
 /**
  * Class which handles the game logic.
@@ -37,7 +36,7 @@ public class StandUp {
     /**
      * Draws the screen and makes everything look nice.
      */
-    protected WorldRenderer cWorldRenderer;
+    protected ScreenStore cScreenStore;
 
     /**
      * Stroll logic.
@@ -81,7 +80,7 @@ public class StandUp {
     public void init() {
         cTimeKeeper.init();
         cGameSkin = new GameSkin();
-        cWorldRenderer = new WorldRenderer();
+        cScreenStore = new ScreenStore();
     }
 
     /**
@@ -162,7 +161,7 @@ public class StandUp {
         cUnsubscribersGameMechanics.add(gameMechanic);
     }
 
-    public WorldRenderer getWorldRenderer() {
-        return cWorldRenderer;
+    public ScreenStore getScreenStore() {
+        return cScreenStore;
     }
 }

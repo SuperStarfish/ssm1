@@ -1,27 +1,17 @@
-package cg.group4.view;
+package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.camera.WorldRenderer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
+import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-
-/**
- * Home screen for the StandUp application.
- * Contains the main menu.
- * Displays the time left until the user can start a new stroll.
- *
- * @author Jurgen van Schagen
- * @author Martijn Gribnau
- *
- */
 public class HomeScreen extends ScreenLogic {
-
     /**
      * Container group used for the layout of the view.
      */
@@ -37,14 +27,8 @@ public class HomeScreen extends ScreenLogic {
      */
     protected Label title, timer;
 
-    /**
-     * Initializes the home screen.
-     * Makes use of a table layout.
-     * Does this by filling a table with the title, the stroll timer, button and setting buttons.
-     * @param worldRenderer The camera viewport to use
-     */
-    public HomeScreen(final WorldRenderer worldRenderer) {
-        super(worldRenderer);
+    @Override
+    protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
 //        cTable.debugAll();
         cTable.setFillParent(true);
@@ -52,18 +36,17 @@ public class HomeScreen extends ScreenLogic {
         initHomeScreenTitle();
         initStrollIntervalTimer();
 
-        initStrollButton(worldRenderer);
-        initSettingsButton(worldRenderer);
+        initStrollButton();
+        initSettingsButton();
 
-       setAsActiveScreen();
+        return cTable;
     }
 
     /**
      * Initializes the title on the home screen.
      */
     public final void initHomeScreenTitle() {
-        title = new Label("Super StarFish Mania",
-                StandUp.getInstance().getGameSkin().get("default_labelStyle", Label.LabelStyle.class));
+        title = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
         cTable.add(title);
     }
@@ -90,12 +73,10 @@ public class HomeScreen extends ScreenLogic {
         cTable.row().expandY();
         cTable.add(timer);
     }
-
     /**
      * Initializes the stroll buttons on the home screen.
-     * @param worldRenderer The camera viewport used
      */
-    public final void initStrollButton(final WorldRenderer worldRenderer) {
+    public final void initStrollButton() {
         cStrollButton = cGameSkin.generateDefaultMenuButton("Stroll");
         cStrollButton.addListener(new ChangeListener() {
             @Override
@@ -110,24 +91,88 @@ public class HomeScreen extends ScreenLogic {
 
     /**
      * Initializes the settings button on the home screen.
-     * @param worldRenderer The camera viewport used
      */
-    public final void initSettingsButton(final WorldRenderer worldRenderer) {
+    public final void initSettingsButton() {
         cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
         cSettingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                worldRenderer.setScreen(new SettingsScreen(worldRenderer));
+                StandUp.getInstance().getScreenStore().setScreen("Settings");
             }
         });
         cTable.row().expandY();
         cTable.add(cSettingsButton);
     }
-
-	@Override
-	public void setAsActiveScreen() {
-		// TODO Auto-generated method stub
-		 cWorldRenderer.setActor(cTable);
-	}
-
 }
+
+
+
+//
+//import cg.group4.game_logic.StandUp;
+//import cg.group4.util.timer.Timer;
+//import cg.group4.util.timer.TimerTask;
+//import cg.group4.view.screen_mechanics.ScreenLogic;
+//import cg.group4.view.screen_mechanics.WorldRenderer;
+//import com.badlogic.gdx.scenes.scene2d.Actor;
+//import com.badlogic.gdx.scenes.scene2d.ui.Label;
+//import com.badlogic.gdx.scenes.scene2d.ui.Table;
+//import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+//import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+//
+//
+///**
+// * Home screen for the StandUp application.
+// * Contains the main menu.
+// * Displays the time left until the user can start a new stroll.
+// *
+// * @author Jurgen van Schagen
+// * @author Martijn Gribnau
+// *
+// */
+//public class HomeScreen extends ScreenLogic {
+//
+//    /**
+//     * Container group used for the layout of the view.
+//     */
+//    protected Table cTable;
+//
+//    /**
+//     *  Buttons for the stroll, settings.
+//     */
+//    protected TextButton cStrollButton, cSettingsButton;
+//
+//    /**
+//     * Labels for title, timer.
+//     */
+//    protected Label title, timer;
+//
+//    /**
+//     * Initializes the home screen.
+//     * Makes use of a table layout.
+//     * Does this by filling a table with the title, the stroll timer, button and setting buttons.
+//     * @param worldRenderer The camera viewport to use
+//     */
+//    public HomeScreen(final WorldRenderer worldRenderer) {
+//        super(worldRenderer);
+//        cTable = new Table();
+////        cTable.debugAll();
+//        cTable.setFillParent(true);
+//
+//        initHomeScreenTitle();
+//        initStrollIntervalTimer();
+//
+//        initStrollButton(worldRenderer);
+//        initSettingsButton(worldRenderer);
+//
+//       setAsActiveScreen();
+//    }
+//
+//
+//
+//	@Override
+//	public void setAsActiveScreen() {
+//		// TODO Auto-generated method stub
+//		 cWorldRenderer.setActor(cTable);
+//	}
+//
+//}

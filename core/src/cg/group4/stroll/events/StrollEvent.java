@@ -4,9 +4,8 @@ import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
-import cg.group4.view.ScreenLogic;
+import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 
 /**
  * Interface that gets implemented by every event.

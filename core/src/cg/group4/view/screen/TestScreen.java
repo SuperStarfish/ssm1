@@ -1,6 +1,7 @@
-package cg.group4.view;
+package cg.group4.view.screen;
 
-import cg.group4.util.camera.WorldRenderer;
+import cg.group4.view.screen_mechanics.ScreenLogic;
+import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;

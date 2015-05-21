@@ -1,16 +1,9 @@
-package cg.group4.view;
+package cg.group4.view.screen;
 
-import cg.group4.util.camera.WorldRenderer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import cg.group4.view.screen_mechanics.ScreenLogic;
+import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class EventScreen extends ScreenLogic {
 	Label cTaskToPerform;

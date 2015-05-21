@@ -1,8 +1,7 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.camera.WorldRenderer;
-
+import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

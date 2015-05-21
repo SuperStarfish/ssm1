@@ -1,7 +1,6 @@
-package cg.group4.util.camera;
+package cg.group4.view.screen_mechanics;
 
-import cg.group4.view.ScreenLogic;
-import cg.group4.view.HomeScreen;
+import cg.group4.view.screen.HomeScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -116,6 +115,7 @@ public class WorldRenderer implements Screen {
     public final void setScreen(final ScreenLogic screen) {
         cScreen.dispose();
         cScreen = screen;
+
     }
 
     /**
