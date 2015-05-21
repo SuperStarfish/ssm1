@@ -1,6 +1,7 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
@@ -51,7 +52,9 @@ public class Launcher extends Game {
         cStandUp.init();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-		setScreen(StandUp.getInstance().getScreenStore().getWorldRenderer());
+        ScreenStore screenStore = StandUp.getInstance().getScreenStore();
+		setScreen(screenStore.getWorldRenderer());
+        screenStore.setScreen("Home");
 	}
 
 	/**
