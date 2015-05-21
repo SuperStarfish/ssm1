@@ -70,6 +70,8 @@ public class StandUp {
         cGameMechanics = new HashSet<GameMechanic>();
         cSubscribersGameMechanics = new HashSet<GameMechanic>();
         cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
+        cGameSkin = new GameSkin();
+        cScreenStore = new ScreenStore();
     }
 
     /**
@@ -79,8 +81,7 @@ public class StandUp {
      */
     public void init() {
         cTimeKeeper.init();
-        cGameSkin = new GameSkin();
-        cScreenStore = new ScreenStore();
+        cScreenStore.initialization();
     }
 
     /**

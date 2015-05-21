@@ -81,8 +81,8 @@ public class HomeScreen extends ScreenLogic {
         cStrollButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                //worldRenderer.setScreen(new StrollScreen(worldRenderer));
                 StandUp.getInstance().startStroll();
+                StandUp.getInstance().getScreenStore();
             }
         });
         cTable.row().expandY();
@@ -104,75 +104,3 @@ public class HomeScreen extends ScreenLogic {
         cTable.add(cSettingsButton);
     }
 }
-
-
-
-//
-//import cg.group4.game_logic.StandUp;
-//import cg.group4.util.timer.Timer;
-//import cg.group4.util.timer.TimerTask;
-//import cg.group4.view.screen_mechanics.ScreenLogic;
-//import cg.group4.view.screen_mechanics.WorldRenderer;
-//import com.badlogic.gdx.scenes.scene2d.Actor;
-//import com.badlogic.gdx.scenes.scene2d.ui.Label;
-//import com.badlogic.gdx.scenes.scene2d.ui.Table;
-//import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-//import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-//
-//
-///**
-// * Home screen for the StandUp application.
-// * Contains the main menu.
-// * Displays the time left until the user can start a new stroll.
-// *
-// * @author Jurgen van Schagen
-// * @author Martijn Gribnau
-// *
-// */
-//public class HomeScreen extends ScreenLogic {
-//
-//    /**
-//     * Container group used for the layout of the view.
-//     */
-//    protected Table cTable;
-//
-//    /**
-//     *  Buttons for the stroll, settings.
-//     */
-//    protected TextButton cStrollButton, cSettingsButton;
-//
-//    /**
-//     * Labels for title, timer.
-//     */
-//    protected Label title, timer;
-//
-//    /**
-//     * Initializes the home screen.
-//     * Makes use of a table layout.
-//     * Does this by filling a table with the title, the stroll timer, button and setting buttons.
-//     * @param worldRenderer The camera viewport to use
-//     */
-//    public HomeScreen(final WorldRenderer worldRenderer) {
-//        super(worldRenderer);
-//        cTable = new Table();
-////        cTable.debugAll();
-//        cTable.setFillParent(true);
-//
-//        initHomeScreenTitle();
-//        initStrollIntervalTimer();
-//
-//        initStrollButton(worldRenderer);
-//        initSettingsButton(worldRenderer);
-//
-//       setAsActiveScreen();
-//    }
-//
-//
-//
-//	@Override
-//	public void setAsActiveScreen() {
-//		// TODO Auto-generated method stub
-//		 cWorldRenderer.setActor(cTable);
-//	}
-//
-//}

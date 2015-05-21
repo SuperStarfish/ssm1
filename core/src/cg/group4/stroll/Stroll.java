@@ -7,8 +7,7 @@ import cg.group4.stroll.events.TestStrollEvent;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen.RewardScreen;
 import cg.group4.view.screen.StrollScreen;
-import cg.group4.view.screen_mechanics.ScreenLogic;
-import cg.group4.view.screen_mechanics.WorldRenderer;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 
 import java.util.Random;
@@ -45,14 +44,9 @@ public class Stroll extends GameMechanic {
     protected Boolean cFinished;
 
     /**
-     * Pointer to the worldRenderer.
+     * Pointer to the screenStore.
      */
-    protected WorldRenderer cWorldRenderer;
-
-    /**
-     * The screen belonging to this stroll.
-     */
-	protected ScreenLogic cScreen;
+    protected ScreenStore cScreenStore;
 	
 	/**
 	 * The base threshold used for generating events.
@@ -60,7 +54,7 @@ public class Stroll extends GameMechanic {
 	protected static final double BASE_THRESHOLD = 0.002;
 
     /**
-     * The timertask to listen to the stroll timer.
+     * The timer task to listen to the stroll timer.
      */
 	protected final TimerTask cTimerTask = new TimerTask() {
         @Override
@@ -96,10 +90,10 @@ public class Stroll extends GameMechanic {
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
 
-        cWorldRenderer = StandUp.getInstance().getWorldRenderer();
+        cScreenStore = StandUp.getInstance().getScreenStore();
 
-        cScreen = new StrollScreen(cWorldRenderer);
-        cWorldRenderer.setScreen(cScreen);
+        cScreenStore.addScreen("Stroll", new StrollScreen());
+        cScreenStore.setScreen("Stroll");
 
         StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
@@ -120,7 +114,7 @@ public class Stroll extends GameMechanic {
      */
     public final void resume() {
         Gdx.app.log(TAG, "Resumed stroll");
-        cWorldRenderer.setScreen(cScreen);
+        cScreenStore.setScreen("Stroll");
     }
 
     /**
@@ -131,7 +125,7 @@ public class Stroll extends GameMechanic {
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
-            cWorldRenderer.setScreen(cEvent.getScreen());
+            cEvent.init();
         }
 	}
 
@@ -151,7 +145,7 @@ public class Stroll extends GameMechanic {
             done();
 		} else {
 			Gdx.app.log(TAG, "Event finished and there is time left, returning back to strollscreen");
-			cScreen.setAsActiveScreen();
+			cScreenStore.setScreen("Stroll");
 		}
     }
 
@@ -163,9 +157,11 @@ public class Stroll extends GameMechanic {
 	public final void done() {
         StandUp.getInstance().unSubscribe(this);
 		Gdx.app.log(TAG, "Stroll has ended.");
-		cScreen.dispose();
         cTimerTask.dispose();
-        cWorldRenderer.setScreen(new RewardScreen(cWorldRenderer));
+
+        cScreenStore.addScreen("Reward", new RewardScreen());
+        cScreenStore.setScreen("Reward");
+
         StandUp.getInstance().endStroll(cRewards);
 	}
 }

@@ -50,7 +50,8 @@ public class Launcher extends Game {
 		cStandUp = StandUp.getInstance();
         cStandUp.init();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		setScreen(cStandUp.getWorldRenderer());
+
+		setScreen(StandUp.getInstance().getScreenStore().getWorldRenderer());
 	}
 
 	/**

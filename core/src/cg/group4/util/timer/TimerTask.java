@@ -1,11 +1,13 @@
 package cg.group4.util.timer;
 
+import com.badlogic.gdx.utils.Disposable;
+
 /**
  * 
  * @author Jurgen van Schagen
  * @author Benjamin Los
  */
-public abstract class TimerTask {
+public abstract class TimerTask implements Disposable{
 
 	/**
 	 * Timer belonging to this task.

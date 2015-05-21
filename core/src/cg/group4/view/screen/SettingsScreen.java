@@ -3,10 +3,10 @@ package cg.group4.view.screen;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.view.screen_mechanics.ScreenLogic;
-import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
@@ -30,25 +30,12 @@ public class SettingsScreen extends ScreenLogic {
             cButtonStopInterval,
             cButtonBack;
 
-    /**
-     * Initializes the settings screen.
-     * @param worldRenderer The camera viewport
-     */
-    public SettingsScreen(final WorldRenderer worldRenderer) {
-        super(worldRenderer);
-        createTable();
-        createGUI();
-
-        setAsActiveScreen();
-    }
-
-    /**
-     * Initializes the table container.
-     */
-    protected final void createTable() {
+    @Override
+    protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
         cTable.setFillParent(true);
-//        cTable.debugAll();
+        createGUI();
+        return cTable;
     }
 
     /**
@@ -91,7 +78,7 @@ public class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 StandUp.getInstance().getTimeKeeper().getTimer(Timer.Global.STROLL.name()).reset();
-                //cWorldRenderer.setScreen(new RewardScreen(cWorldRenderer));
+                //cScreenStore.setScreen(new RewardScreen(cScreenStore));
             }
         };
     }
@@ -118,7 +105,7 @@ public class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                cWorldRenderer.setScreen(new HomeScreen(cWorldRenderer));
+                cScreenStore.setScreen("Home");
             }
         };
     }
@@ -134,10 +121,4 @@ public class SettingsScreen extends ScreenLogic {
         cTable.add(button);
         return button;
     }
-
-	@Override
-	public void setAsActiveScreen() {
-		// TODO Auto-generated method stub
-		cWorldRenderer.setActor(cTable);
-	}
 }

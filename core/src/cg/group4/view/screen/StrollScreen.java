@@ -4,16 +4,16 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
-import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 public class StrollScreen extends ScreenLogic {
     protected Label cTimeRemaining, cText;
     protected Table cTable;
 
-	public StrollScreen(WorldRenderer worldRenderer) {
-		super(worldRenderer);
+    @Override
+    protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
         cTable.setFillParent(true);
         cTable.row().expandY();
@@ -41,13 +41,6 @@ public class StrollScreen extends ScreenLogic {
         cText = new Label("Waiting for event", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.add(cText);
 
-
-        setAsActiveScreen();
-	}
-
-	@Override
-	public void setAsActiveScreen() {
-		// TODO Auto-generated method stub
-		cWorldRenderer.setActor(cTable);
-	}
+        return cTable;
+    }
 }

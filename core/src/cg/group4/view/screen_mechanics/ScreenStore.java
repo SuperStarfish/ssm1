@@ -1,5 +1,8 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.view.screen.HomeScreen;
+import cg.group4.view.screen.SettingsScreen;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,14 +29,26 @@ public class ScreenStore {
         cWorldRenderer = new WorldRenderer();
     }
 
+    public void initialization() {
+        addScreen("Home", new HomeScreen());
+        addScreen("Settings", new SettingsScreen());
+    }
+
     /**
-     * Stores the screen in the store under the given tag and displays it.
+     * Stores the screen in the store under the given tag.
      * @param tag Tag of the screen.
-     * @param screen Screen to be displayed.
+     * @param screen Screen to be stored.
      */
-    public void setScreen(String tag, ScreenLogic screen){
+    public void addScreen(String tag, ScreenLogic screen){
         cScreens.put(tag,screen);
-        cWorldRenderer.setScreen(screen);
+    }
+
+    /**
+     * Removes the screen from the store under the given tag.
+     * @param tag Tag of the screen to be removed.
+     */
+    public void removeScreen(String tag){
+        cScreens.remove(tag);
     }
 
     /**
@@ -51,5 +66,9 @@ public class ScreenStore {
      */
     public ScreenLogic getScreen(String tag){
         return  cScreens.get(tag);
+    }
+
+    public WorldRenderer getWorldRenderer() {
+        return cWorldRenderer;
     }
 }
