@@ -1,10 +1,12 @@
 package cg.group4.stroll.events;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.accelerometer.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;
 import cg.group4.view.ScreenLogic;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
@@ -86,12 +88,17 @@ public class TestStrollEvent extends StrollEvent {
 	protected TimerTask delayInputTasks;
 	
 	/**
+	 * Configurable accelerometer that reads and filters the accelerations of the device.
+	 */
+	protected Accelerometer cAccelMeter;
+	
+	/**
 	 * Constructor for the test event.
 	 */
 	public TestStrollEvent() {
 		super();
 		cScreen = new EventScreen(StandUp.getInstance().getWorldRenderer());
-		cLabel = ((EventScreen)cScreen).getLabel();
+		cLabel = ((EventScreen) cScreen).getLabel();
 		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 		tasksCompleted = 0;
 		prevOperationNr = 0;
@@ -117,6 +124,8 @@ public class TestStrollEvent extends StrollEvent {
 		cDelayInputTimer.subscribe(delayInputTasks);
 		cDelayNewInput = false;
 		
+		cAccelMeter = new Accelerometer();
+		cAccelMeter.filterGravity(true);
 		
 		base = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
 		doTask();
@@ -196,9 +205,11 @@ public class TestStrollEvent extends StrollEvent {
 	 * @param accelData 	Vector containing the acceleration in the x,y and z direction.
 	 */
 	public final void processInput(final Vector3 accelData) {
-//		//System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
+		//System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
+		
+		final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
 		final float delta = 2.0f;
-		float highestAccel = determineHighestAccelerationComponent(accelData);
+		
 		if (highestAccel >= delta) {
 			switch(operationNr) {
 				case MOVE_LEFT:
@@ -260,22 +271,6 @@ public class TestStrollEvent extends StrollEvent {
 		}
 	}
 	
-	/**
-	 * Determines the highest acceleration component to disable the ability to cheat this event.
-	 * @param accelData Vector containing the acceleration in the x, y and z direction.
-	 * @return Returns the highest acceleration.
-	 */
-	public final float determineHighestAccelerationComponent(final Vector3 accelData) {
-		float result = Math.abs(accelData.x);
-		if (result < Math.abs(accelData.y)) {
-			result = Math.abs(accelData.y);
-		}
-		if (result < Math.abs(accelData.z)) {
-			result = Math.abs(accelData.z);
-		}
-		return result;
-	}
-	
     @Override
     public final int getReward() {
         return REWARDS;
@@ -288,28 +283,9 @@ public class TestStrollEvent extends StrollEvent {
 
     @Override
     public final void update() {
-        final float accelX = Gdx.input.getAccelerometerX();
-        final float accelY = Gdx.input.getAccelerometerY();
-        final float accelZ = Gdx.input.getAccelerometerZ();
-        
-        Vector3 current = new Vector3();
-        
-        final float noiseLevel = 1.5f;
-        if (Math.abs(base.x - accelX) > noiseLevel) {
-        	current.x = accelX - base.x;
-        }
-        if (Math.abs(base.y - accelY) > noiseLevel) {
-        	current.y = accelY - base.y;
-        }
-        if (Math.abs(base.z - accelZ) > noiseLevel) {
-        	current.z = accelZ - base.z;
-        }
-      
-        base.x = accelX;
-        base.y = accelY;
-        base.z = accelZ;
-        if (!cDelayNewInput) {
-        	processInput(current);
-        }
+    	Vector3 readings = cAccelMeter.update(); //Done outside of the if to keep the resulting readings relevant. Needs testing
+    	if (!cDelayNewInput) {
+    		processInput(readings);
+    	}
     }
 }
