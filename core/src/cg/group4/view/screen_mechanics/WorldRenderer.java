@@ -23,47 +23,47 @@ public class WorldRenderer implements Screen {
     /**
      * The world is seen in a 4:3 ratio. This sets the width to also fit with 16:9 ratio.
      */
-    static final float GAME_WORLD_WIDTH = 12f;
+    protected static final float GAME_WORLD_WIDTH = 12f;
     /**
      * Specifies the max viewport width allowed.
      */
-    static final float MAX_VIEWPORT_WIDTH = 16f;
+    protected static final float MAX_VIEWPORT_WIDTH = 16f;
     /**
      * The world is seen in a 4:3 ratio. This sets the height to also fit with 16:9 ratio.
      */
-    static final float GAME_WORLD_HEIGHT = 9f;
+    protected static final float GAME_WORLD_HEIGHT = 9f;
     /**
      * User to reposition something to center.
      */
-    static final float CENTERER = -2f;
+    protected static final float CENTERER = -2f;
     /**
      * Spritebatch for the background of the screen.
      */
-    SpriteBatch cBatch;
+    protected SpriteBatch cBatch;
     /**
      * The background sprite that will be rendered
      */
-    Sprite cBackgroundSprite;
+    protected Sprite cBackgroundSprite;
     /**
      * The stage in which actors are placed. Stage does not change.
      */
-    Stage cStage;
+    protected Stage cStage;
     /**
      * A simple music player. To be refactored somewhere else later.
      */
-    Music music;
+    protected Music music;
     /**
      * Different screens can be 'built' by assigning the Screen in the WorldRenderer.
      */
-    ScreenLogic cScreen;
+    protected ScreenLogic cScreen;
     /**
      * The camera that captures what can be seen.
      */
-    OrthographicCamera cCamera;
+    protected OrthographicCamera cCamera;
     /**
      * The visible viewport of the game. Aspect ratios between 16:9 and 4:3 are supported.
      */
-    Viewport cViewPort;
+    protected Viewport cViewPort;
 
     /**
      * Creates everything that is needed to properly display the game and sets the screen to the HomeScreen.

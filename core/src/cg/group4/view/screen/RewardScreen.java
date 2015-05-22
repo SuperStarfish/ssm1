@@ -16,7 +16,7 @@ public class RewardScreen extends ScreenLogic {
         Table table = new Table();
         table.setFillParent(true);
 
-        Label label = new Label("GOOD JOB, REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        Label label = new Label("REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
         table.add(label);
 

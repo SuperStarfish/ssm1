@@ -21,19 +21,19 @@ public class GameSkin extends Skin {
     /**
      * Default font size.
      */
-    final protected int DEFAULT_FONT_SIZE = 42;
+    protected final int DEFAULT_FONT_SIZE = 42;
     /**
      * Default dev height.
      * It is used to scale against the height used to develop the skin for.
      */
-    final float DEV_HEIGHT = 720;
+    protected final float DEV_HEIGHT = 720;
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
      * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
      */
-    final float UI_SCALAR;
+    protected final float UI_SCALAR;
     /**
      * Font generator for the skin.
      */

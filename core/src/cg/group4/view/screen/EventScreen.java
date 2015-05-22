@@ -10,7 +10,7 @@ public class EventScreen extends ScreenLogic {
     /**
      * Label with the text of this event
      */
-    Label cTaskToPerform;
+    protected Label cTaskToPerform;
 
     @Override
     protected WidgetGroup createWidgetGroup() {

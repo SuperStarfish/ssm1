@@ -274,7 +274,8 @@ public class TestStrollEvent extends StrollEvent {
 
     @Override
     public final void update(Observable o, Object arg) {
-        Vector3 readings = cAccelMeter.update(); //Done outside of the if to keep the resulting readings relevant. Needs testing
+        Vector3 readings = cAccelMeter.update();
+        //Done outside of the if to keep the resulting readings relevant. Needs testing
         if (!cDelayNewInput) {
             processInput(readings);
         }
