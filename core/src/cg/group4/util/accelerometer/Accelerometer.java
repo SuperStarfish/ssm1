@@ -61,19 +61,6 @@ public class Accelerometer {
 				filterNoise(resultVector.y),
 				filterNoise(resultVector.z));
 		
-//		if (cFilterGravity) {
-//			resultVector.set(
-//					//SHOULD NOT BE ABS
-//					Math.abs(cBaseVector.x - accelX),
-//					Math.abs(cBaseVector.y - accelY),
-//					Math.abs(cBaseVector.z - accelZ));
-//		}
-//		
-//		resultVector.set(
-//				filterNoise(accelX),
-//				filterNoise(accelY),
-//				filterNoise(accelZ));
-		
 		cBaseVector.set(accelX, accelY, accelZ);
 		//System.out.println("Before filter: X: " + cBaseVector.x + " Y: " + cBaseVector.y + " Z: " + cBaseVector.z);
 		System.out.println("After filter: X: " + resultVector.x + " Y: " + resultVector.y + " Z: " + resultVector.z);
