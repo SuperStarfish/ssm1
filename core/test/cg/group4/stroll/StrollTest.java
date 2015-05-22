@@ -1,6 +1,7 @@
 package cg.group4.stroll;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.util.timer.TimeKeeper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +16,9 @@ public class StrollTest {
 
     @Before
     public void setUp() {
+        TimeKeeper.getInstance().init();
         cStroll = new Stroll();
-//        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").unsubscribe(cStroll.cTimerTask);
+        TimeKeeper.getInstance().getTimer("STROLL").unsubscribe(cStroll.cTimerTask);
     }
 
     @Test

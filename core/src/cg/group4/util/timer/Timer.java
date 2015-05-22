@@ -1,6 +1,5 @@
 package cg.group4.util.timer;
 
-import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -116,7 +115,7 @@ public class Timer {
 		cPersistent = persistent;
 		cPreferences = Gdx.app.getPreferences("TIMER");
 		setFinishTime();
-		StandUp.getInstance().getTimeKeeper().addTimer(this);
+		TimeKeeper.getInstance().addTimer(this);
 	}
 
 	/**
@@ -218,7 +217,7 @@ public class Timer {
 		for(TimerTask task : cTimerTasks) {
 			task.dispose();
 		}
-		StandUp.getInstance().getTimeKeeper().removeTimer(this);
+		TimeKeeper.getInstance().removeTimer(this);
 	}
 
 	/**

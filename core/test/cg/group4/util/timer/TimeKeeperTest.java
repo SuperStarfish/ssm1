@@ -1,7 +1,6 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.game_logic.StandUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,20 +11,21 @@ import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
 public class TimeKeeperTest {
-    TimeKeeper timeKeeper = StandUp.getInstance().getTimeKeeper();
+    TimeKeeper timeKeeper;
     Timer timer;
 
     @Before
     public void setUp(){
+        timeKeeper = TimeKeeper.getInstance();
         timeKeeper.cTimers = new HashSet<Timer>();
         timer = new Timer("TEST", 60);
     }
 
     @Test
     public void testInitGlobalTimers(){
-        int count = StandUp.getInstance().getTimeKeeper().cTimers.size();
+        int count = TimeKeeper.getInstance().cTimers.size();
         timeKeeper.init();
-        assertEquals(count + Timer.Global.values().length, StandUp.getInstance().getTimeKeeper().cTimers.size());
+        assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
     }
 
     @Test

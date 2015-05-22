@@ -1,25 +1,22 @@
 package cg.group4.stroll;
 
-import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
-import cg.group4.util.camera.WorldRenderer;
+import cg.group4.util.subscribe.Subject;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerTask;
-import cg.group4.view.RewardScreen;
-import cg.group4.view.ScreenLogic;
-import cg.group4.view.StrollScreen;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 /**
  * @author Martijn Gribnau
  * @author Benjamin Los
  */
-public class Stroll extends GameMechanic {
+public class Stroll implements Observer {
 	
 	/**
 	 * Tag used for debugging.
@@ -45,16 +42,6 @@ public class Stroll extends GameMechanic {
      * Whether the stroll has ended or not.
      */
     protected Boolean cFinished;
-
-    /**
-     * Pointer to the worldRenderer.
-     */
-    protected WorldRenderer cWorldRenderer;
-
-    /**
-     * The screen belonging to this stroll.
-     */
-	protected ScreenLogic cScreen;
 	
 	/**
 	 * The base threshold used for generating events.
@@ -62,7 +49,7 @@ public class Stroll extends GameMechanic {
 	protected static final double BASE_THRESHOLD = 0.002;
 
     /**
-     * The timertask to listen to the stroll timer.
+     * The timer task to listen to the stroll timer.
      */
 	protected final TimerTask cTimerTask = new TimerTask() {
         @Override
@@ -88,6 +75,11 @@ public class Stroll extends GameMechanic {
      */
     protected StrollEvent cEvent;
 
+    /**
+     * Subject for end of stroll.
+     */
+    protected Subject cEndStrollSubject;
+
 	/**
 	 * Constructor, creates a new Stroll object.
 	 */
@@ -97,14 +89,11 @@ public class Stroll extends GameMechanic {
 		cEventGoing = false;
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
+        cEndStrollSubject = new Subject();
 
-        cWorldRenderer = StandUp.getInstance().getWorldRenderer();
-        cScreen = new StrollScreen(cWorldRenderer);
-        cWorldRenderer.setScreen(cScreen);
-//		cScreen = new StrollScreen(StandUp.getInstance());
-//        ((Game) Gdx.app.getApplicationListener()).setScreen(cScreen);
+        StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
+        TimeKeeper.getInstance().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
 	}
 	
@@ -112,18 +101,10 @@ public class Stroll extends GameMechanic {
 	 * Every cycle, as long as there is no event going on, we want to generate an event.
 	 */
     @Override
-    public final void update() {
+    public final void update(Observable o, Object arg) {
         if (!cEventGoing) {
             generatePossibleEvent();
         }
-    }
-    
-    /**
-     * Resumes the scroll if it is somehow paused.
-     */
-    public final void resume() {
-        Gdx.app.log(TAG, "Resumed stroll");
-        cWorldRenderer.setScreen(cScreen);
     }
 
     /**
@@ -134,8 +115,7 @@ public class Stroll extends GameMechanic {
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
-            cWorldRenderer.setScreen(cEvent.getScreen());
-//            ((Game) Gdx.app.getApplicationListener()).setScreen(cEvent.getScreen());
+            cEvent.init();
         }
 	}
 
@@ -153,10 +133,6 @@ public class Stroll extends GameMechanic {
         if (cFinished) {
         	Gdx.app.log(TAG, "Event finished and time is up, ending stroll.");
             done();
-		} else {
-			Gdx.app.log(TAG, "Event finished and there is time left, returning back to strollscreen");
-            //cWorldRenderer.setScreen(cScreen);
-			cScreen.setAsActiveScreen();
 		}
     }
 
@@ -166,11 +142,22 @@ public class Stroll extends GameMechanic {
 	 * Method that gets called when the stroll has ended/completed.
 	 */
 	public final void done() {
-        StandUp.getInstance().unSubscribe(this);
 		Gdx.app.log(TAG, "Stroll has ended.");
-		cScreen.dispose();
         cTimerTask.dispose();
-        cWorldRenderer.setScreen(new RewardScreen(cWorldRenderer));
+
+        StandUp.getInstance().getUpdateSubject().deleteObserver(this);
+
+        cEndStrollSubject.update();
+        cEndStrollSubject.deleteObservers();
+
         StandUp.getInstance().endStroll(cRewards);
 	}
+
+    /**
+     * Getter for the subject to subscribe to to get updated for the end of the stroll.
+     * @return Subject to subscribe to.
+     */
+    public Subject getEndStrollSubject() {
+        return cEndStrollSubject;
+    }
 }

@@ -19,6 +19,11 @@ public final class TimeKeeper {
 	public static final String TAG = TimeKeeper.class.getSimpleName();
 
 	/**
+	 * Singleton of timer handler.
+	 */
+	protected static final TimeKeeper cInstance = new TimeKeeper();
+
+	/**
 	 * Set of all the timers.
 	 */
 	protected Set<Timer> cTimers;
@@ -37,7 +42,7 @@ public final class TimeKeeper {
 	/**
 	 * Keeps track of the timers and updates them every second.
 	 */
-	public TimeKeeper() {
+	private TimeKeeper() {
 		cTimers = new HashSet<Timer>();
 		cPreviousTick = System.currentTimeMillis();
 		Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
@@ -50,6 +55,14 @@ public final class TimeKeeper {
 		for (Timer.Global timer : Timer.Global.values()) {
 			new Timer(timer.name(), timer.getDuration(), true);
 		}
+	}
+
+	/**
+	 * Getter for time keeper instance.
+	 * @return cInstance
+	 */
+	public static TimeKeeper getInstance() {
+		return cInstance;
 	}
 
 	/**
@@ -73,7 +86,7 @@ public final class TimeKeeper {
 	 * Adds a timer to the timeKeeper.
 	 * @param timer Timer to add to be controlled by the timeKeeper
 	 */
-	void addTimer(final Timer timer) {
+	protected void addTimer(final Timer timer) {
 		if (cTimers.add(timer)) {
 			Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
 		}
@@ -83,7 +96,7 @@ public final class TimeKeeper {
 	 * Removes a timer from the timeKeeper.
 	 * @param timer Timer to be removed from the timekeeper
 	 */
-	void removeTimer(final Timer timer) {
+	protected void removeTimer(final Timer timer) {
 		if (cTimers.remove(timer)) {
 			Gdx.app.debug(TAG, "Removed Timer '" + timer.getName() + "'.");
 		}

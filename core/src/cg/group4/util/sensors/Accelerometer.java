@@ -27,11 +27,12 @@ public class Accelerometer {
 	/**
 	 * Reader that reads the sensor values from the device.
 	 */
-	protected SensorReader cReader; //REPLACO
+	protected SensorReader cReader;
 	
 	/**
 	 * Constructs an accelerometer which is used to read the accelerometer data
 	 * from the device.
+	 * @param reader SensorReader
 	 */
 	public Accelerometer(SensorReader reader) {
 		cFilterGravity = false;

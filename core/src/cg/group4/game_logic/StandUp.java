@@ -1,12 +1,10 @@
 package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
-import cg.group4.util.camera.GameSkin;
-import cg.group4.util.camera.WorldRenderer;
+import cg.group4.util.sensors.SensorReader;
+import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
-
-import java.util.HashSet;
-import java.util.Set;
+import cg.group4.util.timer.Timer;
 
 import com.badlogic.gdx.Gdx;
 
@@ -30,58 +28,32 @@ public class StandUp {
     protected static final StandUp cInstance = new StandUp();
 
     /**
-     *  Contains the default skin that is used in the game.
-     */
-    protected GameSkin cGameSkin;
-
-    /**
-     * Draws the screen and makes everything look nice.
-     */
-    protected WorldRenderer cWorldRenderer;
-
-    /**
      * Stroll logic.
      */
     protected Stroll cStroll;
 
     /**
-     * TimeKeeper logic.
+     * Subject for all the game logic to subscribe to that has to be updated every render cycle.
      */
-    protected TimeKeeper cTimeKeeper;
+    protected Subject cUpdateSubject;
 
     /**
-     * list of all the subscribed game mechanics.
+     * Subject for new stroll.
      */
-    protected Set<GameMechanic> cGameMechanics;
-
+    protected Subject cNewStrollSubject;
+    
     /**
-     * list of all the game mechanics that need to be added.
+     * Reads sensor input of the device
      */
-    protected Set<GameMechanic> cSubscribersGameMechanics;
-    /**
-     * list of all the game mechanics that need to be removed.
-     */
-    protected Set<GameMechanic> cUnsubscribersGameMechanics;
+    protected SensorReader cSensorReader;
 
     /**
      * Instantiate StandUp and TimeKeeper.
      */
     private StandUp() {
-        cTimeKeeper = new TimeKeeper();
-        cGameMechanics = new HashSet<GameMechanic>();
-        cSubscribersGameMechanics = new HashSet<GameMechanic>();
-        cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
-    }
-
-    /**
-     * Initialize TimeKeeper.
-     * This is kept from the constructor of the StandUp, because at construction time of StandUp,
-     * the TimeKeeper is not yet constructed.
-     */
-    public void init() {
-        cTimeKeeper.init();
-        cGameSkin = new GameSkin();
-        cWorldRenderer = new WorldRenderer();
+        cUpdateSubject = new Subject();
+        cNewStrollSubject = new Subject();
+        cSensorReader = new SensorReader();
     }
 
     /**
@@ -90,11 +62,9 @@ public class StandUp {
     public void startStroll() {
         if (cStroll == null) {
         	Gdx.app.log(TAG, "Starting up stroll, created new one.");
-            cTimeKeeper.getTimer("INTERVAL").reset();
+            TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
-        } else {
-        	Gdx.app.log(TAG, "Starting up stroll, found old one so resuming.");
-            cStroll.resume();
+            cNewStrollSubject.update();
         }
     }
 
@@ -115,21 +85,6 @@ public class StandUp {
         return cInstance;
     }
 
-    /**
-     * Getter for TimeKeeper.
-     * @return cTimeKeeper
-     */
-    public TimeKeeper getTimeKeeper() {
-        return cTimeKeeper;
-    }
-
-    /**
-     * Getter for the default game skin.
-     * @return cGameSkin.
-     */
-    public GameSkin getGameSkin(){
-        return cGameSkin;
-    }
 
     /**
      * Getter for Stroll.
@@ -140,29 +95,33 @@ public class StandUp {
     }
 
     /**
-     * Goes over all the subscribed game machenics and updates them.
+     * Updates all the game mechanics.
      */
-    public void updateGameMechanics() {
-        cGameMechanics.removeAll(cUnsubscribersGameMechanics);
-        cGameMechanics.addAll(cSubscribersGameMechanics);
-        cUnsubscribersGameMechanics.clear();
-        cSubscribersGameMechanics.clear();
-
-        for (GameMechanic gm : cGameMechanics) {
-            gm.update();
-        }
-
+    public void update() {
+        cUpdateSubject.update();
     }
 
-    public void subscribe(final GameMechanic gameMechanic) {
-        cSubscribersGameMechanics.add(gameMechanic);
+    /**
+     * Getter for the subject to subscribe to to get updated every render cycle.
+     * @return Subject to subscribe to.
+     */
+    public Subject getUpdateSubject() {
+        return cUpdateSubject;
     }
 
-    public void unSubscribe(final GameMechanic gameMechanic) {
-        cUnsubscribersGameMechanics.add(gameMechanic);
+    /**
+     * Getter for the subject to subscribe to to get updated for new stroll.
+     * @return Subject to subscribe to.
+     */
+    public Subject getNewStrollSubject() {
+        return cNewStrollSubject;
     }
-
-    public WorldRenderer getWorldRenderer() {
-        return cWorldRenderer;
+    
+    /**
+     * Getter for the SensorReader to read the sensor values of the device.
+     * @return SensorReader Object
+     */
+    public SensorReader getSensorReader() {
+    	return cSensorReader;
     }
 }
