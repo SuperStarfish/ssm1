@@ -29,7 +29,7 @@ public abstract class TimerTask implements Disposable{
     /** Returns the timer it belongs too.
      * @return	The timer this task belongs too.
      */
-    public final Boolean isActive() {
+    public final boolean isActive() {
         return cActive;
     }
 

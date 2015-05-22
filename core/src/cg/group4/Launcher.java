@@ -24,7 +24,7 @@ public class Launcher extends Game {
     /**
      * Used to clear all preferences and other data to start with a 'clean' game.
      */
-    public static final boolean CLEAR_SETTINGSS = false;
+    public static final boolean CLEAR_SETTINGS = false;
 	/**
 	 * Handles viewport and camera. Also draws sprites properly in the game world.
 	 */
@@ -42,7 +42,7 @@ public class Launcher extends Game {
 	 */
 	@Override
 	public final void create() {
-        if(CLEAR_SETTINGSS){
+        if(CLEAR_SETTINGS){
             Preferences preferences = Gdx.app.getPreferences("TIMER");
             preferences.clear();
             preferences.flush();

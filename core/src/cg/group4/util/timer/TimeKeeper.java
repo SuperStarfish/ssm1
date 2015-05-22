@@ -73,7 +73,7 @@ public final class TimeKeeper {
 	 * Adds a timer to the timeKeeper.
 	 * @param timer Timer to add to be controlled by the timeKeeper
 	 */
-	void addTimer(final Timer timer) {
+	protected void addTimer(final Timer timer) {
 		if (cTimers.add(timer)) {
 			Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
 		}
@@ -83,7 +83,7 @@ public final class TimeKeeper {
 	 * Removes a timer from the timeKeeper.
 	 * @param timer Timer to be removed from the timekeeper
 	 */
-	void removeTimer(final Timer timer) {
+	protected void removeTimer(final Timer timer) {
 		if (cTimers.remove(timer)) {
 			Gdx.app.debug(TAG, "Removed Timer '" + timer.getName() + "'.");
 		}
