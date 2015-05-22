@@ -1,6 +1,6 @@
 package cg.group4.view.screen;
 
-import cg.group4.game_logic.StandUp;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -18,7 +18,7 @@ public class StrollScreen extends ScreenLogic {
         cTable.setFillParent(true);
         cTable.row().expandY();
         cTimeRemaining = new Label("300", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        StandUp.getInstance().getTimeKeeper().getTimer(Timer.Global.STROLL.name())
+        TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name())
                 .subscribe(new TimerTask() {
                     @Override
                     public void onTick(int seconds) {

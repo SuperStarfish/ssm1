@@ -1,8 +1,8 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.screen_mechanics.ScreenStore;
-import cg.group4.view.screen_mechanics.WorldRenderer;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -25,15 +25,21 @@ public class Launcher extends Game {
      * Used to clear all preferences and other data to start with a 'clean' game.
      */
     public static final boolean CLEAR_SETTINGS = false;
-	/**
-	 * Handles viewport and camera. Also draws sprites properly in the game world.
-	 */
-	private WorldRenderer cWorldRenderer;
 
 	/**
 	 * Keeps track of the game mechanics.
 	 */
 	private StandUp cStandUp;
+
+	/**
+	 * Keeps track of screens throughout the game.
+	 */
+	private ScreenStore cScreenStore;
+
+	/**
+	 * Keeps track of timers throughout the game.
+	 */
+	private TimeKeeper cTimeKeeper;
 
 	/**
 	 * Initializes the application.
@@ -46,15 +52,18 @@ public class Launcher extends Game {
             Preferences preferences = Gdx.app.getPreferences("TIMER");
             preferences.clear();
             preferences.flush();
-
         }
-		cStandUp = StandUp.getInstance();
-        cStandUp.init();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-        ScreenStore screenStore = StandUp.getInstance().getScreenStore();
-		setScreen(screenStore.getWorldRenderer());
-        screenStore.setScreen("Home");
+		cTimeKeeper = TimeKeeper.getInstance();
+		cTimeKeeper.init();
+
+		cStandUp = StandUp.getInstance();
+
+        cScreenStore = ScreenStore.getInstance();
+		cScreenStore.init();
+		setScreen(cScreenStore.getWorldRenderer());
+		cScreenStore.setScreen("Home");
 	}
 
 	/**
@@ -64,8 +73,8 @@ public class Launcher extends Game {
 	@Override
 	public final void render() {
 		super.render();
-		StandUp.getInstance().updateGameMechanics();
-		cStandUp.getTimeKeeper().update();
+		cStandUp.update();
+		cTimeKeeper.update();
 	}
 
 }

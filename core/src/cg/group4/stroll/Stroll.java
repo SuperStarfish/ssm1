@@ -4,6 +4,7 @@ import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen.RewardScreen;
 import cg.group4.view.screen.StrollScreen;
@@ -90,12 +91,12 @@ public class Stroll extends GameMechanic {
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
 
-        cScreenStore = StandUp.getInstance().getScreenStore();
+        cScreenStore = ScreenStore.getInstance();
 
         cScreenStore.addScreen("Stroll", new StrollScreen());
         cScreenStore.setScreen("Stroll");
 
-        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").subscribe(cTimerTask);
+        TimeKeeper.getInstance().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
 	}
 	

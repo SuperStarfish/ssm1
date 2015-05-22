@@ -3,7 +3,6 @@ package cg.group4.game_logic;
 import cg.group4.stroll.Stroll;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.screen_mechanics.GameSkin;
-import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 
 import java.util.HashSet;
@@ -33,20 +32,12 @@ public class StandUp {
      */
     protected GameSkin cGameSkin;
 
-    /**
-     * Draws the screen and makes everything look nice.
-     */
-    protected ScreenStore cScreenStore;
 
     /**
      * Stroll logic.
      */
     protected Stroll cStroll;
 
-    /**
-     * TimeKeeper logic.
-     */
-    protected TimeKeeper cTimeKeeper;
 
     /**
      * list of all the subscribed game mechanics.
@@ -66,22 +57,10 @@ public class StandUp {
      * Instantiate StandUp and TimeKeeper.
      */
     private StandUp() {
-        cTimeKeeper = new TimeKeeper();
         cGameMechanics = new HashSet<GameMechanic>();
         cSubscribersGameMechanics = new HashSet<GameMechanic>();
         cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
         cGameSkin = new GameSkin();
-        cScreenStore = new ScreenStore();
-    }
-
-    /**
-     * Initialize TimeKeeper.
-     * This is kept from the constructor of the StandUp, because at construction time of StandUp,
-     * the TimeKeeper is not yet constructed.
-     */
-    public void init() {
-        cTimeKeeper.init();
-        cScreenStore.initialization();
     }
 
     /**
@@ -90,7 +69,7 @@ public class StandUp {
     public void startStroll() {
         if (cStroll == null) {
         	Gdx.app.log(TAG, "Starting up stroll, created new one.");
-            cTimeKeeper.getTimer("INTERVAL").reset();
+            TimeKeeper.getInstance().getTimer("INTERVAL").reset();
             cStroll = new Stroll();
         } else {
         	Gdx.app.log(TAG, "Starting up stroll, found old one so resuming.");
@@ -115,13 +94,6 @@ public class StandUp {
         return cInstance;
     }
 
-    /**
-     * Getter for TimeKeeper.
-     * @return cTimeKeeper
-     */
-    public TimeKeeper getTimeKeeper() {
-        return cTimeKeeper;
-    }
 
     /**
      * Getter for the default game skin.
@@ -142,7 +114,7 @@ public class StandUp {
     /**
      * Goes over all the subscribed game machenics and updates them.
      */
-    public void updateGameMechanics() {
+    public void update() {
         cGameMechanics.removeAll(cUnsubscribersGameMechanics);
         cGameMechanics.addAll(cSubscribersGameMechanics);
         cUnsubscribersGameMechanics.clear();
@@ -160,9 +132,5 @@ public class StandUp {
 
     public void unSubscribe(final GameMechanic gameMechanic) {
         cUnsubscribersGameMechanics.add(gameMechanic);
-    }
-
-    public ScreenStore getScreenStore() {
-        return cScreenStore;
     }
 }

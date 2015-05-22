@@ -2,6 +2,7 @@ package cg.group4.stroll.events;
 
 import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -44,12 +45,12 @@ public abstract class StrollEvent extends GameMechanic implements Disposable {
     public StrollEvent() {
         super();
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
-        StandUp.getInstance().getTimeKeeper().getTimer("EVENT").subscribe(cTimerTask);
+        TimeKeeper.getInstance().getTimer("EVENT").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
     }
 
     public void init() {
-        cScreenStore = StandUp.getInstance().getScreenStore();
+        cScreenStore = ScreenStore.getInstance();
         cScreenStore.addScreen("Event",createScreen());
         cScreenStore.setScreen("Event");
     }

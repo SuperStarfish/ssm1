@@ -12,6 +12,11 @@ import java.util.Map;
 public class ScreenStore {
 
     /**
+     * Singleton of screen handler.
+     */
+    protected static final ScreenStore cInstance = new ScreenStore();
+
+    /**
      * Hashmap that contains all the screens.
      */
     protected Map<String,ScreenLogic> cScreens;
@@ -24,14 +29,22 @@ public class ScreenStore {
     /**
      * Class to store screens to be accessed later.
      */
-    public ScreenStore() {
+    private ScreenStore() {
         cScreens = new HashMap<String, ScreenLogic>();
         cWorldRenderer = new WorldRenderer();
     }
 
-    public void initialization() {
+    public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
+    }
+
+    /**
+     * Getter for time keeper instance.
+     * @return cInstance
+     */
+    public static ScreenStore getInstance() {
+        return cInstance;
     }
 
     /**

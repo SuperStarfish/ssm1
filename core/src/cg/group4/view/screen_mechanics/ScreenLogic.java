@@ -28,7 +28,7 @@ public abstract class ScreenLogic {
      */
     public ScreenLogic() {
         cGameSkin = StandUp.getInstance().getGameSkin();
-        cScreenStore = StandUp.getInstance().getScreenStore();
+        cScreenStore = ScreenStore.getInstance();
         cWidgetGroup = createWidgetGroup();
     }
 

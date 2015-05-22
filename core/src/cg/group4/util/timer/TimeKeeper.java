@@ -19,6 +19,11 @@ public final class TimeKeeper {
 	public static final String TAG = TimeKeeper.class.getSimpleName();
 
 	/**
+	 * Singleton of timer handler.
+	 */
+	protected static final TimeKeeper cInstance = new TimeKeeper();
+
+	/**
 	 * Set of all the timers.
 	 */
 	protected Set<Timer> cTimers;
@@ -37,7 +42,7 @@ public final class TimeKeeper {
 	/**
 	 * Keeps track of the timers and updates them every second.
 	 */
-	public TimeKeeper() {
+	private TimeKeeper() {
 		cTimers = new HashSet<Timer>();
 		cPreviousTick = System.currentTimeMillis();
 		Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
@@ -50,6 +55,14 @@ public final class TimeKeeper {
 		for (Timer.Global timer : Timer.Global.values()) {
 			new Timer(timer.name(), timer.getDuration(), true);
 		}
+	}
+
+	/**
+	 * Getter for time keeper instance.
+	 * @return cInstance
+	 */
+	public static TimeKeeper getInstance() {
+		return cInstance;
 	}
 
 	/**

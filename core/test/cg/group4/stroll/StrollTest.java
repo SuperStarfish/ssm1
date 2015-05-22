@@ -16,7 +16,7 @@ public class StrollTest {
     @Before
     public void setUp() {
         cStroll = new Stroll();
-//        StandUp.getInstance().getTimeKeeper().getTimer("STROLL").unsubscribe(cStroll.cTimerTask);
+//        TimeKeeper.getInstance().getTimer("STROLL").unsubscribe(cStroll.cTimerTask);
     }
 
     @Test

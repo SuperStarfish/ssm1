@@ -1,9 +1,11 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -58,7 +60,7 @@ public class HomeScreen extends ScreenLogic {
      */
     public final void initStrollIntervalTimer() {
         timer = new Label("3600", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        StandUp.getInstance().getTimeKeeper().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
+        TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
             @Override
             public void onTick(final int seconds) {
                 timer.setText(Integer.toString(seconds));
@@ -82,7 +84,6 @@ public class HomeScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 StandUp.getInstance().startStroll();
-                StandUp.getInstance().getScreenStore();
             }
         });
         cTable.row().expandY();
@@ -97,7 +98,7 @@ public class HomeScreen extends ScreenLogic {
         cSettingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                StandUp.getInstance().getScreenStore().setScreen("Settings");
+                ScreenStore.getInstance().setScreen("Settings");
             }
         });
         cTable.row().expandY();
