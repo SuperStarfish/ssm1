@@ -11,8 +11,8 @@ public class Subject extends Observable {
     /**
      * Notifies the subscribers.
      */
-    public void update() {
+    public void update(Object item) {
         setChanged();
-        notifyObservers();
+        notifyObservers(item);
     }
 }

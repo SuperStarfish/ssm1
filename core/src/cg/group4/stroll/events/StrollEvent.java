@@ -51,12 +51,6 @@ public abstract class StrollEvent implements Disposable, Observer {
         cTimerTask.getTimer().reset();
     }
 
-    public void init() {
-        cScreenStore = ScreenStore.getInstance();
-        cScreenStore.addScreen("Event",createScreen());
-        cScreenStore.setScreen("Event");
-    }
-
 	/**
 	 * Returns the reward accumulated by completing the event.
 	 * @return the reward.
@@ -67,7 +61,7 @@ public abstract class StrollEvent implements Disposable, Observer {
      * Returns the screen to be displayed.
      * @return the screen
      */
-    protected abstract ScreenLogic createScreen();
+    public abstract ScreenLogic createScreen();
 
     /**
      * Cleanup after the event.

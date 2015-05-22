@@ -1,6 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.stroll.Stroll;
+import cg.group4.stroll.events.StrollEvent;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
@@ -16,6 +18,28 @@ import java.util.Observer;
 public class StrollScreen extends ScreenLogic {
     protected Label cTimeRemaining, cText;
     protected Table cTable;
+    protected ScreenStore cScreenStore;
+
+    /**
+     * Observer that gets called when the stroll ends.
+     */
+    protected Observer cNewEventObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            cScreenStore.addScreen("Event", ((StrollEvent) arg).createScreen());
+            cScreenStore.setScreen("Event");
+        }
+    };
+    /**
+     * Observer that gets called when the stroll ends.
+     */
+    protected Observer cEndEventObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            cScreenStore.setScreen("Stroll");
+            cScreenStore.removeScreen("Event");
+        }
+    };
 
     /**
      * Observer that gets called when the stroll ends.
@@ -23,14 +47,17 @@ public class StrollScreen extends ScreenLogic {
     protected Observer cEndStrollObserver = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            ScreenStore screenStore = ScreenStore.getInstance();
-            screenStore.addScreen("Reward", new RewardScreen());
-            screenStore.setScreen("Reward");
+            cScreenStore.addScreen("Reward", new RewardScreen());
+            cScreenStore.setScreen("Reward");
         }
     };
 
     public StrollScreen() {
-        StandUp.getInstance().getStroll().getEndStrollSubject().addObserver(cEndStrollObserver);
+        cScreenStore = ScreenStore.getInstance();
+        Stroll stroll = StandUp.getInstance().getStroll();
+        stroll.getEndStrollSubject().addObserver(cEndStrollObserver);
+        stroll.getNewEventSubject().addObserver(cNewEventObserver);
+        stroll.getEndEventSubject().addObserver(cEndEventObserver);
     }
 
     @Override

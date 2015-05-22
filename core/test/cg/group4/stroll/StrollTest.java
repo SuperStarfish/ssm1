@@ -24,14 +24,6 @@ public class StrollTest {
     @Test
     public void testGeneratePossibleEvent() {
         assertTrue(true);
-//        assertFalse(cStroll.cEventGoing);
-//        assertNull(cStroll.cEvent);
-//
-//        cStroll.cEventThreshold = 1;
-//        cStroll.generatePossibleEvent();
-//
-//        assertTrue(cStroll.cEventGoing);
-//        assertNotNull(cStroll.cEvent);
     }
 
 

@@ -56,7 +56,7 @@ public class StandUp {
         	Gdx.app.log(TAG, "Starting up stroll, created new one.");
             TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
-            cNewStrollSubject.update();
+            cNewStrollSubject.update(null);
         }
     }
 
@@ -90,7 +90,7 @@ public class StandUp {
      * Updates all the game mechanics.
      */
     public void update() {
-        cUpdateSubject.update();
+        cUpdateSubject.update(null);
     }
 
     /**

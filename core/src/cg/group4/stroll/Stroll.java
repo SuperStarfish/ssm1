@@ -80,6 +80,16 @@ public class Stroll implements Observer {
      */
     protected Subject cEndStrollSubject;
 
+    /**
+     * Subject for new event.
+     */
+    protected Subject cNewEventSubject;
+
+    /**
+     * Subject for end of event.
+     */
+    protected Subject cEndEventSubject;
+
 	/**
 	 * Constructor, creates a new Stroll object.
 	 */
@@ -90,6 +100,8 @@ public class Stroll implements Observer {
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
         cEndStrollSubject = new Subject();
+        cNewEventSubject = new Subject();
+        cEndEventSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
@@ -115,7 +127,7 @@ public class Stroll implements Observer {
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             cEvent = new TestStrollEvent();
-            cEvent.init();
+            cNewEventSubject.update(cEvent);
         }
 	}
 
@@ -125,6 +137,8 @@ public class Stroll implements Observer {
      */
     public final void eventFinished(final int rewards) {
     	Gdx.app.log(TAG, "Event completed!");
+
+        cEndEventSubject.update(null);
 
         cRewards += rewards;
         cEvent = null;
@@ -147,7 +161,7 @@ public class Stroll implements Observer {
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cEndStrollSubject.update();
+        cEndStrollSubject.update(null);
         cEndStrollSubject.deleteObservers();
 
         StandUp.getInstance().endStroll(cRewards);
@@ -159,5 +173,21 @@ public class Stroll implements Observer {
      */
     public Subject getEndStrollSubject() {
         return cEndStrollSubject;
+    }
+
+    /**
+     * Getter for the subject to subscribe to get updated for the start of a new event.
+     * @return Subject to subscribe to.
+     */
+    public Subject getNewEventSubject() {
+        return cNewEventSubject;
+    }
+
+    /**
+     * Getter for the subject to subscribe to to get updated for the end of the event.
+     * @return Subject to subscribe to.
+     */
+    public Subject getEndEventSubject() {
+        return cEndEventSubject;
     }
 }
