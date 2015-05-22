@@ -1,6 +1,5 @@
 package cg.group4.stroll.events;
 
-import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
@@ -10,13 +9,15 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 
+import java.util.Observer;
+
 /**
  * Interface that gets implemented by every event.
  * @author Nick Cleintuar
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
-public abstract class StrollEvent extends GameMechanic implements Disposable {
+public abstract class StrollEvent implements Disposable, Observer {
 
     protected ScreenStore cScreenStore;
 	
@@ -43,8 +44,9 @@ public abstract class StrollEvent extends GameMechanic implements Disposable {
      * Constructor, creates a new stroll event.
      */
     public StrollEvent() {
-        super();
+
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
+        StandUp.getInstance().getGameMechanicSubject().addObserver(this);
         TimeKeeper.getInstance().getTimer("EVENT").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
     }
@@ -76,7 +78,7 @@ public abstract class StrollEvent extends GameMechanic implements Disposable {
 	 * Method that gets called to dispose of the event.
 	 */
 	public final void dispose() {
-        super.dispose();
+        StandUp.getInstance().getGameMechanicSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         Timer timer = cTimerTask.getTimer();
         cTimerTask.dispose();

@@ -9,6 +9,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+import java.util.Observable;
+
 /**
  * Stroll event used for testing.
  * @author Nick Cleintuar
@@ -286,7 +288,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final void update() {
+	public void update(Observable o, Object arg)  {
         final float accelX = Gdx.input.getAccelerometerX();
         final float accelY = Gdx.input.getAccelerometerY();
         final float accelZ = Gdx.input.getAccelerometerZ();

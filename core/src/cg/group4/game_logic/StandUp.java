@@ -1,12 +1,12 @@
 package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
+import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import com.badlogic.gdx.Gdx;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Observable;
 
 /**
  * Class which handles the game logic.
@@ -32,28 +32,16 @@ public class StandUp {
      */
     protected Stroll cStroll;
 
-
     /**
-     * list of all the subscribed game mechanics.
+     * Subject for all the game mechanics to subscribe to.
      */
-    protected Set<GameMechanic> cGameMechanics;
-
-    /**
-     * list of all the game mechanics that need to be added.
-     */
-    protected Set<GameMechanic> cSubscribersGameMechanics;
-    /**
-     * list of all the game mechanics that need to be removed.
-     */
-    protected Set<GameMechanic> cUnsubscribersGameMechanics;
+    protected Subject cGameMechanics;
 
     /**
      * Instantiate StandUp and TimeKeeper.
      */
     private StandUp() {
-        cGameMechanics = new HashSet<GameMechanic>();
-        cSubscribersGameMechanics = new HashSet<GameMechanic>();
-        cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
+        cGameMechanics = new Subject();
     }
 
     /**
@@ -97,25 +85,13 @@ public class StandUp {
     }
 
     /**
-     * Goes over all the subscribed game machenics and updates them.
+     * Updates all the game mechanics.
      */
     public void update() {
-        cGameMechanics.removeAll(cUnsubscribersGameMechanics);
-        cGameMechanics.addAll(cSubscribersGameMechanics);
-        cUnsubscribersGameMechanics.clear();
-        cSubscribersGameMechanics.clear();
-
-        for (GameMechanic gm : cGameMechanics) {
-            gm.update();
-        }
-
+        cGameMechanics.update();
     }
 
-    public void subscribe(final GameMechanic gameMechanic) {
-        cSubscribersGameMechanics.add(gameMechanic);
-    }
-
-    public void unSubscribe(final GameMechanic gameMechanic) {
-        cUnsubscribersGameMechanics.add(gameMechanic);
+    public Observable getGameMechanicSubject() {
+        return cGameMechanics;
     }
 }

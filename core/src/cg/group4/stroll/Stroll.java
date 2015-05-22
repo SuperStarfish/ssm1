@@ -1,6 +1,5 @@
 package cg.group4.stroll;
 
-import cg.group4.game_logic.GameMechanic;
 import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
@@ -11,13 +10,15 @@ import cg.group4.view.screen.StrollScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 /**
  * @author Martijn Gribnau
  * @author Benjamin Los
  */
-public class Stroll extends GameMechanic {
+public class Stroll implements Observer {
 	
 	/**
 	 * Tag used for debugging.
@@ -91,6 +92,8 @@ public class Stroll extends GameMechanic {
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
 
+        StandUp.getInstance().getGameMechanicSubject().addObserver(this);
+
         cScreenStore = ScreenStore.getInstance();
 
         cScreenStore.addScreen("Stroll", new StrollScreen());
@@ -104,7 +107,7 @@ public class Stroll extends GameMechanic {
 	 * Every cycle, as long as there is no event going on, we want to generate an event.
 	 */
     @Override
-    public final void update() {
+    public final void update(Observable o, Object arg) {
         if (!cEventGoing) {
             generatePossibleEvent();
         }
@@ -156,9 +159,10 @@ public class Stroll extends GameMechanic {
 	 * Method that gets called when the stroll has ended/completed.
 	 */
 	public final void done() {
-        StandUp.getInstance().unSubscribe(this);
 		Gdx.app.log(TAG, "Stroll has ended.");
         cTimerTask.dispose();
+
+        StandUp.getInstance().getGameMechanicSubject().deleteObserver(this);
 
         cScreenStore.addScreen("Reward", new RewardScreen());
         cScreenStore.setScreen("Reward");
