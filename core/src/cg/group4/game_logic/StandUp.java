@@ -1,9 +1,11 @@
 package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
+import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+
 import com.badlogic.gdx.Gdx;
 
 /**
@@ -39,6 +41,11 @@ public class StandUp {
      * Subject for new stroll.
      */
     protected Subject cNewStrollSubject;
+    
+    /**
+     * Reads sensor input of the device
+     */
+    protected SensorReader cSensorReader;
 
     /**
      * Instantiate StandUp and TimeKeeper.
@@ -46,6 +53,7 @@ public class StandUp {
     private StandUp() {
         cUpdateSubject = new Subject();
         cNewStrollSubject = new Subject();
+        cSensorReader = new SensorReader();
     }
 
     /**
@@ -107,5 +115,13 @@ public class StandUp {
      */
     public Subject getNewStrollSubject() {
         return cNewStrollSubject;
+    }
+    
+    /**
+     * Getter for the SensorReader to read the sensor values of the device.
+     * @return SensorReader Object
+     */
+    public SensorReader getSensorReader() {
+    	return cSensorReader;
     }
 }
