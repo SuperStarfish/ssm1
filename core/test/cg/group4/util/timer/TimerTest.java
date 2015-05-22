@@ -53,6 +53,22 @@ public class TimerTest {
 
     @Test
     public void testDisposeTimerTask() {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void onTick(int seconds) {
+
+            }
+
+            @Override
+            public void onStart(int seconds) {
+
+            }
+
+            @Override
+            public void onStop() {
+
+            }
+        };
         timer.subscribe(timerTask);
         timer.resolve();
         timerTask.dispose();
