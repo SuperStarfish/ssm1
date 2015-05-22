@@ -12,7 +12,7 @@ import com.badlogic.gdx.Preferences;
  * The Launcher class serves as an input point for the LibGDX application.
  * This class handles all the cycles that LibGDX goes through and thus
  * serves as the backbone of the entire application.
- *
+ * <p/>
  * The Launcher creates and initializes the StandUp, which serves as the
  * main game logic backbone.
  *
@@ -26,55 +26,55 @@ public class Launcher extends Game {
      */
     public static final boolean CLEAR_SETTINGS = false;
 
-	/**
-	 * Keeps track of the game mechanics.
-	 */
-	private StandUp cStandUp;
+    /**
+     * Keeps track of the game mechanics.
+     */
+    private StandUp cStandUp;
 
-	/**
-	 * Keeps track of screens throughout the game.
-	 */
-	private ScreenStore cScreenStore;
+    /**
+     * Keeps track of screens throughout the game.
+     */
+    private ScreenStore cScreenStore;
 
-	/**
-	 * Keeps track of timers throughout the game.
-	 */
-	private TimeKeeper cTimeKeeper;
+    /**
+     * Keeps track of timers throughout the game.
+     */
+    private TimeKeeper cTimeKeeper;
 
-	/**
-	 * Initializes the application.
-	 * Does so by creating the TimeKeeper (if non-existent) and setting the
-	 * screen to the main menu.
-	 */
-	@Override
-	public final void create() {
-        if(CLEAR_SETTINGS){
+    /**
+     * Initializes the application.
+     * Does so by creating the TimeKeeper (if non-existent) and setting the
+     * screen to the main menu.
+     */
+    @Override
+    public final void create() {
+        if (CLEAR_SETTINGS) {
             Preferences preferences = Gdx.app.getPreferences("TIMER");
             preferences.clear();
             preferences.flush();
         }
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-		cTimeKeeper = TimeKeeper.getInstance();
-		cTimeKeeper.init();
+        cTimeKeeper = TimeKeeper.getInstance();
+        cTimeKeeper.init();
 
-		cStandUp = StandUp.getInstance();
+        cStandUp = StandUp.getInstance();
 
         cScreenStore = ScreenStore.getInstance();
-		cScreenStore.init();
-		setScreen(cScreenStore.getWorldRenderer());
-		cScreenStore.setScreen("Home");
-	}
+        cScreenStore.init();
+        setScreen(cScreenStore.getWorldRenderer());
+        cScreenStore.setScreen("Home");
+    }
 
-	/**
-	 * Called every frame.
-	 * Renders one frame and updates the TimeKeeper accordingly.
-	 */
-	@Override
-	public final void render() {
-		super.render();
-		cStandUp.update();
-		cTimeKeeper.update();
-	}
+    /**
+     * Called every frame.
+     * Renders one frame and updates the TimeKeeper accordingly.
+     */
+    @Override
+    public final void render() {
+        super.render();
+        cStandUp.update();
+        cTimeKeeper.update();
+    }
 
 }

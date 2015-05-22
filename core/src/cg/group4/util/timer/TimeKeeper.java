@@ -7,112 +7,114 @@ import java.util.Set;
 
 /**
  * Singleton TimeKeeper which keeps track of every individual timer.
+ *
  * @author Jurgen van Schagen
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
 public final class TimeKeeper {
 
-	/**
-	 * Tag used for debugging.
-	 */
-	public static final String TAG = TimeKeeper.class.getSimpleName();
+    /**
+     * Tag used for debugging.
+     */
+    public static final String TAG = TimeKeeper.class.getSimpleName();
 
-	/**
-	 * Singleton of timer handler.
-	 */
-	protected static final TimeKeeper cInstance = new TimeKeeper();
-
-	/**
-	 * Set of all the timers.
-	 */
-	protected Set<Timer> cTimers;
-
-	/**
-	 * Previous tick that the timers were called.
-	 */
-	protected long cPreviousTick;
-
-	/**
-	 * Amount of milliseconds in one second.
-	 */
-	protected final long cMillisInSecond = 1000;
+    /**
+     * Singleton of timer handler.
+     */
+    protected static final TimeKeeper cInstance = new TimeKeeper();
+    /**
+     * Amount of milliseconds in one second.
+     */
+    protected final long cMillisInSecond = 1000;
+    /**
+     * Set of all the timers.
+     */
+    protected Set<Timer> cTimers;
+    /**
+     * Previous tick that the timers were called.
+     */
+    protected long cPreviousTick;
 
 
-	/**
-	 * Keeps track of the timers and updates them every second.
-	 */
-	private TimeKeeper() {
-		cTimers = new HashSet<Timer>();
-		cPreviousTick = System.currentTimeMillis();
-		Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
-	}
+    /**
+     * Keeps track of the timers and updates them every second.
+     */
+    private TimeKeeper() {
+        cTimers = new HashSet<Timer>();
+        cPreviousTick = System.currentTimeMillis();
+        Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
+    }
 
-	/**
-	 * Initializes the global timers (interval and stroll).
-	 */
-	public void init() {
-		for (Timer.Global timer : Timer.Global.values()) {
-			new Timer(timer.name(), timer.getDuration(), true);
-		}
-	}
+    /**
+     * Getter for time keeper instance.
+     *
+     * @return cInstance
+     */
+    public static TimeKeeper getInstance() {
+        return cInstance;
+    }
 
-	/**
-	 * Getter for time keeper instance.
-	 * @return cInstance
-	 */
-	public static TimeKeeper getInstance() {
-		return cInstance;
-	}
+    /**
+     * Initializes the global timers (interval and stroll).
+     */
+    public void init() {
+        for (Timer.Global timer : Timer.Global.values()) {
+            new Timer(timer.name(), timer.getDuration(), true);
+        }
+    }
 
-	/**
-	 * Looks whether a second has past since the last update.
-	 * If so it will update the timers.
-	 * Afterwards it will call resolve to resolve any conflicts.
-	 */
-	public void update() {
-		long timeStamp = System.currentTimeMillis();
+    /**
+     * Looks whether a second has past since the last update.
+     * If so it will update the timers.
+     * Afterwards it will call resolve to resolve any conflicts.
+     */
+    public void update() {
+        long timeStamp = System.currentTimeMillis();
 
-		if (timeStamp - cPreviousTick > cMillisInSecond) {
-			for (Timer timer : cTimers) {
-				timer.resolve();
-				timer.tick(timeStamp);
-			}
-			cPreviousTick += cMillisInSecond;
-		}
-	}
+        if (timeStamp - cPreviousTick > cMillisInSecond) {
+            for (Timer timer : cTimers) {
+                timer.resolve();
+                timer.tick(timeStamp);
+            }
+            cPreviousTick += cMillisInSecond;
+        }
+    }
 
-	/**
-	 * Adds a timer to the timeKeeper.
-	 * @param timer Timer to add to be controlled by the timeKeeper
-	 */
-	protected void addTimer(final Timer timer) {
-		if (cTimers.add(timer)) {
-			Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
-		}
-	}
+    /**
+     * Adds a timer to the timeKeeper.
+     *
+     * @param timer Timer to add to be controlled by the timeKeeper
+     */
+    protected void addTimer(final Timer timer) {
+        if (cTimers.add(timer)) {
+            Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
+        }
+    }
 
-	/**
-	 * Removes a timer from the timeKeeper.
-	 * @param timer Timer to be removed from the timekeeper
-	 */
-	protected void removeTimer(final Timer timer) {
-		if (cTimers.remove(timer)) {
-			Gdx.app.debug(TAG, "Removed Timer '" + timer.getName() + "'.");
-		}
-	}
+    /**
+     * Removes a timer from the timeKeeper.
+     *
+     * @param timer Timer to be removed from the timekeeper
+     */
+    protected void removeTimer(final Timer timer) {
+        if (cTimers.remove(timer)) {
+            Gdx.app.debug(TAG, "Removed Timer '" + timer.getName() + "'.");
+        }
+    }
 
-	/**
-	 * Returns a timer called `name` if controlled by the TimeKeeper.
-	 * @param name Name of a timer
-	 * @return Returns the timer with the specified name
-	 */
-	public Timer getTimer(final String name) {
-		for (Timer timer : cTimers) {
-			if (timer.getName().equals(name)) {
-				return timer;
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns a timer called `name` if controlled by the TimeKeeper.
+     *
+     * @param name Name of a timer
+     * @return Returns the timer with the specified name
+     */
+    public Timer getTimer(final String name) {
+        for (Timer timer : cTimers) {
+            if (timer.getName().equals(name)) {
+                return timer;
+            }
+        }
+        return null;
+    }
 }

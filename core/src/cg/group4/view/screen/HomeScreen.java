@@ -23,7 +23,7 @@ public class HomeScreen extends ScreenLogic {
     protected Table cTable;
 
     /**
-     *  Buttons for the stroll, settings.
+     * Buttons for the stroll, settings.
      */
     protected TextButton cStrollButton, cSettingsButton;
 
@@ -38,7 +38,7 @@ public class HomeScreen extends ScreenLogic {
     protected Observer cNewStrollObserver = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            ScreenStore.getInstance().addScreen("Stroll",new StrollScreen());
+            ScreenStore.getInstance().addScreen("Stroll", new StrollScreen());
         }
     };
 
@@ -84,14 +84,17 @@ public class HomeScreen extends ScreenLogic {
             }
 
             @Override
-            public void onStart(final int seconds) {}
+            public void onStart(final int seconds) {
+            }
 
             @Override
-            public void onStop() {}
+            public void onStop() {
+            }
         });
         cTable.row().expandY();
         cTable.add(timer);
     }
+
     /**
      * Initializes the stroll buttons on the home screen.
      */

@@ -19,31 +19,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
  */
 public class GameSkin extends Skin {
     /**
-     * Font generator for the skin.
-     */
-    protected FreeTypeFontGenerator fontGenerator;
-
-    /**
-     * Path to the default font.
-     */
-    protected String DEFAULT_FONT = "fonts/blow.ttf";
-
-    /**
-     * Default border width.
-     */
-    protected int DEFAULT_BORDER_WIDTH = 2;
-
-    /**
      * Default font size.
      */
     final protected int DEFAULT_FONT_SIZE = 42;
-
     /**
      * Default dev height.
      * It is used to scale against the height used to develop the skin for.
      */
     final float DEV_HEIGHT = 720;
-
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
@@ -51,7 +34,18 @@ public class GameSkin extends Skin {
      * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
      */
     final float UI_SCALAR;
-
+    /**
+     * Font generator for the skin.
+     */
+    protected FreeTypeFontGenerator fontGenerator;
+    /**
+     * Path to the default font.
+     */
+    protected String DEFAULT_FONT = "fonts/blow.ttf";
+    /**
+     * Default border width.
+     */
+    protected int DEFAULT_BORDER_WIDTH = 2;
     /**
      * The height of the screen.
      */
@@ -80,6 +74,7 @@ public class GameSkin extends Skin {
 
     /**
      * The default text button skin.
+     *
      * @return TextButtonStyle
      */
     protected final TextButton.TextButtonStyle generateDefaultTextButton() {
@@ -98,8 +93,9 @@ public class GameSkin extends Skin {
 
     /**
      * The default title font.
+     *
      * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
-     *         has been used to fix this issue.
+     * has been used to fix this issue.
      */
     protected final BitmapFont generateDefaultTitleFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -114,6 +110,7 @@ public class GameSkin extends Skin {
 
     /**
      * The default label style.
+     *
      * @return LabelStyle
      */
     protected final Label.LabelStyle generateDefaultLabelStyle() {
@@ -124,8 +121,9 @@ public class GameSkin extends Skin {
 
     /**
      * The default text font.
+     *
      * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
-     *         has been used to fix this issue.
+     * has been used to fix this issue.
      */
     protected final BitmapFont generateDefaultFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -138,6 +136,7 @@ public class GameSkin extends Skin {
 
     /**
      * Used to generate text buttons using the default text button style.
+     *
      * @param label label text of the text button
      * @return TextButton
      */

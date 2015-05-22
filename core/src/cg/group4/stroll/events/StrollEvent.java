@@ -5,7 +5,6 @@ import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
-import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -13,17 +12,16 @@ import java.util.Observer;
 
 /**
  * Interface that gets implemented by every event.
+ *
  * @author Nick Cleintuar
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
 public abstract class StrollEvent implements Disposable, Observer {
 
-    protected ScreenStore cScreenStore;
-	
-	/**
-	 * Timer to constrain the amount of time spent on an event.
-	 */
+    /**
+     * Timer to constrain the amount of time spent on an event.
+     */
     protected final TimerTask cTimerTask = new TimerTask() {
         @Override
         public void onTick(final int seconds) {
@@ -39,7 +37,7 @@ public abstract class StrollEvent implements Disposable, Observer {
             dispose();
         }
     };
-    
+
     /**
      * Constructor, creates a new stroll event.
      */
@@ -51,14 +49,16 @@ public abstract class StrollEvent implements Disposable, Observer {
         cTimerTask.getTimer().reset();
     }
 
-	/**
-	 * Returns the reward accumulated by completing the event.
-	 * @return the reward.
-	 */
-	public abstract int getReward();
+    /**
+     * Returns the reward accumulated by completing the event.
+     *
+     * @return the reward.
+     */
+    public abstract int getReward();
 
     /**
      * Returns the screen to be displayed.
+     *
      * @return the screen
      */
     public abstract ScreenLogic createScreen();
@@ -67,16 +67,16 @@ public abstract class StrollEvent implements Disposable, Observer {
      * Cleanup after the event.
      */
     protected abstract void clearEvent();
-	
-	/**
-	 * Method that gets called to dispose of the event.
-	 */
-	public final void dispose() {
+
+    /**
+     * Method that gets called to dispose of the event.
+     */
+    public final void dispose() {
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         Timer timer = cTimerTask.getTimer();
         cTimerTask.dispose();
         timer.stop();
         StandUp.getInstance().getStroll().eventFinished(getReward());
-	}
+    }
 }

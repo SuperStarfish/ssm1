@@ -3,67 +3,73 @@ package cg.group4.util.timer;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * 
  * @author Jurgen van Schagen
  * @author Benjamin Los
  */
-public abstract class TimerTask implements Disposable{
+public abstract class TimerTask implements Disposable {
 
-	/**
-	 * Timer belonging to this task.
-	 */
-	protected Timer cTimer;
+    /**
+     * Timer belonging to this task.
+     */
+    protected Timer cTimer;
 
     /**
      * If the timer task should be called on updates (if unsubscribed but not yet resolved).
      */
     protected boolean cActive = true;
 
-	/** Returns the timer it belongs too.
-	 * @return	The timer this task belongs too.
-	 */
-	public final Timer getTimer() {
-		return cTimer;
-	}
+    /**
+     * Returns the timer it belongs too.
+     *
+     * @return The timer this task belongs too.
+     */
+    public final Timer getTimer() {
+        return cTimer;
+    }
 
-    /** Returns the timer it belongs too.
-     * @return	The timer this task belongs too.
+    /**
+     * Sets the timer the task belongs to.
+     *
+     * @param timer The timer the task belongs to
+     */
+    public final void setTimer(final Timer timer) {
+        cTimer = timer;
+    }
+
+    /**
+     * Returns the timer it belongs too.
+     *
+     * @return The timer this task belongs too.
      */
     public final boolean isActive() {
         return cActive;
     }
 
-	/**
-	 * Sets the timer the task belongs to.
-	 * @param timer The timer the task belongs to
-	 */
-	public final void setTimer(final Timer timer) {
-		cTimer = timer;
-	}
+    /**
+     * Disposes the timer task.
+     */
+    public final void dispose() {
+        if (cActive) {
+            cTimer.unsubscribe(this);
+            cTimer = null;
+            cActive = false;
+        }
+    }
 
-	/**
-	 * Disposes the timer task.
-	 */
-	public final void dispose() {
-		if(cActive) {
-			cTimer.unsubscribe(this);
-			cTimer = null;
-			cActive = false;
-		}
-	}
+    /**
+     * Abstract method for what a task should do on a certain amount of ticks.
+     *
+     * @param seconds What should it do after this amount of seconds?
+     */
+    public abstract void onTick(int seconds);
 
-	/**
-	 * Abstract method for what a task should do on a certain amount of ticks.
-	 * @param seconds	What should it do after this amount of seconds?
-	 */
-	public abstract void onTick(int seconds);
+    /**
+     * Abstract method for what a task should do on startup of the timer.
+     */
+    public abstract void onStart(int seconds);
 
-	/**
-	 * Abstract method for what a task should do on startup of the timer.
-	 */
-	public abstract void onStart(int seconds);
-	/**
-	 * Abstract method for what a task should do on the ending of the timer.
-	 */
-	public abstract void onStop();
+    /**
+     * Abstract method for what a task should do on the ending of the timer.
+     */
+    public abstract void onStop();
 }

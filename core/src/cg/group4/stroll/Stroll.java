@@ -17,41 +17,43 @@ import java.util.Random;
  * @author Benjamin Los
  */
 public class Stroll implements Observer {
-	
-	/**
-	 * Tag used for debugging.
-	 */
-	private static final String TAG = Stroll.class.getSimpleName();
-	
-	/**
-	 * Amount of rewards collected.
-	 */
-	protected int cRewards;
 
+    /**
+     * The base threshold used for generating events.
+     */
+    protected static final double BASE_THRESHOLD = 0.002;
+    /**
+     * Tag used for debugging.
+     */
+    private static final String TAG = Stroll.class.getSimpleName();
+    /**
+     * Amount of rewards collected.
+     */
+    protected int cRewards;
     /**
      * The chance of an event happening this second.
      */
     protected double cEventThreshold;
-	
-	/**
-	 * Whether or not you're busy with an event.
-	 */
-	protected boolean cEventGoing;
-
+    /**
+     * Whether or not you're busy with an event.
+     */
+    protected boolean cEventGoing;
     /**
      * Whether the stroll has ended or not.
      */
     protected Boolean cFinished;
-	
-	/**
-	 * The base threshold used for generating events.
-	 */
-	protected static final double BASE_THRESHOLD = 0.002;
-
+    /**
+     * The current event being played.
+     */
+    protected StrollEvent cEvent;
+    /**
+     * Subject for end of stroll.
+     */
+    protected Subject cEndStrollSubject;
     /**
      * The timer task to listen to the stroll timer.
      */
-	protected final TimerTask cTimerTask = new TimerTask() {
+    protected final TimerTask cTimerTask = new TimerTask() {
         @Override
         public void onTick(final int seconds) {
         }
@@ -69,17 +71,6 @@ public class Stroll implements Observer {
             }
         }
     };
-
-    /**
-     * The current event being played.
-     */
-    protected StrollEvent cEvent;
-
-    /**
-     * Subject for end of stroll.
-     */
-    protected Subject cEndStrollSubject;
-
     /**
      * Subject for new event.
      */
@@ -90,13 +81,13 @@ public class Stroll implements Observer {
      */
     protected Subject cEndEventSubject;
 
-	/**
-	 * Constructor, creates a new Stroll object.
-	 */
-	public Stroll() {
-		Gdx.app.log(TAG, "Started new stroll");
-		cRewards = 0;
-		cEventGoing = false;
+    /**
+     * Constructor, creates a new Stroll object.
+     */
+    public Stroll() {
+        Gdx.app.log(TAG, "Started new stroll");
+        cRewards = 0;
+        cEventGoing = false;
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
         cEndStrollSubject = new Subject();
@@ -107,11 +98,11 @@ public class Stroll implements Observer {
 
         TimeKeeper.getInstance().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
-	}
-	
-	/**
-	 * Every cycle, as long as there is no event going on, we want to generate an event.
-	 */
+    }
+
+    /**
+     * Every cycle, as long as there is no event going on, we want to generate an event.
+     */
     @Override
     public final void update(Observable o, Object arg) {
         if (!cEventGoing) {
@@ -129,14 +120,15 @@ public class Stroll implements Observer {
             cEvent = new TestStrollEvent();
             cNewEventSubject.update(cEvent);
         }
-	}
+    }
 
     /**
      * Handles completion of an event.
+     *
      * @param rewards Reward(s) given on completion of an event
      */
     public final void eventFinished(final int rewards) {
-    	Gdx.app.log(TAG, "Event completed!");
+        Gdx.app.log(TAG, "Event completed!");
 
         cEndEventSubject.update(null);
 
@@ -145,18 +137,17 @@ public class Stroll implements Observer {
         cEventGoing = false;
 
         if (cFinished) {
-        	Gdx.app.log(TAG, "Event finished and time is up, ending stroll.");
+            Gdx.app.log(TAG, "Event finished and time is up, ending stroll.");
             done();
-		}
+        }
     }
 
 
-	
-	/**
-	 * Method that gets called when the stroll has ended/completed.
-	 */
-	public final void done() {
-		Gdx.app.log(TAG, "Stroll has ended.");
+    /**
+     * Method that gets called when the stroll has ended/completed.
+     */
+    public final void done() {
+        Gdx.app.log(TAG, "Stroll has ended.");
         cTimerTask.dispose();
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
@@ -165,10 +156,11 @@ public class Stroll implements Observer {
         cEndStrollSubject.deleteObservers();
 
         StandUp.getInstance().endStroll(cRewards);
-	}
+    }
 
     /**
      * Getter for the subject to subscribe to to get updated for the end of the stroll.
+     *
      * @return Subject to subscribe to.
      */
     public Subject getEndStrollSubject() {
@@ -177,6 +169,7 @@ public class Stroll implements Observer {
 
     /**
      * Getter for the subject to subscribe to get updated for the start of a new event.
+     *
      * @return Subject to subscribe to.
      */
     public Subject getNewEventSubject() {
@@ -185,6 +178,7 @@ public class Stroll implements Observer {
 
     /**
      * Getter for the subject to subscribe to to get updated for the end of the event.
+     *
      * @return Subject to subscribe to.
      */
     public Subject getEndEventSubject() {

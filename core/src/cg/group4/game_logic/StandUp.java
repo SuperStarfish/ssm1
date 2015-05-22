@@ -5,7 +5,6 @@ import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
-
 import com.badlogic.gdx.Gdx;
 
 /**
@@ -41,7 +40,7 @@ public class StandUp {
      * Subject for new stroll.
      */
     protected Subject cNewStrollSubject;
-    
+
     /**
      * Reads sensor input of the device
      */
@@ -57,11 +56,20 @@ public class StandUp {
     }
 
     /**
+     * Getter for StandUp instance.
+     *
+     * @return cInstance
+     */
+    public static StandUp getInstance() {
+        return cInstance;
+    }
+
+    /**
      * Starts a new stroll.
      */
     public void startStroll() {
         if (cStroll == null) {
-        	Gdx.app.log(TAG, "Starting up stroll, created new one.");
+            Gdx.app.log(TAG, "Starting up stroll, created new one.");
             TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
             cNewStrollSubject.update(null);
@@ -70,24 +78,17 @@ public class StandUp {
 
     /**
      * Ends the current stroll.
+     *
      * @param cRewards rewards gained by the stroll.
      */
     public void endStroll(final int cRewards) {
-    	Gdx.app.log(TAG, "Ending stroll");
+        Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
     }
 
     /**
-     * Getter for StandUp instance.
-     * @return cInstance
-     */
-    public static StandUp getInstance() {
-        return cInstance;
-    }
-
-
-    /**
      * Getter for Stroll.
+     *
      * @return cStroll
      */
     public Stroll getStroll() {
@@ -103,6 +104,7 @@ public class StandUp {
 
     /**
      * Getter for the subject to subscribe to to get updated every render cycle.
+     *
      * @return Subject to subscribe to.
      */
     public Subject getUpdateSubject() {
@@ -111,17 +113,19 @@ public class StandUp {
 
     /**
      * Getter for the subject to subscribe to to get updated for new stroll.
+     *
      * @return Subject to subscribe to.
      */
     public Subject getNewStrollSubject() {
         return cNewStrollSubject;
     }
-    
+
     /**
      * Getter for the SensorReader to read the sensor values of the device.
+     *
      * @return SensorReader Object
      */
     public SensorReader getSensorReader() {
-    	return cSensorReader;
+        return cSensorReader;
     }
 }

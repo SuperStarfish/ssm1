@@ -4,6 +4,7 @@ import java.util.Observable;
 
 /**
  * Subject that can be subscribed to for changes.
+ *
  * @author Benjamin Los
  */
 public class Subject extends Observable {

@@ -58,6 +58,7 @@ public class SettingsScreen extends ScreenLogic {
 
     /**
      * Resets the interval timer to its default time.
+     *
      * @return ChangeListener
      */
     protected final ChangeListener resetIntervalBehaviour() {
@@ -71,6 +72,7 @@ public class SettingsScreen extends ScreenLogic {
 
     /**
      * Resets the scroll timer to its default time.
+     *
      * @return ChangeListener
      */
     protected final ChangeListener resetStrollBehaviour() {
@@ -86,6 +88,7 @@ public class SettingsScreen extends ScreenLogic {
     /**
      * Stops the interval timer.
      * Resets the internal preferences. By doing so it won't be able to start off the time on which it stopped.
+     *
      * @return ChangeListener
      */
     protected final ChangeListener stopIntervalBehaviour() {
@@ -99,9 +102,10 @@ public class SettingsScreen extends ScreenLogic {
 
     /**
      * Sets the screen to the home menu
+     *
      * @return ChangeListener
      */
-    protected ChangeListener backBehaviour(){
+    protected ChangeListener backBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -112,10 +116,11 @@ public class SettingsScreen extends ScreenLogic {
 
     /**
      * Helper method for creating text buttons and adding them to the table container.
+     *
      * @param label Label for the text button
      * @return The text button just created. It is returned so an event listener can be added to the button.
      */
-    protected TextButton createButton(String label){
+    protected TextButton createButton(String label) {
         TextButton button = cGameSkin.generateDefaultMenuButton(label);
         cTable.row().expandY();
         cTable.add(button);

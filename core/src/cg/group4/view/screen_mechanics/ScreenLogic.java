@@ -33,9 +33,9 @@ public abstract class ScreenLogic {
 
     protected abstract WidgetGroup createWidgetGroup();
 
-    public WidgetGroup getWidgetGroup(){
+    public WidgetGroup getWidgetGroup() {
         return cWidgetGroup;
     }
-    
-    
+
+
 }
