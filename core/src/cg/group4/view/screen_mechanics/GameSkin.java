@@ -1,4 +1,4 @@
-package cg.group4.util.camera;
+package cg.group4.view.screen_mechanics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

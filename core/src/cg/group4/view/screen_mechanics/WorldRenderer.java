@@ -1,7 +1,5 @@
-package cg.group4.util.camera;
+package cg.group4.view.screen_mechanics;
 
-import cg.group4.view.ScreenLogic;
-import cg.group4.view.HomeScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -11,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -83,8 +80,6 @@ public class WorldRenderer implements Screen {
     public WorldRenderer() {
         initCameraAndViewport();
         createMusicPlayer();
-
-        cScreen = new HomeScreen(this);
     }
 
     /**
@@ -114,8 +109,9 @@ public class WorldRenderer implements Screen {
      * @param screen Screen to set the view to
      */
     public final void setScreen(final ScreenLogic screen) {
-        cScreen.dispose();
         cScreen = screen;
+        cStage.clear();
+        cStage.addActor(cScreen.getWidgetGroup());
     }
 
     /**
@@ -141,14 +137,7 @@ public class WorldRenderer implements Screen {
         cBackgroundSprite.setPosition(cBackgroundSprite.getWidth() / CENTERER, cBackgroundSprite.getHeight() / CENTERER);
     }
 
-    /**
-     * Clears the stage and adds a new actor.
-     * @param actor Actor to add
-     */
-    public final void setActor(final Actor actor) {
-        cStage.clear();
-        cStage.addActor(actor);
-    }
+
 
     @Override
     public final void show() {
