@@ -1,7 +1,7 @@
 package cg.group4.stroll.events;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.accelerometer.Accelerometer;
+import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerTask;
 import cg.group4.view.EventScreen;

@@ -1,6 +1,5 @@
-package cg.group4.util.accelerometer;
+package cg.group4.util.sensors;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -26,16 +25,19 @@ public class Accelerometer {
 	protected float cNoiseThreshold;
 	
 	/**
+	 * Reader that reads the sensor values from the device.
+	 */
+	protected SensorReader cReader; //REPLACO
+	
+	/**
 	 * Constructs an accelerometer which is used to read the accelerometer data
 	 * from the device.
 	 */
-	public Accelerometer() {
+	public Accelerometer(SensorReader reader) {
 		cFilterGravity = false;
 		cNoiseThreshold = 1.5f;
-		cBaseVector = new Vector3(
-				Gdx.input.getAccelerometerX(),
-				Gdx.input.getAccelerometerY(),
-				Gdx.input.getAccelerometerZ());
+		cReader = reader;
+		cBaseVector = cReader.readAccelerometer();
 	}
 	
 	/**
@@ -43,17 +45,14 @@ public class Accelerometer {
 	 * @return Current accelerometer readings.
 	 */
 	public final Vector3 update() {
-		float accelX = Gdx.input.getAccelerometerX();
-		float accelY = Gdx.input.getAccelerometerY();
-		float accelZ = Gdx.input.getAccelerometerZ();
-		
-		Vector3 resultVector = new Vector3(accelX, accelY, accelZ);
+		Vector3 readings = cReader.readAccelerometer();
+		Vector3 resultVector = readings.cpy();
 		
 		if (cFilterGravity) {
 			resultVector.set(
-					accelX - cBaseVector.x,
-					accelY - cBaseVector.y,
-					accelZ - cBaseVector.z);
+					resultVector.x - cBaseVector.x,
+					resultVector.y - cBaseVector.y,
+					resultVector.z - cBaseVector.z);
 		}
 		
 		resultVector.set(
@@ -61,9 +60,9 @@ public class Accelerometer {
 				filterNoise(resultVector.y),
 				filterNoise(resultVector.z));
 		
-		cBaseVector.set(accelX, accelY, accelZ);
+		cBaseVector = readings;
 		//System.out.println("Before filter: X: " + cBaseVector.x + " Y: " + cBaseVector.y + " Z: " + cBaseVector.z);
-		System.out.println("After filter: X: " + resultVector.x + " Y: " + resultVector.y + " Z: " + resultVector.z);
+		//System.out.println("After filter: X: " + resultVector.x + " Y: " + resultVector.y + " Z: " + resultVector.z);
 		return resultVector;
 	}
 	
@@ -109,44 +108,6 @@ public class Accelerometer {
 		cFilterGravity = mode;
 	}
 	
-	/**
-	 * Returns the number of the axis on which the gravity currently acts.
-	 * Only works when the device is being held still for a very brief period of time
-	 * (during the reading).
-	 * 1 = -X    4 = +Y
-	 * 2 = +X    5 = -Z
-	 * 3 = -Y    6 = +Z 
-	 * @return Number which represents the axis on which the gravity currently acts.
-	 */
-	//Cleanup soon
-	public final int getGravityAxis() {
-		boolean storedGravitySetting = cFilterGravity;
-		int result = -1;
-		filterGravity(false);
-		Vector3 accelVector = update();
-		
-		if (isGravity(accelVector.x)) {
-			if (accelVector.x <= 0f) {
-				result = 1;
-			} else {
-				result = 2;
-			}
-		} else if (isGravity(accelVector.y)) {
-			if (accelVector.y <= 0f) {
-				result = 3;
-			} else {
-				result = 4;
-			}
-		} else if (isGravity(accelVector.z)) {
-			if (accelVector.z <= 0f) {
-				result = 5;
-			} else {
-				result = 6;
-			}
-		}
-		cFilterGravity = storedGravitySetting;
-		return result;
-	}
 	
 	/**
 	 * Helper method that should not be called outside of this class.
