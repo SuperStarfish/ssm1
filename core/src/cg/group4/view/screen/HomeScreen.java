@@ -13,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.util.Observable;
+import java.util.Observer;
+
 public class HomeScreen extends ScreenLogic {
     /**
      * Container group used for the layout of the view.
@@ -29,11 +32,25 @@ public class HomeScreen extends ScreenLogic {
      */
     protected Label title, timer;
 
+    /**
+     * Observer that gets called on the start of a new stroll.
+     */
+    protected Observer cNewStrollObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            ScreenStore.getInstance().addScreen("Stroll",new StrollScreen());
+        }
+    };
+
+    public HomeScreen() {
+        StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
+    }
+
     @Override
     protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
-//        cTable.debugAll();
         cTable.setFillParent(true);
+
 
         initHomeScreenTitle();
         initStrollIntervalTimer();
@@ -84,6 +101,7 @@ public class HomeScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 StandUp.getInstance().startStroll();
+                ScreenStore.getInstance().setScreen("Stroll");
             }
         });
         cTable.row().expandY();

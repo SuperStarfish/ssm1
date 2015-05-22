@@ -6,8 +6,6 @@ import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import com.badlogic.gdx.Gdx;
 
-import java.util.Observable;
-
 /**
  * Class which handles the game logic.
  *
@@ -38,10 +36,16 @@ public class StandUp {
     protected Subject cUpdateSubject;
 
     /**
+     * Subject for new stroll.
+     */
+    protected Subject cNewStrollSubject;
+
+    /**
      * Instantiate StandUp and TimeKeeper.
      */
     private StandUp() {
         cUpdateSubject = new Subject();
+        cNewStrollSubject = new Subject();
     }
 
     /**
@@ -52,9 +56,7 @@ public class StandUp {
         	Gdx.app.log(TAG, "Starting up stroll, created new one.");
             TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
-        } else {
-        	Gdx.app.log(TAG, "Starting up stroll, found old one so resuming.");
-            cStroll.resume();
+            cNewStrollSubject.update();
         }
     }
 
@@ -95,7 +97,15 @@ public class StandUp {
      * Getter for the subject to subscribe to to get updated every render cycle.
      * @return Subject to subscribe to.
      */
-    public Observable getUpdateSubject() {
+    public Subject getUpdateSubject() {
         return cUpdateSubject;
+    }
+
+    /**
+     * Getter for the subject to subscribe to to get updated for new stroll.
+     * @return Subject to subscribe to.
+     */
+    public Subject getNewStrollSubject() {
+        return cNewStrollSubject;
     }
 }

@@ -3,11 +3,9 @@ package cg.group4.stroll;
 import cg.group4.game_logic.StandUp;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
+import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerTask;
-import cg.group4.view.screen.RewardScreen;
-import cg.group4.view.screen.StrollScreen;
-import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 
 import java.util.Observable;
@@ -44,11 +42,6 @@ public class Stroll implements Observer {
      * Whether the stroll has ended or not.
      */
     protected Boolean cFinished;
-
-    /**
-     * Pointer to the screenStore.
-     */
-    protected ScreenStore cScreenStore;
 	
 	/**
 	 * The base threshold used for generating events.
@@ -82,6 +75,11 @@ public class Stroll implements Observer {
      */
     protected StrollEvent cEvent;
 
+    /**
+     * Subject for end of stroll.
+     */
+    protected Subject cEndStrollSubject;
+
 	/**
 	 * Constructor, creates a new Stroll object.
 	 */
@@ -91,13 +89,9 @@ public class Stroll implements Observer {
 		cEventGoing = false;
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
+        cEndStrollSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
-
-        cScreenStore = ScreenStore.getInstance();
-
-        cScreenStore.addScreen("Stroll", new StrollScreen());
-        cScreenStore.setScreen("Stroll");
 
         TimeKeeper.getInstance().getTimer("STROLL").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
@@ -111,14 +105,6 @@ public class Stroll implements Observer {
         if (!cEventGoing) {
             generatePossibleEvent();
         }
-    }
-    
-    /**
-     * Resumes the scroll if it is somehow paused.
-     */
-    public final void resume() {
-        Gdx.app.log(TAG, "Resumed stroll");
-        cScreenStore.setScreen("Stroll");
     }
 
     /**
@@ -147,9 +133,6 @@ public class Stroll implements Observer {
         if (cFinished) {
         	Gdx.app.log(TAG, "Event finished and time is up, ending stroll.");
             done();
-		} else {
-			Gdx.app.log(TAG, "Event finished and there is time left, returning back to strollscreen");
-			cScreenStore.setScreen("Stroll");
 		}
     }
 
@@ -164,9 +147,17 @@ public class Stroll implements Observer {
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cScreenStore.addScreen("Reward", new RewardScreen());
-        cScreenStore.setScreen("Reward");
+        cEndStrollSubject.update();
+        cEndStrollSubject.deleteObservers();
 
         StandUp.getInstance().endStroll(cRewards);
 	}
+
+    /**
+     * Getter for the subject to subscribe to to get updated for the end of the stroll.
+     * @return Subject to subscribe to.
+     */
+    public Subject getEndStrollSubject() {
+        return cEndStrollSubject;
+    }
 }
