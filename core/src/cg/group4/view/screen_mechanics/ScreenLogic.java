@@ -1,6 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 /**
@@ -27,8 +26,8 @@ public abstract class ScreenLogic {
      * A default constructor which initializes the screen logic.
      */
     public ScreenLogic() {
-        cGameSkin = StandUp.getInstance().getGameSkin();
         cScreenStore = ScreenStore.getInstance();
+        cGameSkin = cScreenStore.getGameSkin();
         cWidgetGroup = createWidgetGroup();
     }
 

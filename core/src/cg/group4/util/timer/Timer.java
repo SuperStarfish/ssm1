@@ -300,13 +300,13 @@ public class Timer {
 		/**
 		 * Length definition of one interval.
 		 */
-		INTERVAL(60 * 1),
+		INTERVAL(60 * 60),
 
 		/**
 		 * Length definition of one stroll.
 		 * (5 * 60 seconds = 5 minutes)
 		 */
-		STROLL(5 * 1),
+		STROLL(5 * 60),
 
 
         /**

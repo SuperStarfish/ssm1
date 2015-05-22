@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Ben on 21-5-2015.
+ * Keeps track of all the screens throughout the game.
+ * @author Benjamin Los
  */
 public class ScreenStore {
 
@@ -27,10 +28,18 @@ public class ScreenStore {
     protected WorldRenderer cWorldRenderer;
 
     /**
+     *  Contains the default skin that is used in the game.
+     */
+    protected GameSkin cGameSkin;
+
+
+
+    /**
      * Class to store screens to be accessed later.
      */
     private ScreenStore() {
         cScreens = new HashMap<String, ScreenLogic>();
+        cGameSkin = new GameSkin();
         cWorldRenderer = new WorldRenderer();
     }
 
@@ -81,7 +90,19 @@ public class ScreenStore {
         return  cScreens.get(tag);
     }
 
+    /**
+     * Getter for the world renderer.
+     * @return The world renderer.
+     */
     public WorldRenderer getWorldRenderer() {
         return cWorldRenderer;
+    }
+
+    /**
+     * Getter for the default game skin.
+     * @return The game skin.
+     */
+    public GameSkin getGameSkin(){
+        return cGameSkin;
     }
 }

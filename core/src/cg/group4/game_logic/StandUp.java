@@ -2,7 +2,7 @@ package cg.group4.game_logic;
 
 import cg.group4.stroll.Stroll;
 import cg.group4.util.timer.TimeKeeper;
-import cg.group4.view.screen_mechanics.GameSkin;
+import cg.group4.util.timer.Timer;
 import com.badlogic.gdx.Gdx;
 
 import java.util.HashSet;
@@ -26,12 +26,6 @@ public class StandUp {
      * Singleton of game logic handler.
      */
     protected static final StandUp cInstance = new StandUp();
-
-    /**
-     *  Contains the default skin that is used in the game.
-     */
-    protected GameSkin cGameSkin;
-
 
     /**
      * Stroll logic.
@@ -60,7 +54,6 @@ public class StandUp {
         cGameMechanics = new HashSet<GameMechanic>();
         cSubscribersGameMechanics = new HashSet<GameMechanic>();
         cUnsubscribersGameMechanics = new HashSet<GameMechanic>();
-        cGameSkin = new GameSkin();
     }
 
     /**
@@ -69,7 +62,7 @@ public class StandUp {
     public void startStroll() {
         if (cStroll == null) {
         	Gdx.app.log(TAG, "Starting up stroll, created new one.");
-            TimeKeeper.getInstance().getTimer("INTERVAL").reset();
+            TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
         } else {
         	Gdx.app.log(TAG, "Starting up stroll, found old one so resuming.");
@@ -94,14 +87,6 @@ public class StandUp {
         return cInstance;
     }
 
-
-    /**
-     * Getter for the default game skin.
-     * @return cGameSkin.
-     */
-    public GameSkin getGameSkin(){
-        return cGameSkin;
-    }
 
     /**
      * Getter for Stroll.
