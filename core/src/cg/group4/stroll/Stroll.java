@@ -92,7 +92,7 @@ public class Stroll implements Observer {
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
 
-        StandUp.getInstance().getGameMechanicSubject().addObserver(this);
+        StandUp.getInstance().getUpdateSubject().addObserver(this);
 
         cScreenStore = ScreenStore.getInstance();
 
@@ -162,7 +162,7 @@ public class Stroll implements Observer {
 		Gdx.app.log(TAG, "Stroll has ended.");
         cTimerTask.dispose();
 
-        StandUp.getInstance().getGameMechanicSubject().deleteObserver(this);
+        StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
         cScreenStore.addScreen("Reward", new RewardScreen());
         cScreenStore.setScreen("Reward");

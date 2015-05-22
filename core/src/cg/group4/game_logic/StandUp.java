@@ -33,15 +33,15 @@ public class StandUp {
     protected Stroll cStroll;
 
     /**
-     * Subject for all the game mechanics to subscribe to.
+     * Subject for all the game logic to subscribe to that has to be updated every render cycle.
      */
-    protected Subject cGameMechanics;
+    protected Subject cUpdateSubject;
 
     /**
      * Instantiate StandUp and TimeKeeper.
      */
     private StandUp() {
-        cGameMechanics = new Subject();
+        cUpdateSubject = new Subject();
     }
 
     /**
@@ -88,10 +88,14 @@ public class StandUp {
      * Updates all the game mechanics.
      */
     public void update() {
-        cGameMechanics.update();
+        cUpdateSubject.update();
     }
 
-    public Observable getGameMechanicSubject() {
-        return cGameMechanics;
+    /**
+     * Getter for the subject to subscribe to to get updated every render cycle.
+     * @return Subject to subscribe to.
+     */
+    public Observable getUpdateSubject() {
+        return cUpdateSubject;
     }
 }

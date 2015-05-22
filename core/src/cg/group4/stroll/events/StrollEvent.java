@@ -46,7 +46,7 @@ public abstract class StrollEvent implements Disposable, Observer {
     public StrollEvent() {
 
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
-        StandUp.getInstance().getGameMechanicSubject().addObserver(this);
+        StandUp.getInstance().getUpdateSubject().addObserver(this);
         TimeKeeper.getInstance().getTimer("EVENT").subscribe(cTimerTask);
         cTimerTask.getTimer().reset();
     }
@@ -78,7 +78,7 @@ public abstract class StrollEvent implements Disposable, Observer {
 	 * Method that gets called to dispose of the event.
 	 */
 	public final void dispose() {
-        StandUp.getInstance().getGameMechanicSubject().deleteObserver(this);
+        StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         Timer timer = cTimerTask.getTimer();
         cTimerTask.dispose();
