@@ -97,7 +97,6 @@ public class ScreenStore {
 
     /**
      * Getter for the world renderer.
-     *
      * @return The world renderer.
      */
     public WorldRenderer getWorldRenderer() {
@@ -111,5 +110,12 @@ public class ScreenStore {
      */
     public GameSkin getGameSkin() {
         return cGameSkin;
+    }
+
+    public void rebuild(int UISize){
+        cGameSkin.createUIElements(UISize);
+        for(ScreenLogic screen : cScreens.values()){
+            screen.buildScreen();
+        }
     }
 }

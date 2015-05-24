@@ -51,7 +51,6 @@ public class HomeScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-
         initHomeScreenTitle();
         initStrollIntervalTimer();
 
@@ -124,5 +123,10 @@ public class HomeScreen extends ScreenLogic {
         });
         cTable.row().expandY();
         cTable.add(cSettingsButton);
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return null;
     }
 }

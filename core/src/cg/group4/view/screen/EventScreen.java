@@ -31,4 +31,8 @@ public class EventScreen extends ScreenLogic {
         return cTaskToPerform;
     }
 
+    @Override
+    protected String setPreviousScreenName() {
+        return "Stroll";
+    }
 }

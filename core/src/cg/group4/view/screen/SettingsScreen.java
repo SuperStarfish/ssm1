@@ -126,4 +126,9 @@ public class SettingsScreen extends ScreenLogic {
         cTable.add(button);
         return button;
     }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
+    }
 }

@@ -91,4 +91,9 @@ public class StrollScreen extends ScreenLogic {
 
         return cTable;
     }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
+    }
 }

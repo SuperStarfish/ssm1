@@ -23,17 +23,17 @@ public class GameSkin extends Skin {
      */
     protected final int DEFAULT_FONT_SIZE = 42;
     /**
-     * Default dev height.
-     * It is used to scale against the height used to develop the skin for.
+     * Default dev size.
+     * It is used to scale the current screen size against the size used to develop the skin for.
      */
-    protected final float DEV_HEIGHT = 720;
+    protected final float DEV_SIZE = 720;
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
-     * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
+     * It is calculated by taking the height of the screen divided by the default size (DEV_SIZE).
      */
-    protected final float UI_SCALAR;
+    protected float UI_SCALAR;
     /**
      * Font generator for the skin.
      */
@@ -46,19 +46,16 @@ public class GameSkin extends Skin {
      * Default border width.
      */
     protected int DEFAULT_BORDER_WIDTH = 2;
-    /**
-     * The height of the screen.
-     */
-    float UI_HEIGHT;
 
     /**
      * Initializes the skin.
      */
     public GameSkin() {
-        UI_HEIGHT = Gdx.graphics.getHeight();
-        UI_SCALAR = UI_HEIGHT / DEV_HEIGHT;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));
+    }
 
+    public void createUIElements(int newSize){
+        UI_SCALAR = newSize / DEV_SIZE;
         addFonts();
     }
 

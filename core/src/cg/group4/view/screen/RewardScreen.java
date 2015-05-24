@@ -32,4 +32,9 @@ public class RewardScreen extends ScreenLogic {
 
         return table;
     }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
+    }
 }

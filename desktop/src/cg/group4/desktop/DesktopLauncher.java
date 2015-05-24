@@ -27,7 +27,9 @@ public class DesktopLauncher {
         RATIO5_3(1200, 720),
         RATIO16_10(1152, 720),
         RATIO3_2(1080, 720),
-        RATIO4_3(960, 720);
+        RATIO4_3(960, 720),
+        RATIO3_4(720, 960),
+        RATIO9_16(540, 960);
         protected int cWidth, cHeight;
         Aspect(int width, int height){
             cWidth = width;
