@@ -38,6 +38,14 @@ public class SettingsScreen extends ScreenLogic {
         return cTable;
     }
 
+    @Override
+    protected void rebuildWidgetGroup() {
+        cButtonResetInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonResetStroll.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonStopInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonBack.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+    }
+
     /**
      * Creates the buttons of the settings menu and adds an event listener for each of them.
      */

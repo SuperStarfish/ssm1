@@ -22,6 +22,11 @@ public class EventScreen extends ScreenLogic {
         return cContainer;
     }
 
+    @Override
+    protected void rebuildWidgetGroup() {
+        cTaskToPerform.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    }
+
     /**
      * Returns the label of the screen.
      *

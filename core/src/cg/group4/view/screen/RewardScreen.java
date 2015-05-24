@@ -10,27 +10,35 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 
 public class RewardScreen extends ScreenLogic {
+    TextButton homeButton;
+    Label rewardLabel;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         Table table = new Table();
         table.setFillParent(true);
 
-        Label label = new Label("REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        rewardLabel = new Label("REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
-        table.add(label);
+        table.add(rewardLabel);
 
-        TextButton button = cGameSkin.generateDefaultMenuButton("Main Menu");
-        button.addListener(new ChangeListener() {
+        homeButton = cGameSkin.generateDefaultMenuButton("Main Menu");
+        homeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 cScreenStore.setScreen("Home");
             }
         });
         table.row().expandY();
-        table.add(button);
+        table.add(homeButton);
 
         return table;
+    }
+
+    @Override
+    protected void rebuildWidgetGroup() {
+        homeButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        rewardLabel.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
     }
 
     @Override

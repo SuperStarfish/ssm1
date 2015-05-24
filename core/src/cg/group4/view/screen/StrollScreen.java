@@ -93,6 +93,12 @@ public class StrollScreen extends ScreenLogic {
     }
 
     @Override
+    protected void rebuildWidgetGroup() {
+        cTimeRemaining.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cText.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    }
+
+    @Override
     protected String setPreviousScreenName() {
         return "Home";
     }

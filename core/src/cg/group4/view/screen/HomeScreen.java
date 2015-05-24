@@ -60,6 +60,14 @@ public class HomeScreen extends ScreenLogic {
         return cTable;
     }
 
+    @Override
+    protected void rebuildWidgetGroup() {
+        title.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        timer.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cStrollButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cSettingsButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+    }
+
     /**
      * Initializes the title on the home screen.
      */

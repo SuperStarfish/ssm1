@@ -46,6 +46,8 @@ public abstract class ScreenLogic {
 
     protected abstract WidgetGroup createWidgetGroup();
 
+    protected abstract void rebuildWidgetGroup();
+
     protected abstract String setPreviousScreenName();
 
     public String getPreviousScreenName(){

@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
+import java.util.ArrayList;
+
 /**
  * The default skin details for the application.
  *
@@ -56,15 +58,15 @@ public class GameSkin extends Skin {
 
     public void createUIElements(int newSize){
         UI_SCALAR = newSize / DEV_SIZE;
-        addFonts();
+        addDefaults();
     }
 
     /**
      * Adds different fonts and their styles to the skin, to choose from.
      */
-    protected final void addFonts() {
+    protected final void addDefaults() {
         this.add("default_font", generateDefaultFont());
-        this.add("default_textButtonStyle", generateDefaultTextButton());
+        this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
     }
@@ -74,7 +76,7 @@ public class GameSkin extends Skin {
      *
      * @return TextButtonStyle
      */
-    protected final TextButton.TextButtonStyle generateDefaultTextButton() {
+    protected final TextButton.TextButtonStyle generateDefaultTextButtonStyle() {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.fontColor = Color.GREEN;
         buttonStyle.font = this.get("default_font", BitmapFont.class);
@@ -138,7 +140,19 @@ public class GameSkin extends Skin {
      * @return TextButton
      */
     public TextButton generateDefaultMenuButton(final String label) {
-        return new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        TextButton button = new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        return button;
+    }
+
+    /**
+     * Used to generate labels using the default label style.
+     *
+     * @param text label text of the text button
+     * @return TextButton
+     */
+    public Label generateDefaultLabel(final String text) {
+        Label label = new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
+        return label;
     }
 
     /**

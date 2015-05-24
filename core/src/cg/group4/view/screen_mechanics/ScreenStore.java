@@ -115,7 +115,7 @@ public class ScreenStore {
     public void rebuild(int UISize){
         cGameSkin.createUIElements(UISize);
         for(ScreenLogic screen : cScreens.values()){
-            screen.buildScreen();
+            screen.rebuildWidgetGroup();
         }
     }
 }
