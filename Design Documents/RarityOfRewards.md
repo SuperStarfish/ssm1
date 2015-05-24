@@ -1,4 +1,5 @@
 ﻿Rarity of rewards - DRAFT
+==========================
 
 How rewards work
 ================
@@ -57,12 +58,12 @@ The fish shapes are predefined and stored in a list (or similar structure).
 * The simple fish
 * The starfish 
 
-##### Colours
+#### Colours
 
 For the rarity of colours we take the wavelength of visible human colours.
 A lower wavelength will map to a more common colour where as a higher wavelength will map to a more rare colour.
 
-##### From a number to a reward
+#### From a number to a reward
 
 /// (Number x, Number y) ➝ Reward(shape, colour)
 
