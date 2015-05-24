@@ -71,8 +71,8 @@ A lower wavelength will map to a more common colour where as a higher wavelength
 Building a reward image (proposed)
 ==================================
 
-Take a PixMap of the fish image (the shape)
-Take a second PixMap of the fish image with only the parts which will be modified by a colour filter.
-Apply a colour filter over the second PixMap. 
+1. Take a PixMap of the fish image (the shape)
+2. Take a second PixMap of the fish image with only the parts which will be modified by a colour filter.
+3. Apply a colour filter over the second PixMap. 
 
 This way, we only have to store the X amount of images of the shapes instead of loading X*Y images where Y is the amount of colours possible to get as reward.
