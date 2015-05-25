@@ -10,7 +10,7 @@ import cg.group4.Launcher;
  * on Android.
  */
 public class DesktopLauncher {
-    public static final Aspect aspect = Aspect.RATIO16_9;
+    public static final Aspect aspect = Aspect.RATIO9_16;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

@@ -29,8 +29,8 @@ public class WorldRenderer extends InputAdapter implements Screen {
 
     protected boolean cIsLandscape;
 
-    protected final String DEFAULT_LANDSCAPE_BACKGROUND_PATH = "default_landscape_background.jpg";
-    protected final String DEFAULT_PORTRAIT_BACKGROUND_PATH = "default_portrait_background.jpg";
+    protected final String DEFAULT_LANDSCAPE_BACKGROUND_PATH = "images/default_landscape_background.jpg";
+    protected final String DEFAULT_PORTRAIT_BACKGROUND_PATH = "images/default_portrait_background.jpg";
 
 
     @Override
@@ -162,6 +162,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cScreen = screen;
         cStage.dispose();
         cStage = new Stage();
+        cStage.setDebugAll(true);
         cStage.addActor(cScreen.getWidgetGroup());
         inputMultiplexer.addProcessor(cStage);
     }

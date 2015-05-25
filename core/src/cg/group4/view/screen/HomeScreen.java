@@ -27,6 +27,8 @@ public class HomeScreen extends ScreenLogic {
      */
     protected TextButton cStrollButton, cSettingsButton;
 
+    protected Timer cIntervalTimer;
+
     /**
      * Labels for title, timer.
      */
@@ -83,7 +85,13 @@ public class HomeScreen extends ScreenLogic {
      * If the timer is started, its label will change to the time left on the timer.
      */
     public final void initStrollIntervalTimer() {
-        timer = new Label("3600", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        System.out.println(cIntervalTimer.getRemainingTime() + "");
+        if(cIntervalTimer.getRemainingTime() > 0 ){
+            timer = new Label(Integer.toString(cIntervalTimer.getRemainingTime()), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        } else {
+            timer = new Label("Ready", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        }
         TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
             @Override
             public void onTick(final int seconds) {
