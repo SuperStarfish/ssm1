@@ -60,7 +60,7 @@ public final class StrollScreen extends ScreenLogic {
     protected Observer cEndStrollObserver = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            cScreenStore.addScreen("Reward", new RewardScreen());
+            cScreenStore.addScreen("Reward", new RewardScreen((Integer) arg));
             cScreenStore.setScreen("Reward");
         }
     };

@@ -31,7 +31,6 @@ public abstract class ScreenLogic {
     public ScreenLogic() {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
-        cWidgetGroup = createWidgetGroup();
     }
 
     /**
@@ -47,6 +46,9 @@ public abstract class ScreenLogic {
      * @return The widget group.
      */
     public WidgetGroup getWidgetGroup() {
+        if (cWidgetGroup == null) {
+            cWidgetGroup = createWidgetGroup();
+        }
         return cWidgetGroup;
     }
 
