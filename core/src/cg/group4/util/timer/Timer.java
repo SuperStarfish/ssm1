@@ -128,6 +128,11 @@ public class Timer {
         cSubscribe = new HashSet<TimerTask>();
         cTimerTasks = new HashSet<TimerTask>();
         cUnsubscribe = new HashSet<TimerTask>();
+
+        cStartSubject = new Subject();
+        cStopSubject = new Subject();
+        cTickSubject = new Subject();
+
         cPersistent = persistent;
         cPreferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
