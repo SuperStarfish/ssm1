@@ -44,7 +44,12 @@ public class HomeScreen extends ScreenLogic {
     /**
      * Observer to subscribe to the tick subject of the interval timer.
      */
-    protected Observer cTickObserver;
+    protected Observer cIntervalTickObserver;
+
+    /**
+     * The interval timer of the game.
+     */
+    protected Timer cIntervalTimer;
 
     public HomeScreen() {
         StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
@@ -80,15 +85,20 @@ public class HomeScreen extends ScreenLogic {
      * If the timer is started, its label will change to the time left on the timer.
      */
     public final void initStrollIntervalTimer() {
-        timer = new Label("3600", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cTickObserver = new Observer() {
+        timer = new Label(
+                Integer.toString(Timer.Global.INTERVAL.getDuration()),
+                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+
+        cIntervalTickObserver = new Observer() {
 
             @Override
             public void update(Observable o, Object arg) {
                 timer.setText(arg.toString());
             }
         };
-        TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).getTickSubject().addObserver(cTickObserver);
+
+        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
 
         cTable.row().expandY();
         cTable.add(timer);

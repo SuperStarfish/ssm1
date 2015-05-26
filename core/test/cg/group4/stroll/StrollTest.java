@@ -18,7 +18,6 @@ public class StrollTest {
     public void setUp() {
         TimeKeeper.getInstance().init();
         cStroll = new Stroll();
-        TimeKeeper.getInstance().getTimer("STROLL").unsubscribe(cStroll.cTimerTask);
     }
 
     @Test

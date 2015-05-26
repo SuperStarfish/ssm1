@@ -5,7 +5,7 @@ import cg.group4.stroll.events.StrollEvent;
 import cg.group4.stroll.events.TestStrollEvent;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
-import cg.group4.util.timer.TimerTask;
+import cg.group4.util.timer.Timer;
 import com.badlogic.gdx.Gdx;
 
 import java.util.Observable;
@@ -51,26 +51,22 @@ public class Stroll implements Observer {
      */
     protected Subject cEndStrollSubject;
     /**
-     * The timer task to listen to the stroll timer.
+     * The observer to subscribe to the stop subject of stroll timer.
      */
-    protected final TimerTask cTimerTask = new TimerTask() {
-        @Override
-        public void onTick(final int seconds) {
-        }
+    protected  Observer cStrollStopObserver = new Observer() {
 
         @Override
-        public void onStart(final int seconds) {
-            cFinished = false;
-        }
-
-        @Override
-        public void onStop() {
+        public void update(Observable o, Object arg) {
             cFinished = true;
             if (!cEventGoing) {
                 done();
             }
         }
     };
+    /**
+     * The stroll timer.
+     */
+    protected Timer cStrollTimer;
     /**
      * Subject for new event.
      */
@@ -96,8 +92,10 @@ public class Stroll implements Observer {
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        TimeKeeper.getInstance().getTimer("STROLL").subscribe(cTimerTask);
-        cTimerTask.getTimer().reset();
+        cStrollTimer = TimeKeeper.getInstance().getTimer("STROLL");
+        cStrollTimer.reset();
+        cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
+
     }
 
     /**
@@ -148,12 +146,13 @@ public class Stroll implements Observer {
      */
     public final void done() {
         Gdx.app.log(TAG, "Stroll has ended.");
-        cTimerTask.dispose();
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
         cEndStrollSubject.update(null);
         cEndStrollSubject.deleteObservers();
+
+        cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
 
         StandUp.getInstance().endStroll(cRewards);
     }

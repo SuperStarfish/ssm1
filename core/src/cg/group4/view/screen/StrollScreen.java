@@ -5,7 +5,6 @@ import cg.group4.stroll.Stroll;
 import cg.group4.stroll.events.StrollEvent;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
-import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -52,6 +51,16 @@ public class StrollScreen extends ScreenLogic {
         }
     };
 
+    /**
+     * The stroll timer of the game.
+     */
+    protected Timer cStrollTimer;
+
+    /**
+     * Observer to subscribe to the tick subject of the stroll timer.
+     */
+    protected Observer cStrollTickObserver;
+
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
         Stroll stroll = StandUp.getInstance().getStroll();
@@ -65,30 +74,31 @@ public class StrollScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
         cTable.row().expandY();
-        cTimeRemaining = new Label("300", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name())
-                .subscribe(new TimerTask() {
-                    @Override
-                    public void onTick(int seconds) {
-                        cTimeRemaining.setText(Integer.toString(seconds));
-                    }
 
-                    @Override
-                    public void onStart(int seconds) {
-
-                    }
-
-                    @Override
-                    public void onStop() {
-
-                    }
-                });
-        cTable.add(cTimeRemaining);
+        initRemainingTime();
 
         cTable.row().expandY();
         cText = new Label("Waiting for event", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.add(cText);
 
         return cTable;
+    }
+
+    protected void initRemainingTime() {
+        cTimeRemaining = new Label(
+                Integer.toString(Timer.Global.STROLL.getDuration()),
+                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+
+        cStrollTickObserver = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                    cTimeRemaining.setText(arg.toString());
+            }
+        };
+
+        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
+        cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
+
+        cTable.add(cTimeRemaining);
     }
 }

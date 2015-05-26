@@ -241,6 +241,9 @@ public class Timer {
         for (TimerTask task : cTimerTasks) {
             task.dispose();
         }
+        cStartSubject.deleteObservers();
+        cStopSubject.deleteObservers();
+        cTickSubject.deleteObservers();
         TimeKeeper.getInstance().removeTimer(this);
     }
 
