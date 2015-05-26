@@ -3,7 +3,6 @@ package cg.group4.game_logic.stroll.events;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
-import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen.EventScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Stroll event used for testing.
@@ -73,9 +73,13 @@ public class TestStrollEvent extends StrollEvent {
      */
     protected String direction;
     /**
-     * Tasks which will execute when a delay is initiated and stopped.
+     * Tasks which will execute when a delay is initiated.
      */
-    protected TimerTask delayInputTasks;
+    protected Observer cDelayInputStartObserver;
+    /**
+     * Tasks which will execute when a delay is stopped.
+     */
+    protected Observer cDelayInputStopObserver;
 
     /**
      * Configurable accelerometer that reads and filters the accelerations of the device.
@@ -93,25 +97,24 @@ public class TestStrollEvent extends StrollEvent {
         tasksCompleted = 0;
         prevOperationNr = 0;
 
-        delayInputTasks = new TimerTask() {
+        cDelayInputStartObserver = new Observer() {
             @Override
-            public void onTick(final int seconds) {
-            }
-
-            @Override
-            public void onStart(final int seconds) {
+            public void update(Observable o, Object arg) {
                 cLabel.setText("Wrong! Try " + direction + " again!");
                 cDelayNewInput = true;
             }
+        };
 
+        cDelayInputStopObserver = new Observer() {
             @Override
-            public void onStop() {
+            public void update(Observable o, Object arg) {
                 cDelayNewInput = false;
             }
         };
 
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
-        cDelayInputTimer.subscribe(delayInputTasks);
+        cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
+        cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
         cDelayNewInput = false;
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
@@ -186,7 +189,8 @@ public class TestStrollEvent extends StrollEvent {
      */
     public final void clearEvent() {
         super.dispose();
-        delayInputTasks.dispose();
+        cDelayInputTimer.getStartSubject().deleteObserver(cDelayInputStartObserver);
+        cDelayInputTimer.getStopSubject().deleteObserver(cDelayInputStopObserver);
         cDelayInputTimer.dispose();
     }
 

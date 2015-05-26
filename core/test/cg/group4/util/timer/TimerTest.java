@@ -7,7 +7,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+
+import java.util.Observable;
+import java.util.Observer;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -15,71 +17,12 @@ import static org.mockito.Mockito.*;
 @RunWith(GdxTestRunner.class)
 public class TimerTest {
     Timer timer;
-    TimerTask timerTask;
+    Observer timerObserver;
 
     @Before
     public void setUp() {
         timer = new Timer("TEST", 5);
-        timerTask = mock(TimerTask.class);
-    }
-
-    @Test
-    public void testAddTimerTask() {
-        timer.subscribe(timerTask);
-        assertEquals(1, timer.cSubscribe.size());
-        assertEquals(0, timer.cTimerTasks.size());
-        assertEquals(0, timer.cUnsubscribe.size());
-        timer.resolve();
-        assertEquals(0, timer.cSubscribe.size());
-        assertEquals(1, timer.cTimerTasks.size());
-        assertEquals(0, timer.cUnsubscribe.size());
-        assertEquals(timer,timerTask.getTimer());
-    }
-
-    @Test
-    public void testRemoveTimerTask() {
-        timer.subscribe(timerTask);
-        timer.resolve();
-        timer.unsubscribe(timerTask);
-        assertEquals(0, timer.cSubscribe.size());
-        assertEquals(1, timer.cTimerTasks.size());
-        assertEquals(1, timer.cUnsubscribe.size());
-        timer.resolve();
-        assertEquals(0, timer.cSubscribe.size());
-        assertEquals(0, timer.cTimerTasks.size());
-        assertEquals(0, timer.cUnsubscribe.size());
-        assertNull(timerTask.getTimer());
-    }
-
-    @Test
-    public void testDisposeTimerTask() {
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void onTick(int seconds) {
-
-            }
-
-            @Override
-            public void onStart(int seconds) {
-
-            }
-
-            @Override
-            public void onStop() {
-
-            }
-        };
-        timer.subscribe(timerTask);
-        timer.resolve();
-        timerTask.dispose();
-        assertEquals(0, timer.cSubscribe.size());
-        assertEquals(1, timer.cTimerTasks.size());
-        assertEquals(1, timer.cUnsubscribe.size());
-        timer.resolve();
-        assertEquals(0, timer.cSubscribe.size());
-        assertEquals(0, timer.cTimerTasks.size());
-        assertEquals(0, timer.cUnsubscribe.size());
-        assertNull( timerTask.getTimer());
+        timerObserver = mock(Observer.class);
     }
 
 
@@ -111,7 +54,6 @@ public class TimerTest {
 
     @Test
     public void testOnTickWhenFinished(){
-        timer.subscribe(timerTask);
         long timeStamp = System.currentTimeMillis();
         timer.cFinishTime = timeStamp - timer.cDuration;
         timer.tick(timeStamp);
@@ -121,9 +63,9 @@ public class TimerTest {
     @Test
     public void testTickWhenNotRunning(){
         timer.stop();
-        timer.subscribe(timerTask);
+        timer.getTickSubject().addObserver(timerObserver);
         timer.tick(System.currentTimeMillis());
-        verify(timerTask, never()).onTick(Mockito.anyInt());
+        verify(timerObserver, never()).update((Observable) any(), any());
     }
 
     @Test public void testSetFinishTimePersistent(){
@@ -137,19 +79,6 @@ public class TimerTest {
         timer.cPreferences.putLong(timer.cName, System.currentTimeMillis() - timer.cDuration);
         timer = new Timer("TEST", 60, true);
         assertFalse(timer.cRunning);
-    }
-
-    @Test public  void testSubscriptionTickRunning() {
-        TimerTask tt = mock(TimerTask.class);
-        timer.subscribe(tt);
-        verify(tt, times(1)).onTick(anyInt());
-    }
-
-    @Test public  void testSubscriptionTickStop() {
-        timer.stop();
-        TimerTask tt = mock(TimerTask.class);
-        timer.subscribe(tt);
-        verify(tt, never()).onTick(anyInt());
     }
 
     @Test public void testResetFinishTime(){

@@ -4,9 +4,6 @@ import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Implementation of the Timer class. Contains a list of subscribers.
  * The Timer class can only be accessed from the TimeKeeper.
@@ -31,21 +28,6 @@ public class Timer {
      * Name of the Timer.
      */
     protected String cName;                // required
-
-    /**
-     * Set of TimerTasks to be subscriber from this timer.
-     */
-    protected Set<TimerTask> cSubscribe;  // always created
-
-    /**
-     * Set of TimerTasks that are subscribed to this timer.
-     */
-    protected Set<TimerTask> cTimerTasks;  // always created
-
-    /**
-     * Set of TimerTasks to be unsubscriber from this timer.
-     */
-    protected Set<TimerTask> cUnsubscribe;  // always created
 
     /**
      * Duration of the timer (in seconds).
@@ -125,9 +107,6 @@ public class Timer {
         cName = name;
         cDuration = duration;
         cRemainingTime = duration;
-        cSubscribe = new HashSet<TimerTask>();
-        cTimerTasks = new HashSet<TimerTask>();
-        cUnsubscribe = new HashSet<TimerTask>();
 
         cStartSubject = new Subject();
         cStopSubject = new Subject();
@@ -174,48 +153,10 @@ public class Timer {
             if (timeStamp > cFinishTime) {
                 cRunning = false;
                 cRemainingTime = 0;
-                notifyStop();
                 cStopSubject.update();
             } else {
                 cRemainingTime = (int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC;
-                notifyTick(cRemainingTime);
                 cTickSubject.update(cRemainingTime);
-            }
-        }
-    }
-
-    /**
-     * Notifies the listeners that a Tick event occurred.
-     *
-     * @param remainingTime Time until timer finishes
-     */
-    protected final void notifyTick(final int remainingTime) {
-        for (TimerTask task : cTimerTasks) {
-            if (task.isActive()) {
-                task.onTick(remainingTime);
-            }
-        }
-    }
-
-    /**
-     * Notifies the listeners that a Stop event occurred.
-     */
-    protected final void notifyStop() {
-        for (TimerTask task : cTimerTasks) {
-            if (task.isActive()) {
-                task.onStop();
-            }
-        }
-
-    }
-
-    /**
-     * Notifies the listeners that a Start event occurred.
-     */
-    protected final void notifyStart() {
-        for (TimerTask task : cTimerTasks) {
-            if (task.isActive()) {
-                task.onStart(cDuration);
             }
         }
     }
@@ -228,7 +169,6 @@ public class Timer {
             cPreferences.putLong(cName, System.currentTimeMillis());
             cPreferences.flush();
             cRunning = false;
-            notifyStop();
             cStopSubject.update();
         }
     }
@@ -238,9 +178,6 @@ public class Timer {
      */
     public final void dispose() {
         stop();
-        for (TimerTask task : cTimerTasks) {
-            task.dispose();
-        }
         cStartSubject.deleteObservers();
         cStopSubject.deleteObservers();
         cTickSubject.deleteObservers();
@@ -256,7 +193,6 @@ public class Timer {
                 + "-Timer to finish " + ((cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC)
                 + " seconds from now.");
         cRunning = true;
-        notifyStart();
         cStartSubject.update();
     }
 
@@ -295,39 +231,6 @@ public class Timer {
     @Override
     public final int hashCode() {
         return cName.hashCode();
-    }
-
-    /**
-     * Method that adds a TimerTask to the current subscribers.
-     *
-     * @param task Which task should be added
-     */
-    public final void subscribe(final TimerTask task) {
-        cSubscribe.add(task);
-        task.setTimer(this);
-        if (cRunning) {
-            task.onTick(cRemainingTime);
-        }
-    }
-
-    /**
-     * Method that removes a TimerTask from the current subscribers.
-     *
-     * @param task Which task should be removed
-     */
-    public final void unsubscribe(final TimerTask task) {
-        cUnsubscribe.add(task);
-        task.setTimer(null);
-    }
-
-    /**
-     * Resolves issues in the subscription lists.
-     */
-    public final void resolve() {
-        cTimerTasks.removeAll(cUnsubscribe);
-        cUnsubscribe.clear();
-        cTimerTasks.addAll(cSubscribe);
-        cSubscribe.clear();
     }
 
     /**

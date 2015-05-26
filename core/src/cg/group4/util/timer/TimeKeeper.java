@@ -74,7 +74,6 @@ public final class TimeKeeper {
 
         if (timeStamp - cPreviousTick > cMillisInSecond) {
             for (Timer timer : cTimers) {
-                timer.resolve();
                 timer.tick(timeStamp);
             }
             cPreviousTick += cMillisInSecond;
