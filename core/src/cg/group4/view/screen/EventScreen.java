@@ -5,10 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
-public class EventScreen extends ScreenLogic {
+/**
+ * Screen to be displayed during an event.
+ */
+public final class EventScreen extends ScreenLogic {
 
     /**
-     * Label with the text of this event
+     * Label with the text of this event.
      */
     protected Label cTaskToPerform;
 

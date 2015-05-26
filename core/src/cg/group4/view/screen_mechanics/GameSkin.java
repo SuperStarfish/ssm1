@@ -49,7 +49,7 @@ public class GameSkin extends Skin {
     /**
      * The height of the screen.
      */
-    float UI_HEIGHT;
+    protected float UI_HEIGHT;
 
     /**
      * Initializes the skin.

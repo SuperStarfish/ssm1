@@ -41,7 +41,7 @@ public class WorldRenderer implements Screen {
      */
     protected SpriteBatch cBatch;
     /**
-     * The background sprite that will be rendered
+     * The background sprite that will be rendered.
      */
     protected Sprite cBackgroundSprite;
     /**
@@ -82,7 +82,12 @@ public class WorldRenderer implements Screen {
         Gdx.input.setInputProcessor(cStage);
 
         cCamera = new OrthographicCamera();
-        cViewPort = new ExtendViewport(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT, MAX_VIEWPORT_WIDTH, GAME_WORLD_HEIGHT, cCamera);
+        cViewPort = new ExtendViewport(
+                GAME_WORLD_WIDTH,
+                GAME_WORLD_HEIGHT,
+                MAX_VIEWPORT_WIDTH,
+                GAME_WORLD_HEIGHT,
+                cCamera);
         setBackground("default_background.jpg");
     }
 
@@ -128,7 +133,9 @@ public class WorldRenderer implements Screen {
         cBackgroundSprite.setSize(
                 (cBackgroundSprite.getWidth() / cBackgroundSprite.getHeight()) * GAME_WORLD_HEIGHT,
                 GAME_WORLD_HEIGHT);
-        cBackgroundSprite.setPosition(cBackgroundSprite.getWidth() / CENTERER, cBackgroundSprite.getHeight() / CENTERER);
+        cBackgroundSprite.setPosition(
+                cBackgroundSprite.getWidth() / CENTERER,
+                cBackgroundSprite.getHeight() / CENTERER);
     }
 
 

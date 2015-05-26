@@ -3,7 +3,6 @@ package cg.group4.view.screen;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
-import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,7 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class HomeScreen extends ScreenLogic {
+/**
+ *
+ */
+public final class HomeScreen extends ScreenLogic {
     /**
      * Container group used for the layout of the view.
      */
@@ -42,6 +44,19 @@ public class HomeScreen extends ScreenLogic {
         }
     };
 
+    /**
+     * Observer to subscribe to the tick subject of the interval timer.
+     */
+    protected Observer cIntervalTickObserver;
+
+    /**
+     * The interval timer of the game.
+     */
+    protected Timer cIntervalTimer;
+
+    /**
+     * Creates the home screen.
+     */
     public HomeScreen() {
         StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
     }
@@ -76,21 +91,21 @@ public class HomeScreen extends ScreenLogic {
      * If the timer is started, its label will change to the time left on the timer.
      */
     public final void initStrollIntervalTimer() {
-        timer = new Label("3600", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
-            @Override
-            public void onTick(final int seconds) {
-                timer.setText(Integer.toString(seconds));
-            }
+        timer = new Label(
+                Integer.toString(Timer.Global.INTERVAL.getDuration()),
+                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+
+        cIntervalTickObserver = new Observer() {
 
             @Override
-            public void onStart(final int seconds) {
+            public void update(Observable o, Object arg) {
+                timer.setText(arg.toString());
             }
+        };
 
-            @Override
-            public void onStop() {
-            }
-        });
+        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
+
         cTable.row().expandY();
         cTable.add(timer);
     }
