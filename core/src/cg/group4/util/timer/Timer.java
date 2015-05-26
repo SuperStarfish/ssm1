@@ -1,5 +1,6 @@
 package cg.group4.util.timer;
 
+import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -75,6 +76,21 @@ public class Timer {
      * Time remaining to end of timer.
      */
     protected int cRemainingTime;
+
+    /**
+     * Subject that can be subscribed to and updates when the timer starts.
+     */
+    protected Subject cStartSubject;
+
+    /**
+     * Subject that can be subscribed to and updates when the timer ticks.
+     */
+    protected Subject cTickSubject;
+
+    /**
+     * Subject that can be subscribed to and updates when the timer stops.
+     */
+    protected Subject cStopSubject;
 
 
     /**
@@ -154,9 +170,11 @@ public class Timer {
                 cRunning = false;
                 cRemainingTime = 0;
                 notifyStop();
+                cStopSubject.update();
             } else {
                 cRemainingTime = (int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC;
                 notifyTick(cRemainingTime);
+                cTickSubject.update(cRemainingTime);
             }
         }
     }
@@ -206,6 +224,7 @@ public class Timer {
             cPreferences.flush();
             cRunning = false;
             notifyStop();
+            cStopSubject.update();
         }
     }
 
@@ -230,6 +249,7 @@ public class Timer {
                 + " seconds from now.");
         cRunning = true;
         notifyStart();
+        cStartSubject.update();
     }
 
     /**
@@ -292,6 +312,30 @@ public class Timer {
         cUnsubscribe.clear();
         cTimerTasks.addAll(cSubscribe);
         cSubscribe.clear();
+    }
+
+    /**
+     * Getter for the stop subject.
+     * @return returns the stop subject of the timer
+     */
+    public Subject getStopSubject() {
+        return cStopSubject;
+    }
+
+    /**
+     * Getter for the start subject.
+     * @return returns the start subject of the timer
+     */
+    public Subject getStartSubject() {
+        return cStartSubject;
+    }
+
+    /**
+     * Getter for the tick subject.
+     * @return returns the tick subject of the timer
+     */
+    public Subject getTickSubject() {
+        return cTickSubject;
     }
 
     /**
