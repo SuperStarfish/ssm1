@@ -10,6 +10,9 @@ import cg.group4.Launcher;
  * on Android.
  */
 public class DesktopLauncher {
+    /**
+     * Uses the Aspect enum to determine what height and width to use for testing the screen on desktop.
+     */
     public static final Aspect aspect = Aspect.RATIO9_16;
 
 	public static void main (String[] arg) {

@@ -67,10 +67,10 @@ public class HomeScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        cTitle.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cTimer.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cStrollButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        cSettingsButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cTitle.setStyle(cGameSkin.getDefaultLabelStyle());
+        cTimer.setStyle(cGameSkin.getDefaultLabelStyle());
+        cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
@@ -83,18 +83,33 @@ public class HomeScreen extends ScreenLogic {
     }
 
     /**
-     * Initializes the stroll interval timer to the view.
-     * The default label is "3600".
-     * If the timer is started, its label will change to the time left on the timer.
+     * Gets the IntervalTimer and initializes buttons and behaviour. Then adds the label to the WidgetGroup.
      */
     public final void initStrollIntervalTimer() {
         cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        System.out.println(cIntervalTimer.getRemainingTime() + "");
+
+        createTimeRemainingLabel();
+        addTimerBevahiour();
+
+        cTable.row().expandY();
+        cTable.add(cTimer);
+    }
+
+    /**
+     * Creates the label and initializes the text depending on the remaining time for the IntervalTimer
+     */
+    protected void createTimeRemainingLabel(){
         if(cIntervalTimer.getRemainingTime() > 0 ){
-            cTimer = new Label(Integer.toString(cIntervalTimer.getRemainingTime()), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+            cTimer = new Label(Integer.toString(cIntervalTimer.getRemainingTime()), cGameSkin.getDefaultLabelStyle());
         } else {
             cTimer = new Label("Ready", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         }
+    }
+
+    /**
+     * Adds behaviour for the IntervalTimer.
+     */
+    protected void addTimerBevahiour(){
         TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
             @Override
             public void onTick(final int seconds) {
@@ -109,8 +124,6 @@ public class HomeScreen extends ScreenLogic {
             public void onStop() {
             }
         });
-        cTable.row().expandY();
-        cTable.add(cTimer);
     }
 
     /**

@@ -142,6 +142,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
     /**
      * Upon resizing checks to see if the orientation is changed. If so, it will change the background to default.
      * Resizing always resets the GameSkin and ScreenLogic to match the new size.
+     *
      * @param width New width of the application.
      * @param height New height of the application.
      */
@@ -166,6 +167,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
 
     /**
      * Sets the current background using the PATH that is supplied.
+     *
      * @param filename PATH to the image.
      */
     public void setBackground(String filename){
@@ -178,6 +180,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
     /**
      * Discards previous background textures (if existing) and then sets the background to the file in the FileHandle.
      * If the new background does not fit the aspect ratio, the default background will be set.
+     *
      * @param fileHandle The FileHandle to the file.
      */
     public void setBackground(FileHandle fileHandle){
