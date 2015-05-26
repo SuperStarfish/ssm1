@@ -3,7 +3,6 @@ package cg.group4.view.screen;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
-import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -42,6 +41,11 @@ public class HomeScreen extends ScreenLogic {
         }
     };
 
+    /**
+     * Observer to subscribe to the tick subject of the interval timer.
+     */
+    protected Observer cTickObserver;
+
     public HomeScreen() {
         StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
     }
@@ -77,20 +81,15 @@ public class HomeScreen extends ScreenLogic {
      */
     public final void initStrollIntervalTimer() {
         timer = new Label("3600", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
-            @Override
-            public void onTick(final int seconds) {
-                timer.setText(Integer.toString(seconds));
-            }
+        cTickObserver = new Observer() {
 
             @Override
-            public void onStart(final int seconds) {
+            public void update(Observable o, Object arg) {
+                timer.setText(arg.toString());
             }
+        };
+        TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).getTickSubject().addObserver(cTickObserver);
 
-            @Override
-            public void onStop() {
-            }
-        });
         cTable.row().expandY();
         cTable.add(timer);
     }
