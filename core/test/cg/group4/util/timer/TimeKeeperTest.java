@@ -15,28 +15,28 @@ public class TimeKeeperTest {
     Timer timer;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         timeKeeper = TimeKeeper.getInstance();
         timeKeeper.cTimers = new HashSet<Timer>();
         timer = new Timer("TEST", 60);
     }
 
     @Test
-    public void testInitGlobalTimers(){
+    public void testInitGlobalTimers() {
         int count = TimeKeeper.getInstance().cTimers.size();
         timeKeeper.init();
         assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
     }
 
     @Test
-    public void testAddTimer(){
+    public void testAddTimer() {
         int size = timeKeeper.cTimers.size();
         timeKeeper.addTimer(new Timer("Test2", 5));
         assertEquals(size + 1, timeKeeper.cTimers.size());
     }
 
     @Test
-     public void testAddDuplicateTimer(){
+    public void testAddDuplicateTimer() {
         timeKeeper.addTimer(new Timer("Test2", 0));
         int size = timeKeeper.cTimers.size();
         timeKeeper.addTimer(new Timer("Test2", 5));
@@ -44,19 +44,19 @@ public class TimeKeeperTest {
     }
 
     @Test
-    public void testGetTimer(){
+    public void testGetTimer() {
         timeKeeper.addTimer(timer);
         assertTrue(timer.equals(timeKeeper.getTimer(timer.cName)));
     }
 
     @Test
-    public void testGetTimerNull(){
+    public void testGetTimerNull() {
         timeKeeper.addTimer(timer);
         assertNull(timeKeeper.getTimer("TAD"));
     }
 
     @Test
-    public void testNotifyStop(){
+    public void testNotifyStop() {
         timeKeeper.addTimer(timer);
         assertNull(timeKeeper.getTimer("TAD"));
     }
