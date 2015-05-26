@@ -278,6 +278,11 @@ public class Timer {
         return cRunning;
     }
 
+    /**
+     * Returns the remaining time before the timer ends.
+     *
+     * @return The remaining time.
+     */
     public final int getRemainingTime() {
         return cRemainingTime;
     }
@@ -315,6 +320,9 @@ public class Timer {
         task.setTimer(null);
     }
 
+    /**
+     * Resolves issues in the subscription lists.
+     */
     public final void resolve() {
         cTimerTasks.removeAll(cUnsubscribe);
         cUnsubscribe.clear();
@@ -324,6 +332,7 @@ public class Timer {
 
     /**
      * Getter for the stop subject.
+     *
      * @return returns the stop subject of the timer
      */
     public Subject getStopSubject() {
@@ -332,6 +341,7 @@ public class Timer {
 
     /**
      * Getter for the start subject.
+     *
      * @return returns the start subject of the timer
      */
     public Subject getStartSubject() {
@@ -340,6 +350,7 @@ public class Timer {
 
     /**
      * Getter for the tick subject.
+     *
      * @return returns the tick subject of the timer
      */
     public Subject getTickSubject() {

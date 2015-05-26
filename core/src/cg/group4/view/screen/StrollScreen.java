@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.stroll.Stroll;
-import cg.group4.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.Stroll;
+import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -14,9 +14,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import java.util.Observable;
 import java.util.Observer;
 
-public class StrollScreen extends ScreenLogic {
+/**
+ * Screen to be displayed during an event.
+ */
+public final class StrollScreen extends ScreenLogic {
+    /**
+     * Labels to display text of the screen.
+     */
     protected Label cTimeRemaining, cText;
+
+    /**
+     * Table that all the elements are added to.
+     */
     protected Table cTable;
+
+    /**
+     * Screen store of the game.
+     */
     protected ScreenStore cScreenStore;
 
     /**
@@ -61,6 +75,9 @@ public class StrollScreen extends ScreenLogic {
      */
     protected Observer cStrollTickObserver;
 
+    /**
+     * Creates a screen that should be displayed during a stroll.
+     */
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
         Stroll stroll = StandUp.getInstance().getStroll();
@@ -84,6 +101,9 @@ public class StrollScreen extends ScreenLogic {
         return cTable;
     }
 
+    /**
+     * Initializes the label to display the time remaining of the stroll.
+     */
     protected void initRemainingTime() {
         cTimeRemaining = new Label(
                 Integer.toString(Timer.Global.STROLL.getDuration()),
@@ -92,7 +112,7 @@ public class StrollScreen extends ScreenLogic {
         cStrollTickObserver = new Observer() {
             @Override
             public void update(Observable o, Object arg) {
-                    cTimeRemaining.setText(arg.toString());
+                cTimeRemaining.setText(arg.toString());
             }
         };
 

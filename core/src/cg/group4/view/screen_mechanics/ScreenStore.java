@@ -52,6 +52,9 @@ public class ScreenStore {
         return cInstance;
     }
 
+    /**
+     * Initialization of the screen store, creates the standard screens.
+     */
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());

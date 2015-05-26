@@ -65,6 +65,8 @@ public abstract class TimerTask implements Disposable {
 
     /**
      * Abstract method for what a task should do on startup of the timer.
+     *
+     * @param seconds Duration of the timer.
      */
     public abstract void onStart(int seconds);
 

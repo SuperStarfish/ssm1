@@ -15,7 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class HomeScreen extends ScreenLogic {
+/**
+ *
+ */
+public final class HomeScreen extends ScreenLogic {
     /**
      * Container group used for the layout of the view.
      */
@@ -51,6 +54,9 @@ public class HomeScreen extends ScreenLogic {
      */
     protected Timer cIntervalTimer;
 
+    /**
+     * Creates the home screen.
+     */
     public HomeScreen() {
         StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
     }

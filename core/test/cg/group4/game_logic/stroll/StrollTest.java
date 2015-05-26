@@ -1,4 +1,4 @@
-package cg.group4.stroll;
+package cg.group4.game_logic.stroll;
 
 import cg.group4.GdxTestRunner;
 import cg.group4.util.timer.TimeKeeper;
