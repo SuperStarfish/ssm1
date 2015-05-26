@@ -115,6 +115,7 @@ public class Timer {
         cPreferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
         cRemainingTime = (int) (cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC;
+        cRemainingTime = cRemainingTime < 0 ? 0 : cRemainingTime;
         TimeKeeper.getInstance().addTimer(this);
     }
 

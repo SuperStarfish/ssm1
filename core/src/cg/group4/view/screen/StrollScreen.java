@@ -30,6 +30,7 @@ public class StrollScreen extends ScreenLogic {
             cScreenStore.setScreen("Event");
         }
     };
+
     /**
      * Observer that gets called when the stroll ends.
      */

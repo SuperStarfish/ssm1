@@ -56,6 +56,11 @@ public class GameSkin extends Skin {
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));
     }
 
+    /**
+     * Sets the UI Scalar and creates the UI elements based on this scale.
+     *
+     * @param newSize
+     */
     public void createUIElements(int newSize){
         UI_SCALAR = newSize / DEV_SIZE;
         addDefaults();
@@ -69,6 +74,24 @@ public class GameSkin extends Skin {
         this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
+    }
+
+    /**
+     * Easy method to return the default TextButtonStyle as a proper class.
+     *
+     * @return TextButtonStyle object
+     */
+    public TextButton.TextButtonStyle getDefaultTextButtonStyle(){
+        return get("default_textButtonStyle", TextButton.TextButtonStyle.class);
+    }
+
+    /**
+     * Easy method to return the default LabelStyle as a proper class.
+     *
+     * @return LabelStyle object
+     */
+    public Label.LabelStyle getDefaultLabelStyle(){
+        return get("default_labelStyle", Label.LabelStyle.class);
     }
 
     /**

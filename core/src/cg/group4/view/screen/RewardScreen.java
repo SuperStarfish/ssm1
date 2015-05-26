@@ -10,35 +10,42 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 
 public class RewardScreen extends ScreenLogic {
-    TextButton homeButton;
-    Label rewardLabel;
+    /**
+     * Button to return to the HomeScreen.
+     */
+    TextButton cHomeButton;
+
+    /**
+     * Label containing the reward.
+     */
+    Label cRewardLabel;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         Table table = new Table();
         table.setFillParent(true);
 
-        rewardLabel = new Label("REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cRewardLabel = new Label("REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
-        table.add(rewardLabel);
+        table.add(cRewardLabel);
 
-        homeButton = cGameSkin.generateDefaultMenuButton("Main Menu");
-        homeButton.addListener(new ChangeListener() {
+        cHomeButton = cGameSkin.generateDefaultMenuButton("Main Menu");
+        cHomeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 cScreenStore.setScreen("Home");
             }
         });
         table.row().expandY();
-        table.add(homeButton);
+        table.add(cHomeButton);
 
         return table;
     }
 
     @Override
     protected void rebuildWidgetGroup() {
-        homeButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        rewardLabel.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cHomeButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cRewardLabel.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
     }
 
     @Override

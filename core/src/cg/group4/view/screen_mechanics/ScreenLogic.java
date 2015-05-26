@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
  */
 public abstract class ScreenLogic {
     /**
-     * A default game skin.
+     * Reference to the default game skin.
      */
     protected GameSkin cGameSkin;
 
@@ -36,24 +36,46 @@ public abstract class ScreenLogic {
     public ScreenLogic() {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
-        buildScreen();
-        cPreviousScreenName = setPreviousScreenName();
-    }
-
-    public void buildScreen(){
         cWidgetGroup = createWidgetGroup();
+        cPreviousScreenName = setPreviousScreenName();
+
     }
 
+    /**
+     * Creates the WidgetGroup that contains the logic of this Screen.
+     *
+     * @return The WidgetGroup that will be added to the Stage.
+     */
     protected abstract WidgetGroup createWidgetGroup();
 
+    /**
+     * This method is called whenever the game is resized. In this method the all the UI elements need to update
+     * their styles using .setStyle().
+     */
     protected abstract void rebuildWidgetGroup();
 
+    /**
+     * This method defines the Screen to go back to. Simply supplying the name of the Screen is sufficient since
+     * the ScreenStore will handle the rest.
+     *
+     * @return Name of the previous Screen name. Can be null.
+     */
     protected abstract String setPreviousScreenName();
 
+    /**
+     * Returns the previous Screen name. Has to be set through the setPreviousScreenName() method.
+     *
+     * @return The previous Screen name.
+     */
     public String getPreviousScreenName(){
         return cPreviousScreenName;
     }
 
+    /**
+     * Returns the WidgetGroup of this Screen. This will be added to the Stage in the WorldRenderer.
+     *
+     * @return The WidgetGroup containing the logic of this Screen.
+     */
     public WidgetGroup getWidgetGroup() {
         return cWidgetGroup;
     }

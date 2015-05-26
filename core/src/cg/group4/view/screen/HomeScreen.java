@@ -27,12 +27,15 @@ public class HomeScreen extends ScreenLogic {
      */
     protected TextButton cStrollButton, cSettingsButton;
 
+    /**
+     * Reference to the IntervalTimer to properly display remaining time.
+     */
     protected Timer cIntervalTimer;
 
     /**
      * Labels for title, timer.
      */
-    protected Label title, timer;
+    protected Label cTitle, cTimer;
 
     /**
      * Observer that gets called on the start of a new stroll.
@@ -64,8 +67,8 @@ public class HomeScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        title.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        timer.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTitle.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTimer.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cStrollButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
         cSettingsButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
     }
@@ -74,9 +77,9 @@ public class HomeScreen extends ScreenLogic {
      * Initializes the title on the home screen.
      */
     public final void initHomeScreenTitle() {
-        title = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTitle = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
-        cTable.add(title);
+        cTable.add(cTitle);
     }
 
     /**
@@ -88,14 +91,14 @@ public class HomeScreen extends ScreenLogic {
         cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
         System.out.println(cIntervalTimer.getRemainingTime() + "");
         if(cIntervalTimer.getRemainingTime() > 0 ){
-            timer = new Label(Integer.toString(cIntervalTimer.getRemainingTime()), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+            cTimer = new Label(Integer.toString(cIntervalTimer.getRemainingTime()), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         } else {
-            timer = new Label("Ready", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+            cTimer = new Label("Ready", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         }
         TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
             @Override
             public void onTick(final int seconds) {
-                timer.setText(Integer.toString(seconds));
+                HomeScreen.this.cTimer.setText(Integer.toString(seconds));
             }
 
             @Override
@@ -107,7 +110,7 @@ public class HomeScreen extends ScreenLogic {
             }
         });
         cTable.row().expandY();
-        cTable.add(timer);
+        cTable.add(cTimer);
     }
 
     /**
