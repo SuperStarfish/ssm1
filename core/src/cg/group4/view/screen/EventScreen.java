@@ -15,6 +15,9 @@ public final class EventScreen extends ScreenLogic {
      */
     protected Label cTaskToPerform;
 
+    /**
+     * Creates an event screen to display the data from an event.
+     */
     public EventScreen() {
         cTaskToPerform = new Label("TASK:", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
     }

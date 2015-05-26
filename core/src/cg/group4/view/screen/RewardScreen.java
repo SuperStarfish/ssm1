@@ -13,8 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  */
 public final class RewardScreen extends ScreenLogic {
 
+    /**
+     * Reward that has to be displayed of the screen.
+     */
     protected int cReward;
 
+    /**
+     * Creates a new reward screen.
+     *
+     * @param reward Reward to be displayed.
+     */
     public RewardScreen(int reward) {
         cReward = reward;
     }
