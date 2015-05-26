@@ -12,6 +12,14 @@ public class Subject extends Observable {
     /**
      * Notifies the subscribers.
      */
+    public void update() {
+        update(null);
+    }
+
+    /**
+     * Notifies the subscribers.
+     * @param item Passes the object to its subscribers with the update.
+     */
     public void update(Object item) {
         setChanged();
         notifyObservers(item);
