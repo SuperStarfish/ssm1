@@ -1,6 +1,7 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Application;
@@ -40,6 +41,20 @@ public class Launcher extends Game {
      * Keeps track of timers throughout the game.
      */
     private TimeKeeper cTimeKeeper;
+
+    /**
+     * Accelerometer status.
+     */
+    private final AccelerationStatus cAccelerationStatus;
+
+    /**
+     * Tunnels the acceleration status through the launcher to the android project.
+     * @param accelerationStatus
+     */
+    public Launcher(AccelerationStatus accelerationStatus) {
+        super();
+        cAccelerationStatus = accelerationStatus;
+    }
 
     /**
      * Initializes the application.

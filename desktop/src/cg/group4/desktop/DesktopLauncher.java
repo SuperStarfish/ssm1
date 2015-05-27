@@ -1,8 +1,9 @@
 package cg.group4.desktop;
 
+import cg.group4.Launcher;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import cg.group4.Launcher;
+import sensor.DesktopAccelerationStatus;
 
 /**
  * The DesktopLauncher is the starting point to launch a Desktop version of the game.
@@ -16,7 +17,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = aspect.getWidth();
         config.height = aspect.getHeight();
-		new LwjglApplication(new Launcher(), config);
+		new LwjglApplication(new Launcher(new DesktopAccelerationStatus()), config);
     }
 
     /**
