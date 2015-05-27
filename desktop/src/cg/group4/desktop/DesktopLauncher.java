@@ -1,9 +1,9 @@
 package cg.group4.desktop;
 
 import cg.group4.Launcher;
+import cg.group4.sensor.DesktopAccelerationStatus;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import sensor.DesktopAccelerationStatus;
 
 /**
  * The DesktopLauncher is the starting point to launch a Desktop version of the game.
