@@ -52,6 +52,9 @@ public class ScreenStore {
         return cInstance;
     }
 
+    /**
+     * Initializes the Home Screen and the Settings Screen, since those are highly likely to be opened.
+     */
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
@@ -97,7 +100,6 @@ public class ScreenStore {
 
     /**
      * Getter for the world renderer.
-     *
      * @return The world renderer.
      */
     public WorldRenderer getWorldRenderer() {
@@ -111,5 +113,19 @@ public class ScreenStore {
      */
     public GameSkin getGameSkin() {
         return cGameSkin;
+    }
+
+    /**
+     * Upon resizing the game, this method is called. It will first update the GameSkin and then ask the
+     * Screens it contains to update their UI Elements.
+     *
+     * @param UISize The new width/height (depending on orientation) that is used by the GameSkin to rescale the UI
+     *               elements.
+     */
+    public void rebuild(int UISize){
+        cGameSkin.createUIElements(UISize);
+        for(ScreenLogic screen : cScreens.values()){
+            screen.rebuildWidgetGroup();
+        }
     }
 }
