@@ -4,7 +4,7 @@ package cg.group4.sensor;
 /**
  * Desktop implementation of thee acceleration status.
  */
-public class DesktopAccelerationStatus implements AccelerationStatus {
+public class DesktopAccelerationStatus extends AccelerationStatus {
 
 
     /**

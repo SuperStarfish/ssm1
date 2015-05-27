@@ -7,10 +7,10 @@ import com.accellibandroid.Utilities.Movement;
 import com.badlogic.gdx.Gdx;
 
 /**
- * TODO: Provide the state of the acceleration back to the core module.
+ * Gives back the acceleration status of the android device.
  *
  */
-public class AndroidAccelerationStatus implements AccelerationStatus, MovementEventListener {
+public class AndroidAccelerationStatus extends AccelerationStatus implements MovementEventListener {
 
     /**
      * Tag for debugging & logging purposes.
@@ -55,7 +55,7 @@ public class AndroidAccelerationStatus implements AccelerationStatus, MovementEv
      */
     @Override
     public AccelerationState getAccelerationState() {
-        return AccelerationState.CHEATING;
+        return cAccelerationState;
     }
 
     /**
@@ -66,10 +66,16 @@ public class AndroidAccelerationStatus implements AccelerationStatus, MovementEv
     public void movementChanged(Movement movement) {
         if(movement.name() == "WALKING") {
             Gdx.app.debug(TAG, "You are walking!");
+            cAccelerationState = AccelerationState.WALKING;
         } else if(movement.name() == "RUNNING") {
             Gdx.app.debug(TAG, "You are running!");
+            cAccelerationState = AccelerationState.RUNNING;
         } else if(movement.name() == "CHEATING") {
             Gdx.app.debug(TAG, "You are impossible!");
+            cAccelerationState = AccelerationState.CHEATING;
+        } else {
+            Gdx.app.debug(TAG, "You are resting!");
+            cAccelerationState = AccelerationState.RESTING;
         }
     }
 }

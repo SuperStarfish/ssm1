@@ -16,12 +16,7 @@ public class AndroidLauncher extends AndroidApplication {
 	 * System sensor service of Android. Used for the accelerometer.
 	 */
 	protected SensorManager cSensorManager;
-
-	/**
-	 *
-	 */
-	protected AndroidAccelerationStatus cAndroidAccelerationStatus;
-
+	
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
