@@ -1,6 +1,6 @@
 package cg.group4.game_logic;
 
-import cg.group4.stroll.Stroll;
+import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
@@ -42,7 +42,7 @@ public class StandUp {
     protected Subject cNewStrollSubject;
 
     /**
-     * Reads sensor input of the device
+     * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
 

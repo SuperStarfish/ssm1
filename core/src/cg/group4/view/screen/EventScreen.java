@@ -5,18 +5,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
-public class EventScreen extends ScreenLogic {
+/**
+ * Screen to be displayed during an event.
+ */
+public final class EventScreen extends ScreenLogic {
 
     /**
-     * Label with the text of this event
+     * Label with the text of this event.
      */
     protected Label cTaskToPerform;
+
+    /**
+     * Creates an event screen to display the data from an event.
+     */
+    public EventScreen() {
+        cTaskToPerform = new Label("TASK:", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    }
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         Container<Label> cContainer = new Container<Label>();
         cContainer.setFillParent(true);
-        cTaskToPerform = new Label("TASK:", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
 
         cContainer.setActor(cTaskToPerform);
         return cContainer;

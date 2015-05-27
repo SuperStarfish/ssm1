@@ -100,6 +100,7 @@ public class ScreenStore {
 
     /**
      * Getter for the world renderer.
+     * 
      * @return The world renderer.
      */
     public WorldRenderer getWorldRenderer() {

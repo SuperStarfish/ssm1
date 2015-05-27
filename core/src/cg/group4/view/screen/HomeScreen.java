@@ -3,7 +3,6 @@ package cg.group4.view.screen;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
-import cg.group4.util.timer.TimerTask;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,7 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class HomeScreen extends ScreenLogic {
+/**
+ * First screen displayed when opening the application.
+ */
+public final class HomeScreen extends ScreenLogic {
     /**
      * Container group used for the layout of the view.
      */
@@ -28,14 +30,9 @@ public class HomeScreen extends ScreenLogic {
     protected TextButton cStrollButton, cSettingsButton;
 
     /**
-     * Reference to the IntervalTimer to properly display remaining time.
-     */
-    protected Timer cIntervalTimer;
-
-    /**
      * Labels for title, timer.
      */
-    protected Label cTitle, cTimer;
+    protected Label title, timer;
 
     /**
      * Observer that gets called on the start of a new stroll.
@@ -47,6 +44,19 @@ public class HomeScreen extends ScreenLogic {
         }
     };
 
+    /**
+     * Observer to subscribe to the tick subject of the interval timer.
+     */
+    protected Observer cIntervalTickObserver;
+
+    /**
+     * The interval timer of the game.
+     */
+    protected Timer cIntervalTimer;
+
+    /**
+     * Creates the home screen.
+     */
     public HomeScreen() {
         StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
     }
@@ -67,8 +77,8 @@ public class HomeScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        cTitle.setStyle(cGameSkin.getDefaultLabelStyle());
-        cTimer.setStyle(cGameSkin.getDefaultLabelStyle());
+        title.setStyle(cGameSkin.getDefaultLabelStyle());
+        timer.setStyle(cGameSkin.getDefaultLabelStyle());
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
@@ -77,53 +87,32 @@ public class HomeScreen extends ScreenLogic {
      * Initializes the title on the home screen.
      */
     public final void initHomeScreenTitle() {
-        cTitle = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        title = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
-        cTable.add(cTitle);
+        cTable.add(title);
     }
 
     /**
      * Gets the IntervalTimer and initializes buttons and behaviour. Then adds the label to the WidgetGroup.
      */
     public final void initStrollIntervalTimer() {
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        timer = new Label(
+                Integer.toString(Timer.Global.INTERVAL.getDuration()),
+                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
 
-        createTimeRemainingLabel();
-        addTimerBevahiour();
+        cIntervalTickObserver = new Observer() {
+
+            @Override
+            public void update(Observable o, Object arg) {
+                timer.setText(arg.toString());
+            }
+        };
+
+        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
 
         cTable.row().expandY();
-        cTable.add(cTimer);
-    }
-
-    /**
-     * Creates the label and initializes the text depending on the remaining time for the IntervalTimer
-     */
-    protected void createTimeRemainingLabel(){
-        if(cIntervalTimer.getRemainingTime() > 0 ){
-            cTimer = new Label(Integer.toString(cIntervalTimer.getRemainingTime()), cGameSkin.getDefaultLabelStyle());
-        } else {
-            cTimer = new Label("Ready", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        }
-    }
-
-    /**
-     * Adds behaviour for the IntervalTimer.
-     */
-    protected void addTimerBevahiour(){
-        TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).subscribe(new TimerTask() {
-            @Override
-            public void onTick(final int seconds) {
-                HomeScreen.this.cTimer.setText(Integer.toString(seconds));
-            }
-
-            @Override
-            public void onStart(final int seconds) {
-            }
-
-            @Override
-            public void onStop() {
-            }
-        });
+        cTable.add(timer);
     }
 
     /**

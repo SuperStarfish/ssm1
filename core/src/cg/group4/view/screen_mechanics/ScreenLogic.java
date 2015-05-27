@@ -36,7 +36,6 @@ public abstract class ScreenLogic {
     public ScreenLogic() {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
-        cWidgetGroup = createWidgetGroup();
         cPreviousScreenName = setPreviousScreenName();
 
     }
@@ -47,7 +46,7 @@ public abstract class ScreenLogic {
      * @return The WidgetGroup that will be added to the Stage.
      */
     protected abstract WidgetGroup createWidgetGroup();
-
+    
     /**
      * This method is called whenever the game is resized. In this method the all the UI elements need to update
      * their styles using .setStyle().
@@ -77,6 +76,9 @@ public abstract class ScreenLogic {
      * @return The WidgetGroup containing the logic of this Screen.
      */
     public WidgetGroup getWidgetGroup() {
+        if (cWidgetGroup == null) {
+            cWidgetGroup = createWidgetGroup();
+        }
         return cWidgetGroup;
     }
 
