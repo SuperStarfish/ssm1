@@ -30,7 +30,6 @@ public class StrollScreen extends ScreenLogic {
             cScreenStore.setScreen("Event");
         }
     };
-
     /**
      * Observer that gets called when the stroll ends.
      */
@@ -91,16 +90,5 @@ public class StrollScreen extends ScreenLogic {
         cTable.add(cText);
 
         return cTable;
-    }
-
-    @Override
-    protected void rebuildWidgetGroup() {
-        cTimeRemaining.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cText.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-    }
-
-    @Override
-    protected String setPreviousScreenName() {
-        return "Home";
     }
 }

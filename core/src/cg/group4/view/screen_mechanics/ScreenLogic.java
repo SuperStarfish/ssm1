@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
  */
 public abstract class ScreenLogic {
     /**
-     * Reference to the default game skin.
+     * A default game skin.
      */
     protected GameSkin cGameSkin;
 
@@ -20,15 +20,7 @@ public abstract class ScreenLogic {
      */
     protected WidgetGroup cWidgetGroup;
 
-    /**
-     * Reference to the ScreenStore. Used to switch to other screens.
-     */
     protected ScreenStore cScreenStore;
-
-    /**
-     * The name of the previous screen. Used to go back to that screen through the ScreenStore.
-     */
-    protected final String cPreviousScreenName;
 
     /**
      * A default constructor which initializes the screen logic.
@@ -37,45 +29,10 @@ public abstract class ScreenLogic {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
         cWidgetGroup = createWidgetGroup();
-        cPreviousScreenName = setPreviousScreenName();
-
     }
 
-    /**
-     * Creates the WidgetGroup that contains the logic of this Screen.
-     *
-     * @return The WidgetGroup that will be added to the Stage.
-     */
     protected abstract WidgetGroup createWidgetGroup();
 
-    /**
-     * This method is called whenever the game is resized. In this method the all the UI elements need to update
-     * their styles using .setStyle().
-     */
-    protected abstract void rebuildWidgetGroup();
-
-    /**
-     * This method defines the Screen to go back to. Simply supplying the name of the Screen is sufficient since
-     * the ScreenStore will handle the rest.
-     *
-     * @return Name of the previous Screen name. Can be null.
-     */
-    protected abstract String setPreviousScreenName();
-
-    /**
-     * Returns the previous Screen name. Has to be set through the setPreviousScreenName() method.
-     *
-     * @return The previous Screen name.
-     */
-    public String getPreviousScreenName(){
-        return cPreviousScreenName;
-    }
-
-    /**
-     * Returns the WidgetGroup of this Screen. This will be added to the Stage in the WorldRenderer.
-     *
-     * @return The WidgetGroup containing the logic of this Screen.
-     */
     public WidgetGroup getWidgetGroup() {
         return cWidgetGroup;
     }

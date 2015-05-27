@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-import java.util.ArrayList;
-
 /**
  * The default skin details for the application.
  *
@@ -25,17 +23,17 @@ public class GameSkin extends Skin {
      */
     protected final int DEFAULT_FONT_SIZE = 42;
     /**
-     * Default dev size.
-     * It is used to scale the current screen size against the size used to develop the skin for.
+     * Default dev height.
+     * It is used to scale against the height used to develop the skin for.
      */
-    protected final float DEV_SIZE = 720;
+    protected final float DEV_HEIGHT = 720;
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
-     * It is calculated by taking the height of the screen divided by the default size (DEV_SIZE).
+     * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
      */
-    protected float UI_SCALAR;
+    protected final float UI_SCALAR;
     /**
      * Font generator for the skin.
      */
@@ -48,50 +46,30 @@ public class GameSkin extends Skin {
      * Default border width.
      */
     protected int DEFAULT_BORDER_WIDTH = 2;
+    /**
+     * The height of the screen.
+     */
+    float UI_HEIGHT;
 
     /**
      * Initializes the skin.
      */
     public GameSkin() {
+        UI_HEIGHT = Gdx.graphics.getHeight();
+        UI_SCALAR = UI_HEIGHT / DEV_HEIGHT;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));
-    }
 
-    /**
-     * Sets the UI Scalar and creates the UI elements based on this scale.
-     *
-     * @param newSize
-     */
-    public void createUIElements(int newSize){
-        UI_SCALAR = newSize / DEV_SIZE;
-        addDefaults();
+        addFonts();
     }
 
     /**
      * Adds different fonts and their styles to the skin, to choose from.
      */
-    protected final void addDefaults() {
+    protected final void addFonts() {
         this.add("default_font", generateDefaultFont());
-        this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
+        this.add("default_textButtonStyle", generateDefaultTextButton());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
-    }
-
-    /**
-     * Easy method to return the default TextButtonStyle as a proper class.
-     *
-     * @return TextButtonStyle object
-     */
-    public TextButton.TextButtonStyle getDefaultTextButtonStyle(){
-        return get("default_textButtonStyle", TextButton.TextButtonStyle.class);
-    }
-
-    /**
-     * Easy method to return the default LabelStyle as a proper class.
-     *
-     * @return LabelStyle object
-     */
-    public Label.LabelStyle getDefaultLabelStyle(){
-        return get("default_labelStyle", Label.LabelStyle.class);
     }
 
     /**
@@ -99,7 +77,7 @@ public class GameSkin extends Skin {
      *
      * @return TextButtonStyle
      */
-    protected final TextButton.TextButtonStyle generateDefaultTextButtonStyle() {
+    protected final TextButton.TextButtonStyle generateDefaultTextButton() {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.fontColor = Color.GREEN;
         buttonStyle.font = this.get("default_font", BitmapFont.class);
@@ -163,19 +141,7 @@ public class GameSkin extends Skin {
      * @return TextButton
      */
     public TextButton generateDefaultMenuButton(final String label) {
-        TextButton button = new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        return button;
-    }
-
-    /**
-     * Used to generate labels using the default label style.
-     *
-     * @param text label text of the text button
-     * @return TextButton
-     */
-    public Label generateDefaultLabel(final String text) {
-        Label label = new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
-        return label;
+        return new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
     }
 
     /**

@@ -108,14 +108,13 @@ public class Timer {
     protected final void init(final String name, final int duration, final boolean persistent) {
         cName = name;
         cDuration = duration;
+        cRemainingTime = duration;
         cSubscribe = new HashSet<TimerTask>();
         cTimerTasks = new HashSet<TimerTask>();
         cUnsubscribe = new HashSet<TimerTask>();
         cPersistent = persistent;
         cPreferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
-        cRemainingTime = (int) (cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC;
-        cRemainingTime = cRemainingTime < 0 ? 0 : cRemainingTime;
         TimeKeeper.getInstance().addTimer(this);
     }
 
