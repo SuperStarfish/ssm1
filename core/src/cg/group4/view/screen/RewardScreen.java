@@ -8,8 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-
-public class RewardScreen extends ScreenLogic {
+/**
+ * Screen to display the rewards that have been gathered during an event.
+ */
+public final class RewardScreen extends ScreenLogic {
 
     @Override
     protected WidgetGroup createWidgetGroup() {

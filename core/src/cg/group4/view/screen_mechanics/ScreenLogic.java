@@ -20,6 +20,9 @@ public abstract class ScreenLogic {
      */
     protected WidgetGroup cWidgetGroup;
 
+    /**
+     * Screen store of the game.
+     */
     protected ScreenStore cScreenStore;
 
     /**
@@ -31,8 +34,18 @@ public abstract class ScreenLogic {
         cWidgetGroup = createWidgetGroup();
     }
 
+    /**
+     * Creates a widget group that can be displayed bij the world renderer when that screen is displayed.
+     *
+     * @return The widget group.
+     */
     protected abstract WidgetGroup createWidgetGroup();
 
+    /**
+     * Getter for the widget group created by the method 'createWidgetGroup'.
+     *
+     * @return The widget group.
+     */
     public WidgetGroup getWidgetGroup() {
         return cWidgetGroup;
     }

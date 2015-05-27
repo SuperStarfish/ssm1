@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * @author Jurgen van Schagen
  * @author Martijn Gribnau
  */
-public class SettingsScreen extends ScreenLogic {
+public final class SettingsScreen extends ScreenLogic {
 
     /**
      * Container group used for the layout of the view.
@@ -101,7 +101,7 @@ public class SettingsScreen extends ScreenLogic {
     }
 
     /**
-     * Sets the screen to the home menu
+     * Sets the screen to the home menu.
      *
      * @return ChangeListener
      */
