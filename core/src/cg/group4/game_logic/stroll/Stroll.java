@@ -124,9 +124,9 @@ public class Stroll implements Observer {
      * @param rewards Reward(s) given on completion of an event
      */
     public final void eventFinished(final int rewards) {
-        Gdx.app.log(TAG, "Event completed!");
+        Gdx.app.log(TAG, "Event completed! Collected " + rewards + " rewards.");
 
-        cEndEventSubject.update(null);
+        cEndEventSubject.update(rewards);
 
         cRewards += rewards;
         cEvent = null;
@@ -143,11 +143,12 @@ public class Stroll implements Observer {
      * Method that gets called when the stroll has ended/completed.
      */
     public final void done() {
-        Gdx.app.log(TAG, "Stroll has ended.");
+        Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
+
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cEndStrollSubject.update(null);
+        cEndStrollSubject.update(cRewards);
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);

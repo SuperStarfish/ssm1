@@ -13,12 +13,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  */
 public final class RewardScreen extends ScreenLogic {
 
+    /**
+     * Reward that has to be displayed of the screen.
+     */
+    protected int cReward;
+
+    /**
+     * Creates a new reward screen.
+     *
+     * @param reward Reward to be displayed.
+     */
+    public RewardScreen(int reward) {
+        cReward = reward;
+    }
+
     @Override
     protected WidgetGroup createWidgetGroup() {
         Table table = new Table();
         table.setFillParent(true);
 
-        Label label = new Label("REWARDS COME LATER", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        Label label = new Label(Integer.toString(cReward), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
         table.add(label);
 

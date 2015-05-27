@@ -276,7 +276,6 @@ public class Timer {
          */
         STROLL(5 * 60),
 
-
         /**
          * Max length of an event is 1 min (60 seconds).
          */
