@@ -13,7 +13,7 @@ import com.badlogic.gdx.Gdx;
  * @author Martijn Gribnau
  * @author Benjamin Los
  */
-public class StandUp {
+public final class StandUp {
 
     /**
      * Tag of this class.
@@ -24,7 +24,7 @@ public class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static final StandUp cInstance = new StandUp();
+    protected static final StandUp INSTANCE = new StandUp();
 
     /**
      * Stroll logic.
@@ -61,7 +61,7 @@ public class StandUp {
      * @return cInstance
      */
     public static StandUp getInstance() {
-        return cInstance;
+        return INSTANCE;
     }
 
     /**

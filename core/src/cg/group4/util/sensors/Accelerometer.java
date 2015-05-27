@@ -35,7 +35,7 @@ public class Accelerometer {
      *
      * @param reader SensorReader
      */
-    public Accelerometer(SensorReader reader) {
+    public Accelerometer(final SensorReader reader) {
         cFilterGravity = false;
         cNoiseThreshold = 1.5f;
         cReader = reader;

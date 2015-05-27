@@ -60,7 +60,7 @@ public class Stroll implements Observer {
     protected Observer cStrollStopObserver = new Observer() {
 
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cFinished = true;
             if (!cEventGoing) {
                 done();
@@ -100,7 +100,7 @@ public class Stroll implements Observer {
 
 
     @Override
-    public final void update(Observable o, Object arg) {
+    public final void update(final Observable o, final Object arg) {
         if (!cEventGoing) {
             generatePossibleEvent();
         }
@@ -161,7 +161,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public Subject getEndStrollSubject() {
+    public final Subject getEndStrollSubject() {
         return cEndStrollSubject;
     }
 
@@ -170,7 +170,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public Subject getNewEventSubject() {
+    public final Subject getNewEventSubject() {
         return cNewEventSubject;
     }
 
@@ -179,7 +179,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public Subject getEndEventSubject() {
+    public final Subject getEndEventSubject() {
         return cEndEventSubject;
     }
 }

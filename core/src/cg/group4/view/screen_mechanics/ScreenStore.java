@@ -11,12 +11,12 @@ import java.util.Map;
  *
  * @author Benjamin Los
  */
-public class ScreenStore {
+public final class ScreenStore {
 
     /**
      * Singleton of screen handler.
      */
-    protected static final ScreenStore cInstance = new ScreenStore();
+    protected static ScreenStore cInstance;
 
     /**
      * Hashmap that contains all the screens.
@@ -49,6 +49,9 @@ public class ScreenStore {
      * @return cInstance
      */
     public static ScreenStore getInstance() {
+        if (cInstance == null) {
+            cInstance = new ScreenStore();
+        }
         return cInstance;
     }
 
@@ -66,7 +69,7 @@ public class ScreenStore {
      * @param tag    Tag of the screen.
      * @param screen Screen to be stored.
      */
-    public void addScreen(String tag, ScreenLogic screen) {
+    public void addScreen(final String tag, final ScreenLogic screen) {
         cScreens.put(tag, screen);
     }
 
@@ -75,7 +78,7 @@ public class ScreenStore {
      *
      * @param tag Tag of the screen to be removed.
      */
-    public void removeScreen(String tag) {
+    public void removeScreen(final String tag) {
         cScreens.remove(tag);
     }
 
@@ -84,7 +87,7 @@ public class ScreenStore {
      *
      * @param tag Tag of the screen to be displayed.
      */
-    public void setScreen(String tag) {
+    public void setScreen(final String tag) {
         cWorldRenderer.setScreen(cScreens.get(tag));
     }
 
@@ -94,13 +97,13 @@ public class ScreenStore {
      * @param tag Tag of the screen to be returned.
      * @return Returns the screen belonging to the given tag.
      */
-    public ScreenLogic getScreen(String tag) {
+    public ScreenLogic getScreen(final String tag) {
         return cScreens.get(tag);
     }
 
     /**
      * Getter for the world renderer.
-     * 
+     *
      * @return The world renderer.
      */
     public WorldRenderer getWorldRenderer() {
@@ -120,12 +123,12 @@ public class ScreenStore {
      * Upon resizing the game, this method is called. It will first update the GameSkin and then ask the
      * Screens it contains to update their UI Elements.
      *
-     * @param UISize The new width/height (depending on orientation) that is used by the GameSkin to rescale the UI
+     * @param uiSize The new width/height (depending on orientation) that is used by the GameSkin to rescale the UI
      *               elements.
      */
-    public void rebuild(int UISize){
-        cGameSkin.createUIElements(UISize);
-        for(ScreenLogic screen : cScreens.values()){
+    public void rebuild(final int uiSize) {
+        cGameSkin.createUIElements(uiSize);
+        for (ScreenLogic screen : cScreens.values()) {
             screen.rebuildWidgetGroup();
         }
     }

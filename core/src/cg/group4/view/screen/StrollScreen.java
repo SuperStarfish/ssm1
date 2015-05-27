@@ -38,7 +38,7 @@ public final class StrollScreen extends ScreenLogic {
      */
     protected Observer cNewEventObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cScreenStore.addScreen("Event", ((StrollEvent) arg).createScreen());
             cScreenStore.setScreen("Event");
         }
@@ -49,7 +49,7 @@ public final class StrollScreen extends ScreenLogic {
      */
     protected Observer cEndEventObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cScreenStore.setScreen("Stroll");
             cScreenStore.removeScreen("Event");
         }
@@ -60,7 +60,7 @@ public final class StrollScreen extends ScreenLogic {
      */
     protected Observer cEndStrollObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cScreenStore.addScreen("Reward", new RewardScreen((Integer) arg));
             cScreenStore.setScreen("Reward");
         }
@@ -112,7 +112,7 @@ public final class StrollScreen extends ScreenLogic {
 
         cStrollTickObserver = new Observer() {
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 cTimeRemaining.setText(arg.toString());
             }
         };

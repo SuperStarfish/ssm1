@@ -39,7 +39,7 @@ public final class HomeScreen extends ScreenLogic {
      */
     protected Observer cNewStrollObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             ScreenStore.getInstance().addScreen("Stroll", new StrollScreen());
         }
     };
@@ -86,7 +86,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Initializes the title on the home screen.
      */
-    public final void initHomeScreenTitle() {
+    public void initHomeScreenTitle() {
         title = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
         cTable.add(title);
@@ -95,7 +95,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Gets the IntervalTimer and initializes buttons and behaviour. Then adds the label to the WidgetGroup.
      */
-    public final void initStrollIntervalTimer() {
+    public void initStrollIntervalTimer() {
         timer = new Label(
                 Integer.toString(Timer.Global.INTERVAL.getDuration()),
                 cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
@@ -103,7 +103,7 @@ public final class HomeScreen extends ScreenLogic {
         cIntervalTickObserver = new Observer() {
 
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 timer.setText(arg.toString());
             }
         };
@@ -118,7 +118,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Initializes the stroll buttons on the home screen.
      */
-    public final void initStrollButton() {
+    public void initStrollButton() {
         cStrollButton = cGameSkin.generateDefaultMenuButton("Stroll");
         cStrollButton.addListener(new ChangeListener() {
             @Override
@@ -134,7 +134,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Initializes the settings button on the home screen.
      */
-    public final void initSettingsButton() {
+    public void initSettingsButton() {
         cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
         cSettingsButton.addListener(new ChangeListener() {
             @Override

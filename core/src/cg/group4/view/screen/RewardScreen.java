@@ -12,35 +12,43 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * Screen to display the rewards that have been gathered during an event.
  */
 public final class RewardScreen extends ScreenLogic {
-    
-    /**
-     * Button to return to the HomeScreen.
-     */
-    TextButton cHomeButton;
-    
+
     /**
      * Reward that has to be displayed of the screen.
      */
     protected int cReward;
-
+    /**
+     * Button to return to the HomeScreen.
+     */
+    protected TextButton cHomeButton;
     /**
      * Label containing the reward.
      */
-    Label cRewardLabel;
+    protected Label cRewardLabel;
+
+    /**
+     * Creates a new reward screen.
+     *
+     * @param reward The reward to be displayed on the reward screen.
+     */
+    public RewardScreen(final int reward) {
+        cReward = reward;
+    }
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         Table table = new Table();
         table.setFillParent(true);
 
-        cRewardLabel = new Label(Integer.toString(cReward), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cRewardLabel = new Label(Integer.toString(cReward),
+                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
         table.add(cRewardLabel);
 
         cHomeButton = cGameSkin.generateDefaultMenuButton("Main Menu");
         cHomeButton.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 cScreenStore.setScreen("Home");
             }
         });

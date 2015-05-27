@@ -116,11 +116,14 @@ public class Timer {
         cPreferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
         cRemainingTime = (int) (cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC;
-        cRemainingTime = cRemainingTime < 0 ? 0 : cRemainingTime;
+        if (cRemainingTime < 0) {
+            cRemainingTime =  0;
+        }
         TimeKeeper.getInstance().addTimer(this);
     }
 
-    /**r
+    /**
+     * r
      * Sets the timer finish time to current time + its duration.
      */
     protected final void setFinishTime() {
@@ -150,7 +153,7 @@ public class Timer {
      *
      * @param timeStamp The current time.
      */
-    protected void tick(final long timeStamp) {
+    protected final void tick(final long timeStamp) {
         if (cRunning) {
             if (timeStamp > cFinishTime) {
                 cRunning = false;
@@ -240,7 +243,7 @@ public class Timer {
      *
      * @return returns the stop subject of the timer
      */
-    public Subject getStopSubject() {
+    public final Subject getStopSubject() {
         return cStopSubject;
     }
 
@@ -249,7 +252,7 @@ public class Timer {
      *
      * @return returns the start subject of the timer
      */
-    public Subject getStartSubject() {
+    public final Subject getStartSubject() {
         return cStartSubject;
     }
 
@@ -258,7 +261,7 @@ public class Timer {
      *
      * @return returns the tick subject of the timer
      */
-    public Subject getTickSubject() {
+    public final Subject getTickSubject() {
         return cTickSubject;
     }
 
