@@ -6,7 +6,6 @@ import cg.group4.Launcher;
 import cg.group4.sensor.AndroidAccelerationStatus;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import cg.group4.Launcher;
 
 /**
  * The AndroidLauncher class runs the application on an Android device.
@@ -19,9 +18,9 @@ public class AndroidLauncher extends AndroidApplication {
 	protected SensorManager cSensorManager;
 	
 	@Override
-	protected void onCreate (Bundle savedInstanceState) {
+	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		cSensorManager = (SensorManager)this.getSystemService(SENSOR_SERVICE);
+		cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
 		initialize(new Launcher(new AndroidAccelerationStatus(cSensorManager)), config);

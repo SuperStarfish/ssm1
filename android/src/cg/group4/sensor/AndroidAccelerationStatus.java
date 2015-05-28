@@ -15,28 +15,28 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
     /**
      * Tag for debugging & logging purposes.
      */
-    private final String TAG = this.getClass().getSimpleName();
+    private final String tag = this.getClass().getSimpleName();
 
     /**
-     * Sensor manager which handles the sensor input
+     * Sensor manager which handles the sensor input.
      */
-    SensorManager cSensorManager;
+    protected SensorManager cSensorManager;
 
     /**
      * Creator for the accel library android.
      */
-    Creator cCreator;
+    protected Creator cCreator;
 
     /**
      *  State to return to the application (which will be obtained from the accel library android).
      */
-    AccelerationState cAccelerationState;
+    protected AccelerationState cAccelerationState;
 
     /**
      * Constructs the class for android devices which will return the state of the movement by the user.
      * @param sensorManager Sensor
      */
-    public AndroidAccelerationStatus(SensorManager sensorManager) {
+    public AndroidAccelerationStatus(final SensorManager sensorManager) {
         cSensorManager = sensorManager;
         init();
     }
@@ -44,7 +44,7 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
     /**
      * Initializes a creator for the accel library android and registers the movementChanged event listener to it.
      */
-    public void init() {
+    public final void init() {
         cCreator = new Creator(cSensorManager);
         cCreator.registerListener(this);
     }
@@ -54,7 +54,7 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
      * @return One of the four predeined states.
      */
     @Override
-    public AccelerationState getAccelerationState() {
+    public final AccelerationState getAccelerationState() {
         return cAccelerationState;
     }
 
@@ -63,18 +63,18 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
      * @param movement Amount of movement.
      */
     @Override
-    public void movementChanged(Movement movement) {
-        if(movement.name() == "WALKING") {
-            Gdx.app.debug(TAG, "You are walking!");
+    public final void movementChanged(final Movement movement) {
+        if (movement.name().equals("WALKING")) {
+            Gdx.app.debug(tag, "You are walking!");
             cAccelerationState = AccelerationState.WALKING;
-        } else if(movement.name() == "RUNNING") {
-            Gdx.app.debug(TAG, "You are running!");
+        } else if (movement.name().equals("RUNNING")) {
+            Gdx.app.debug(tag, "You are running!");
             cAccelerationState = AccelerationState.RUNNING;
-        } else if(movement.name() == "CHEATING") {
-            Gdx.app.debug(TAG, "You are impossible!");
+        } else if (movement.name().equals("CHEATING")) {
+            Gdx.app.debug(tag, "You are impossible!");
             cAccelerationState = AccelerationState.CHEATING;
         } else {
-            Gdx.app.debug(TAG, "You are resting!");
+            Gdx.app.debug(tag, "You are resting!");
             cAccelerationState = AccelerationState.RESTING;
         }
     }

@@ -33,11 +33,6 @@ public class Launcher extends Game {
     private StandUp cStandUp;
 
     /**
-     * Keeps track of screens throughout the game.
-     */
-    private ScreenStore cScreenStore;
-
-    /**
      * Keeps track of timers throughout the game.
      */
     private TimeKeeper cTimeKeeper;
@@ -49,9 +44,9 @@ public class Launcher extends Game {
 
     /**
      * Tunnels the acceleration status through the launcher to the android project.
-     * @param accelerationStatus
+     * @param accelerationStatus The movement status of the player.
      */
-    public Launcher(AccelerationStatus accelerationStatus) {
+    public Launcher(final AccelerationStatus accelerationStatus) {
         super();
         cAccelerationStatus = accelerationStatus;
     }
@@ -75,7 +70,8 @@ public class Launcher extends Game {
 
         cStandUp = StandUp.getInstance();
 
-        cScreenStore = ScreenStore.getInstance();
+        ScreenStore cScreenStore = ScreenStore.getInstance();
+
         cScreenStore.init();
         setScreen(cScreenStore.getWorldRenderer());
         cScreenStore.setScreen("Home");

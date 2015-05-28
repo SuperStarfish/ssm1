@@ -13,7 +13,7 @@ public class DesktopAccelerationStatus extends AccelerationStatus {
      * @return AccelerationState.CHEATING
      */
     @Override
-    public AccelerationState getAccelerationState() {
+    public final AccelerationState getAccelerationState() {
         return AccelerationState.CHEATING;
     }
 }
