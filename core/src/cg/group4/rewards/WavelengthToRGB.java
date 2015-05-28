@@ -4,6 +4,9 @@ package cg.group4.rewards;
  * Utility class that converts a wavelength to a RGB colour.
  * @author Jean de Leeuw
  *
+ *Sources:
+ *http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm
+ *http://stackoverflow.com/questions/1472514/convert-light-frequency-to-rgb
  */
 public final class WavelengthToRGB {
 	
@@ -34,6 +37,9 @@ public final class WavelengthToRGB {
 			cCinterval6 = 645,
 			cCinterval7 = 781;
 	
+	/**
+	 * Intensity interval values.
+	 */
 	protected static final int cIinterval1 = 380,
 			cIinterval2 = 420,
 			cIinterval3 = 700,

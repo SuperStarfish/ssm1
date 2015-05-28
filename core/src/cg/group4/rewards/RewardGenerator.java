@@ -27,31 +27,33 @@ public class RewardGenerator {
 	/**
 	 * Upper limit of range of numbers that can be generated (not inclusive).
 	 */
-	protected final int cRangeMax = 20;
+	protected final double cRangeMax;
 	
 	/**
 	 * Lower limit of range of numbers that can be generated (inclusive).
 	 */
-	protected final int cRangeMin = 0;
+	protected final double cRangeMin;
 	
 	/**
 	 * Constructs a new reward generator.
 	 */
 	public RewardGenerator() {
 		cRNG = new Random();
+		cRangeMax = inverseRewardFunction(differentColours);
+		cRangeMin = inverseRewardFunction(0);
 	}
 	
 	/**
 	 * Generates the colour of the reward.
 	 * @return RGB values of the colour of the reward. 
 	 */
-	public final int[] generateRewardColor() {
+	public final int generateRewardColour() {
 		double random = randomDouble();
 		random = rewardFunction(random);
 		
 		final int lowerEndVisibleSpectrum = 380;
-		double wavelength = (differentColours - random) + lowerEndVisibleSpectrum;
-		return WavelengthToRGB.wavelengthToRGB(wavelength);
+		int wavelength = (int) (differentColours - random) + lowerEndVisibleSpectrum;
+		return wavelength;
 	}
 	
 	/**
@@ -63,7 +65,7 @@ public class RewardGenerator {
 	protected final double randomDouble() {
 		int nr = cRNG.nextInt(cRandomNumberPossibilities);
 		
-		int range = cRangeMax - cRangeMin;
+		double range = cRangeMax - cRangeMin;
 		double perStep = (double) range / cRandomNumberPossibilities;
 		return nr * perStep;
 	}
@@ -72,11 +74,25 @@ public class RewardGenerator {
 	 * Helper method that should not be called outside of this class.
 	 * Applies a function to the input.
 	 * 
+	 * The reward function now is specified as: f(x) = x^4.
 	 * @param x Input
-	 * @return Result after applying the function to the input.
+	 * @return Result after applying the function to the input
 	 */
 	protected final double rewardFunction(final double x) {
 		final int exponent = 4;
 		return Math.pow(x, exponent);
+	}
+	
+	/**
+	 * Helper method that should not be called outside of this class.
+	 * Applies the inverse of the above function to the input.
+	 * 
+	 * The inverse of the reward function now is specified as: f(x) = x^(1/4).
+	 * @param x Input
+	 * @return Result after applying the inverse of the function to the input
+	 */
+	protected final double inverseRewardFunction(final double x) {
+		final int exponent = 4;
+		return Math.pow(x, (double) 1 / exponent);
 	}
 }
