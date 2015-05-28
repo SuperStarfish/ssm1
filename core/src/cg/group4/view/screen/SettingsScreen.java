@@ -110,7 +110,6 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 cStrollTimer.reset();
-                //cScreenStore.setScreen(new RewardScreen(cScreenStore));
             }
         };
     }
@@ -125,7 +124,6 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 cStrollTimer.stop();
-                //cScreenStore.setScreen(new RewardScreen(cScreenStore));
             }
         };
     }
