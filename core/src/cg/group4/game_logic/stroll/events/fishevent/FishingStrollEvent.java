@@ -37,7 +37,7 @@ public class FishingStrollEvent extends StrollEvent {
 
 	protected Accelerometer cAccelMeter;
 	
-	public FishingStrollEvent(){
+	public FishingStrollEvent() {
 		super();
         cScreen = new EventScreen();
         cLabel = cScreen.getLabel();
@@ -66,6 +66,7 @@ public class FishingStrollEvent extends StrollEvent {
         
         cDelayNewInput = false;
 
+		cDelayInputTimer.reset();
         cState = new CastBackState(this);
 	}
 	
