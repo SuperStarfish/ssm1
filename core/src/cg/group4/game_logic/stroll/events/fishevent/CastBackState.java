@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class CastBackState implements FishEventState {
 
-    protected static final float DELTA = 2.5f;
+    protected static final float DELTA = 2.0f;
 
     protected boolean behind;
 
@@ -15,7 +15,7 @@ public class CastBackState implements FishEventState {
 
     public CastBackState(FishingStrollEvent event) {
         cEvent = event;
-        cEvent.cLabel.setText("Cast your line back!");
+        cEvent.cLabel.setText("Hold the screen towards you and cast your line back!");
     }
 
     public final void processInput(final Vector3 input) {

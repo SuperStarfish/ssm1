@@ -181,8 +181,6 @@ public class TestStrollEvent extends StrollEvent {
      */
     public final void clearEvent() {
         super.dispose();
-        cDelayInputTimer.getStartSubject().deleteObserver(cDelayInputStartObserver);
-        cDelayInputTimer.getStopSubject().deleteObserver(cDelayInputStopObserver);
         cDelayInputTimer.dispose();
     }
 

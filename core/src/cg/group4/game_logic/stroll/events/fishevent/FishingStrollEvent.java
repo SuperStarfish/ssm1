@@ -41,7 +41,6 @@ public class FishingStrollEvent extends StrollEvent {
 		super();
         cScreen = new EventScreen();
         cLabel = cScreen.getLabel();
-        cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 
         cDelayInputStartObserver = new Observer() {
             @Override
@@ -63,8 +62,6 @@ public class FishingStrollEvent extends StrollEvent {
         
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
         cAccelMeter.filterGravity(true);
-        
-        cDelayNewInput = false;
 
 		cDelayInputTimer.reset();
         cState = new CastBackState(this);
