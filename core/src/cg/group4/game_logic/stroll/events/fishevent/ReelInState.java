@@ -7,7 +7,17 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class ReelInState implements FishEventState{
 
+    protected static final float DELTA = -2.0f;
+
+    protected FishingStrollEvent cEvent;
+
+    public ReelInState(FishingStrollEvent event){
+        cEvent = event;
+    }
+
     public final void processInput(Vector3 input){
-        
+        if(input.z < DELTA){
+            cEvent.eventCompleted();
+        }
     }
 }

@@ -18,6 +18,10 @@ public class CastBackState implements FishEventState {
         cEvent.cLabel.setText("Hold the screen towards you and cast your line back!");
     }
 
+    /**
+     * Method that processes the input to match the movement of making your fishing hook ready to throw in the water.
+     * @param input Vector containing the acceleration in the x,y,z directions respectively.
+     */
     public final void processInput(final Vector3 input) {
         float movementxy = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2)));
         float movementzy = (float) Math.sqrt((Math.pow(input.z, 2) + Math.pow(input.y, 2)));

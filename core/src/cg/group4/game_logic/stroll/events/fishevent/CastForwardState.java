@@ -10,7 +10,7 @@ public class CastForwardState implements FishEventState {
     /**
      * Constant describing when it is honest movement.
      */
-    protected static final float DELTA = 2.0f;
+    protected static final float DELTA = 3.0f;
 
     /**
      * Pointer to the event this is a state of.
@@ -25,30 +25,19 @@ public class CastForwardState implements FishEventState {
      */
     public CastForwardState(final FishingStrollEvent event) {
         cEvent = event;
-        cEvent.cLabel.setText("Throw it!");
+        cEvent.cLabel.setText("Throw your hook into the water!");
     }
 
     /**
-     * Method that processes the input to match the movement of
+     * Method that processes the input to match the movement of casting your line into the water.
      * @param input Vector containing the acceleration in the x,y,z directions respectively.
      */
     public final void processInput(final Vector3 input) {
         float movementxy = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2)));
         float movementzy = (float) Math.sqrt((Math.pow(input.z, 2) + Math.pow(input.y, 2)));
 
-        if (!forward) {
-            if (input.y > 0) {
-                if (movementxy > DELTA || movementzy > DELTA) {
-                    forward = true;
-                }
-            }
-        } else {
-            if (input.y < 0) {
-                if (movementxy > DELTA || movementzy > DELTA) {
-                    cEvent.cDelayInputTimer.reset();
-                    cEvent.cState = new WaitState(cEvent);
-                }
-            }
+        if (input.z > DELTA){
+            cEvent.cState = new WaitState(cEvent);
         }
     }
 }

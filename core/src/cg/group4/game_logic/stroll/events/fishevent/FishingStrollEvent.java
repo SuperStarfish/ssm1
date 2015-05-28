@@ -64,7 +64,7 @@ public class FishingStrollEvent extends StrollEvent {
         cAccelMeter.filterGravity(true);
 
 		cDelayInputTimer.reset();
-        cState = new CastBackState(this);
+        cState = new CastForwardState(this);
 	}
 	
 	@Override
@@ -96,9 +96,5 @@ public class FishingStrollEvent extends StrollEvent {
 	@Override
 	protected void clearEvent() {
 		super.dispose();
-        cDelayInputTimer.getStartSubject().deleteObserver(cDelayInputStartObserver);
-        cDelayInputTimer.getStopSubject().deleteObserver(cDelayInputStopObserver);
-        cDelayInputTimer.dispose();
-		
 	}
 }

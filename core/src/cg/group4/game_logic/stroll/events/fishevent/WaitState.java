@@ -33,18 +33,23 @@ public class WaitState implements FishEventState {
         cFishStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                //Delete fish timer
-                cEvent.eventCompleted();
+                cFishTimer.stop();
+                cEvent.cState = new ReelInState(cEvent);
             }
         };
 
         cFishTimer.getStopSubject().addObserver(cFishStopObserver);
 
     }
+
+    /**
+     *
+     * @param input
+     */
     public final void processInput(Vector3 input) {
 
-        float pytho = (float) Math.sqrt((Math.pow(input.x,2) + Math.pow(input.y,2) + Math.pow(input.z,2)));
-        if(pytho > DELTA){
+        float pytho = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2) + Math.pow(input.z, 2)));
+        if (pytho > DELTA) {
             cFishTimer.reset();
         }
     }
