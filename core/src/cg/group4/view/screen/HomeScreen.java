@@ -16,7 +16,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- *
+ * First screen displayed when opening the application.
  */
 public final class HomeScreen extends ScreenLogic {
     /**
@@ -39,7 +39,7 @@ public final class HomeScreen extends ScreenLogic {
      */
     protected Observer cNewStrollObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             ScreenStore.getInstance().addScreen("Stroll", new StrollScreen());
         }
     };
@@ -66,7 +66,6 @@ public final class HomeScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-
         initHomeScreenTitle();
         initStrollIntervalTimer();
 
@@ -76,21 +75,27 @@ public final class HomeScreen extends ScreenLogic {
         return cTable;
     }
 
+    @Override
+    protected void rebuildWidgetGroup() {
+        title.setStyle(cGameSkin.getDefaultLabelStyle());
+        timer.setStyle(cGameSkin.getDefaultLabelStyle());
+        cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+    }
+
     /**
      * Initializes the title on the home screen.
      */
-    public final void initHomeScreenTitle() {
+    public void initHomeScreenTitle() {
         title = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
         cTable.add(title);
     }
 
     /**
-     * Initializes the stroll interval timer to the view.
-     * The default label is "3600".
-     * If the timer is started, its label will change to the time left on the timer.
+     * Gets the IntervalTimer and initializes buttons and behaviour. Then adds the label to the WidgetGroup.
      */
-    public final void initStrollIntervalTimer() {
+    public void initStrollIntervalTimer() {
         timer = new Label(
                 Integer.toString(Timer.Global.INTERVAL.getDuration()),
                 cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
@@ -98,7 +103,7 @@ public final class HomeScreen extends ScreenLogic {
         cIntervalTickObserver = new Observer() {
 
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 timer.setText(arg.toString());
             }
         };
@@ -113,7 +118,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Initializes the stroll buttons on the home screen.
      */
-    public final void initStrollButton() {
+    public void initStrollButton() {
         cStrollButton = cGameSkin.generateDefaultMenuButton("Stroll");
         cStrollButton.addListener(new ChangeListener() {
             @Override
@@ -129,7 +134,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Initializes the settings button on the home screen.
      */
-    public final void initSettingsButton() {
+    public void initSettingsButton() {
         cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
         cSettingsButton.addListener(new ChangeListener() {
             @Override
@@ -139,5 +144,10 @@ public final class HomeScreen extends ScreenLogic {
         });
         cTable.row().expandY();
         cTable.add(cSettingsButton);
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return null;
     }
 }

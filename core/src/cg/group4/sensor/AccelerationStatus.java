@@ -11,7 +11,6 @@ public abstract class AccelerationStatus {
      * @return One of the four predefined acceleration states.
      */
     public AccelerationState getAccelerationState() {
-
         return AccelerationState.RESTING;
     }
 }
