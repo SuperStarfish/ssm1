@@ -7,22 +7,35 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * State for the FishingEvent where you have to wait for the fishes to bite
+ * State for the FishingEvent where you have to wait for the fishes to bite.
  * @author Nick Cleintuar
  */
 public class WaitState implements FishEventState {
 
-    protected static final float DELTA = 2.5f;
+    /**
+     * Constant used to describe when you have moved too much.
+     */
+    protected static final float DELTA = 1.5f;
 
+    /**
+     * The observer for the timer, on stop it should switch the state of the event.
+     */
     protected Observer cFishStopObserver;
 
-    protected Observer cFishStartObserver;
-
+    /**
+     * The timer which keeps track for how long you hold still.
+     */
     protected Timer cFishTimer;
 
-
+    /**
+     * The event this state belongs to.
+     */
     protected FishingStrollEvent cEvent;
 
+    /**
+     * Constructor, creates a new timer for this state.
+     * @param event The event this state belongs to.
+     */
     public WaitState(final FishingStrollEvent event) {
         cFishTimer = new Timer("WAITFORFISH", 5);
 

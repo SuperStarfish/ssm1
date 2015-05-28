@@ -16,9 +16,15 @@ import cg.group4.view.screen.EventScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 
 public class FishingStrollEvent extends StrollEvent {
-	
-	protected final static int REWARDS = 10;
-	
+
+    /**
+     * Amount of points that you should gain when completing this event.
+     */
+	protected static final int REWARDS = 10;
+
+    /**
+     * The screen this event belongs to.
+     */
 	protected EventScreen cScreen;
 
 	protected Sound cCompletedTaskSound;
@@ -68,18 +74,25 @@ public class FishingStrollEvent extends StrollEvent {
 	}
 	
 	@Override
-	public final void update(Observable o, Object arg) {
+	public final void update(final Observable o, final Object arg) {
 		Vector3 accel = cAccelMeter.update();
         if (!cDelayNewInput) {
             processInput(accel);
         }
 	}
 
+	/**
+	 * Gets called when the event is completed.
+	 */
     public final void eventCompleted() {
         clearEvent();
     }
 
-	private void processInput(Vector3 input) {
+    /**
+     * Processes the input for the event, takes the processInput method of his state.
+     * @param input Vector containg the acceleration in the x,y,z direction.
+     */
+	private void processInput(final Vector3 input) {
 		cState.processInput(input);
 	}
 
@@ -94,7 +107,7 @@ public class FishingStrollEvent extends StrollEvent {
 	}
 
 	@Override
-	protected void clearEvent() {
+	protected final void clearEvent() {
 		super.dispose();
 	}
 }

@@ -3,7 +3,7 @@ package cg.group4.game_logic.stroll.events.fishevent;
 import com.badlogic.gdx.math.Vector3;
 
 /**
- * Created by Nick on 27-5-2015.
+ *
  */
 public class CastForwardState implements FishEventState {
 
@@ -16,8 +16,6 @@ public class CastForwardState implements FishEventState {
      * Pointer to the event this is a state of.
      */
     protected FishingStrollEvent cEvent;
-
-    protected boolean forward;
 
     /**
      * Constructor of the state, connects the state to the event.
@@ -33,10 +31,8 @@ public class CastForwardState implements FishEventState {
      * @param input Vector containing the acceleration in the x,y,z directions respectively.
      */
     public final void processInput(final Vector3 input) {
-        float movementxy = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2)));
-        float movementzy = (float) Math.sqrt((Math.pow(input.z, 2) + Math.pow(input.y, 2)));
 
-        if (input.z > DELTA){
+        if (input.z > DELTA) {
             cEvent.cState = new WaitState(cEvent);
         }
     }
