@@ -10,7 +10,7 @@ public class CastForwardState implements FishEventState {
     /**
      * Constant describing when it is honest movement.
      */
-    protected static final float DELTA = 3.0f;
+    protected static final float DELTA = 3.5f;
 
     /**
      * Pointer to the event this is a state of.

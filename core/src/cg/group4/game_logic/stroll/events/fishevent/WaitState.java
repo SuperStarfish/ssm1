@@ -23,7 +23,7 @@ public class WaitState implements FishEventState {
 
     protected FishingStrollEvent cEvent;
 
-    public WaitState(FishingStrollEvent event) {
+    public WaitState(final FishingStrollEvent event) {
         cFishTimer = new Timer("WAITFORFISH", 5);
 
         cEvent = event;
@@ -46,7 +46,7 @@ public class WaitState implements FishEventState {
      *
      * @param input
      */
-    public final void processInput(Vector3 input) {
+    public final void processInput(final Vector3 input) {
 
         float pytho = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2) + Math.pow(input.z, 2)));
         if (pytho > DELTA) {
