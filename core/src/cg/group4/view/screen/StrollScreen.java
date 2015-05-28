@@ -29,11 +29,6 @@ public final class StrollScreen extends ScreenLogic {
     protected Table cTable;
 
     /**
-     * Screen store of the game.
-     */
-    protected ScreenStore cScreenStore;
-
-    /**
      * Observer that gets called when the stroll ends.
      */
     protected Observer cNewEventObserver = new Observer() {
