@@ -15,7 +15,7 @@ public final class TimerStore {
     /**
      * Singleton of timer store.
      */
-    protected final static TimerStore cInstance = new TimerStore();
+    protected static final TimerStore INSTANCE = new TimerStore();
 
     /**
      * Hashmap that contains all the timers.
@@ -43,10 +43,10 @@ public final class TimerStore {
     /**
      * Getter for time store instance.
      *
-     * @return cInstance
+     * @return INSTANCE
      */
     public static TimerStore getInstance() {
-        return cInstance;
+        return INSTANCE;
     }
 
     /**

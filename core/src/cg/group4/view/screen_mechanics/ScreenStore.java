@@ -16,7 +16,7 @@ public final class ScreenStore {
     /**
      * Singleton of screen handler.
      */
-    protected final static ScreenStore cInstance = new ScreenStore();
+    protected static final ScreenStore INSTANCE = new ScreenStore();
 
     /**
      * Hashmap that contains all the screens.
@@ -45,11 +45,10 @@ public final class ScreenStore {
 
     /**
      * Getter for screen store instance.
-     *
-     * @return cInstance
+     * @return The instance.
      */
     public static ScreenStore getInstance() {
-        return cInstance;
+        return INSTANCE;
     }
 
     /**

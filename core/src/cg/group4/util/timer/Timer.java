@@ -285,7 +285,7 @@ public class Timer implements Observer {
         /**
          * Duration of the global timer.
          */
-        private int eDuration;
+        private int cDuration;
 
         /**
          * Set the duration of a global timer.
@@ -293,7 +293,7 @@ public class Timer implements Observer {
          * @param duration The duration in seconds
          */
         Global(final int duration) {
-            eDuration = duration;
+            cDuration = duration;
         }
 
         /**
@@ -302,7 +302,7 @@ public class Timer implements Observer {
          * @return The duration in seconds
          */
         public int getDuration() {
-            return eDuration;
+            return cDuration;
         }
     }
 }

@@ -18,14 +18,14 @@ public class TimeKeeperTest {
     /**
      * The timeKeeper that will be tested upon.
      */
-    protected TimeKeeper timeKeeper;
+    protected TimeKeeper cTimeKeeper;
 
     /**
      * Creates the needed objects for the tests.
      */
     @Before
     public final void setUp() {
-        timeKeeper = new TimeKeeper();
+        cTimeKeeper = new TimeKeeper();
     }
 
     /**
@@ -33,7 +33,7 @@ public class TimeKeeperTest {
      */
     @Test
     public final void testGetTimerSubject() {
-        assertEquals(timeKeeper.getTimerSubject(), timeKeeper.cTimerSubject);
+        assertEquals(cTimeKeeper.getTimerSubject(), cTimeKeeper.cTimerSubject);
     }
 
     /**
@@ -41,10 +41,10 @@ public class TimeKeeperTest {
      */
     @Test
     public final void testUpdate() {
-        timeKeeper.cTimerSubject = mock(Subject.class);
-        timeKeeper.cPreviousTick -= 1000;
-        timeKeeper.update();
-        verify(timeKeeper.cTimerSubject, times(1)).notifyObservers(anyLong());
+        cTimeKeeper.cTimerSubject = mock(Subject.class);
+        cTimeKeeper.cPreviousTick -= 1000;
+        cTimeKeeper.update();
+        verify(cTimeKeeper.cTimerSubject, times(1)).notifyObservers(anyLong());
     }
 
 

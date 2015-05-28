@@ -58,7 +58,7 @@ public final class StandUp {
     /**
      * Getter for StandUp instance.
      *
-     * @return cInstance
+     * @return INSTANCE
      */
     public static StandUp getInstance() {
         return INSTANCE;

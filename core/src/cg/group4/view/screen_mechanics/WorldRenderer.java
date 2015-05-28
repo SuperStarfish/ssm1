@@ -1,10 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,23 +20,23 @@ public class WorldRenderer extends InputAdapter implements Screen {
     /**
      * The minimal Viewport aspect ratio.
      */
-    protected final float minViewportRatio = 9f;
+    protected final float cMinViewportRatio = 9f;
     /**
      * The maximum Viewport aspect ratio.
      */
-    protected final float maxViewportRatio = 16f;
+    protected final float cMaxViewportRatio = 16f;
     /**
      * Used to position the background to the center of the Viewport.
      */
-    protected final float toCenter = -2f;
+    protected final float cToCenter = -2f;
     /**
      * Path to the default landscape background image.
      */
-    protected final String defaultLandscapePath = "images/default_landscape_background.jpg";
+    protected final String cDefaultLandscapePath = "images/default_landscape_background.jpg";
     /**
      * Path to the default portrait background image.
      */
-    protected final String defaultPortraitPath = "images/default_portrait_background.jpg";
+    protected final String cDefaultPortraitPath = "images/default_portrait_background.jpg";
     /**
      * The viewport for the game. Makes sure that the game is rendered between 16:9 and 4:3 aspect ratio.
      */
@@ -65,7 +61,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
      * InputMultiplexer stores multiple InputProcessors. This is used to have the Stage as well as the
      * WorldRenderer be able to handle input events.
      */
-    protected InputMultiplexer inputMultiplexer;
+    protected InputMultiplexer cInputMultiplexer;
     /**
      * The Sprite used for the background.
      */
@@ -91,7 +87,12 @@ public class WorldRenderer extends InputAdapter implements Screen {
      */
     protected final void initDefaults() {
         cCamera = new OrthographicCamera();
-        cViewport = new ExtendViewport(minViewportRatio, minViewportRatio, maxViewportRatio, maxViewportRatio, cCamera);
+        cViewport = new ExtendViewport(
+                cMinViewportRatio,
+                cMinViewportRatio,
+                cMaxViewportRatio,
+                cMaxViewportRatio,
+                cCamera);
         cBatch = new SpriteBatch();
         cStage = new Stage();
         cScreenStore = ScreenStore.getInstance();
@@ -102,10 +103,10 @@ public class WorldRenderer extends InputAdapter implements Screen {
      */
     protected final void captureInput() {
         Gdx.input.setCatchBackKey(true);
-        inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(this);
-        inputMultiplexer.addProcessor(cStage);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+        cInputMultiplexer = new InputMultiplexer();
+        cInputMultiplexer.addProcessor(this);
+        cInputMultiplexer.addProcessor(cStage);
+        Gdx.input.setInputProcessor(cInputMultiplexer);
     }
 
     /**
@@ -170,9 +171,9 @@ public class WorldRenderer extends InputAdapter implements Screen {
      */
     protected final void setDefaultBackground() {
         if (cIsLandscape) {
-            setBackground(defaultLandscapePath);
+            setBackground(cDefaultLandscapePath);
         } else {
-            setBackground(defaultPortraitPath);
+            setBackground(cDefaultPortraitPath);
         }
 
     }
@@ -216,14 +217,14 @@ public class WorldRenderer extends InputAdapter implements Screen {
     protected final void setBackgroundSprite(final Texture texture) {
         cBackgroundSprite = new Sprite(texture);
         if (cIsLandscape) {
-            cBackgroundSprite.setSize(maxViewportRatio, minViewportRatio);
+            cBackgroundSprite.setSize(cMaxViewportRatio, cMinViewportRatio);
         } else {
-            cBackgroundSprite.setSize(minViewportRatio, maxViewportRatio);
+            cBackgroundSprite.setSize(cMinViewportRatio, cMaxViewportRatio);
         }
 
         cBackgroundSprite.setOriginCenter();
         cBackgroundSprite
-                .setPosition(cBackgroundSprite.getWidth() / toCenter, cBackgroundSprite.getHeight() / toCenter);
+                .setPosition(cBackgroundSprite.getWidth() / cToCenter, cBackgroundSprite.getHeight() / cToCenter);
     }
 
     /**
@@ -232,13 +233,13 @@ public class WorldRenderer extends InputAdapter implements Screen {
      * @param screen Screen to set the view to
      */
     public final void setScreen(final ScreenLogic screen) {
-        inputMultiplexer.removeProcessor(cStage);
+        cInputMultiplexer.removeProcessor(cStage);
         cScreen = screen;
         cStage.dispose();
         cStage = new Stage();
         cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
-        inputMultiplexer.addProcessor(cStage);
+        cInputMultiplexer.addProcessor(cStage);
     }
 
     @Override

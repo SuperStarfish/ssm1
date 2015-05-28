@@ -16,19 +16,19 @@ public class TimerStoreTest {
     /**
      * The timeStore that will be tested upon.
      */
-    protected TimerStore timerStore;
+    protected TimerStore cTimerStore;
     /**
      * Timer to test with.
      */
-    protected Timer timer;
+    protected Timer cTimer;
 
     /**
      * Creates the needed objects for the tests.
      */
     @Before
     public final void setUp() {
-        timerStore = new TimerStore();
-        timer = new Timer("TEST", 60);
+        cTimerStore = new TimerStore();
+        cTimer = new Timer("TEST", 60);
     }
 
     /**
@@ -36,7 +36,7 @@ public class TimerStoreTest {
      */
     @Test
     public final void testInitGlobalTimers() {
-        assertEquals(Timer.Global.values().length, timerStore.cTimers.size());
+        assertEquals(Timer.Global.values().length, cTimerStore.cTimers.size());
     }
 
     /**
@@ -44,9 +44,9 @@ public class TimerStoreTest {
      */
     @Test
     public final void testAddTimer() {
-        int size = timerStore.cTimers.size();
-        timerStore.addTimer(timer);
-        assertEquals(size + 1, timerStore.cTimers.size());
+        int size = cTimerStore.cTimers.size();
+        cTimerStore.addTimer(cTimer);
+        assertEquals(size + 1, cTimerStore.cTimers.size());
     }
 
     /**
@@ -54,10 +54,10 @@ public class TimerStoreTest {
      */
     @Test
     public final void testAddDuplicateTimer() {
-        timerStore.addTimer(timer);
-        int size = timerStore.cTimers.size();
-        timerStore.addTimer(new Timer(timer.getName(), 5));
-        assertEquals(size, timerStore.cTimers.size());
+        cTimerStore.addTimer(cTimer);
+        int size = cTimerStore.cTimers.size();
+        cTimerStore.addTimer(new Timer(cTimer.getName(), 5));
+        assertEquals(size, cTimerStore.cTimers.size());
     }
 
     /**
@@ -65,8 +65,8 @@ public class TimerStoreTest {
      */
     @Test
     public final void testGetTimer() {
-        timerStore.addTimer(timer);
-        assertTrue(timer.equals(timerStore.getTimer(timer.cName)));
+        cTimerStore.addTimer(cTimer);
+        assertTrue(cTimer.equals(cTimerStore.getTimer(cTimer.cName)));
     }
 
     /**
@@ -74,8 +74,8 @@ public class TimerStoreTest {
      */
     @Test
     public final void testGetTimerNull() {
-        timerStore.addTimer(timer);
-        assertNull(timerStore.getTimer("TAD"));
+        cTimerStore.addTimer(cTimer);
+        assertNull(cTimerStore.getTimer("TAD"));
     }
 
     /**
@@ -83,11 +83,11 @@ public class TimerStoreTest {
      */
     @Test
     public final void testRemoveTimer() {
-        timerStore.addTimer(timer);
-        assertTrue(timerStore.cTimers.containsValue(timer));
-        int size = timerStore.getTimeKeeper().getTimerSubject().countObservers();
-        timerStore.removeTimer(timer);
-        assertFalse(timerStore.cTimers.containsValue(timer));
-        assertEquals(size - 1, timerStore.getTimeKeeper().getTimerSubject().countObservers());
+        cTimerStore.addTimer(cTimer);
+        assertTrue(cTimerStore.cTimers.containsValue(cTimer));
+        int size = cTimerStore.getTimeKeeper().getTimerSubject().countObservers();
+        cTimerStore.removeTimer(cTimer);
+        assertFalse(cTimerStore.cTimers.containsValue(cTimer));
+        assertEquals(size - 1, cTimerStore.getTimeKeeper().getTimerSubject().countObservers());
     }
 }
