@@ -26,25 +26,43 @@ public final class SettingsScreen extends ScreenLogic {
      * Buttons for the options in the settings menu.
      */
     protected TextButton cButtonResetInterval,
-            cButtonResetStroll,
             cButtonStopInterval,
+            cButtonResetStroll,
+            cButtonStopStroll,
             cButtonBack;
+
+    /**
+     * References to the STROLL Timer and INTERVAL Timer.
+     */
+    protected Timer cIntervalTimer, cStrollTimer;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
         cTable.setFillParent(true);
+
+        getTimers();
         createGUI();
+
         return cTable;
+    }
+
+    /**
+     * Gets the STROLL Timer and INTERVAL Timer so they can easily be accessed within this screen.
+     */
+    protected void getTimers() {
+        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
     }
 
     @Override
     protected void rebuildWidgetGroup() {
         getWidgetGroup();
-        cButtonResetInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        cButtonResetStroll.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        cButtonStopInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
-        cButtonBack.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
@@ -54,11 +72,14 @@ public final class SettingsScreen extends ScreenLogic {
         cButtonResetInterval = createButton("Reset Interval");
         cButtonResetInterval.addListener(resetIntervalBehaviour());
 
+        cButtonStopInterval = createButton("Stop Interval");
+        cButtonStopInterval.addListener(stopIntervalBehaviour());
+
         cButtonResetStroll = createButton("Reset Stroll");
         cButtonResetStroll.addListener(resetStrollBehaviour());
 
-        cButtonStopInterval = createButton("Stop Interval");
-        cButtonStopInterval.addListener(stopIntervalBehaviour());
+        cButtonStopStroll = createButton("Stop Stroll");
+        cButtonStopStroll.addListener(stopStrollBehaviour());
 
         cButtonBack = createButton("Back");
         cButtonBack.addListener(backBehaviour());
@@ -74,7 +95,7 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
+               cIntervalTimer.reset();
             }
         };
     }
@@ -88,7 +109,22 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name()).reset();
+                cStrollTimer.reset();
+                //cScreenStore.setScreen(new RewardScreen(cScreenStore));
+            }
+        };
+    }
+
+    /**
+     * Stops the stroll timer.
+     *
+     * @return ChangeListener
+     */
+    protected ChangeListener stopStrollBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                cStrollTimer.stop();
                 //cScreenStore.setScreen(new RewardScreen(cScreenStore));
             }
         };
@@ -104,7 +140,7 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
+                cIntervalTimer.stop();
             }
         };
     }
