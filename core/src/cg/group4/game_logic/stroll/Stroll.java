@@ -1,5 +1,6 @@
 package cg.group4.game_logic.stroll;
 
+import cg.group4.Launcher;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
@@ -27,6 +28,7 @@ public class Stroll implements Observer {
      * Tag used for debugging.
      */
     private static final String TAG = Stroll.class.getSimpleName();
+
     /**
      * Amount of rewards collected.
      */
@@ -55,6 +57,7 @@ public class Stroll implements Observer {
      * The stroll timer.
      */
     protected Timer cStrollTimer;
+
     /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
@@ -114,7 +117,17 @@ public class Stroll implements Observer {
         Random rnd = new Random();
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
-            cEvent = new FishingStrollEvent();
+            int chosenEvent = rnd.nextInt(2);
+            switch(chosenEvent) {
+                case(0):
+                    cEvent = new FishingStrollEvent();
+                    break;
+                case(1):
+                    cEvent = new TestStrollEvent();
+                    break;
+                default:
+                    cEvent = new TestStrollEvent();
+            }
             cNewEventSubject.update(cEvent);
         }
     }
