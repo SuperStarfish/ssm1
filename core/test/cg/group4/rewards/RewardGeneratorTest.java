@@ -72,6 +72,7 @@ public class RewardGeneratorTest {
 	@Test
 	public void constructorTest() {
 		assertTrue(cGenerator.cRNG != null);
+		assertTrue(cGenerator.cCollectibleFactory != null);
 	}
 	
 	/**

@@ -2,6 +2,9 @@ package cg.group4.rewards;
 
 import java.util.Random;
 
+import cg.group4.rewards.collectibles.Collectible;
+import cg.group4.rewards.collectibles.CollectibleFactory;
+
 /**
  * Objects that generates the rewards.
  * @author Jean de Leeuw
@@ -35,19 +38,38 @@ public class RewardGenerator {
 	protected final double cRangeMin;
 	
 	/**
+	 * Object that creates collectibles.
+	 */
+	protected final CollectibleFactory cCollectibleFactory;
+	
+	/**
 	 * Constructs a new reward generator.
 	 */
 	public RewardGenerator() {
 		cRNG = new Random();
 		cRangeMax = inverseRewardFunction(differentColours);
 		cRangeMin = inverseRewardFunction(0);
+		cCollectibleFactory = new CollectibleFactory();
 	}
 	
 	/**
+	 * Generates a random collectible and return this created collectible.
+	 * @return Collectible object.
+	 */
+	public final Collectible generateCollectible() {
+		String[] collectibleList = cCollectibleFactory.getCollectiblesList();
+		int nr = cRNG.nextInt(collectibleList.length);
+		int colour = generateRewardColour();
+		return cCollectibleFactory.generateCollectible(collectibleList[nr], colour);
+	}
+	
+	/**
+	 * Helper method that should not be called outside of this class.
 	 * Generates the colour of the reward.
+	 * 
 	 * @return RGB values of the colour of the reward. 
 	 */
-	public final int generateRewardColour() {
+	protected final int generateRewardColour() {
 		double random = randomDouble();
 		random = rewardFunction(random);
 		
