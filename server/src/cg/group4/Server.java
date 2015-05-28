@@ -1,90 +1,100 @@
 package cg.group4;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.BindException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The server class handles storage of user data and interaction.
+ * The Server class creates an access point for clients. It contains a thread pool on which
+ * server tasks are run.
  */
 public class Server {
-    private static final Logger logger = Logger.getLogger(Server.class.getName());
+    /**
+     * Default java logging functionality.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+
+    /**
+     * The port that the server will use.
+     */
+    public static final int DEFAULT_PORT = 63269;
+
+    /**
+     * The maximum number of Threads that can be active.
+     */
+    public static final int MAX_THREADS = 50;
+
+    /**
+     * The ExecutorService which only allows as much threads to be run as defined by MAX_THREADS.
+     */
+    protected ExecutorService cPool;
 
     /**
      * The local IP address and the external IP address.
      */
     protected InetAddress cLocalAddress, cExternalAddress;
 
+    /**
+     * The ServerSocket used by the server.
+     */
     protected ServerSocket cServerSocket;
-
-    protected ObjectInputStream cInputStream;
-
-    protected ObjectOutputStream cOutputStream;
-
-    protected Socket cConnection;
 
     /**
      * Creates a new Server.
      */
     public Server() {
-        logger.setLevel(Level.INFO);
+        LOGGER.setLevel(Level.INFO);
     }
 
-    public void startRunning() {
+    /**
+     * Gets the local and external IP address and creates the ServerSocket. Then waits for incoming connections.
+     */
+    public final void startRunning() {
         try {
             cLocalAddress = getLocalIP();
             cExternalAddress = getExternalIP();
             cServerSocket = createServerSocket();
-            System.out.println(toString());
-            while(true) {
-                try {
-                    waitForConnection();
-                    createStreams();
-                    whileInteracting();
-                } finally {
-                    cleanUp();
-                }
-            }
+            LOGGER.info(this.toString());
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    protected final void waitForConnection() throws IOException {
-        System.out.println("Waiting for connection...");
-        cConnection = cServerSocket.accept();
-        System.out.println("Connected to " + cConnection.getInetAddress().getHostName());
-    }
-
-    protected final void createStreams() throws IOException {
-        cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
-        cOutputStream.flush();
-        cInputStream = new ObjectInputStream(cConnection.getInputStream());
-    }
-
-    protected final void cleanUp() throws IOException {
-        cOutputStream.close();
-        cInputStream.close();
-        cConnection.close();
-    }
-
-    protected final void whileInteracting() throws IOException {
-        String message = "You are now connected";
-        do {
-            try {
-                message = (String) cInputStream.readObject();
-                System.out.println(message);
-            } catch (ClassNotFoundException cnfException) {
-                System.out.println("Don't know what I received");
-            }
-        } while (!message.equals("STOP"));
+        acceptConnections();
     }
 
     /**
-     * Looks up the local IP address. Uses InterAddress.getLocalHost() to do so.
+     * Called when everything is set properly and waits for new incoming connections. Runs the connections in
+     * separate ServerThreads.
+     */
+    protected final void acceptConnections() {
+        cPool = Executors.newFixedThreadPool(MAX_THREADS);
+        LOGGER.info("Server is running. Accepting incoming connections.");
+        while (true) {
+            try {
+                Socket connection = cServerSocket.accept();
+                Callable<Void> task = new ServerThread(connection);
+                cPool.submit(task);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Looks up the local IP address. Uses InetAddress.getLocalHost() to do so.
      *
      * @return The localhost IP address.
      * @throws UnknownHostException The host could not be found.
@@ -108,8 +118,20 @@ public class Server {
         return InetAddress.getByName(ip);
     }
 
+    /**
+     * Creates the ServerSocket on the DEFAULT_PORT.
+     *
+     * @return ServerSocket
+     * @throws IOException Exits the application if port could not be bound.
+     */
     protected final ServerSocket createServerSocket() throws IOException {
-        return new ServerSocket(63269);
+        try {
+            return new ServerSocket(DEFAULT_PORT);
+        } catch (BindException bindException) {
+            System.out.println("Port " + DEFAULT_PORT + " is already in use. Please change or free the port.");
+            System.exit(1);
+        }
+        return null;
     }
 
     /**
@@ -142,6 +164,7 @@ public class Server {
 
     /**
      * Test method for the server.
+     *
      * @param args arguments
      */
     public static void main(final String[] args) {

@@ -3,10 +3,14 @@ package cg.group4;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Client {
+    protected static final Logger LOGGER = Logger.getLogger(Client.class.getName());
+
     protected ObjectOutputStream cOutputStream;
 
     protected ObjectInputStream cInputStream;
@@ -17,61 +21,83 @@ public class Client {
 
     protected int cServerPort;
 
+    protected final int cDefaultPort = 63269;
+
+    protected final String cDefaultIP = "192.168.2.20";
+
+    protected final int cMaxPortNumber = 65535;
+
+    protected boolean cKeepAlive = true;
+
+    protected final String cIPPattern =
+            "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+
+    protected BufferedReader bufferedReader;
+
     public Client(){
         setIPAndPort();
     }
 
-    public Client(boolean useDefault){
-
+    public Client(boolean useDefaults) {
+        if (useDefaults && validatePort(cDefaultPort) && validateIP(cDefaultIP)) {
+            cServerPort = cDefaultPort;
+            cServerIP = cDefaultIP;
+        } else {
+            setIPAndPort();
+        }
     }
 
     protected void setIPAndPort(){
         try {
-            cServerIP = null;
-            cServerPort = -1;
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            while (cServerIP == null) {
-                System.out.print("Enter an IP to connect to: ");
-                String input = br.readLine();
-                if(validateIP(input)){
-                   cServerIP = input;
-                } else{
-                    System.out.print("Invalid IP given, please try again.");
-                }
-            }
-            while (cServerPort == -1){
-                System.out.println("Enter a port to connect to: ");
-                try{
-                    int port = Integer.parseInt(br.readLine());
-                    if(port >= 0 && port <= 65535){
-                        cServerPort = port;
-                    } else{
-                        System.out.println("Port should be between 0 and 65535");
-                    }
-                } catch (NumberFormatException nfe){
-                    System.out.println("That is not an integer! Please try again.");
-                }
-            }
+            bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+            cServerIP = askForIP();
+            cServerPort = askForPort();
+
+            bufferedReader.close();
         } catch(IOException ioException) {
             ioException.printStackTrace();
         }
     }
 
-    public final void startRunning() {
+    protected String askForIP() throws IOException {
+        String input;
+        do {
+            System.out.print("Please enter the server IP address: ");
+            input = bufferedReader.readLine();
+        } while (!validateIP(input));
+        return input;
+    }
+
+    protected int askForPort() throws IOException {
+        boolean isValid = false;
+        int input = -1;
+        do {
+            System.out.print("Please enter the server port: ");
+            try {
+                input = Integer.parseInt(bufferedReader.readLine());
+                isValid = true;
+            } catch (NumberFormatException e){
+                System.out.println("That is not an integer!");
+            }
+        } while(!isValid && !validatePort(input));
+        return input;
+    }
+
+    public final void openConnection() {
         try {
             connectToServer();
-            if(cConnection != null) {
-                createStreams();
-                whileInteracting();
-            }
+            createStreams();
         } catch (IOException ioException) {
             ioException.printStackTrace();
-        } finally {
-            try {
-                cleanUp();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+        }
+    }
+
+    public final void closeConnection(){
+        try {
+            cleanUp();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -81,10 +107,7 @@ public class Client {
             cConnection = new Socket(cServerIP, cServerPort);
         } catch (ConnectException connectException){
             System.out.println(connectException.getMessage());
-        }
-
-        if (cConnection != null) {
-            System.out.println("Connected to: " + cConnection.getInetAddress().getHostName());
+            System.exit(1);
         }
     }
 
@@ -106,31 +129,62 @@ public class Client {
         }
     }
 
-    protected final void whileInteracting() throws IOException {
-        String message = "";
+    protected final void interactWithServer() {
         do {
             try {
-                message = (String) cInputStream.readObject();
-                if(!message.equals("")){
-                    System.out.println(message);
+                Message message = (Message) cInputStream.readObject();
+                System.out.println(message.type);
+                switch (message.type){
+                    case REPLY:
+                        System.out.println(message.body);
+                        break;
+                    case CLOSE:
+                        cKeepAlive = false;
+                        break;
+                    default:
+                        LOGGER.severe("Received a message and I don't know how to handle it!");
+                        break;
                 }
-            } catch (ClassNotFoundException cnfException) {
-                System.out.println("Don't know what I received");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SocketException e){
+                LOGGER.info("Lost connection with: " + cConnection.getInetAddress().getHostName());
+                cKeepAlive = false;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } while (!message.equals("STOP"));
+        } while(cKeepAlive);
     }
 
-    private static final String PATTERN =
-            "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+    public void sendMessage(Message message){
+        if(message.type != null){
+            try{
+                cOutputStream.writeObject(message);
+                cOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else{
+            System.out.println("No message type specified!");
+        }
+    }
 
-    public static boolean validateIP(final String ip){
-        Pattern pattern = Pattern.compile(PATTERN);
+    protected boolean validateIP(final String ip) {
+        Pattern pattern = Pattern.compile(cIPPattern);
         Matcher matcher = pattern.matcher(ip);
         return matcher.matches();
     }
 
-    public static void main(String[] args){
-        Client client = new Client();
-        client.startRunning();
+    protected boolean validatePort(final Integer port) {
+        return port != null && port >= 0 && port <= cMaxPortNumber;
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client(true);
+        client.openConnection();
+        client.sendMessage(new Message(Message.Type.GET, "Hallo server!"));
+        while(true){
+            client.interactWithServer();
+        }
     }
 }
