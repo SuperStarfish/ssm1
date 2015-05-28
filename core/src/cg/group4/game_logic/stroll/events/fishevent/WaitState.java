@@ -23,16 +23,6 @@ public class WaitState implements FishEventState {
     protected static final int TIME = 7;
 
     /**
-     * The observer for the timer, on stop it should switch the state of the event.
-     */
-    protected Observer cFishStopObserver;
-
-    /**
-     * The timer which keeps track for how long you hold still.
-     */
-    protected Timer cFishTimer;
-
-    /**
      * The event this state belongs to.
      */
     protected FishingStrollEvent cEvent;
@@ -42,21 +32,21 @@ public class WaitState implements FishEventState {
      * @param event The event this state belongs to.
      */
     public WaitState(final FishingStrollEvent event) {
-        cFishTimer = new Timer("WAITFORFISH", TIME);
-
         cEvent = event;
 
         cEvent.cLabel.setText("Wait for the fish to bite");
 
-        cFishStopObserver = new Observer() {
+        cEvent.cFishTimer = new Timer("WAITFORFISH", TIME);
+
+        cEvent.cFishStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cFishTimer.stop();
+                cEvent.cFishTimer.stop();
                 cEvent.cState = new ReelInState(cEvent);
             }
         };
 
-        cFishTimer.getStopSubject().addObserver(cFishStopObserver);
+        cEvent.cFishTimer.getStopSubject().addObserver(cEvent.cFishStopObserver);
 
     }
 
@@ -68,7 +58,7 @@ public class WaitState implements FishEventState {
 
         float pythagorean = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2) + Math.pow(input.z, 2)));
         if (pythagorean > DELTA) {
-            cFishTimer.reset();
+            cEvent.cFishTimer.reset();
         }
     }
 }
