@@ -33,7 +33,6 @@ public abstract class StrollEvent implements Disposable, Observer {
         @Override
         public void update(final Observable o, final Object arg) {
             clearEvent();
-            dispose();
         }
     };
 

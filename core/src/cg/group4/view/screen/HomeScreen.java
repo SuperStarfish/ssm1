@@ -93,8 +93,8 @@ public final class HomeScreen extends ScreenLogic {
      * Obtains both the STROLL and INTERVAL Timers so we can properly create the GUI.
      */
     protected void initTimers() {
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cIsClickable = cStrollTimer.isRunning() || !cIntervalTimer.isRunning();
     }
 

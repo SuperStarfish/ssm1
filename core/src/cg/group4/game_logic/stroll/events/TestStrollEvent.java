@@ -191,6 +191,7 @@ public class TestStrollEvent extends StrollEvent {
      * Clears the current event.
      */
     public final void clearEvent() {
+        super.dispose();
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 

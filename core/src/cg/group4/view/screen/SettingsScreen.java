@@ -51,8 +51,8 @@ public final class SettingsScreen extends ScreenLogic {
      * Gets the STROLL Timer and INTERVAL Timer so they can easily be accessed within this screen.
      */
     protected void getTimers() {
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
     }
 
     @Override
