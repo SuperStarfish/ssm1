@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cg.group4.game_logic.stroll.events.StrollEvent;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -73,12 +74,24 @@ public class FishingStrollEvent extends StrollEvent {
 	protected Accelerometer cAccelMeter;
 
 	/**
+	 * The observer for the timer, on stop it should switch the state of the event.
+	 */
+	protected Observer cFishStopObserver;
+
+	/**
+	 * The timer which keeps track for how long you hold still.
+	 */
+	protected Timer cFishTimer;
+
+	/**
 	 * Creates a new fishing event, with delay timer, text, screen and input.
 	 */
 	public FishingStrollEvent() {
 		super();
         cScreen = new EventScreen();
         cLabel = cScreen.getLabel();
+
+		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 
         cDelayInputStartObserver = new Observer() {
             @Override
@@ -141,5 +154,7 @@ public class FishingStrollEvent extends StrollEvent {
 	@Override
 	protected final void clearEvent() {
 		super.dispose();
+		cDelayInputTimer.dispose();
+		cFishTimer.dispose();
 	}
 }
