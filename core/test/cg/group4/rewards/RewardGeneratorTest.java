@@ -71,9 +71,7 @@ public class RewardGeneratorTest {
 	 */
 	@Test
 	public void constructorTest() {
-		Object o = cGenerator.cRNG;
-		assertTrue(o != null);
-		assertTrue(o instanceof Random);
+		assertTrue(cGenerator.cRNG != null);
 	}
 	
 	/**

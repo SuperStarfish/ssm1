@@ -49,17 +49,18 @@ public final class WavelengthToRGB {
 	 * Returns the RGB values of the given wavelength.
 	 * 
 	 * @param wavelength in the visible spectrum (between 380 - 780)
-	 * @return RGB colours corresponding to the given wavelength
+	 * @return RGB colours [0 - 1.0] corresponding to the given wavelength
 	 */
-	public static int[] wavelengthToRGB(final double wavelength) {
-		int[] RGB = new int[3];
+	public static float[] wavelengthToRGB(final double wavelength) {
+		float[] RGB = new float[3];
+		final float normalize = 255f;
 		
 		double[] colours = setColours(wavelength);
 		double intensity = determineIntensity(wavelength);
 		
-		RGB[0] = adjustColours(colours[0], intensity);
-		RGB[1] = adjustColours(colours[1], intensity);
-		RGB[2] = adjustColours(colours[2], intensity);
+		RGB[0] = adjustColours(colours[0], intensity) / normalize;
+		RGB[1] = adjustColours(colours[1], intensity) / normalize;
+		RGB[2] = adjustColours(colours[2], intensity) / normalize;
 		
 		return RGB;
 	}
@@ -132,10 +133,10 @@ public final class WavelengthToRGB {
 	 * @param factor intensity value
 	 * @return Correct RGB values
 	 */
-	protected static int adjustColours(final double colour, final double factor) {
+	protected static float adjustColours(final double colour, final double factor) {
 		if (colour == 0d) {
 			return 0;
 		}
-		return (int) Math.round(cMaxIntensity * Math.pow(colour * factor, cGamma));
+		return (float) (cMaxIntensity * Math.pow(colour * factor, cGamma));
 	}
 }
