@@ -21,19 +21,19 @@ public class GameSkin extends Skin {
     /**
      * Default font size.
      */
-    protected final int DEFAULT_FONT_SIZE = 42;
+    protected final int defaultFontSize = 42;
     /**
-     * Default dev height.
-     * It is used to scale against the height used to develop the skin for.
+     * Default dev size.
+     * It is used to scale the current screen size against the size used to develop the skin for.
      */
-    protected final float DEV_HEIGHT = 720;
+    protected final float devSize = 720;
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
-     * It is calculated by taking the height of the screen divided by the default height (DEV_HEIGHT).
+     * It is calculated by taking the height of the screen divided by the default size (devSize).
      */
-    protected final float UI_SCALAR;
+    protected float uiScalar;
     /**
      * Font generator for the skin.
      */
@@ -41,35 +41,55 @@ public class GameSkin extends Skin {
     /**
      * Path to the default font.
      */
-    protected String DEFAULT_FONT = "fonts/blow.ttf";
+    protected String defaultFont = "fonts/blow.ttf";
     /**
      * Default border width.
      */
-    protected int DEFAULT_BORDER_WIDTH = 2;
-    /**
-     * The height of the screen.
-     */
-    protected float UI_HEIGHT;
+    protected int defaultBorderWidth = 2;
 
     /**
      * Initializes the skin.
      */
     public GameSkin() {
-        UI_HEIGHT = Gdx.graphics.getHeight();
-        UI_SCALAR = UI_HEIGHT / DEV_HEIGHT;
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(DEFAULT_FONT));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(defaultFont));
+    }
 
-        addFonts();
+    /**
+     * Sets the UI Scalar and creates the UI elements based on this scale.
+     *
+     * @param newSize New size of the game window.
+     */
+    public final void createUIElements(final int newSize) {
+        uiScalar = newSize / devSize;
+        addDefaults();
     }
 
     /**
      * Adds different fonts and their styles to the skin, to choose from.
      */
-    protected final void addFonts() {
+    protected final void addDefaults() {
         this.add("default_font", generateDefaultFont());
-        this.add("default_textButtonStyle", generateDefaultTextButton());
+        this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
+    }
+
+    /**
+     * Easy method to return the default TextButtonStyle as a proper class.
+     *
+     * @return TextButtonStyle object
+     */
+    public final TextButton.TextButtonStyle getDefaultTextButtonStyle() {
+        return get("default_textButtonStyle", TextButton.TextButtonStyle.class);
+    }
+
+    /**
+     * Easy method to return the default LabelStyle as a proper class.
+     *
+     * @return LabelStyle object
+     */
+    public final Label.LabelStyle getDefaultLabelStyle() {
+        return get("default_labelStyle", Label.LabelStyle.class);
     }
 
     /**
@@ -77,14 +97,14 @@ public class GameSkin extends Skin {
      *
      * @return TextButtonStyle
      */
-    protected final TextButton.TextButtonStyle generateDefaultTextButton() {
+    protected final TextButton.TextButtonStyle generateDefaultTextButtonStyle() {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.fontColor = Color.GREEN;
         buttonStyle.font = this.get("default_font", BitmapFont.class);
 
         Sprite sprite = new Sprite(new Texture(Gdx.files.internal("images/wooden_sign.png")));
         final float scalar = 0.42f;
-        sprite.setSize(sprite.getWidth() * scalar * UI_SCALAR, sprite.getHeight() * scalar * UI_SCALAR);
+        sprite.setSize(sprite.getWidth() * scalar * uiScalar, sprite.getHeight() * scalar * uiScalar);
 
         buttonStyle.up = new SpriteDrawable(sprite);
 
@@ -100,11 +120,11 @@ public class GameSkin extends Skin {
     protected final BitmapFont generateDefaultTitleFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (DEFAULT_BORDER_WIDTH * UI_SCALAR);
+        fontParameter.borderWidth = (int) (defaultBorderWidth * uiScalar);
         fontParameter.color = Color.WHITE;
 
         final float scale = 1.2f;
-        fontParameter.size = (int) (DEFAULT_FONT_SIZE * UI_SCALAR * scale);
+        fontParameter.size = (int) (defaultFontSize * uiScalar * scale);
         return fontGenerator.generateFont(fontParameter);
     }
 
@@ -128,9 +148,9 @@ public class GameSkin extends Skin {
     protected final BitmapFont generateDefaultFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (DEFAULT_BORDER_WIDTH * UI_SCALAR);
+        fontParameter.borderWidth = (int) (defaultBorderWidth * uiScalar);
         fontParameter.color = Color.WHITE;
-        fontParameter.size = (int) (DEFAULT_FONT_SIZE * UI_SCALAR);
+        fontParameter.size = (int) (defaultFontSize * uiScalar);
         return fontGenerator.generateFont(fontParameter);
     }
 
@@ -140,15 +160,26 @@ public class GameSkin extends Skin {
      * @param label label text of the text button
      * @return TextButton
      */
-    public TextButton generateDefaultMenuButton(final String label) {
-        return new TextButton(label, this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+    public final TextButton generateDefaultMenuButton(final String label) {
+        return new TextButton(label,
+                this.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+    }
+
+    /**
+     * Used to generate labels using the default label style.
+     *
+     * @param text label text of the text button
+     * @return TextButton
+     */
+    public final Label generateDefaultLabel(final String text) {
+        return new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
     }
 
     /**
      * Disposes data of the game skin.
      */
     @Override
-    public void dispose() {
+    public final void dispose() {
         fontGenerator.dispose();
         super.dispose();
     }

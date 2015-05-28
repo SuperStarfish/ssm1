@@ -61,7 +61,7 @@ public class Stroll implements Observer {
     protected Observer cStrollStopObserver = new Observer() {
 
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cFinished = true;
             if (!cEventGoing) {
                 done();
@@ -101,7 +101,7 @@ public class Stroll implements Observer {
 
 
     @Override
-    public final void update(Observable o, Object arg) {
+    public final void update(final Observable o, final Object arg) {
         if (!cEventGoing) {
             generatePossibleEvent();
         }
@@ -125,9 +125,9 @@ public class Stroll implements Observer {
      * @param rewards Reward(s) given on completion of an event
      */
     public final void eventFinished(final int rewards) {
-        Gdx.app.log(TAG, "Event completed!");
+        Gdx.app.log(TAG, "Event completed! Collected " + rewards + " rewards.");
 
-        cEndEventSubject.update(null);
+        cEndEventSubject.update(rewards);
 
         cRewards += rewards;
         cEvent = null;
@@ -144,11 +144,12 @@ public class Stroll implements Observer {
      * Method that gets called when the stroll has ended/completed.
      */
     public final void done() {
-        Gdx.app.log(TAG, "Stroll has ended.");
+        Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
+
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cEndStrollSubject.update(null);
+        cEndStrollSubject.update(cRewards);
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
@@ -161,7 +162,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public Subject getEndStrollSubject() {
+    public final Subject getEndStrollSubject() {
         return cEndStrollSubject;
     }
 
@@ -170,7 +171,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public Subject getNewEventSubject() {
+    public final Subject getNewEventSubject() {
         return cNewEventSubject;
     }
 
@@ -179,7 +180,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public Subject getEndEventSubject() {
+    public final Subject getEndEventSubject() {
         return cEndEventSubject;
     }
 }

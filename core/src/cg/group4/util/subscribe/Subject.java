@@ -12,7 +12,7 @@ public class Subject extends Observable {
     /**
      * Notifies the subscribers.
      */
-    public void update() {
+    public final void update() {
         update(null);
     }
 
@@ -21,7 +21,7 @@ public class Subject extends Observable {
      *
      * @param item Passes the object to its subscribers with the update.
      */
-    public void update(Object item) {
+    public final void update(final Object item) {
         setChanged();
         notifyObservers(item);
     }

@@ -38,17 +38,18 @@ public final class StrollScreen extends ScreenLogic {
      */
     protected Observer cNewEventObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cScreenStore.addScreen("Event", ((StrollEvent) arg).createScreen());
             cScreenStore.setScreen("Event");
         }
     };
+
     /**
      * Observer that gets called when the stroll ends.
      */
     protected Observer cEndEventObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cScreenStore.setScreen("Stroll");
             cScreenStore.removeScreen("Event");
         }
@@ -59,8 +60,8 @@ public final class StrollScreen extends ScreenLogic {
      */
     protected Observer cEndStrollObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
-            cScreenStore.addScreen("Reward", new RewardScreen());
+        public void update(final Observable o, final Object arg) {
+            cScreenStore.addScreen("Reward", new RewardScreen((Integer) arg));
             cScreenStore.setScreen("Reward");
         }
     };
@@ -111,7 +112,7 @@ public final class StrollScreen extends ScreenLogic {
 
         cStrollTickObserver = new Observer() {
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 cTimeRemaining.setText(arg.toString());
             }
         };
@@ -120,5 +121,16 @@ public final class StrollScreen extends ScreenLogic {
         cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
 
         cTable.add(cTimeRemaining);
+    }
+
+    @Override
+    protected void rebuildWidgetGroup() {
+        cTimeRemaining.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cText.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
     }
 }

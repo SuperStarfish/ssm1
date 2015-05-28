@@ -95,7 +95,7 @@ public class TestStrollEvent extends StrollEvent {
 
         cDelayInputStartObserver = new Observer() {
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 cLabel.setText("Wrong! Try " + direction + " again!");
                 cDelayNewInput = true;
             }
@@ -103,7 +103,7 @@ public class TestStrollEvent extends StrollEvent {
 
         cDelayInputStopObserver = new Observer() {
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 cDelayNewInput = false;
             }
         };
@@ -258,7 +258,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final void update(Observable o, Object arg) {
+    public final void update(final Observable o, final Object arg) {
         Vector3 readings = cAccelMeter.update();
         //Done outside of the if to keep the resulting readings relevant. Needs testing
         if (!cDelayNewInput) {

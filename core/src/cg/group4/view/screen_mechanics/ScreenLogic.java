@@ -10,18 +10,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
  */
 public abstract class ScreenLogic {
     /**
-     * A default game skin.
+     * The name of the previous screen. Used to go back to that screen through the ScreenStore.
+     */
+    protected final String cPreviousScreenName;
+    /**
+     * Reference to the default game skin.
      */
     protected GameSkin cGameSkin;
-
     /**
      * This group will be the active Actor in the WorldRenderer when this screen becomes
      * active.
      */
     protected WidgetGroup cWidgetGroup;
-
     /**
-     * Screen store of the game.
+     * Reference to the ScreenStore. Used to switch to other screens.
      */
     protected ScreenStore cScreenStore;
 
@@ -31,22 +33,49 @@ public abstract class ScreenLogic {
     public ScreenLogic() {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
-        cWidgetGroup = createWidgetGroup();
+        cPreviousScreenName = setPreviousScreenName();
+
     }
 
     /**
-     * Creates a widget group that can be displayed bij the world renderer when that screen is displayed.
+     * Creates the WidgetGroup that contains the logic of this Screen.
      *
-     * @return The widget group.
+     * @return The WidgetGroup that will be added to the Stage.
      */
     protected abstract WidgetGroup createWidgetGroup();
 
     /**
-     * Getter for the widget group created by the method 'createWidgetGroup'.
-     *
-     * @return The widget group.
+     * This method is called whenever the game is resized. In this method the all the UI elements need to update
+     * their styles using .setStyle().
      */
-    public WidgetGroup getWidgetGroup() {
+    protected abstract void rebuildWidgetGroup();
+
+    /**
+     * This method defines the Screen to go back to. Simply supplying the name of the Screen is sufficient since
+     * the ScreenStore will handle the rest.
+     *
+     * @return Name of the previous Screen name. Can be null.
+     */
+    protected abstract String setPreviousScreenName();
+
+    /**
+     * Returns the previous Screen name. Has to be set through the setPreviousScreenName() method.
+     *
+     * @return The previous Screen name.
+     */
+    public final String getPreviousScreenName() {
+        return cPreviousScreenName;
+    }
+
+    /**
+     * Returns the WidgetGroup of this Screen. This will be added to the Stage in the WorldRenderer.
+     *
+     * @return The WidgetGroup containing the logic of this Screen.
+     */
+    public final WidgetGroup getWidgetGroup() {
+        if (cWidgetGroup == null) {
+            cWidgetGroup = createWidgetGroup();
+        }
         return cWidgetGroup;
     }
 

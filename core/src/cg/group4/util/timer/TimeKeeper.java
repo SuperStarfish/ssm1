@@ -22,7 +22,7 @@ public final class TimeKeeper {
     /**
      * Singleton of timer handler.
      */
-    protected static final TimeKeeper cInstance = new TimeKeeper();
+    protected static final TimeKeeper INSTANCE = new TimeKeeper();
     /**
      * Amount of milliseconds in one second.
      */
@@ -52,7 +52,7 @@ public final class TimeKeeper {
      * @return cInstance
      */
     public static TimeKeeper getInstance() {
-        return cInstance;
+        return INSTANCE;
     }
 
     /**
