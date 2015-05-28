@@ -15,7 +15,7 @@ public final class TimerStore {
     /**
      * Singleton of timer store.
      */
-    protected static TimerStore cInstance;
+    protected final static TimerStore cInstance = new TimerStore();
 
     /**
      * Hashmap that contains all the timers.
@@ -30,7 +30,7 @@ public final class TimerStore {
     /**
      * Class to store timers to be accessed.
      */
-    private TimerStore() {
+    protected TimerStore() {
         cTimers = new HashMap<String, Timer>();
         cTimeKeeper = new TimeKeeper();
 
@@ -46,9 +46,6 @@ public final class TimerStore {
      * @return cInstance
      */
     public static TimerStore getInstance() {
-        if (cInstance == null) {
-            cInstance = new TimerStore();
-        }
         return cInstance;
     }
 

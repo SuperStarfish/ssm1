@@ -1,11 +1,11 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
 
 /**
@@ -27,7 +27,7 @@ public class TimerStoreTest {
      */
     @Before
     public final void setUp() {
-        timerStore = TimerStore.getInstance();
+        timerStore = new TimerStore();
         timer = new Timer("TEST", 60);
     }
 
@@ -89,13 +89,5 @@ public class TimerStoreTest {
         timerStore.removeTimer(timer);
         assertFalse(timerStore.cTimers.containsValue(timer));
         assertEquals(size - 1, timerStore.getTimeKeeper().getTimerSubject().countObservers());
-    }
-
-    /**
-     * Removes the objects created for the tests.
-     */
-    @After
-    public final void tearDown() {
-        TimerStore.cInstance = null;
     }
 }
