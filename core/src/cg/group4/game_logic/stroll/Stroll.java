@@ -3,6 +3,7 @@ package cg.group4.game_logic.stroll;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
+import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
@@ -113,7 +114,7 @@ public class Stroll implements Observer {
         Random rnd = new Random();
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
-            cEvent = new TestStrollEvent();
+            cEvent = new FishingStrollEvent();
             cNewEventSubject.update(cEvent);
         }
     }
