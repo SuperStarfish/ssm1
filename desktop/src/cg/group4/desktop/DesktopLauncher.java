@@ -10,7 +10,10 @@ import cg.group4.Launcher;
  * on Android.
  */
 public class DesktopLauncher {
-    public static final Aspect aspect = Aspect.RATIO16_9;
+    /**
+     * Uses the Aspect enum to determine what height and width to use for testing the screen on desktop.
+     */
+    public static final Aspect aspect = Aspect.RATIO9_16;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -27,7 +30,9 @@ public class DesktopLauncher {
         RATIO5_3(1200, 720),
         RATIO16_10(1152, 720),
         RATIO3_2(1080, 720),
-        RATIO4_3(960, 720);
+        RATIO4_3(960, 720),
+        RATIO3_4(720, 960),
+        RATIO9_16(540, 960);
         protected int cWidth, cHeight;
         Aspect(int width, int height){
             cWidth = width;

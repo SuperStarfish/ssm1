@@ -61,8 +61,8 @@ public class Launcher extends Game {
         cStandUp = StandUp.getInstance();
 
         cScreenStore = ScreenStore.getInstance();
-        cScreenStore.init();
         setScreen(cScreenStore.getWorldRenderer());
+        cScreenStore.init();
         cScreenStore.setScreen("Home");
     }
 

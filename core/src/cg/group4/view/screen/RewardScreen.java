@@ -17,13 +17,21 @@ public final class RewardScreen extends ScreenLogic {
      * Reward that has to be displayed of the screen.
      */
     protected int cReward;
+    /**
+     * Button to return to the HomeScreen.
+     */
+    protected TextButton cHomeButton;
+    /**
+     * Label containing the reward.
+     */
+    protected Label cRewardLabel;
 
     /**
      * Creates a new reward screen.
      *
-     * @param reward Reward to be displayed.
+     * @param reward The reward to be displayed on the reward screen.
      */
-    public RewardScreen(int reward) {
+    public RewardScreen(final int reward) {
         cReward = reward;
     }
 
@@ -32,20 +40,32 @@ public final class RewardScreen extends ScreenLogic {
         Table table = new Table();
         table.setFillParent(true);
 
-        Label label = new Label(Integer.toString(cReward), cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cRewardLabel = new Label(Integer.toString(cReward),
+                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
-        table.add(label);
+        table.add(cRewardLabel);
 
-        TextButton button = cGameSkin.generateDefaultMenuButton("Main Menu");
-        button.addListener(new ChangeListener() {
+        cHomeButton = cGameSkin.generateDefaultMenuButton("Main Menu");
+        cHomeButton.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 cScreenStore.setScreen("Home");
             }
         });
         table.row().expandY();
-        table.add(button);
+        table.add(cHomeButton);
 
         return table;
+    }
+
+    @Override
+    protected void rebuildWidgetGroup() {
+        cHomeButton.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cRewardLabel.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
     }
 }

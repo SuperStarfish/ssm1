@@ -38,10 +38,19 @@ public final class SettingsScreen extends ScreenLogic {
         return cTable;
     }
 
+    @Override
+    protected void rebuildWidgetGroup() {
+        getWidgetGroup();
+        cButtonResetInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonResetStroll.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonStopInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cButtonBack.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+    }
+
     /**
      * Creates the buttons of the settings menu and adds an event listener for each of them.
      */
-    protected final void createGUI() {
+    protected void createGUI() {
         cButtonResetInterval = createButton("Reset Interval");
         cButtonResetInterval.addListener(resetIntervalBehaviour());
 
@@ -61,7 +70,7 @@ public final class SettingsScreen extends ScreenLogic {
      *
      * @return ChangeListener
      */
-    protected final ChangeListener resetIntervalBehaviour() {
+    protected ChangeListener resetIntervalBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
@@ -75,7 +84,7 @@ public final class SettingsScreen extends ScreenLogic {
      *
      * @return ChangeListener
      */
-    protected final ChangeListener resetStrollBehaviour() {
+    protected ChangeListener resetStrollBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
@@ -91,7 +100,7 @@ public final class SettingsScreen extends ScreenLogic {
      *
      * @return ChangeListener
      */
-    protected final ChangeListener stopIntervalBehaviour() {
+    protected ChangeListener stopIntervalBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
@@ -108,7 +117,7 @@ public final class SettingsScreen extends ScreenLogic {
     protected ChangeListener backBehaviour() {
         return new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 cScreenStore.setScreen("Home");
             }
         };
@@ -120,10 +129,15 @@ public final class SettingsScreen extends ScreenLogic {
      * @param label Label for the text button
      * @return The text button just created. It is returned so an event listener can be added to the button.
      */
-    protected TextButton createButton(String label) {
+    protected TextButton createButton(final String label) {
         TextButton button = cGameSkin.generateDefaultMenuButton(label);
         cTable.row().expandY();
         cTable.add(button);
         return button;
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
     }
 }
