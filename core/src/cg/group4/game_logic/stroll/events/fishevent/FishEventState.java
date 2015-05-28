@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 public interface FishEventState {
 
     /**
-     * Processes the input out of the accelerometer
+     * Processes the input out of the accelerometer.
      * @param input Vector containing the acceleration in the x,y,z direction.
      */
     void processInput(Vector3 input);

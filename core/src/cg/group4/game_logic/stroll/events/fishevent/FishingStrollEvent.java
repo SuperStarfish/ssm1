@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cg.group4.game_logic.stroll.events.StrollEvent;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -15,6 +14,10 @@ import cg.group4.util.timer.Timer;
 import cg.group4.view.screen.EventScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 
+/**
+ * Stroll event where you have to fish to complete it.
+ * @author Nick Cleintuar
+ */
 public class FishingStrollEvent extends StrollEvent {
 
     /**
@@ -27,22 +30,51 @@ public class FishingStrollEvent extends StrollEvent {
      */
 	protected EventScreen cScreen;
 
+	/**
+	 * Sound played when the task is completed.
+	 */
 	protected Sound cCompletedTaskSound;
 
+	/**
+	 * Text that gets displayed on screen.
+	 */
 	protected Label cLabel;
 
+	/**
+	 * The state where the event is in.
+	 */
 	protected FishEventState cState;
 
+	/**
+	 * Observer for the input delay timer, prevents people from completing the task instantaneous.
+	 * Changes the input delay boolean.
+	 */
 	protected Observer cDelayInputStartObserver;
 
+	/**
+	 * Timer for the input delay, prevents people from completing the task instantaneous.
+	 */
 	protected Timer cDelayInputTimer;
 
+	/**
+	 * Observer for the input delay timer, prevents people from completing the task instantaneous.
+	 * Changes the input delay boolean.
+	*/
 	protected Observer cDelayInputStopObserver;
 
+	/**
+	 * Boolean for the input delay, prevents people from completing the task instantaneous.
+	 */
 	protected boolean cDelayNewInput;
 
+	/**
+	 * Accelerometer used to fetch the input to complete the event.
+	 */
 	protected Accelerometer cAccelMeter;
-	
+
+	/**
+	 * Creates a new fishing event, with delay timer, text, screen and input.
+	 */
 	public FishingStrollEvent() {
 		super();
         cScreen = new EventScreen();
@@ -50,14 +82,14 @@ public class FishingStrollEvent extends StrollEvent {
 
         cDelayInputStartObserver = new Observer() {
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 cDelayNewInput = true;
             }
         };
 
         cDelayInputStopObserver = new Observer() {
             @Override
-            public void update(Observable o, Object arg) {
+            public void update(final Observable o, final Object arg) {
                 cDelayNewInput = false;
             }
         };

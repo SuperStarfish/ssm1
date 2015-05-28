@@ -18,6 +18,11 @@ public class WaitState implements FishEventState {
     protected static final float DELTA = 1.5f;
 
     /**
+     *
+     */
+    protected static final int TIME = 7;
+
+    /**
      * The observer for the timer, on stop it should switch the state of the event.
      */
     protected Observer cFishStopObserver;
@@ -37,7 +42,7 @@ public class WaitState implements FishEventState {
      * @param event The event this state belongs to.
      */
     public WaitState(final FishingStrollEvent event) {
-        cFishTimer = new Timer("WAITFORFISH", 5);
+        cFishTimer = new Timer("WAITFORFISH", TIME);
 
         cEvent = event;
 
@@ -56,13 +61,13 @@ public class WaitState implements FishEventState {
     }
 
     /**
-     *
-     * @param input
+     * Method that processes the input to match the movement of waiting for the fish to bite, so holding still.
+     * @param input Vector containing the acceleration in the x,y,z directions respectively.
      */
     public final void processInput(final Vector3 input) {
 
-        float pytho = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2) + Math.pow(input.z, 2)));
-        if (pytho > DELTA) {
+        float pythagorean = (float) Math.sqrt((Math.pow(input.x, 2) + Math.pow(input.y, 2) + Math.pow(input.z, 2)));
+        if (pythagorean > DELTA) {
             cFishTimer.reset();
         }
     }
