@@ -16,7 +16,7 @@ public class SensorReader {
      *
      * @return Accelerometer sensor values.
      */
-    public final Vector3 readAccelerometer() {
+    public Vector3 readAccelerometer() {
         return new Vector3(
                 Gdx.input.getAccelerometerX(),
                 Gdx.input.getAccelerometerY(),
