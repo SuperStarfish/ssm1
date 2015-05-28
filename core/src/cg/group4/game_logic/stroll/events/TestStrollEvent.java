@@ -116,7 +116,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
         cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
-        TimerStore.getInstance().addTimer(cDelayInputTimer.getName(), cDelayInputTimer);
+        TimerStore.getInstance().addTimer(cDelayInputTimer);
 
         cDelayNewInput = false;
 
@@ -191,7 +191,7 @@ public class TestStrollEvent extends StrollEvent {
      * Clears the current event.
      */
     public final void clearEvent() {
-        TimerStore.getInstance().removeTimer(cDelayInputTimer.getName());
+        TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 
     /**

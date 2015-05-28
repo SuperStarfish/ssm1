@@ -11,80 +11,122 @@ import org.junit.runner.RunWith;
 import java.util.Observable;
 import java.util.Observer;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests for the timer class.
+ */
 @RunWith(GdxTestRunner.class)
 public class TimerTest {
-    Timer timer;
-    Observer timerObserver;
 
+    /**
+     * Timer that will be tested upon.
+     */
+    protected Timer cTimer;
+
+    /**
+     * Initializes objects for a test.
+     */
     @Before
-    public void setUp() {
-        timer = new Timer("TEST", 5);
-        timerObserver = mock(Observer.class);
+    public final void setUp() {
+        cTimer = new Timer("TEST", 5);
     }
 
-
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testGetName() {
-        assertEquals("TEST", timer.getName());
+    public final void testGetName() {
+        assertEquals(cTimer.cName, cTimer.getName());
     }
 
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testEqualsTrue() {
-        assertTrue(timer.equals(new Timer("TEST", 60, true)));
+    public final void testGetRemainingTime() {
+        assertEquals(cTimer.cRemainingTime, cTimer.getRemainingTime());
     }
 
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testEqualsNull() {
-        assertFalse(timer.equals(null));
+    public final void testGetStartSubject() {
+        assertEquals(cTimer.cStartSubject, cTimer.getStartSubject());
     }
 
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testEqualsNonTimerClass() {
-        assertFalse(timer.equals("BLA"));
+    public final void testGetStopSubject() {
+        assertEquals(cTimer.cStopSubject, cTimer.getStopSubject());
     }
 
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testNotEquals() {
-        assertFalse(timer.equals(new Timer("WRONG", 5)));
+    public final void testGetTickSubject() {
+        assertEquals(cTimer.cTickSubject, cTimer.getTickSubject());
     }
 
-
+    /**
+     * Verifies that a timer stops when a tick happens after the timers duration has past.
+     */
     @Test
-    public void testOnTickWhenFinished() {
+    public final void testOnTickWhenFinished() {
+        assertTrue(cTimer.cRunning);
         long timeStamp = System.currentTimeMillis();
-        timer.cFinishTime = timeStamp - timer.cDuration;
-        timer.tick(timeStamp);
-        assertFalse(timer.cRunning);
+        cTimer.cFinishTime = timeStamp - cTimer.cDuration;
+        cTimer.tick(timeStamp);
+        assertFalse(cTimer.cRunning);
     }
 
+    /**
+     * Verifies that a timer does not do anything after the timer has stopped.
+     */
     @Test
-    public void testTickWhenNotRunning() {
-        timer.stop();
-        timer.getTickSubject().addObserver(timerObserver);
-        timer.tick(System.currentTimeMillis());
+    public final void testTickWhenNotRunning() {
+        cTimer.stop();
+        Observer timerObserver = mock(Observer.class);
+        cTimer.getTickSubject().addObserver(timerObserver);
+        cTimer.tick(System.currentTimeMillis());
         verify(timerObserver, never()).update((Observable) any(), any());
     }
 
+    /**
+     * Test if reset resetFinishTime() will be called at recreating timer.
+     */
     @Test
-    public void testSetFinishTimePersistent() {
-        timer = new Timer("TEST", 60, true);
-        timer = new Timer("TEST", 60, true);
-        assertTrue(timer.cRunning);
+    public final void testSetFinishTimePersistent() {
+        cTimer = new Timer(cTimer.getName(), 60, true);
+        cTimer = new Timer(cTimer.getName(), 60);
+        cTimer = new Timer(cTimer.getName(), 60, true);
+        assertTrue(cTimer.cRunning);
     }
 
+    /**
+     * Test if reset resetFinishTime() will not be called if the timer was finished.
+     */
     @Test
-    public void testSetFinishTimePersistentFinished() {
-        timer = new Timer("TEST", 60, true);
-        timer.cPreferences.putLong(timer.cName, System.currentTimeMillis() - timer.cDuration);
-        timer = new Timer("TEST", 60, true);
-        assertFalse(timer.cRunning);
+    public final void testSetFinishTimePersistentFinished() {
+        cTimer = new Timer(cTimer.getName(), 60, true);
+        cTimer.cPreferences.putLong(cTimer.cName, System.currentTimeMillis() - cTimer.cDuration);
+        cTimer = new Timer(cTimer.getName(), 60, true);
+        assertFalse(cTimer.cRunning);
     }
 
+    /**
+     * Test for the method resetFinishTime().
+     */
     @Test
-    public void testResetFinishTime() {
+    public final void testResetFinishTime() {
         Timer timer = new Timer("BLABLA", 60, true);
         long time = timer.cPreferences.getLong(timer.cName);
         timer.tick(System.currentTimeMillis() + 1000);
@@ -92,22 +134,48 @@ public class TimerTest {
         assertTrue(timer.cPreferences.getLong(timer.cName) > time);
     }
 
-
+    /**
+     * Test for the method isRunning().
+     */
     @Test
-    public void testTimerEnumINTERVAL() {
+    public final void testIsRunning() {
+        cTimer.reset();
+        assertTrue(cTimer.isRunning());
+        cTimer.stop();
+        assertFalse(cTimer.isRunning());
+    }
+
+    /**
+     * Test for the enum INTERVAL.
+     */
+    @Test
+    public final void testTimerEnumINTERVAL() {
         assertEquals(60 * 60, Timer.Global.INTERVAL.getDuration());
     }
 
+    /**
+     * Test for the enum STROLL.
+     */
     @Test
-    public void testTimerEnumSTROLL() {
+    public final void testTimerEnumSTROLL() {
         assertEquals(5 * 60, Timer.Global.STROLL.getDuration());
     }
 
+    /**
+     * Test for the enum EVENT.
+     */
+    @Test
+    public final void testTimerEnumEVENT() {
+        assertEquals(60, Timer.Global.EVENT.getDuration());
+    }
+
+    /**
+     * Tear down to prepare for the next test.
+     */
     @After
-    public void tearDown() {
+    public final void tearDown() {
         Preferences preferences = Gdx.app.getPreferences("TIMER");
         preferences.clear();
         preferences.flush();
     }
-
 }

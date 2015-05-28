@@ -151,7 +151,7 @@ public class Timer implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public final void update(final Observable o, final Object arg) {
         tick(Long.parseLong(arg.toString()));
     }
 
@@ -178,7 +178,7 @@ public class Timer implements Observer {
      */
     public final void stop() {
         if (cRunning) {
-            cPreferences.putLong(cName, System.currentTimeMillis());
+            cPreferences.remove(cName);
             cPreferences.flush();
             cRunning = false;
             cStopSubject.update();
@@ -193,7 +193,6 @@ public class Timer implements Observer {
         cStartSubject.deleteObservers();
         cStopSubject.deleteObservers();
         cTickSubject.deleteObservers();
-//        TimeKeeper.getInstance().removeTimer(this);
     }
 
     /**
@@ -233,16 +232,6 @@ public class Timer implements Observer {
      */
     public final int getRemainingTime() {
         return cRemainingTime;
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        return !(obj == null || !(obj instanceof Timer)) && cName.equals(((Timer) obj).getName());
-    }
-
-    @Override
-    public final int hashCode() {
-        return cName.hashCode();
     }
 
     /**
@@ -291,7 +280,7 @@ public class Timer implements Observer {
         /**
          * Max length of an event is 1 min (60 seconds).
          */
-        EVENT(6);
+        EVENT(60);
 
         /**
          * Duration of the global timer.

@@ -35,7 +35,7 @@ public final class TimerStore {
         cTimeKeeper = new TimeKeeper();
 
         for (Timer.Global timer : Timer.Global.values()) {
-            addTimer(timer.name(), new Timer(timer.name(), timer.getDuration(), true));
+            addTimer(new Timer(timer.name(), timer.getDuration(), true));
         }
         Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeStore!");
     }
@@ -53,26 +53,24 @@ public final class TimerStore {
     }
 
     /**
-     * Stores the timer in the store under the given name.
+     * Stores the timer in the store under the timers name.
      *
-     * @param name  Name of the timer.
      * @param timer Timer to be stored.
      */
-    public void addTimer(final String name, final Timer timer) {
-        cTimers.put(name, timer);
+    public void addTimer(final Timer timer) {
+        cTimers.put(timer.getName(), timer);
         cTimeKeeper.getTimerSubject().addObserver(timer);
     }
 
     /**
      * Removes the timer from the store with the given name.
      *
-     * @param name Name of the timer to be removed.
+     * @param timer The timer to be removed.
      */
-    public void removeTimer(final String name) {
-        Timer timer = getTimer(name);
+    public void removeTimer(final Timer timer) {
         timer.dispose();
         cTimeKeeper.getTimerSubject().deleteObserver(timer);
-        cTimers.remove(name);
+        cTimers.remove(timer.getName());
     }
 
     /**

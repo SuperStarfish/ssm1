@@ -30,10 +30,11 @@ public class AccelerometerTest {
     protected SensorReader cSensorReader;
 
     /**
-     * Constructs the mock and rules for the sensorReader. Also constructs the accelerometer object which will be tested.
+     * Constructs the mock and rules for the sensorReader.
+     * Also constructs the accelerometer object which will be tested.
      */
     @Before
-    public void setUp() {
+    public final void setUp() {
         cSensorReader = mock(SensorReader.class);
         when(cSensorReader.readAccelerometer()).thenReturn(new Vector3(1f, 2f, 3f));
 
@@ -44,7 +45,7 @@ public class AccelerometerTest {
      * Destroys the mock and the accelerometer so every test works with clean objects.
      */
     @After
-    public void tearDown() {
+    public final void tearDown() {
         cAccelMeter = null;
         cSensorReader = null;
     }
@@ -53,7 +54,7 @@ public class AccelerometerTest {
      * Tests if the noise threshold is adjustable.
      */
     @Test
-    public void setNoiseThresholdTest() {
+    public final void setNoiseThresholdTest() {
         assertEquals(1.5f, cAccelMeter.cNoiseThreshold, 0);
         cAccelMeter.setNoiseThreshold(3.45f);
         assertEquals(3.45f, cAccelMeter.cNoiseThreshold, 0);
@@ -63,7 +64,7 @@ public class AccelerometerTest {
      * Tests if a certain acceleration is approximately equal to gravity.
      */
     @Test
-    public void isGravity() {
+    public final void isGravity() {
         float scalar = 9.81f;
         assertTrue(cAccelMeter.isGravity(scalar));
         scalar = 8.9f;
@@ -76,7 +77,7 @@ public class AccelerometerTest {
      * Tets if the setting to filter gravity from the readings is adjustable.
      */
     @Test
-    public void filterGravityTest() {
+    public final void filterGravityTest() {
         assertFalse(cAccelMeter.cFilterGravity);
         cAccelMeter.filterGravity(true);
         assertTrue(cAccelMeter.cFilterGravity);
@@ -86,7 +87,7 @@ public class AccelerometerTest {
      * Tests if readings below a certain level are discarded.
      */
     @Test
-    public void filterNoiseTest() {
+    public final void filterNoiseTest() {
         assertEquals(1.5f, cAccelMeter.cNoiseThreshold, 0);
         float scalar = 1.23f;
         assertEquals(0, cAccelMeter.filterNoise(scalar), 0);
@@ -98,7 +99,7 @@ public class AccelerometerTest {
      * Tests if the highest component of a Vector3 object is returned.
      */
     @Test
-    public void highestAccelerationComponentTest() {
+    public final void highestAccelerationComponentTest() {
         Vector3 data = new Vector3(1f, 2f, 3f);
         assertEquals(3f, cAccelMeter.highestAccelerationComponent(data), 0);
         data.set(0.5f, 0.2f, 0.45f);
@@ -109,7 +110,7 @@ public class AccelerometerTest {
      * Tests if the accelerometer object is constructed correctly.
      */
     @Test
-    public void constructorTest() {
+    public final void constructorTest() {
         assertFalse(cAccelMeter.cFilterGravity);
         assertEquals(1.5f, cAccelMeter.cNoiseThreshold, 0);
         assertEquals(cAccelMeter.cBaseVector.x, 1f, 0);
@@ -121,7 +122,7 @@ public class AccelerometerTest {
      * Tests if the readings are correctly read when the gravity filter option is ON.
      */
     @Test
-    public void updateGravityFilterONTest1() {
+    public final void updateGravityFilterONTest1() {
         cAccelMeter.filterGravity(true);
         assertTrue(cAccelMeter.cFilterGravity);
         cAccelMeter.cBaseVector = new Vector3(1f, 1f, 1f);
@@ -136,7 +137,7 @@ public class AccelerometerTest {
      * Another test to see if the readings are correctly read when the gravity filter option is ON.
      */
     @Test
-    public void updateGravityFilterONTest2() {
+    public final void updateGravityFilterONTest2() {
         cAccelMeter.filterGravity(true);
         assertTrue(cAccelMeter.cFilterGravity);
         cAccelMeter.cBaseVector = new Vector3(1f, 0.2f, 0f);
@@ -151,7 +152,7 @@ public class AccelerometerTest {
      * Tests if the readings are correctly read when the gravity filter option is OFF.
      */
     @Test
-    public void updateGravityFilterOFFTest() {
+    public final void updateGravityFilterOFFTest() {
         assertFalse(cAccelMeter.cFilterGravity);
         Vector3 result = cAccelMeter.update();
 
