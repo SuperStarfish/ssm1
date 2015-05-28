@@ -4,6 +4,9 @@ import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Implementation of the Timer class. Contains a list of subscribers.
  * The Timer class can only be accessed from the TimeKeeper.
@@ -12,7 +15,7 @@ import com.badlogic.gdx.Preferences;
  * @author Benjamin Los
  * @author Jurgen van Schagen
  */
-public class Timer {
+public class Timer implements Observer {
 
     /**
      * Tag used for debugging.
@@ -117,9 +120,8 @@ public class Timer {
         setFinishTime();
         cRemainingTime = (int) (cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC;
         if (cRemainingTime < 0) {
-            cRemainingTime =  0;
+            cRemainingTime = 0;
         }
-        TimeKeeper.getInstance().addTimer(this);
     }
 
     /**
@@ -146,6 +148,11 @@ public class Timer {
      */
     public final String getName() {
         return cName;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        tick(Long.parseLong(arg.toString()));
     }
 
     /**
@@ -186,7 +193,7 @@ public class Timer {
         cStartSubject.deleteObservers();
         cStopSubject.deleteObservers();
         cTickSubject.deleteObservers();
-        TimeKeeper.getInstance().removeTimer(this);
+//        TimeKeeper.getInstance().removeTimer(this);
     }
 
     /**
@@ -284,7 +291,7 @@ public class Timer {
         /**
          * Max length of an event is 1 min (60 seconds).
          */
-        EVENT(60);
+        EVENT(6);
 
         /**
          * Duration of the global timer.

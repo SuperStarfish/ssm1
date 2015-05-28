@@ -1,7 +1,7 @@
 package cg.group4.view.screen;
 
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -74,7 +74,7 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
+                TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             }
         };
     }
@@ -88,7 +88,7 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name()).reset();
+                TimerStore.getInstance().getTimer(Timer.Global.STROLL.name()).reset();
                 //cScreenStore.setScreen(new RewardScreen(cScreenStore));
             }
         };
@@ -104,7 +104,7 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
+                TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
             }
         };
     }

@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -108,7 +108,7 @@ public final class HomeScreen extends ScreenLogic {
             }
         };
 
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
         cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
 
         cTable.row().expandY();

@@ -3,8 +3,8 @@ package cg.group4.view.screen;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.game_logic.stroll.events.StrollEvent;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -117,7 +117,7 @@ public final class StrollScreen extends ScreenLogic {
             }
         };
 
-        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
 
         cTable.add(cTimeRemaining);

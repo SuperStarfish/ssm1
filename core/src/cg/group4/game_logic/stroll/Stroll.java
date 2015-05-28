@@ -4,8 +4,8 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.util.subscribe.Subject;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
 import java.util.Observable;
@@ -92,9 +92,9 @@ public class Stroll implements Observer {
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        cStrollTimer = TimeKeeper.getInstance().getTimer("STROLL");
-        cStrollTimer.reset();
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
+        cStrollTimer.reset();
 
     }
 

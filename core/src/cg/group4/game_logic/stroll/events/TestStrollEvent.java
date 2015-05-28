@@ -3,6 +3,7 @@ package cg.group4.game_logic.stroll.events;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen.EventScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
@@ -115,6 +116,8 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
         cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
+        TimerStore.getInstance().addTimer(cDelayInputTimer.getName(), cDelayInputTimer);
+
         cDelayNewInput = false;
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
@@ -188,10 +191,7 @@ public class TestStrollEvent extends StrollEvent {
      * Clears the current event.
      */
     public final void clearEvent() {
-        super.dispose();
-        cDelayInputTimer.getStartSubject().deleteObserver(cDelayInputStartObserver);
-        cDelayInputTimer.getStopSubject().deleteObserver(cDelayInputStopObserver);
-        cDelayInputTimer.dispose();
+        TimerStore.getInstance().removeTimer(cDelayInputTimer.getName());
     }
 
     /**

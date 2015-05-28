@@ -1,9 +1,7 @@
 package cg.group4.util.timer;
 
+import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Singleton TimeKeeper which keeps track of every individual timer.
@@ -20,48 +18,28 @@ public final class TimeKeeper {
     public static final String TAG = TimeKeeper.class.getSimpleName();
 
     /**
-     * Singleton of timer handler.
-     */
-    protected static final TimeKeeper INSTANCE = new TimeKeeper();
-    /**
      * Amount of milliseconds in one second.
      */
     protected final long cMillisInSecond = 1000;
-    /**
-     * Set of all the timers.
-     */
-    protected Set<Timer> cTimers;
+
     /**
      * Previous tick that the timers were called.
      */
     protected long cPreviousTick;
 
+    /**
+     * Subject for a timer to subscribe to to be informed every second.
+     */
+    protected Subject cTimerSubject;
+
 
     /**
      * Keeps track of the timers and updates them every second.
      */
-    private TimeKeeper() {
-        cTimers = new HashSet<Timer>();
+    protected TimeKeeper() {
         cPreviousTick = System.currentTimeMillis();
+        cTimerSubject = new Subject();
         Gdx.app.debug(TimeKeeper.TAG, "Created a new TimeKeeper!");
-    }
-
-    /**
-     * Getter for time keeper instance.
-     *
-     * @return cInstance
-     */
-    public static TimeKeeper getInstance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Initializes the global timers (interval and stroll).
-     */
-    public void init() {
-        for (Timer.Global timer : Timer.Global.values()) {
-            new Timer(timer.name(), timer.getDuration(), true);
-        }
     }
 
     /**
@@ -73,47 +51,17 @@ public final class TimeKeeper {
         long timeStamp = System.currentTimeMillis();
 
         if (timeStamp - cPreviousTick > cMillisInSecond) {
-            for (Timer timer : cTimers) {
-                timer.tick(timeStamp);
-            }
+            cTimerSubject.update(timeStamp);
             cPreviousTick += cMillisInSecond;
         }
     }
 
     /**
-     * Adds a timer to the timeKeeper.
+     * Subject that will inform all of its subscribers every second.
      *
-     * @param timer Timer to add to be controlled by the timeKeeper
+     * @return The Subject.
      */
-    protected void addTimer(final Timer timer) {
-        if (cTimers.add(timer)) {
-            Gdx.app.debug(TAG, "Added Timer '" + timer.getName() + "'.");
-        }
-    }
-
-    /**
-     * Removes a timer from the timeKeeper.
-     *
-     * @param timer Timer to be removed from the timekeeper
-     */
-    protected void removeTimer(final Timer timer) {
-        if (cTimers.remove(timer)) {
-            Gdx.app.debug(TAG, "Removed Timer '" + timer.getName() + "'.");
-        }
-    }
-
-    /**
-     * Returns a timer called `name` if controlled by the TimeKeeper.
-     *
-     * @param name Name of a timer
-     * @return Returns the timer with the specified name
-     */
-    public Timer getTimer(final String name) {
-        for (Timer timer : cTimers) {
-            if (timer.getName().equals(name)) {
-                return timer;
-            }
-        }
-        return null;
+    public Subject getTimerSubject() {
+        return cTimerSubject;
     }
 }

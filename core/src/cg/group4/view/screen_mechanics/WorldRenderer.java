@@ -232,7 +232,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cScreen = screen;
         cStage.dispose();
         cStage = new Stage();
-        cStage.setDebugAll(true);
+        cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
         inputMultiplexer.addProcessor(cStage);
     }

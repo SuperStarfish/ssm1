@@ -44,7 +44,7 @@ public final class ScreenStore {
     }
 
     /**
-     * Getter for time keeper instance.
+     * Getter for screen store instance.
      *
      * @return cInstance
      */
