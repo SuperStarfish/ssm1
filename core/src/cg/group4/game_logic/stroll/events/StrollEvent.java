@@ -18,9 +18,9 @@ import java.util.Observer;
  * @author Martijn Gribnau
  */
 public abstract class StrollEvent implements Disposable, Observer {
-
+	
     /**
-     *
+     * Every strollEvent has a respective timer.
      */
     protected Timer cEventTimer;
 
