@@ -4,6 +4,9 @@ import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Implementation of the Timer class. Contains a list of subscribers.
  * The Timer class can only be accessed from the TimeKeeper.
@@ -12,7 +15,7 @@ import com.badlogic.gdx.Preferences;
  * @author Benjamin Los
  * @author Jurgen van Schagen
  */
-public class Timer {
+public class Timer implements Observer {
 
     /**
      * Tag used for debugging.
@@ -117,9 +120,8 @@ public class Timer {
         setFinishTime();
         cRemainingTime = (int) (cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC;
         if (cRemainingTime < 0) {
-            cRemainingTime =  0;
+            cRemainingTime = 0;
         }
-        TimeKeeper.getInstance().addTimer(this);
     }
 
     /**
@@ -148,6 +150,11 @@ public class Timer {
         return cName;
     }
 
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        tick(Long.parseLong(arg.toString()));
+    }
+
     /**
      * Method called by TimeKeeper whenever a second in the game has passed.
      *
@@ -171,7 +178,7 @@ public class Timer {
      */
     public final void stop() {
         if (cRunning) {
-            cPreferences.putLong(cName, System.currentTimeMillis());
+            cPreferences.remove(cName);
             cPreferences.flush();
             cRunning = false;
             cStopSubject.update();
@@ -186,7 +193,6 @@ public class Timer {
         cStartSubject.deleteObservers();
         cStopSubject.deleteObservers();
         cTickSubject.deleteObservers();
-        TimeKeeper.getInstance().removeTimer(this);
     }
 
     /**
@@ -226,16 +232,6 @@ public class Timer {
      */
     public final int getRemainingTime() {
         return cRemainingTime;
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        return !(obj == null || !(obj instanceof Timer)) && cName.equals(((Timer) obj).getName());
-    }
-
-    @Override
-    public final int hashCode() {
-        return cName.hashCode();
     }
 
     /**
@@ -289,7 +285,7 @@ public class Timer {
         /**
          * Duration of the global timer.
          */
-        private int eDuration;
+        private int cDuration;
 
         /**
          * Set the duration of a global timer.
@@ -297,7 +293,7 @@ public class Timer {
          * @param duration The duration in seconds
          */
         Global(final int duration) {
-            eDuration = duration;
+            cDuration = duration;
         }
 
         /**
@@ -306,7 +302,7 @@ public class Timer {
          * @return The duration in seconds
          */
         public int getDuration() {
-            return eDuration;
+            return cDuration;
         }
     }
 }

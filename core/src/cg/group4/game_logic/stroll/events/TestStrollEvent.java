@@ -3,6 +3,7 @@ package cg.group4.game_logic.stroll.events;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen.EventScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
@@ -55,7 +56,7 @@ public class TestStrollEvent extends StrollEvent {
      * prevOperationNr: Previous movement operation that was done.
      * tasksCompleted: Number of completed movement operations.
      */
-    protected int operationNr, prevOperationNr, tasksCompleted;
+    protected int cOperationNr, cPrevOperationNr, cTasksCompleted;
     /**
      * Whether or not the input is delayed.
      */
@@ -67,7 +68,7 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Direction of the current task.
      */
-    protected String direction;
+    protected String cDirection;
     /**
      * Tasks which will execute when a delay is initiated.
      */
@@ -90,13 +91,13 @@ public class TestStrollEvent extends StrollEvent {
         cScreen = new EventScreen();
         cLabel = cScreen.getLabel();
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
-        tasksCompleted = 0;
-        prevOperationNr = 0;
+        cTasksCompleted = 0;
+        cPrevOperationNr = 0;
 
         cDelayInputStartObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cLabel.setText("Wrong! Try " + direction + " again!");
+                cLabel.setText("Wrong! Try " + cDirection + " again!");
                 cDelayNewInput = true;
             }
         };
@@ -111,6 +112,8 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
         cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
+        TimerStore.getInstance().addTimer(cDelayInputTimer);
+
         cDelayNewInput = false;
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
@@ -123,41 +126,41 @@ public class TestStrollEvent extends StrollEvent {
      * Sets the new operation that should be done.
      */
     public final void doTask() {
-        operationNr = (int) Math.floor(Math.random() * AMOUNT_OF_TASKS + 1);
-        if (operationNr == prevOperationNr) {
-            if (operationNr == AMOUNT_OF_TASKS) {
-                operationNr = 1;
+        cOperationNr = (int) Math.floor(Math.random() * AMOUNT_OF_TASKS + 1);
+        if (cOperationNr == cPrevOperationNr) {
+            if (cOperationNr == AMOUNT_OF_TASKS) {
+                cOperationNr = 1;
             } else {
-                operationNr++;
+                cOperationNr++;
             }
         }
-        switch (operationNr) {
+        switch (cOperationNr) {
             case MOVE_LEFT:
-                direction = "left";
+                cDirection = "left";
                 cLabel.setText("Move your phone to the left!");
                 break;
             case MOVE_RIGHT:
-                direction = "right";
+                cDirection = "right";
                 cLabel.setText("Move your phone to the right!");
                 break;
             case MOVE_DOWN:
-                direction = "down";
+                cDirection = "down";
                 cLabel.setText("Move your phone down!");
                 break;
             case MOVE_UP:
-                direction = "up";
+                cDirection = "up";
                 cLabel.setText("Move your phone up!");
                 break;
             case MOVE_AWAY:
-                direction = "away from you";
+                cDirection = "away from you";
                 cLabel.setText("Move your phone away from you!");
                 break;
             case MOVE_TOWARDS:
-                direction = "towards you";
+                cDirection = "towards you";
                 cLabel.setText("Move your phone towards you!");
                 break;
             default:
-                cLabel.setText("doTask Unknown Operation Number: " + operationNr);
+                cLabel.setText("doTask Unknown Operation Number: " + cOperationNr);
                 break;
         }
     }
@@ -166,10 +169,10 @@ public class TestStrollEvent extends StrollEvent {
      * Gets called when one of the individual tasks gets completed.
      */
     public final void taskCompleted() {
-        this.tasksCompleted++;
+        this.cTasksCompleted++;
         cCompletedTaskSound.play(1.0f);
-        if (this.tasksCompleted < MAX_TASKS) {
-            prevOperationNr = operationNr;
+        if (this.cTasksCompleted < MAX_TASKS) {
+            cPrevOperationNr = cOperationNr;
             doTask();
         } else {
             clearEvent();
@@ -181,7 +184,7 @@ public class TestStrollEvent extends StrollEvent {
      */
     public final void clearEvent() {
         super.dispose();
-        cDelayInputTimer.dispose();
+        TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 
     /**
@@ -190,12 +193,13 @@ public class TestStrollEvent extends StrollEvent {
      * @param accelData Vector containing the acceleration in the x,y and z direction.
      */
     public final void processInput(final Vector3 accelData) {
+        //System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
 
         final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
         final float delta = 2.0f;
 
         if (highestAccel >= delta) {
-            switch (operationNr) {
+            switch (cOperationNr) {
                 case MOVE_LEFT:
                     cDelayInputTimer.reset();
                     if (accelData.y >= delta) {
@@ -239,7 +243,7 @@ public class TestStrollEvent extends StrollEvent {
                     }
                     break;
                 default:
-                    cLabel.setText("processInput Unknown Operation Number: " + operationNr);
+                    cLabel.setText("processInput Unknown Operation Number: " + cOperationNr);
                     break;
             }
         }

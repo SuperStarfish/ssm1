@@ -16,7 +16,7 @@ public final class ScreenStore {
     /**
      * Singleton of screen handler.
      */
-    protected static ScreenStore cInstance;
+    protected static final ScreenStore INSTANCE = new ScreenStore();
 
     /**
      * Hashmap that contains all the screens.
@@ -37,22 +37,18 @@ public final class ScreenStore {
     /**
      * Class to store screens to be accessed later.
      */
-    private ScreenStore() {
+    protected ScreenStore() {
         cScreens = new HashMap<String, ScreenLogic>();
         cGameSkin = new GameSkin();
         cWorldRenderer = new WorldRenderer();
     }
 
     /**
-     * Getter for time keeper instance.
-     *
-     * @return cInstance
+     * Getter for screen store instance.
+     * @return The instance.
      */
     public static ScreenStore getInstance() {
-        if (cInstance == null) {
-            cInstance = new ScreenStore();
-        }
-        return cInstance;
+        return INSTANCE;
     }
 
     /**
