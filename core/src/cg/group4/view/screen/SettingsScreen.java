@@ -1,7 +1,7 @@
 package cg.group4.view.screen;
 
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * @author Jurgen van Schagen
  * @author Martijn Gribnau
  */
-public class SettingsScreen extends ScreenLogic {
+public final class SettingsScreen extends ScreenLogic {
 
     /**
      * Container group used for the layout of the view.
@@ -26,30 +26,60 @@ public class SettingsScreen extends ScreenLogic {
      * Buttons for the options in the settings menu.
      */
     protected TextButton cButtonResetInterval,
-            cButtonResetStroll,
             cButtonStopInterval,
+            cButtonResetStroll,
+            cButtonStopStroll,
             cButtonBack;
+
+    /**
+     * References to the STROLL Timer and INTERVAL Timer.
+     */
+    protected Timer cIntervalTimer, cStrollTimer;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
         cTable.setFillParent(true);
+
+        getTimers();
         createGUI();
+
         return cTable;
+    }
+
+    /**
+     * Gets the STROLL Timer and INTERVAL Timer so they can easily be accessed within this screen.
+     */
+    protected void getTimers() {
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+    }
+
+    @Override
+    protected void rebuildWidgetGroup() {
+        getWidgetGroup();
+        cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
      * Creates the buttons of the settings menu and adds an event listener for each of them.
      */
-    protected final void createGUI() {
+    protected void createGUI() {
         cButtonResetInterval = createButton("Reset Interval");
         cButtonResetInterval.addListener(resetIntervalBehaviour());
+
+        cButtonStopInterval = createButton("Stop Interval");
+        cButtonStopInterval.addListener(stopIntervalBehaviour());
 
         cButtonResetStroll = createButton("Reset Stroll");
         cButtonResetStroll.addListener(resetStrollBehaviour());
 
-        cButtonStopInterval = createButton("Stop Interval");
-        cButtonStopInterval.addListener(stopIntervalBehaviour());
+        cButtonStopStroll = createButton("Stop Stroll");
+        cButtonStopStroll.addListener(stopStrollBehaviour());
 
         cButtonBack = createButton("Back");
         cButtonBack.addListener(backBehaviour());
@@ -61,11 +91,11 @@ public class SettingsScreen extends ScreenLogic {
      *
      * @return ChangeListener
      */
-    protected final ChangeListener resetIntervalBehaviour() {
+    protected ChangeListener resetIntervalBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
+               cIntervalTimer.reset();
             }
         };
     }
@@ -75,12 +105,25 @@ public class SettingsScreen extends ScreenLogic {
      *
      * @return ChangeListener
      */
-    protected final ChangeListener resetStrollBehaviour() {
+    protected ChangeListener resetStrollBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name()).reset();
-                //cScreenStore.setScreen(new RewardScreen(cScreenStore));
+                cStrollTimer.reset();
+            }
+        };
+    }
+
+    /**
+     * Stops the stroll timer.
+     *
+     * @return ChangeListener
+     */
+    protected ChangeListener stopStrollBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                cStrollTimer.stop();
             }
         };
     }
@@ -91,24 +134,24 @@ public class SettingsScreen extends ScreenLogic {
      *
      * @return ChangeListener
      */
-    protected final ChangeListener stopIntervalBehaviour() {
+    protected ChangeListener stopIntervalBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
+                cIntervalTimer.stop();
             }
         };
     }
 
     /**
-     * Sets the screen to the home menu
+     * Sets the screen to the home menu.
      *
      * @return ChangeListener
      */
     protected ChangeListener backBehaviour() {
         return new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 cScreenStore.setScreen("Home");
             }
         };
@@ -120,10 +163,15 @@ public class SettingsScreen extends ScreenLogic {
      * @param label Label for the text button
      * @return The text button just created. It is returned so an event listener can be added to the button.
      */
-    protected TextButton createButton(String label) {
+    protected TextButton createButton(final String label) {
         TextButton button = cGameSkin.generateDefaultMenuButton(label);
         cTable.row().expandY();
         cTable.add(button);
         return button;
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
     }
 }

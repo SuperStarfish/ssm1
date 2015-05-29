@@ -1,63 +1,51 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.util.subscribe.Subject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.HashSet;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.*;
 
-import static org.junit.Assert.*;
-
+/**
+ * Tests for the timeKeeper class.
+ */
 @RunWith(GdxTestRunner.class)
 public class TimeKeeperTest {
-    TimeKeeper timeKeeper;
-    Timer timer;
+    /**
+     * The timeKeeper that will be tested upon.
+     */
+    protected TimeKeeper cTimeKeeper;
 
+    /**
+     * Creates the needed objects for the tests.
+     */
     @Before
-    public void setUp(){
-        timeKeeper = TimeKeeper.getInstance();
-        timeKeeper.cTimers = new HashSet<Timer>();
-        timer = new Timer("TEST", 60);
+    public final void setUp() {
+        cTimeKeeper = new TimeKeeper();
     }
 
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testInitGlobalTimers(){
-        int count = TimeKeeper.getInstance().cTimers.size();
-        timeKeeper.init();
-        assertEquals(count + Timer.Global.values().length, TimeKeeper.getInstance().cTimers.size());
+    public final void testGetTimerSubject() {
+        assertEquals(cTimeKeeper.getTimerSubject(), cTimeKeeper.cTimerSubject);
     }
 
+    /**
+     * Test to verify the getter returns the right object.
+     */
     @Test
-    public void testAddTimer(){
-        int size = timeKeeper.cTimers.size();
-        timeKeeper.addTimer(new Timer("Test2", 5));
-        assertEquals(size + 1, timeKeeper.cTimers.size());
+    public final void testUpdate() {
+        cTimeKeeper.cTimerSubject = mock(Subject.class);
+        cTimeKeeper.cPreviousTick -= 1000;
+        cTimeKeeper.update();
+        verify(cTimeKeeper.cTimerSubject, times(1)).notifyObservers(anyLong());
     }
 
-    @Test
-     public void testAddDuplicateTimer(){
-        timeKeeper.addTimer(new Timer("Test2", 0));
-        int size = timeKeeper.cTimers.size();
-        timeKeeper.addTimer(new Timer("Test2", 5));
-        assertEquals(size, timeKeeper.cTimers.size());
-    }
 
-    @Test
-    public void testGetTimer(){
-        timeKeeper.addTimer(timer);
-        assertTrue(timer.equals(timeKeeper.getTimer(timer.cName)));
-    }
-
-    @Test
-    public void testGetTimerNull(){
-        timeKeeper.addTimer(timer);
-        assertNull(timeKeeper.getTimer("TAD"));
-    }
-
-    @Test
-    public void testNotifyStop(){
-        timeKeeper.addTimer(timer);
-        assertNull(timeKeeper.getTimer("TAD"));
-    }
 }

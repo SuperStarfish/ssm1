@@ -1,10 +1,10 @@
 package cg.group4.game_logic;
 
-import cg.group4.stroll.Stroll;
+import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
 /**
@@ -13,7 +13,7 @@ import com.badlogic.gdx.Gdx;
  * @author Martijn Gribnau
  * @author Benjamin Los
  */
-public class StandUp {
+public final class StandUp {
 
     /**
      * Tag of this class.
@@ -24,7 +24,7 @@ public class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static final StandUp cInstance = new StandUp();
+    protected static final StandUp INSTANCE = new StandUp();
 
     /**
      * Stroll logic.
@@ -42,7 +42,7 @@ public class StandUp {
     protected Subject cNewStrollSubject;
 
     /**
-     * Reads sensor input of the device
+     * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
 
@@ -58,10 +58,10 @@ public class StandUp {
     /**
      * Getter for StandUp instance.
      *
-     * @return cInstance
+     * @return INSTANCE
      */
     public static StandUp getInstance() {
-        return cInstance;
+        return INSTANCE;
     }
 
     /**
@@ -70,7 +70,7 @@ public class StandUp {
     public void startStroll() {
         if (cStroll == null) {
             Gdx.app.log(TAG, "Starting up stroll, created new one.");
-            TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
+            TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
             cNewStrollSubject.update(null);
         }

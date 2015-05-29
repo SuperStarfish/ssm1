@@ -1,8 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,133 +12,126 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * Class that handles the viewport and swapping of Actors and Sprites.
- *
- * @author Jurgen van Schagen
+ * Is responsible for the display of the screens and properly settings the background image.
+ * Draws the WidgetGroups correctly on all screen resolution supported withing the viewport ratios.
  */
-public class WorldRenderer implements Screen {
+public class WorldRenderer extends InputAdapter implements Screen {
 
     /**
-     * The world is seen in a 4:3 ratio. This sets the width to also fit with 16:9 ratio.
+     * The minimal Viewport aspect ratio.
      */
-    protected static final float GAME_WORLD_WIDTH = 12f;
+    protected final float cMinViewportRatio = 9f;
     /**
-     * Specifies the max viewport width allowed.
+     * The maximum Viewport aspect ratio.
      */
-    protected static final float MAX_VIEWPORT_WIDTH = 16f;
+    protected final float cMaxViewportRatio = 16f;
     /**
-     * The world is seen in a 4:3 ratio. This sets the height to also fit with 16:9 ratio.
+     * Used to position the background to the center of the Viewport.
      */
-    protected static final float GAME_WORLD_HEIGHT = 9f;
+    protected final float cToCenter = -2f;
     /**
-     * User to reposition something to center.
+     * Path to the default landscape background image.
      */
-    protected static final float CENTERER = -2f;
+    protected final String cDefaultLandscapePath = "images/default_landscape_background.jpg";
     /**
-     * Spritebatch for the background of the screen.
+     * Path to the default portrait background image.
      */
-    protected SpriteBatch cBatch;
+    protected final String cDefaultPortraitPath = "images/default_portrait_background.jpg";
     /**
-     * The background sprite that will be rendered
+     * The viewport for the game. Makes sure that the game is rendered between 16:9 and 4:3 aspect ratio.
      */
-    protected Sprite cBackgroundSprite;
+    protected Viewport cViewport;
     /**
-     * The stage in which actors are placed. Stage does not change.
-     */
-    protected Stage cStage;
-    /**
-     * A simple music player. To be refactored somewhere else later.
-     */
-    protected Music music;
-    /**
-     * Different screens can be 'built' by assigning the Screen in the WorldRenderer.
-     */
-    protected ScreenLogic cScreen;
-    /**
-     * The camera that captures what can be seen.
+     * Camera used by the Viewport.
      */
     protected OrthographicCamera cCamera;
     /**
-     * The visible viewport of the game. Aspect ratios between 16:9 and 4:3 are supported.
+     * The SpriteBatch used to draw elements on the screen.
      */
-    protected Viewport cViewPort;
-
+    protected SpriteBatch cBatch;
     /**
-     * Creates everything that is needed to properly display the game and sets the screen to the HomeScreen.
+     * The Stage that will contain the UI elements from the ScreenLogic.
      */
-    public WorldRenderer() {
-        initCameraAndViewport();
-        createMusicPlayer();
-    }
-
+    protected Stage cStage;
     /**
-     * Initializes everything for the camera and viewport. Also creates a SpriteBatch and Stage.
+     * Stores ScreenLogic so it can easily be accessed again.
      */
-    protected final void initCameraAndViewport() {
-        cBatch = new SpriteBatch();
-        cStage = new Stage();
-        Gdx.input.setInputProcessor(cStage);
-
-        cCamera = new OrthographicCamera();
-        cViewPort = new ExtendViewport(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT, MAX_VIEWPORT_WIDTH, GAME_WORLD_HEIGHT, cCamera);
-        setBackground("default_background.jpg");
-    }
-
+    protected ScreenStore cScreenStore;
     /**
-     * Creates a simple music player. To be refactored later.
+     * InputMultiplexer stores multiple InputProcessors. This is used to have the Stage as well as the
+     * WorldRenderer be able to handle input events.
      */
-    protected final void createMusicPlayer() {
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
-        music.setLooping(true);
-        music.play();
-    }
-
+    protected InputMultiplexer cInputMultiplexer;
     /**
-     * Disposes the previous screen and sets the new given screen.
-     *
-     * @param screen Screen to set the view to
+     * The Sprite used for the background.
      */
-    public final void setScreen(final ScreenLogic screen) {
-        cScreen = screen;
-        cStage.clear();
-        cStage.addActor(cScreen.getWidgetGroup());
-    }
-
+    protected Sprite cBackgroundSprite;
     /**
-     * Calls setBackground with a FileHandle after finding the specified file.
-     *
-     * @param fileName Path to the file relative to assets folder.
+     * The current ScreenLogic that is active and displayed.
      */
-    public final void setBackground(final String fileName) {
-        setBackground(Gdx.files.internal(fileName));
-    }
-
+    protected ScreenLogic cScreen;
     /**
-     * Sets the background to fit properly in the viewport.
-     *
-     * @param file The background FileHandle
+     * Defines if the application is in 'landscape' or in 'portrait'.
      */
-    public final void setBackground(final FileHandle file) {
-        if (cBackgroundSprite != null) {
-            cBackgroundSprite.getTexture().dispose();
-        }
-        cBackgroundSprite = new Sprite(new Texture(file));
-        cBackgroundSprite.setSize(
-                (cBackgroundSprite.getWidth() / cBackgroundSprite.getHeight()) * GAME_WORLD_HEIGHT,
-                GAME_WORLD_HEIGHT);
-        cBackgroundSprite.setPosition(cBackgroundSprite.getWidth() / CENTERER, cBackgroundSprite.getHeight() / CENTERER);
-    }
-
+    protected boolean cIsLandscape;
 
     @Override
     public final void show() {
+        initDefaults();
+        captureInput();
+        initBackgroundAndUI();
+    }
+
+    /**
+     * Initializes the necessary components for this class to function.
+     */
+    protected final void initDefaults() {
+        cCamera = new OrthographicCamera();
+        cViewport = new ExtendViewport(
+                cMinViewportRatio,
+                cMinViewportRatio,
+                cMaxViewportRatio,
+                cMaxViewportRatio,
+                cCamera);
+        cBatch = new SpriteBatch();
+        cStage = new Stage();
+        cScreenStore = ScreenStore.getInstance();
+    }
+
+    /**
+     * Sets the input to be captured by the stage and handles this WorldRenderer.
+     */
+    protected final void captureInput() {
+        Gdx.input.setCatchBackKey(true);
+        cInputMultiplexer = new InputMultiplexer();
+        cInputMultiplexer.addProcessor(this);
+        cInputMultiplexer.addProcessor(cStage);
+        Gdx.input.setInputProcessor(cInputMultiplexer);
+    }
+
+    /**
+     * Sets the default background and UI. First determines if the application is in Landscape or Portrait.
+     * Then uses this to get the default background and set the initial UI scale.
+     */
+    protected final void initBackgroundAndUI() {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        cIsLandscape = width > height;
+        setDefaultBackground();
+        if (cIsLandscape) {
+            cScreenStore.getGameSkin().createUIElements(height);
+        } else {
+            cScreenStore.getGameSkin().createUIElements(width);
+        }
 
     }
 
     @Override
-    public final void render(float delta) {
-        cViewPort.apply();
-        renderDefaults();
+    public final void render(final float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        cCamera.update();
+        cBatch.setProjectionMatrix(cCamera.combined);
         cBatch.begin();
         cBackgroundSprite.draw(cBatch);
         cBatch.end();
@@ -149,37 +140,140 @@ public class WorldRenderer implements Screen {
     }
 
     /**
-     * Does the very basic task of 'cleaning' the screen so a new render can happen.
+     * Upon resizing checks to see if the orientation is changed. If so, it will change the background to default.
+     * Resizing always resets the GameSkin and ScreenLogic to match the new size.
+     *
+     * @param width  New width of the application.
+     * @param height New height of the application.
      */
-    protected final void renderDefaults() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        cCamera.update();
-        cBatch.setProjectionMatrix(cCamera.combined);
-    }
-
     @Override
     public final void resize(final int width, final int height) {
-        cViewPort.update(width, height);
+        cViewport.update(width, height);
+        if (width > height != cIsLandscape) {
+            cIsLandscape = !cIsLandscape;
+            setDefaultBackground();
+        }
+
+        if (cIsLandscape) {
+            cScreenStore.rebuild(height);
+        } else {
+            cScreenStore.rebuild(width);
+        }
+
+        if (cScreen != null) {
+            setScreen(cScreen);
+        }
+    }
+
+    /**
+     * This method will use the current orientation to determine which default background to set.
+     * Calls SetBackground() using the PATH to the proper background file.
+     */
+    protected final void setDefaultBackground() {
+        if (cIsLandscape) {
+            setBackground(cDefaultLandscapePath);
+        } else {
+            setBackground(cDefaultPortraitPath);
+        }
+
+    }
+
+    /**
+     * Sets the current background using the PATH that is supplied.
+     *
+     * @param filename PATH to the image.
+     */
+    public final void setBackground(final String filename) {
+        FileHandle fileHandle = Gdx.files.internal(filename);
+        if (fileHandle.exists()) {
+            setBackground(fileHandle);
+        }
+    }
+
+    /**
+     * Discards previous background textures (if existing) and then sets the background to the file in the FileHandle.
+     * If the new background does not fit the aspect ratio, the default background will be set.
+     *
+     * @param fileHandle The FileHandle to the file.
+     */
+    public final void setBackground(final FileHandle fileHandle) {
+        if (cBackgroundSprite != null) {
+            cBackgroundSprite.getTexture().dispose();
+        }
+        Texture texture = new Texture(fileHandle);
+        if (texture.getWidth() > texture.getHeight() != cIsLandscape) {
+            setDefaultBackground();
+        } else {
+            setBackgroundSprite(texture);
+        }
+
+    }
+
+    /**
+     * Properly sets the backgroundSprite to the new texture (background image).
+     *
+     * @param texture The texture to be used as background.
+     */
+    protected final void setBackgroundSprite(final Texture texture) {
+        cBackgroundSprite = new Sprite(texture);
+        if (cIsLandscape) {
+            cBackgroundSprite.setSize(cMaxViewportRatio, cMinViewportRatio);
+        } else {
+            cBackgroundSprite.setSize(cMinViewportRatio, cMaxViewportRatio);
+        }
+
+        cBackgroundSprite.setOriginCenter();
+        cBackgroundSprite
+                .setPosition(cBackgroundSprite.getWidth() / cToCenter, cBackgroundSprite.getHeight() / cToCenter);
+    }
+
+    /**
+     * Disposes the previous screen and sets the new given screen.
+     *
+     * @param screen Screen to set the view to
+     */
+    public final void setScreen(final ScreenLogic screen) {
+        cInputMultiplexer.removeProcessor(cStage);
+        cScreen = screen;
+        cStage.dispose();
+        cStage = new Stage();
+        cStage.setDebugAll(false);
+        cStage.addActor(cScreen.getWidgetGroup());
+        cInputMultiplexer.addProcessor(cStage);
     }
 
     @Override
-    public final void pause() {
+    public void pause() {
 
     }
 
     @Override
-    public final void resume() {
+    public void resume() {
 
     }
 
     @Override
-    public final void hide() {
+    public void hide() {
 
     }
 
     @Override
     public final void dispose() {
         cBackgroundSprite.getTexture().dispose();
+        cBatch.dispose();
+        cStage.dispose();
+    }
+
+    @Override
+    public final boolean keyDown(final int keycode) {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
+            String previousScreenName = cScreen.getPreviousScreenName();
+            if (previousScreenName == null) {
+                Gdx.app.exit();
+            } else {
+                cScreenStore.setScreen(previousScreenName);
+            }
+        }
+        return false;
     }
 }

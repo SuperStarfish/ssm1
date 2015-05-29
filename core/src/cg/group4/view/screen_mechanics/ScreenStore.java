@@ -11,12 +11,12 @@ import java.util.Map;
  *
  * @author Benjamin Los
  */
-public class ScreenStore {
+public final class ScreenStore {
 
     /**
      * Singleton of screen handler.
      */
-    protected static final ScreenStore cInstance = new ScreenStore();
+    protected static final ScreenStore INSTANCE = new ScreenStore();
 
     /**
      * Hashmap that contains all the screens.
@@ -37,21 +37,23 @@ public class ScreenStore {
     /**
      * Class to store screens to be accessed later.
      */
-    private ScreenStore() {
+    protected ScreenStore() {
         cScreens = new HashMap<String, ScreenLogic>();
         cGameSkin = new GameSkin();
         cWorldRenderer = new WorldRenderer();
     }
 
     /**
-     * Getter for time keeper instance.
-     *
-     * @return cInstance
+     * Getter for screen store instance.
+     * @return The instance.
      */
     public static ScreenStore getInstance() {
-        return cInstance;
+        return INSTANCE;
     }
 
+    /**
+     * Initializes the Home Screen and the Settings Screen, since those are highly likely to be opened.
+     */
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
@@ -63,7 +65,7 @@ public class ScreenStore {
      * @param tag    Tag of the screen.
      * @param screen Screen to be stored.
      */
-    public void addScreen(String tag, ScreenLogic screen) {
+    public void addScreen(final String tag, final ScreenLogic screen) {
         cScreens.put(tag, screen);
     }
 
@@ -72,7 +74,7 @@ public class ScreenStore {
      *
      * @param tag Tag of the screen to be removed.
      */
-    public void removeScreen(String tag) {
+    public void removeScreen(final String tag) {
         cScreens.remove(tag);
     }
 
@@ -81,7 +83,7 @@ public class ScreenStore {
      *
      * @param tag Tag of the screen to be displayed.
      */
-    public void setScreen(String tag) {
+    public void setScreen(final String tag) {
         cWorldRenderer.setScreen(cScreens.get(tag));
     }
 
@@ -91,7 +93,7 @@ public class ScreenStore {
      * @param tag Tag of the screen to be returned.
      * @return Returns the screen belonging to the given tag.
      */
-    public ScreenLogic getScreen(String tag) {
+    public ScreenLogic getScreen(final String tag) {
         return cScreens.get(tag);
     }
 
@@ -111,5 +113,19 @@ public class ScreenStore {
      */
     public GameSkin getGameSkin() {
         return cGameSkin;
+    }
+
+    /**
+     * Upon resizing the game, this method is called. It will first update the GameSkin and then ask the
+     * Screens it contains to update their UI Elements.
+     *
+     * @param uiSize The new width/height (depending on orientation) that is used by the GameSkin to rescale the UI
+     *               elements.
+     */
+    public void rebuild(final int uiSize) {
+        cGameSkin.createUIElements(uiSize);
+        for (ScreenLogic screen : cScreens.values()) {
+            screen.rebuildWidgetGroup();
+        }
     }
 }

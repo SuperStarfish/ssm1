@@ -1,7 +1,9 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
@@ -32,14 +34,23 @@ public class Launcher extends Game {
     private StandUp cStandUp;
 
     /**
-     * Keeps track of screens throughout the game.
-     */
-    private ScreenStore cScreenStore;
-
-    /**
      * Keeps track of timers throughout the game.
      */
     private TimeKeeper cTimeKeeper;
+
+    /**
+     * Accelerometer status.
+     */
+    private final AccelerationStatus cAccelerationStatus;
+
+    /**
+     * Tunnels the acceleration status through the launcher to the android project.
+     * @param accelerationStatus The movement status of the player.
+     */
+    public Launcher(final AccelerationStatus accelerationStatus) {
+        super();
+        cAccelerationStatus = accelerationStatus;
+    }
 
     /**
      * Initializes the application.
@@ -55,14 +66,13 @@ public class Launcher extends Game {
         }
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-        cTimeKeeper = TimeKeeper.getInstance();
-        cTimeKeeper.init();
+        cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
 
-        cScreenStore = ScreenStore.getInstance();
-        cScreenStore.init();
+        ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
+        cScreenStore.init();
         cScreenStore.setScreen("Home");
     }
 

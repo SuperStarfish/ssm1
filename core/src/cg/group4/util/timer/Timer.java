@@ -1,10 +1,11 @@
 package cg.group4.util.timer;
 
+import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Implementation of the Timer class. Contains a list of subscribers.
@@ -14,7 +15,7 @@ import java.util.Set;
  * @author Benjamin Los
  * @author Jurgen van Schagen
  */
-public class Timer {
+public class Timer implements Observer {
 
     /**
      * Tag used for debugging.
@@ -30,21 +31,6 @@ public class Timer {
      * Name of the Timer.
      */
     protected String cName;                // required
-
-    /**
-     * Set of TimerTasks to be subscriber from this timer.
-     */
-    protected Set<TimerTask> cSubscribe;  // always created
-
-    /**
-     * Set of TimerTasks that are subscribed to this timer.
-     */
-    protected Set<TimerTask> cTimerTasks;  // always created
-
-    /**
-     * Set of TimerTasks to be unsubscriber from this timer.
-     */
-    protected Set<TimerTask> cUnsubscribe;  // always created
 
     /**
      * Duration of the timer (in seconds).
@@ -75,6 +61,21 @@ public class Timer {
      * Time remaining to end of timer.
      */
     protected int cRemainingTime;
+
+    /**
+     * Subject that can be subscribed to and updates when the timer starts.
+     */
+    protected Subject cStartSubject;
+
+    /**
+     * Subject that can be subscribed to and updates when the timer ticks.
+     */
+    protected Subject cTickSubject;
+
+    /**
+     * Subject that can be subscribed to and updates when the timer stops.
+     */
+    protected Subject cStopSubject;
 
 
     /**
@@ -109,16 +110,22 @@ public class Timer {
         cName = name;
         cDuration = duration;
         cRemainingTime = duration;
-        cSubscribe = new HashSet<TimerTask>();
-        cTimerTasks = new HashSet<TimerTask>();
-        cUnsubscribe = new HashSet<TimerTask>();
+
+        cStartSubject = new Subject();
+        cStopSubject = new Subject();
+        cTickSubject = new Subject();
+
         cPersistent = persistent;
         cPreferences = Gdx.app.getPreferences("TIMER");
         setFinishTime();
-        TimeKeeper.getInstance().addTimer(this);
+        cRemainingTime = (int) (cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC;
+        if (cRemainingTime < 0) {
+            cRemainingTime = 0;
+        }
     }
 
     /**
+     * r
      * Sets the timer finish time to current time + its duration.
      */
     protected final void setFinishTime() {
@@ -143,56 +150,25 @@ public class Timer {
         return cName;
     }
 
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        tick(Long.parseLong(arg.toString()));
+    }
+
     /**
      * Method called by TimeKeeper whenever a second in the game has passed.
      *
      * @param timeStamp The current time.
      */
-    protected void tick(final long timeStamp) {
+    protected final void tick(final long timeStamp) {
         if (cRunning) {
             if (timeStamp > cFinishTime) {
                 cRunning = false;
                 cRemainingTime = 0;
-                notifyStop();
+                cStopSubject.update();
             } else {
                 cRemainingTime = (int) (cFinishTime - timeStamp) / MILLISEC_IN_SEC;
-                notifyTick(cRemainingTime);
-            }
-        }
-    }
-
-    /**
-     * Notifies the listeners that a Tick event occurred.
-     *
-     * @param remainingTime Time until timer finishes
-     */
-    protected final void notifyTick(final int remainingTime) {
-        for (TimerTask task : cTimerTasks) {
-            if (task.isActive()) {
-                task.onTick(remainingTime);
-            }
-        }
-    }
-
-    /**
-     * Notifies the listeners that a Stop event occurred.
-     */
-    protected final void notifyStop() {
-        for (TimerTask task : cTimerTasks) {
-            if (task.isActive()) {
-                task.onStop();
-            }
-        }
-
-    }
-
-    /**
-     * Notifies the listeners that a Start event occurred.
-     */
-    protected final void notifyStart() {
-        for (TimerTask task : cTimerTasks) {
-            if (task.isActive()) {
-                task.onStart(cDuration);
+                cTickSubject.update(cRemainingTime);
             }
         }
     }
@@ -202,10 +178,10 @@ public class Timer {
      */
     public final void stop() {
         if (cRunning) {
-            cPreferences.putLong(cName, System.currentTimeMillis());
+            cPreferences.remove(cName);
             cPreferences.flush();
             cRunning = false;
-            notifyStop();
+            cStopSubject.update();
         }
     }
 
@@ -214,10 +190,9 @@ public class Timer {
      */
     public final void dispose() {
         stop();
-        for (TimerTask task : cTimerTasks) {
-            task.dispose();
-        }
-        TimeKeeper.getInstance().removeTimer(this);
+        cStartSubject.deleteObservers();
+        cStopSubject.deleteObservers();
+        cTickSubject.deleteObservers();
     }
 
     /**
@@ -229,7 +204,7 @@ public class Timer {
                 + "-Timer to finish " + ((cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC)
                 + " seconds from now.");
         cRunning = true;
-        notifyStart();
+        cStartSubject.update();
     }
 
     /**
@@ -250,48 +225,40 @@ public class Timer {
         return cRunning;
     }
 
+    /**
+     * Returns the remaining time before the timer ends.
+     *
+     * @return The remaining time.
+     */
     public final int getRemainingTime() {
         return cRemainingTime;
     }
 
-    @Override
-    public final boolean equals(final Object obj) {
-        return !(obj == null || !(obj instanceof Timer)) && cName.equals(((Timer) obj).getName());
-    }
-
-    @Override
-    public final int hashCode() {
-        return cName.hashCode();
+    /**
+     * Getter for the stop subject.
+     *
+     * @return returns the stop subject of the timer
+     */
+    public final Subject getStopSubject() {
+        return cStopSubject;
     }
 
     /**
-     * Method that adds a TimerTask to the current subscribers.
+     * Getter for the start subject.
      *
-     * @param task Which task should be added
+     * @return returns the start subject of the timer
      */
-    public final void subscribe(final TimerTask task) {
-        cSubscribe.add(task);
-        task.setTimer(this);
-        if (cRunning) {
-            task.onTick(cRemainingTime);
-        }
+    public final Subject getStartSubject() {
+        return cStartSubject;
     }
 
     /**
-     * Method that removes a TimerTask from the current subscribers.
+     * Getter for the tick subject.
      *
-     * @param task Which task should be removed
+     * @return returns the tick subject of the timer
      */
-    public final void unsubscribe(final TimerTask task) {
-        cUnsubscribe.add(task);
-        task.setTimer(null);
-    }
-
-    public final void resolve() {
-        cTimerTasks.removeAll(cUnsubscribe);
-        cUnsubscribe.clear();
-        cTimerTasks.addAll(cSubscribe);
-        cSubscribe.clear();
+    public final Subject getTickSubject() {
+        return cTickSubject;
     }
 
     /**
@@ -310,7 +277,6 @@ public class Timer {
          */
         STROLL(5 * 60),
 
-
         /**
          * Max length of an event is 1 min (60 seconds).
          */
@@ -319,7 +285,7 @@ public class Timer {
         /**
          * Duration of the global timer.
          */
-        private int eDuration;
+        private int cDuration;
 
         /**
          * Set the duration of a global timer.
@@ -327,7 +293,7 @@ public class Timer {
          * @param duration The duration in seconds
          */
         Global(final int duration) {
-            eDuration = duration;
+            cDuration = duration;
         }
 
         /**
@@ -336,7 +302,7 @@ public class Timer {
          * @return The duration in seconds
          */
         public int getDuration() {
-            return eDuration;
+            return cDuration;
         }
     }
 }
