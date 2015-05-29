@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -93,8 +93,8 @@ public final class HomeScreen extends ScreenLogic {
      * Obtains both the STROLL and INTERVAL Timers so we can properly create the GUI.
      */
     protected void initTimers() {
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cIsClickable = cStrollTimer.isRunning() || !cIntervalTimer.isRunning();
     }
 

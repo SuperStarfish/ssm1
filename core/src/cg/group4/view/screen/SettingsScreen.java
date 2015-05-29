@@ -1,7 +1,7 @@
 package cg.group4.view.screen;
 
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -51,8 +51,8 @@ public final class SettingsScreen extends ScreenLogic {
      * Gets the STROLL Timer and INTERVAL Timer so they can easily be accessed within this screen.
      */
     protected void getTimers() {
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        cStrollTimer = TimeKeeper.getInstance().getTimer(Timer.Global.STROLL.name());
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
     }
 
     @Override
