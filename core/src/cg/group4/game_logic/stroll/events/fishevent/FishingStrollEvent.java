@@ -1,19 +1,19 @@
 package cg.group4.game_logic.stroll.events.fishevent;
 
-import java.util.Observable;
-import java.util.Observer;
-
+import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
+import cg.group4.util.sensors.Accelerometer;
+import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen.EventScreen;
+import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-import cg.group4.game_logic.StandUp;
-import cg.group4.util.sensors.Accelerometer;
-import cg.group4.util.timer.Timer;
-import cg.group4.view.screen.EventScreen;
-import cg.group4.view.screen_mechanics.ScreenLogic;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Stroll event where you have to fish to complete it.
@@ -106,8 +106,9 @@ public class FishingStrollEvent extends StrollEvent {
             }
         };
 
-        cDelayInputTimer = new Timer("DELAYFISHEVENT", 1);
-        cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
+		cDelayInputTimer = new Timer("DELAYFISHEVENT", 1);
+		TimerStore.getInstance().addTimer(cDelayInputTimer);
+		cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
         
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
@@ -153,7 +154,7 @@ public class FishingStrollEvent extends StrollEvent {
 	@Override
 	protected final void clearEvent() {
 		super.dispose();
-		cDelayInputTimer.dispose();
-		cFishTimer.dispose();
+		TimerStore.getInstance().removeTimer(cDelayInputTimer);
+		TimerStore.getInstance().removeTimer(cFishTimer);
 	}
 }
