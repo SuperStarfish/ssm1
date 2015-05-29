@@ -3,7 +3,7 @@ package cg.group4.game_logic.stroll.events.fishevent;
 import com.badlogic.gdx.math.Vector3;
 
 /**
- *
+ * State for FishingStrollEvent where you have to 'throw' your line into the water.
  */
 public class CastForwardState implements FishEventState {
 

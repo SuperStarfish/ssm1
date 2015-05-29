@@ -17,7 +17,6 @@ import cg.group4.view.screen_mechanics.ScreenLogic;
 
 /**
  * Stroll event where you have to fish to complete it.
- * @author Nick Cleintuar
  */
 public class FishingStrollEvent extends StrollEvent {
 

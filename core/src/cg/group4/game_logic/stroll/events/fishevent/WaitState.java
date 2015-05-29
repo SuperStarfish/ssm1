@@ -8,7 +8,6 @@ import java.util.Observer;
 
 /**
  * State for the FishingEvent where you have to wait for the fishes to bite.
- * @author Nick Cleintuar
  */
 public class WaitState implements FishEventState {
 
