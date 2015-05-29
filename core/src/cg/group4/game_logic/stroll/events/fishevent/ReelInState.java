@@ -23,7 +23,7 @@ public class ReelInState implements FishEventState {
      */
     public ReelInState(final FishingStrollEvent event) {
         cEvent = event;
-        cEvent.cLabel.setText("They have bitten! Pull your fish out of the water!");
+        cEvent.cLabel.setText("Pull the fish");
     }
 
     /**

@@ -1,6 +1,5 @@
 package cg.group4.game_logic.stroll;
 
-import cg.group4.Launcher;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
