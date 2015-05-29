@@ -1,6 +1,7 @@
 package cg.group4.game_logic.stroll.events.fishevent;
 
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.Observable;
@@ -36,6 +37,7 @@ public class WaitState implements FishEventState {
         cEvent.cLabel.setText("Wait for the fish....");
 
         cEvent.cFishTimer = new Timer("WAITFORFISH", TIME);
+        TimerStore.getInstance().addTimer(cEvent.cFishTimer);
 
         cEvent.cFishStopObserver = new Observer() {
             @Override
