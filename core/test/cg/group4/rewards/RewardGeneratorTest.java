@@ -60,7 +60,7 @@ public class RewardGeneratorTest {
 				randomPossibilities = 400000000,
 				minRange = 0;
 		final double maxRange = 4.472136;
-		assertEquals(colourAmount, cGenerator.differentColours, 0);
+		assertEquals(colourAmount, cGenerator.cDifferentColours, 0);
 		assertEquals(randomPossibilities, cGenerator.cRandomNumberPossibilities, 0);
 		assertEquals(maxRange, cGenerator.cRangeMax, cErrorMargin);
 		assertEquals(minRange, cGenerator.cRangeMin, cErrorMargin);
