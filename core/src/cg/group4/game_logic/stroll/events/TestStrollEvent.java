@@ -50,15 +50,11 @@ public class TestStrollEvent extends StrollEvent {
      * The label where the event instructions are displayed.
      */
     protected Label cLabel;
+    
     /**
-     * The accelerometer values of the previous update.
-     * Used to cancel noise and reactionary acceleration.
-     */
-    protected Vector3 cBase;
-    /**
-     * cOperationNr: Movement operation that must be done.
-     * cPrevOperationNr: Previous movement operation that was done.
-     * cTasksCompleted: Number of completed movement operations.
+     * operationNr: Movement operation that must be done.
+     * prevOperationNr: Previous movement operation that was done.
+     * tasksCompleted: Number of completed movement operations.
      */
     protected int cOperationNr, cPrevOperationNr, cTasksCompleted;
     /**
@@ -122,11 +118,7 @@ public class TestStrollEvent extends StrollEvent {
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
         cAccelMeter.filterGravity(true);
-
-        cBase = new Vector3(
-                Gdx.input.getAccelerometerX(),
-                Gdx.input.getAccelerometerY(),
-                Gdx.input.getAccelerometerZ());
+        
         doTask();
     }
 
@@ -180,12 +172,9 @@ public class TestStrollEvent extends StrollEvent {
         this.cTasksCompleted++;
         cCompletedTaskSound.play(1.0f);
         if (this.cTasksCompleted < MAX_TASKS) {
-            //cDelayTaskTimer.reset();
             cPrevOperationNr = cOperationNr;
-            //cLabel.setText("Nice!");
             doTask();
         } else {
-            //cLabel.setText("You completed the event! Good job!");
             clearEvent();
         }
     }
@@ -213,37 +202,29 @@ public class TestStrollEvent extends StrollEvent {
             switch (cOperationNr) {
                 case MOVE_LEFT:
                     cDelayInputTimer.reset();
-                    //if (accelData.x <= -delta) {
                     if (accelData.y >= delta) {
                         System.out.println("Left Succes!");
-                        //cBase.x = -1 * accelData.x;
                         taskCompleted();
                     }
                     break;
                 case MOVE_RIGHT:
                     cDelayInputTimer.reset();
-                    //if (accelData.x >= delta) {
                     if (accelData.y <= delta) {
                         System.out.println("Right Succes!");
-                        //cBase.x = -1 * accelData.x;
                         taskCompleted();
                     }
                     break;
                 case MOVE_DOWN:
                     cDelayInputTimer.reset();
-                    //if (accelData.y <= -delta) {
                     if (accelData.x <= -delta) {
                         System.out.println("Down Succes!");
-                        //cBase.y = -1 * accelData.y;
                         taskCompleted();
                     }
                     break;
                 case MOVE_UP:
                     cDelayInputTimer.reset();
-                    //if (accelData.y >= delta) {
                     if (accelData.x >= delta) {
                         System.out.println("Up Succes!");
-                        //cBase.y = -1 * accelData.y;
                         taskCompleted();
                     }
                     break;
@@ -251,7 +232,6 @@ public class TestStrollEvent extends StrollEvent {
                     cDelayInputTimer.reset();
                     if (accelData.z <= -delta) {
                         System.out.println("Away Succes!");
-                        //cBase.z = -1 * accelData.z;
                         taskCompleted();
                     }
                     break;
@@ -259,7 +239,6 @@ public class TestStrollEvent extends StrollEvent {
                     cDelayInputTimer.reset();
                     if (accelData.z >= delta) {
                         System.out.println("Toward Succes!");
-                        //cBase.z = -1 * accelData.z;
                         taskCompleted();
                     }
                     break;
