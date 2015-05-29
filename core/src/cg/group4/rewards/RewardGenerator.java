@@ -20,7 +20,7 @@ public class RewardGenerator {
 	/**
 	 * Numbers of possible different colours.
 	 */
-	protected final int differentColours = 400;
+	protected final int cDifferentColours = 400;
 	
 	/**
 	 * Number of possible different numbers the random number generator can generate.
@@ -47,7 +47,7 @@ public class RewardGenerator {
 	 */
 	public RewardGenerator() {
 		cRNG = new Random();
-		cRangeMax = inverseRewardFunction(differentColours);
+		cRangeMax = inverseRewardFunction(cDifferentColours);
 		cRangeMin = inverseRewardFunction(0);
 		cCollectibleFactory = new CollectibleFactory();
 	}
@@ -74,7 +74,7 @@ public class RewardGenerator {
 		random = rewardFunction(random);
 		
 		final int lowerEndVisibleSpectrum = 380;
-		int wavelength = (int) (differentColours - random) + lowerEndVisibleSpectrum;
+		int wavelength = (int) (cDifferentColours - random) + lowerEndVisibleSpectrum;
 		return wavelength;
 	}
 	

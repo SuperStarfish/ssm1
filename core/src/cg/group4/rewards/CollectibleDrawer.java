@@ -15,9 +15,15 @@ import com.badlogic.gdx.graphics.Color;
 public class CollectibleDrawer {
 	
 	/**
+	 * R, G and B value of the replacement colour.
+	 */
+	protected final float cReplaceColourComponent = 120f / 255f;
+	
+	/**
 	 * Colour in the image that needs to be replaced.
 	 */
-	protected final float[] cReplacementColour = {120f/255f, 120f/255f, 120f/255f};
+	protected final float[] cReplacementColour = {
+			cReplaceColourComponent, cReplaceColourComponent, cReplaceColourComponent};
 	
 	/**
 	 * Alpha value of the new colour.
