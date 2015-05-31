@@ -75,6 +75,8 @@ project(":server") {
     apply plugin: "java"
 
     dependencies {
+        compile "org.xerial:sqlite-jdbc:3.8.6"
+
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
     }

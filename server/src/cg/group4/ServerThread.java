@@ -16,7 +16,7 @@ public class ServerThread implements Callable<Void> {
     /**
      * Default java logging functionality.
      */
-    private static final Logger LOGGER = Logger.getLogger(ServerThread.class.getName());
+    protected static final Logger LOGGER = Logger.getLogger(ServerThread.class.getName());
 
     /**
      * The connection with the Client.

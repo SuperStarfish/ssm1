@@ -21,9 +21,9 @@ public class Client {
 
     protected int cServerPort;
 
-    protected final int cDefaultPort = 63269;
+    protected final int cDefaultPort = 56789;
 
-    protected final String cDefaultIP = "192.168.2.20";
+    protected final String cDefaultIP = "10.0.0.6";
 
     protected final int cMaxPortNumber = 65535;
 
@@ -105,6 +105,7 @@ public class Client {
         System.out.println("Attempting to connect to server...");
         try {
             cConnection = new Socket(cServerIP, cServerPort);
+            System.out.println("test");
         } catch (ConnectException connectException){
             System.out.println(connectException.getMessage());
             System.exit(1);
