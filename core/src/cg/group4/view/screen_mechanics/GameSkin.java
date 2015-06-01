@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * The default skin details for the application.
@@ -172,7 +174,9 @@ public class GameSkin extends Skin {
      * @return TextButton
      */
     public final Label generateDefaultLabel(final String text) {
-        return new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
+    	Label result = new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
+    	result.setAlignment(Align.center);
+        return result;
     }
 
     /**

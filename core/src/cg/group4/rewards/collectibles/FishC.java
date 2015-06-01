@@ -1,5 +1,7 @@
 package cg.group4.rewards.collectibles;
 
+import java.util.Date;
+
 import cg.group4.rewards.WavelengthToRGB;
 
 /**
@@ -35,5 +37,23 @@ public class FishC extends Collectible {
 	@Override
 	public String getImagePath() {
 		return cImageLocation;
+	}
+
+	@Override
+	public Date getDate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getRarity() {
+		// TODO Auto-generated method stub
+		return 1.5;
+	}
+
+	@Override
+	public int getAmount() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
