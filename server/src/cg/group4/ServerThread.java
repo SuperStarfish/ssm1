@@ -95,27 +95,7 @@ public class ServerThread implements Callable<Void> {
     protected final void interactWithClient() {
         do {
             try {
-                Message message = (Message) cInputStream.readObject();
-                switch (message.type){
-                    case GET:
-                        handleGetRequest(message);
-                        break;
-                    case PUT:
-                        handlePutRequest(message);
-                        break;
-                    case POST:
-                        handlePostRequest(message);
-                        break;
-                    case DELETE:
-                        handleDeleteRequest(message);
-                        break;
-                    case CLOSE:
-                        cKeepAlive = false;
-                        break;
-                    default:
-                        LOGGER.severe("Received a message and I don't know how to handle it!");
-                        break;
-                }
+                handleRequest(cInputStream.readObject());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SocketException e){
@@ -127,61 +107,7 @@ public class ServerThread implements Callable<Void> {
         } while(cKeepAlive);
     }
 
-    /**
-     * Handles an incoming GET message.
-     *
-     * @param message Query made by the Client.
-     */
-    protected void handleGetRequest(Message message) {
-        LOGGER.info("Received a GET message: " + message.body);
-        Message reply = new Message();
-        reply.type = Message.Type.REPLY;
-        reply.body = "Get requests are not implemented yet.";
-        sendReply(reply);
-    }
-
-    /**
-     * Handles an incoming PUT message.
-     *
-     * @param message Query made by the Client.
-     */
-    protected void handlePutRequest(Message message) {
-        Message reply = new Message();
-        reply.type = Message.Type.REPLY;
-        reply.body = "Put requests are not implemented yet.";
-        sendReply(message);
-    }
-
-    /**
-     * Handles an incoming POST message.
-     *
-     * @param message Query made by the Client.
-     */
-    protected void handlePostRequest(Message message) {
-        Message reply = new Message();
-        reply.type = Message.Type.REPLY;
-        reply.body = "Post requests are not implemented yet.";
-        sendReply(message);
-    }
-
-    /**
-     * Handles an incoming DELETE message.
-     *
-     * @param message Query made by the Client.
-     */
-    protected void handleDeleteRequest(Message message) {
-        Message reply = new Message();
-        reply.type = Message.Type.REPLY;
-        reply.body = "Delete requests are not implemented yet.";
-        sendReply(message);
-    }
-
-    protected void sendReply(Message message){
-        try {
-            cOutputStream.writeObject(message);
-            cOutputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void handleRequest(Object object) {
+        System.out.println(object.getClass());
     }
 }

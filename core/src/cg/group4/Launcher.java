@@ -1,5 +1,6 @@
 package cg.group4;
 
+import cg.group4.client.Client;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.view.screen_mechanics.ScreenStore;
@@ -54,6 +55,9 @@ public class Launcher extends Game {
             preferences.flush();
         }
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+        Client client = new Client();
+        client.start();
 
         cTimeKeeper = TimeKeeper.getInstance();
         cTimeKeeper.init();
