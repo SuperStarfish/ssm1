@@ -1,9 +1,9 @@
-package cg.group4.rewards.collectibles.collectibleSorters;
+package cg.group4.rewards.collectibles.collectible_sorters;
+
+import cg.group4.rewards.collectibles.Collectible;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import cg.group4.rewards.collectibles.Collectible;
 
 /**
  * Object that sorts a HashSet of collectibles based on their rarity.

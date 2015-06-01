@@ -1,16 +1,14 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.rewards.collectibles.Collectible;
+import cg.group4.rewards.Collection;
 import cg.group4.rewards.collectibles.FishA;
 import cg.group4.rewards.collectibles.FishB;
 import cg.group4.rewards.collectibles.FishC;
 import cg.group4.view.screen.CollectiblesScreen;
-import cg.group4.view.screen.Collection;
 import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen.SettingsScreen;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
