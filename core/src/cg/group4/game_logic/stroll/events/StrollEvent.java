@@ -1,8 +1,8 @@
 package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
@@ -18,9 +18,9 @@ import java.util.Observer;
  * @author Martijn Gribnau
  */
 public abstract class StrollEvent implements Disposable, Observer {
-
+	
     /**
-     *
+     * Every strollEvent has a respective timer.
      */
     protected Timer cEventTimer;
 
@@ -33,7 +33,6 @@ public abstract class StrollEvent implements Disposable, Observer {
         @Override
         public void update(final Observable o, final Object arg) {
             clearEvent();
-            dispose();
         }
     };
 
@@ -45,7 +44,7 @@ public abstract class StrollEvent implements Disposable, Observer {
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        cEventTimer = TimeKeeper.getInstance().getTimer(Timer.Global.EVENT.name());
+        cEventTimer = TimerStore.getInstance().getTimer(Timer.Global.EVENT.name());
         cEventTimer.getStopSubject().addObserver(cEventStopObserver);
         cEventTimer.reset();
     }

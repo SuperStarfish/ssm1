@@ -64,8 +64,6 @@ public class Accelerometer {
                 filterNoise(resultVector.z));
 
         cBaseVector = readings;
-        //System.out.println("Before filter: X: " + cBaseVector.x + " Y: " + cBaseVector.y + " Z: " + cBaseVector.z);
-        //System.out.println("After filter: X: " + resultVector.x + " Y: " + resultVector.y + " Z: " + resultVector.z);
         return resultVector;
     }
 

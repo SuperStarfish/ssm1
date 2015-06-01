@@ -21,37 +21,37 @@ public class GameSkin extends Skin {
     /**
      * Default font size.
      */
-    protected final int defaultFontSize = 42;
+    protected final int cDefaultFontSize = 42;
     /**
      * Default dev size.
      * It is used to scale the current screen size against the size used to develop the skin for.
      */
-    protected final float devSize = 720;
+    protected final float cDevSize = 720;
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
-     * It is calculated by taking the height of the screen divided by the default size (devSize).
+     * It is calculated by taking the height of the screen divided by the default size (cDevSize).
      */
-    protected float uiScalar;
+    protected float cUiScalar;
     /**
      * Font generator for the skin.
      */
-    protected FreeTypeFontGenerator fontGenerator;
+    protected FreeTypeFontGenerator cFontGenerator;
     /**
      * Path to the default font.
      */
-    protected String defaultFont = "fonts/blow.ttf";
+    protected String cDefaultFont = "fonts/blow.ttf";
     /**
      * Default border width.
      */
-    protected int defaultBorderWidth = 2;
+    protected int cDefaultBorderWidth = 2;
 
     /**
      * Initializes the skin.
      */
     public GameSkin() {
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(defaultFont));
+        cFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(cDefaultFont));
     }
 
     /**
@@ -60,7 +60,7 @@ public class GameSkin extends Skin {
      * @param newSize New size of the game window.
      */
     public final void createUIElements(final int newSize) {
-        uiScalar = newSize / devSize;
+        cUiScalar = newSize / cDevSize;
         addDefaults();
     }
 
@@ -104,7 +104,7 @@ public class GameSkin extends Skin {
 
         Sprite sprite = new Sprite(new Texture(Gdx.files.internal("images/wooden_sign.png")));
         final float scalar = 0.42f;
-        sprite.setSize(sprite.getWidth() * scalar * uiScalar, sprite.getHeight() * scalar * uiScalar);
+        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
 
         buttonStyle.up = new SpriteDrawable(sprite);
 
@@ -120,12 +120,12 @@ public class GameSkin extends Skin {
     protected final BitmapFont generateDefaultTitleFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (defaultBorderWidth * uiScalar);
+        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
         fontParameter.color = Color.WHITE;
 
         final float scale = 1.2f;
-        fontParameter.size = (int) (defaultFontSize * uiScalar * scale);
-        return fontGenerator.generateFont(fontParameter);
+        fontParameter.size = (int) (cDefaultFontSize * cUiScalar * scale);
+        return cFontGenerator.generateFont(fontParameter);
     }
 
     /**
@@ -148,10 +148,10 @@ public class GameSkin extends Skin {
     protected final BitmapFont generateDefaultFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (defaultBorderWidth * uiScalar);
+        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
         fontParameter.color = Color.WHITE;
-        fontParameter.size = (int) (defaultFontSize * uiScalar);
-        return fontGenerator.generateFont(fontParameter);
+        fontParameter.size = (int) (cDefaultFontSize * cUiScalar);
+        return cFontGenerator.generateFont(fontParameter);
     }
 
     /**
@@ -180,7 +180,7 @@ public class GameSkin extends Skin {
      */
     @Override
     public final void dispose() {
-        fontGenerator.dispose();
+        cFontGenerator.dispose();
         super.dispose();
     }
 

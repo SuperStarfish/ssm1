@@ -3,9 +3,10 @@ package cg.group4.game_logic.stroll;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
+import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.util.subscribe.Subject;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
 import java.util.Observable;
@@ -26,6 +27,7 @@ public class Stroll implements Observer {
      * Tag used for debugging.
      */
     private static final String TAG = Stroll.class.getSimpleName();
+
     /**
      * Amount of rewards collected.
      */
@@ -54,6 +56,7 @@ public class Stroll implements Observer {
      * The stroll timer.
      */
     protected Timer cStrollTimer;
+
     /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
@@ -92,9 +95,9 @@ public class Stroll implements Observer {
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        cStrollTimer = TimeKeeper.getInstance().getTimer("STROLL");
-        cStrollTimer.reset();
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
+        cStrollTimer.reset();
 
     }
 
@@ -113,7 +116,17 @@ public class Stroll implements Observer {
         Random rnd = new Random();
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
-            cEvent = new TestStrollEvent();
+            int chosenEvent = rnd.nextInt(2);
+            switch(chosenEvent) {
+                case(0):
+                    cEvent = new FishingStrollEvent();
+                    break;
+                case(1):
+                    cEvent = new TestStrollEvent();
+                    break;
+                default:
+                    cEvent = new TestStrollEvent();
+            }
             cNewEventSubject.update(cEvent);
         }
     }
