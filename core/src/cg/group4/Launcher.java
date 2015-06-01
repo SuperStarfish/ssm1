@@ -56,9 +56,6 @@ public class Launcher extends Game {
         }
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-        Client client = new Client();
-        client.start();
-
         cTimeKeeper = TimeKeeper.getInstance();
         cTimeKeeper.init();
 

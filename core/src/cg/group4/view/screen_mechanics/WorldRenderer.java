@@ -1,5 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -268,6 +269,10 @@ public class WorldRenderer extends InputAdapter implements Screen {
             } else {
                 cScreenStore.setScreen(previousScreenName);
             }
+        } else if(keycode == Input.Keys.C) {
+            StandUp.getInstance().getClient().connectToServer();
+        } else if(keycode == Input.Keys.F) {
+            StandUp.getInstance().getClient().closeConnection();
         }
         return false;
     }

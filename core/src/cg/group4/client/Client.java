@@ -1,9 +1,13 @@
 package cg.group4.client;
 
+import cg.group4.client.connection.Connected;
+import cg.group4.client.connection.Connection;
+import cg.group4.client.connection.Unconnected;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,42 +16,25 @@ import java.io.ObjectOutputStream;
 /**
  * @author Jurgen van Schagen
  */
-public class Client extends Thread{
-    protected Socket cConnection;
+public class Client {
+    protected Connection cConnection;
 
-    protected final String defaultIP = "10.0.0.6";
+    protected final String defaultIP = "192.168.2.20";
 
     protected final int defaultPort = 56789;
 
-    ObjectInputStream inputStream;
+    public Client() { cConnection = new Unconnected(); }
 
-    ObjectOutputStream outputStream;
-
-    public Client() { }
-
-    @Override
-    public void run() {
-        connectToServer();
+    public void connectToServer(String ip, int port) {
+        cConnection = cConnection.connect(ip, port);
     }
 
     public void connectToServer() {
-        cConnection = Gdx.net.newClientSocket(Net.Protocol.TCP, defaultIP, defaultPort, null);
-        try {
-            inputStream = new ObjectInputStream(cConnection.getInputStream());
-            outputStream = new ObjectOutputStream(cConnection.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cConnection = cConnection.connect(defaultIP, defaultPort);
     }
 
     public void closeConnection() {
-        try {
-            outputStream.close();
-            inputStream.close();
-            cConnection.dispose();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        cConnection = cConnection.disconnect();
     }
 
 }

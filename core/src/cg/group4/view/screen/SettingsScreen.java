@@ -3,6 +3,7 @@ package cg.group4.view.screen;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.view.screen_mechanics.ScreenLogic;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -28,6 +29,7 @@ public final class SettingsScreen extends ScreenLogic {
     protected TextButton cButtonResetInterval,
             cButtonResetStroll,
             cButtonStopInterval,
+            cNetworkScreen,
             cButtonBack;
 
     @Override
@@ -45,6 +47,7 @@ public final class SettingsScreen extends ScreenLogic {
         cButtonResetStroll.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
         cButtonStopInterval.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
         cButtonBack.setStyle(cGameSkin.get("default_textButtonStyle", TextButton.TextButtonStyle.class));
+        cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
@@ -59,6 +62,9 @@ public final class SettingsScreen extends ScreenLogic {
 
         cButtonStopInterval = createButton("Stop Interval");
         cButtonStopInterval.addListener(stopIntervalBehaviour());
+
+        cNetworkScreen = createButton("Network");
+        cNetworkScreen.addListener(networkScreenBehaviour());
 
         cButtonBack = createButton("Back");
         cButtonBack.addListener(backBehaviour());
@@ -105,6 +111,15 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
+            }
+        };
+    }
+
+    protected ChangeListener networkScreenBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Network");
             }
         };
     }

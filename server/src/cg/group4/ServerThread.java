@@ -98,6 +98,9 @@ public class ServerThread implements Callable<Void> {
                 handleRequest(cInputStream.readObject());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+            } catch (EOFException e){
+                LOGGER.severe("Lost connection with: " + cConnection.getInetAddress().getHostName());
+                cKeepAlive = false;
             } catch (SocketException e){
                 LOGGER.info("Lost connection with: " + cConnection.getInetAddress().getHostName());
                 cKeepAlive = false;

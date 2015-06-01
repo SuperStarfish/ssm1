@@ -1,6 +1,7 @@
 package cg.group4.view.screen_mechanics;
 
 import cg.group4.view.screen.HomeScreen;
+import cg.group4.view.screen.NetworkScreen;
 import cg.group4.view.screen.SettingsScreen;
 
 import java.util.HashMap;
@@ -61,6 +62,7 @@ public final class ScreenStore {
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
+        addScreen("Network", new NetworkScreen());
     }
 
     /**
