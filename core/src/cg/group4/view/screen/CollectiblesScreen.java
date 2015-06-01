@@ -1,5 +1,7 @@
 package cg.group4.view.screen;
 
+import java.util.ArrayList;
+
 import cg.group4.rewards.CollectibleDrawer;
 import cg.group4.rewards.Collection;
 import cg.group4.rewards.collectibles.Collectible;
@@ -7,6 +9,7 @@ import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
 import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -14,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
-import java.util.ArrayList;
 
 public class CollectiblesScreen extends ScreenLogic {
 	
@@ -83,7 +84,6 @@ public class CollectiblesScreen extends ScreenLogic {
 	
 	protected void constructContents(int screenWidth, int screenHeight) {
 		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection.getCollection());
-		System.out.println(sortedList.size());
 		
 		for (Collectible c : sortedList) {
 			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth);
