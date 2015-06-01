@@ -1,5 +1,8 @@
 package cg.group4.view.screen_mechanics;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cg.group4.rewards.Collection;
 import cg.group4.rewards.collectibles.FishA;
 import cg.group4.rewards.collectibles.FishB;
@@ -7,9 +10,6 @@ import cg.group4.rewards.collectibles.FishC;
 import cg.group4.view.screen.CollectiblesScreen;
 import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen.SettingsScreen;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Keeps track of all the screens throughout the game.
