@@ -19,9 +19,9 @@ import java.io.ObjectOutputStream;
 public class Client {
     protected Connection cConnection;
 
-    protected final String defaultIP = "192.168.2.20";
+    public static final String defaultIP = "192.168.2.20";
 
-    protected final int defaultPort = 56789;
+    public static final int defaultPort = 56789;
 
     public Client() { cConnection = new Unconnected(); }
 

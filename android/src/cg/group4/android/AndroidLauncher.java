@@ -2,6 +2,7 @@ package cg.group4.android;
 
 import android.os.Bundle;
 
+import android.provider.Settings;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import cg.group4.Launcher;
@@ -15,6 +16,17 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
-		initialize(new Launcher(), config);
+		String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        System.out.println(id);
+        initialize(new Launcher(), config);
 	}
 }

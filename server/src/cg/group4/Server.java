@@ -4,12 +4,12 @@ import cg.group4.host.ExternalHost;
 import cg.group4.host.Host;
 import cg.group4.host.LocalHost;
 import cg.group4.host.UnknownHost;
+import cg.group4.util.StaticsCaller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -57,15 +57,35 @@ public class Server {
      */
     protected ExecutorService cPool;
 
+    protected StaticsCaller cStaticsCaller;
+
     /**
      * The maximum number of threads that the ExecutorService can have.
      */
     protected final int maxThreads = 50;
 
     /**
+     * String to be used for the URL to check external IP.
+     */
+    protected final String cVerifyURl = "http://checkip.amazonaws.com";
+
+    /**
+     * URL used to check the external IP address.
+     */
+    protected URL cWhatIsMyIP;
+
+
+    /**
      * Creates an instance of Server.
      */
-    public Server() { }
+    public Server() {
+        cStaticsCaller = new StaticsCaller();
+        try {
+            cWhatIsMyIP = new URL(cVerifyURl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Starts the Server. First looks up the Local IP and then the External IP. After that it tries to create a
@@ -92,8 +112,7 @@ public class Server {
      */
     protected final void createLocalIP() {
         try {
-            cLocalHost = new LocalHost(InetAddress.getLocalHost());
-            LOGGER.info("Local IP: " + cLocalHost.toString());
+            cLocalHost = new LocalHost(cStaticsCaller.getLocalHost());
         } catch (UnknownHostException e) {
             cLocalHost = new UnknownHost();
             LOGGER.severe("Could not set up local IP!");
@@ -105,7 +124,7 @@ public class Server {
      */
     protected final void createExternalIP() {
         try {
-            cExternalHost = new ExternalHost(InetAddress.getByName(getExternalIP()));
+            cExternalHost = new ExternalHost(cStaticsCaller.getByName(getExternalIP()));
             LOGGER.info("External IP: " + cExternalHost.toString());
         } catch (UnknownHostException e) {
             cExternalHost = new UnknownHost();
@@ -123,14 +142,9 @@ public class Server {
     protected final String getExternalIP() throws UnknownHostException {
         String result = "";
         try {
-            URL whatIsMyIP = new URL("http://checkip.amazonaws.com");
-            BufferedReader in = new BufferedReader(new InputStreamReader(whatIsMyIP.openStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(cWhatIsMyIP.openStream()));
             result = in.readLine();
             in.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            throw e;
         } catch (IOException e) {
             e.printStackTrace();
         }

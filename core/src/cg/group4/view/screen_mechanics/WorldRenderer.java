@@ -262,17 +262,13 @@ public class WorldRenderer extends InputAdapter implements Screen {
 
     @Override
     public final boolean keyDown(final int keycode) {
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
             String previousScreenName = cScreen.getPreviousScreenName();
             if (previousScreenName == null) {
                 Gdx.app.exit();
             } else {
                 cScreenStore.setScreen(previousScreenName);
             }
-        } else if(keycode == Input.Keys.C) {
-            StandUp.getInstance().getClient().connectToServer();
-        } else if(keycode == Input.Keys.F) {
-            StandUp.getInstance().getClient().closeConnection();
         }
         return false;
     }
