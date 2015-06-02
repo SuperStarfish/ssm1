@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
+import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,9 +30,14 @@ public final class HomeScreen extends ScreenLogic {
     protected TextButton cStrollButton, cSettingsButton;
 
     /**
-     * Labels for title, timer.
+     * Labels for cTitle, timer.
      */
-    protected Label title, timer;
+    protected Label cTitle, cTimer;
+
+    /**
+     * Determines if the stroll button is clickable.
+     */
+    protected boolean cIsClickable = false;
 
     /**
      * Observer that gets called on the start of a new stroll.
@@ -52,7 +57,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * The interval timer of the game.
      */
-    protected Timer cIntervalTimer;
+    protected Timer cIntervalTimer, cStrollTimer;
 
     /**
      * Creates the home screen.
@@ -66,6 +71,7 @@ public final class HomeScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
+        initTimers();
         initHomeScreenTitle();
         initStrollIntervalTimer();
 
@@ -77,42 +83,81 @@ public final class HomeScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        title.setStyle(cGameSkin.getDefaultLabelStyle());
-        timer.setStyle(cGameSkin.getDefaultLabelStyle());
+        cTitle.setStyle(cGameSkin.getDefaultLabelStyle());
+        cTimer.setStyle(cGameSkin.getDefaultLabelStyle());
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+    }
+
+    /**
+     * Obtains both the STROLL and INTERVAL Timers so we can properly create the GUI.
+     */
+    protected void initTimers() {
+        cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        cIsClickable = cStrollTimer.isRunning() || !cIntervalTimer.isRunning();
     }
 
     /**
      * Initializes the title on the home screen.
      */
     public void initHomeScreenTitle() {
-        title = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTitle = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
-        cTable.add(title);
+        cTable.add(cTitle);
     }
 
     /**
      * Gets the IntervalTimer and initializes buttons and behaviour. Then adds the label to the WidgetGroup.
      */
     public void initStrollIntervalTimer() {
-        timer = new Label(
-                Integer.toString(Timer.Global.INTERVAL.getDuration()),
-                cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        String textToDisplay;
+        if (cIsClickable) {
+            if (cStrollTimer.isRunning()) {
+                textToDisplay = "Stroll running!";
+            } else {
+                textToDisplay = "Ready!";
+            }
+        } else {
+            textToDisplay = Integer.toString(Timer.Global.INTERVAL.getDuration());
+        }
+        cTimer = new Label(textToDisplay, cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
 
         cIntervalTickObserver = new Observer() {
-
             @Override
             public void update(final Observable o, final Object arg) {
-                timer.setText(arg.toString());
+                if (!cStrollTimer.isRunning()) {
+                    cTimer.setText(arg.toString());
+                }
             }
         };
 
-        cIntervalTimer = TimeKeeper.getInstance().getTimer(Timer.Global.INTERVAL.name());
+        Observer cIntervalStopObserver = new Observer() {
+            @Override
+            public void update(final Observable o, final Object arg) {
+                if (!cStrollTimer.isRunning()) {
+                    cIsClickable = true;
+                    cTimer.setText("Ready!");
+                }
+            }
+        };
+
+        Observer cIntervalStartObserver = new Observer() {
+            @Override
+            public void update(final Observable o, final Object arg) {
+                if (!cStrollTimer.isRunning()) {
+                    cIsClickable = false;
+                    cTimer.setText(Integer.toString(Timer.Global.INTERVAL.getDuration()));
+                }
+            }
+        };
+
+        cIntervalTimer.getStartSubject().addObserver(cIntervalStartObserver);
+        cIntervalTimer.getStopSubject().addObserver(cIntervalStopObserver);
         cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
 
         cTable.row().expandY();
-        cTable.add(timer);
+        cTable.add(cTimer);
     }
 
     /**
@@ -123,8 +168,10 @@ public final class HomeScreen extends ScreenLogic {
         cStrollButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                StandUp.getInstance().startStroll();
-                ScreenStore.getInstance().setScreen("Stroll");
+                if (cIsClickable) {
+                    StandUp.getInstance().startStroll();
+                    ScreenStore.getInstance().setScreen("Stroll");
+                }
             }
         });
         cTable.row().expandY();
