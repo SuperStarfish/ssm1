@@ -1,8 +1,9 @@
 package cg.group4.rewards.collectibles;
 
-import java.util.Date;
-
 import cg.group4.rewards.RewardUtil;
+
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -10,7 +11,7 @@ import cg.group4.rewards.RewardUtil;
  * @author Jean de Leeuw
  *
  */
-public abstract class Collectible {
+public abstract class Collectible implements Serializable {
 	
 	/**
 	 * Wavelength of the collectible representing the colour of the collectible.
@@ -41,7 +42,7 @@ public abstract class Collectible {
 	 * @param wavelength representing the colour of the collectible
 	 */
 	public Collectible(final int wavelength) {
-        cWavelength = clampWaveLength(wavelength);;
+        cWavelength = clampWaveLength(wavelength);
 	}
 	
 	/**
@@ -101,15 +102,29 @@ public abstract class Collectible {
     private int clampWaveLength(final int waveLength) {
         int res = waveLength;
 
+		final int minWaveLength = 380;
+		final int maxWaveLength = 780;
+
         // clamp lower bound
-        if (waveLength < 380) {
-            res = 380;
+        if (waveLength < minWaveLength) {
+            res = minWaveLength;
         }
         // clamp upper bound
-        else if (waveLength > 780) {
-            res = 780;
+        else if (waveLength > maxWaveLength) {
+            res = maxWaveLength;
         }
 
         return res;
     }
+
+	public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Collectible<");
+        sb.append("wavelength = ").append(cWavelength).append(", ");
+        sb.append("amount = ").append(getAmount()).append(", ");
+        sb.append("form multiplier = ").append(getFormRarity());
+        sb.append(">");
+        return sb.toString();
+    }
+
 }

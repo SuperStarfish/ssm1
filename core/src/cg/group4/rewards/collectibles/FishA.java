@@ -1,12 +1,14 @@
 package cg.group4.rewards.collectibles;
 
 
+import java.io.Serializable;
+
 /**
  * A collectible with variable colour that can be generated.
  * @author Jean de Leeuw
  *
  */
-public class FishA extends Collectible {
+public class FishA extends Collectible implements Serializable {
 	
 	/**
 	 * Constructs a FishA collectible.
