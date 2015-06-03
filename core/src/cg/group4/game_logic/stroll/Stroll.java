@@ -14,8 +14,7 @@ import java.util.Observer;
 import java.util.Random;
 
 /**
- * @author Martijn Gribnau
- * @author Benjamin Los
+ * A stroll will generate events for the player based on the players activity.
  */
 public class Stroll implements Observer {
 

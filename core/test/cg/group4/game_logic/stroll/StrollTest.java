@@ -43,6 +43,7 @@ public class StrollTest {
     @Test
     public void testUpdateGood() {
         cStroll = spy(cStroll);
+        doNothing().when(cStroll).generatePossibleEvent();
 
         cStroll.update(null, null);
 
