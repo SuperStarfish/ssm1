@@ -148,7 +148,7 @@ public class Stroll implements Observer {
         }
     }
 
-    private int getAmplifier(AccelerationState state){
+    protected int getAmplifier(AccelerationState state){
         for(Amplifier a : Amplifier.values()){
             if(a.cState == state) {
                 return a.cAmplifier;
