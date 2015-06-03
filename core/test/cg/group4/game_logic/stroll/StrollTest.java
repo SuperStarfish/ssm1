@@ -63,8 +63,6 @@ public class StrollTest {
         verify(cStroll, never()).generatePossibleEvent();
     }
 
-//    s
-
     /**
      * Test the generation of an event.
      */
