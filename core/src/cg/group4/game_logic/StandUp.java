@@ -88,10 +88,8 @@ public final class StandUp {
 
     /**
      * Ends the current stroll.
-     *
-     * @param cRewards rewards gained by the stroll.
      */
-    public void endStroll(final int cRewards) {
+    public void endStroll() {
         Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
     }

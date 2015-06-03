@@ -172,7 +172,7 @@ public class Stroll implements Observer {
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
 
-        StandUp.getInstance().endStroll(cRewards);
+        StandUp.getInstance().endStroll();
     }
 
     /**
