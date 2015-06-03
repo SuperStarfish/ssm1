@@ -4,11 +4,11 @@ package cg.group4.sensor;
  * Interface which will be the core module wrapper for the Accel Library Android.
  * @author Martijn Gribnau
  */
-public abstract class AccelerationStatus {
+public interface AccelerationStatus {
 
     /**
      * Returns defined states for the accelerometer.
      * @return One of the four predefined acceleration states.
      */
-    abstract AccelerationState getAccelerationState();
+    AccelerationState getAccelerationState();
 }

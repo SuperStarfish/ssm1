@@ -10,7 +10,7 @@ import com.badlogic.gdx.Gdx;
  * Gives back the acceleration status of the android device.
  *
  */
-public class AndroidAccelerationStatus extends AccelerationStatus implements MovementEventListener {
+public class AndroidAccelerationStatus implements MovementEventListener,AccelerationStatus {
 
     /**
      * Tag for debugging & logging purposes.

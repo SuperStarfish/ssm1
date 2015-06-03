@@ -1,6 +1,7 @@
 package cg.group4.game_logic;
 
 import cg.group4.game_logic.stroll.Stroll;
+import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
@@ -46,6 +47,8 @@ public final class StandUp {
      */
     protected SensorReader cSensorReader;
 
+    protected AccelerationStatus accelerationStatus;
+
     /**
      * Instantiate StandUp and TimeKeeper.
      */
@@ -65,7 +68,7 @@ public final class StandUp {
     }
 
     /**
-     * Resets the singleton, testing perposes.
+     * Resets the singleton, testing purposes.
      */
     public static void reset() {
         INSTANCE = new StandUp();
@@ -134,5 +137,13 @@ public final class StandUp {
      */
     public SensorReader getSensorReader() {
         return cSensorReader;
+    }
+
+    public void setAccelerationStatus(AccelerationStatus accelerationStatus) {
+        this.accelerationStatus = accelerationStatus;
+    }
+
+    public AccelerationStatus getAccelerationStatus() {
+        return this.accelerationStatus;
     }
 }

@@ -4,6 +4,8 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
+import cg.group4.sensor.AccelerationState;
+import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -32,10 +34,6 @@ public class Stroll implements Observer {
      * Amount of rewards collected.
      */
     protected int cRewards;
-    /**
-     * The chance of an event happening this second.
-     */
-    protected double cEventThreshold;
     /**
      * Whether or not you're busy with an event.
      */
@@ -88,7 +86,6 @@ public class Stroll implements Observer {
         cRewards = 0;
         cEventGoing = false;
         cFinished = false;
-        cEventThreshold = BASE_THRESHOLD;
         cEndStrollSubject = new Subject();
         cNewEventSubject = new Subject();
         cEndEventSubject = new Subject();
@@ -114,7 +111,8 @@ public class Stroll implements Observer {
      */
     protected final void generatePossibleEvent() {
         Random rnd = new Random();
-        if (rnd.nextFloat() < cEventThreshold) {
+        double eventThreshold = getAmplifier(StandUp.getInstance().getAccelerationStatus().getAccelerationState()) *BASE_THRESHOLD;
+        if (rnd.nextDouble() < eventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
             switch(chosenEvent) {
@@ -149,6 +147,15 @@ public class Stroll implements Observer {
             Gdx.app.log(TAG, "Event finished and time is up, ending stroll.");
             done();
         }
+    }
+
+    private int getAmplifier(AccelerationState state){
+        for(Amplifier a : Amplifier.values()){
+            if(a.cState == state) {
+                return a.cAmplifier;
+            }
+        }
+        return 1;
     }
 
 
@@ -194,5 +201,20 @@ public class Stroll implements Observer {
      */
     public final Subject getEndEventSubject() {
         return cEndEventSubject;
+    }
+
+    public enum Amplifier{
+        WALK(AccelerationState.WALKING,1),
+        RUN(AccelerationState.RUNNING,2),
+        STOP(AccelerationState.RESTING,0),
+        CHEAT(AccelerationState.CHEATING,0);
+
+        private AccelerationState cState;
+        private int cAmplifier;
+
+        Amplifier(AccelerationState state, int amplifier){
+            this.cAmplifier = amplifier;
+            this.cState = state;
+        }
     }
 }
