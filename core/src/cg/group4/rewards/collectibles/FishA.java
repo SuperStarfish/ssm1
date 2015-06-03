@@ -1,39 +1,29 @@
 package cg.group4.rewards.collectibles;
 
-import cg.group4.rewards.WavelengthToRGB;
 
 /**
  * A collectible with variable colour that can be generated.
  * @author Jean de Leeuw
  *
  */
-public class FishA extends Collectible{
-	
-	/**
-	 * Location of the image of the form of the collectible.
-	 */
-	protected final String cImageLocation = "images/FishA.png";
-	
-	/**
-	 * Wavelength representing the colour of the collectible.
-	 */
-	protected final int cWavelength;
+public class FishA extends Collectible {
 	
 	/**
 	 * Constructs a FishA collectible.
-	 * @param wavelength representing the colour of the collectible.
+	 * @param wavelength representing the colour of the collectible
 	 */
 	public FishA(final int wavelength) {
-		cWavelength = wavelength;
-	}
-
-	@Override
-	public float[] getColour() {
-		return WavelengthToRGB.wavelengthToRGB(cWavelength);
+		super(wavelength);
 	}
 
 	@Override
 	public String getImagePath() {
-		return cImageLocation;
+		return "images/FishA.png";
+	}
+
+	@Override
+	public double getFormRarity() {
+		final double formRarity = 0.3;
+		return formRarity;
 	}
 }

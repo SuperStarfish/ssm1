@@ -26,9 +26,9 @@ public final class HomeScreen extends ScreenLogic {
     protected Table cTable;
 
     /**
-     * Buttons for the stroll, settings.
+     * Buttons for the stroll, settings, collection.
      */
-    protected TextButton cStrollButton, cSettingsButton;
+    protected TextButton cStrollButton, cSettingsButton, cCollectionButton;
 
     /**
      * Labels for cTitle, timer.
@@ -77,6 +77,7 @@ public final class HomeScreen extends ScreenLogic {
         initStrollIntervalTimer();
 
         initStrollButton();
+        initCollectionButton();
         initSettingsButton();
 
         return cTable;
@@ -88,6 +89,7 @@ public final class HomeScreen extends ScreenLogic {
         cTimer.setStyle(cGameSkin.getDefaultLabelStyle());
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cCollectionButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
@@ -193,6 +195,21 @@ public final class HomeScreen extends ScreenLogic {
         });
         cTable.row().expandY();
         cTable.add(cSettingsButton);
+    }
+    
+    /**
+     * Initializes the collection button on the home screen.
+     */
+    public void initCollectionButton() {
+    	cCollectionButton = cGameSkin.generateDefaultMenuButton("Collection");
+    	cCollectionButton.addListener(new ChangeListener() {
+    		@Override
+    		public void changed(final ChangeEvent event, final Actor actor) {
+    			ScreenStore.getInstance().setScreen("Collection");
+    		}
+    	});
+    	cTable.row().expandY();
+    	cTable.add(cCollectionButton);
     }
 
     @Override

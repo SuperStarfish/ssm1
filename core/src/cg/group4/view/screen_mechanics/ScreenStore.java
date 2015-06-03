@@ -7,6 +7,14 @@ import cg.group4.view.screen.SettingsScreen;
 import java.util.HashMap;
 import java.util.Map;
 
+import cg.group4.rewards.Collection;
+import cg.group4.rewards.collectibles.FishA;
+import cg.group4.rewards.collectibles.FishB;
+import cg.group4.rewards.collectibles.FishC;
+import cg.group4.view.screen.CollectiblesScreen;
+import cg.group4.view.screen.HomeScreen;
+import cg.group4.view.screen.SettingsScreen;
+
 /**
  * Keeps track of all the screens throughout the game.
  *
@@ -53,10 +61,18 @@ public final class ScreenStore {
     }
 
     /**
-     * Initializes the Home Screen and the Settings Screen, since those are highly likely to be opened.
+     * Initializes the Home Screen, Settings Screen and the Collection Screen,
+     * since those are highly likely to be opened.
      */
     public void init() {
         addScreen("Home", new HomeScreen());
+        //STILL NEEDS SERVER IMPLEMENTATION TO COMPLETE. THIS IS JUST TO TEST.
+        Collection collection = new Collection();
+        collection.add(new FishA(500));
+        collection.add(new FishB(380));
+        collection.add(new FishC(660));
+        System.out.println(collection.size());
+        addScreen("Collection", new CollectiblesScreen(collection));
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
     }
