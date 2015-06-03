@@ -1,5 +1,6 @@
 package cg.group4.rewards;
 
+import cg.group4.exceptions.LocalStoreUnavailableException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
@@ -31,15 +32,13 @@ public class LocalCollectionStorer implements CollectionStorer {
 
     @Override
     public void store() {
-        if (!isLocalStorageAvailable()) {
-            // rescue
-        }
 
-        // Currently, does not check for an existing file, thus just overwrites existing data.
-        if (!getFile().exists()) {
-            Gdx.app.log(cTag, "Storing new file at: " + Gdx.files.getLocalStoragePath());
+        try {
+            getFile().writeString(cJson.prettyPrint(cCollection), false);
+            Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath());
+        } catch (LocalStoreUnavailableException e) {
+            e.printStackTrace();
         }
-        getFile().writeString(cJson.prettyPrint(cCollection), false);
 
     }
 
@@ -57,7 +56,11 @@ public class LocalCollectionStorer implements CollectionStorer {
      * Returns the a FileHandle based on the {#code cLocalFile}
      * @return
      */
-    private FileHandle getFile() {
+    private FileHandle getFile() throws LocalStoreUnavailableException {
+        if (!isLocalStorageAvailable()) {
+            throw new LocalStoreUnavailableException();
+        }
+
         return Gdx.files.local(cLocalFile);
     }
 }
