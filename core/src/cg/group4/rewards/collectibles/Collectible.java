@@ -39,6 +39,7 @@ public abstract class Collectible {
 	 * @param wavelength representing the colour of the collectible
 	 */
 	public Collectible(final int wavelength) {
+		assert (wavelength >= 380 && wavelength <= 780);
 		cWavelength = wavelength;
 	}
 	

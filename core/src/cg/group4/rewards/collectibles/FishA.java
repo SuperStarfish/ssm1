@@ -16,12 +16,6 @@ public class FishA extends Collectible {
 		super(wavelength);
 	}
 
-	/**
-	 * Constructs a FishA collectible.
-	 * @param wavelength representing the colour of the collectible.
-	 */
-	
-
 	@Override
 	public String getImagePath() {
 		return "images/FishA.png";
