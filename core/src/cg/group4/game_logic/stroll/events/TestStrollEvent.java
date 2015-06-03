@@ -50,10 +50,6 @@ public class TestStrollEvent extends StrollEvent {
      */
     protected Timer cDelayInputTimer;
     /**
-     * Direction of the current task.
-     */
-    protected String cDirection;
-    /**
      * Tasks which will execute when a delay is initiated.
      */
     protected Observer cDelayInputStartObserver;
@@ -74,12 +70,11 @@ public class TestStrollEvent extends StrollEvent {
         super();
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;
-        cPrevOperationNr = 0;
+        cPrevOperationNr = -1;
 
         cDelayInputStartObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                System.out.println("start");
                 cDelayNewInput = true;
             }
         };
@@ -87,7 +82,6 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                System.out.println("stop");
                 cLabelSubject.update("Move your phone " + cDirections[cOperationNr] + "!");
                 cDelayNewInput = false;
             }
@@ -107,10 +101,8 @@ public class TestStrollEvent extends StrollEvent {
      */
     public final void doTask() {
         do {
-            cOperationNr = new Random().nextInt(6);
+            cOperationNr = new Random().nextInt(cDirections.length);
         } while (cOperationNr == cPrevOperationNr);
-
-        cDelayInputTimer.reset();
 
     }
 
@@ -119,8 +111,11 @@ public class TestStrollEvent extends StrollEvent {
      */
     public final void taskCompleted() {
         this.cTasksCompleted++;
+        Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
         cCompletedTaskSound.play(1.0f);
         cLabelSubject.update("Good work!");
+        cDelayInputTimer.reset();
+
         if (this.cTasksCompleted < MAX_TASKS) {
             cPrevOperationNr = cOperationNr;
             doTask();
@@ -142,6 +137,7 @@ public class TestStrollEvent extends StrollEvent {
         TimerStore.getInstance().addTimer(cDelayInputTimer);
         cAccelMeter.filterGravity(true);
         doTask();
+        cDelayInputTimer.stop();
     }
 
     /**
@@ -154,8 +150,7 @@ public class TestStrollEvent extends StrollEvent {
         final float delta = 2.5f;
 
         if (highestAccel >= delta) {
-            System.out.println("jep");
-            Boolean success = false;
+            Boolean success;
             switch (cOperationNr) {
                 case MOVE_LEFT:
                     success = accelData.y >= delta;
@@ -175,9 +170,11 @@ public class TestStrollEvent extends StrollEvent {
                 case MOVE_TOWARDS:
                     success = accelData.z >= delta;
                     break;
+                default:
+                    success = false;
+                    break;
             }
             if (success) {
-                Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
                 taskCompleted();
             } else {
                 cDelayInputTimer.reset();

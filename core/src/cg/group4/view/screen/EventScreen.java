@@ -19,9 +19,12 @@ public final class EventScreen extends ScreenLogic {
      */
     protected Label cTaskToPerform;
 
+    /**
+     * Observes label changes.
+     */
     protected Observer cLabelObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             cTaskToPerform.setText(arg.toString());
         }
     };
@@ -30,8 +33,8 @@ public final class EventScreen extends ScreenLogic {
      * Creates an event screen to display the data from an event.
      * @param event The event belonging to this screen.
      */
-    public EventScreen(StrollEvent event) {
-        cTaskToPerform = new Label("Event", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    public EventScreen(final StrollEvent event) {
+        cTaskToPerform = new Label("", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         event.getLabelSubject().addObserver(cLabelObserver);
         event.start();
     }
