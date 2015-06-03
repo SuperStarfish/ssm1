@@ -35,12 +35,13 @@ public abstract class Collectible {
 	protected double cFormMultiplier;
 	
 	/**
-	 * Constructs a FishA collectible.
+	 * Constructs a collectible.
+     * The constructed collectible will be based on its shape (the implementing class) and a colour (specified here).
+     * The colour is based on the wavelength of light. The wavelength is clamped between 380 - 780 inclusive.
 	 * @param wavelength representing the colour of the collectible
 	 */
 	public Collectible(final int wavelength) {
-		assert (wavelength >= 380 && wavelength <= 780);
-		cWavelength = wavelength;
+        cWavelength = clampWaveLength(wavelength);;
 	}
 	
 	/**
@@ -90,4 +91,25 @@ public abstract class Collectible {
 	 * @return double representing the form multiplier.
 	 */
 	public abstract double getFormRarity();
+
+    /**
+     * Keeps the wave length between the visible human color range.
+     * The supported range is 380 - 780 (inclusive).
+     * @param waveLength Input to be clamped
+     * @return The clamped wavelength based on the input parameter
+     */
+    private int clampWaveLength(final int waveLength) {
+        int res = waveLength;
+
+        // clamp lower bound
+        if (waveLength < 380) {
+            res = 380;
+        }
+        // clamp upper bound
+        else if (waveLength > 780) {
+            res = 780;
+        }
+
+        return res;
+    }
 }
