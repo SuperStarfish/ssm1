@@ -155,7 +155,7 @@ public class Stroll implements Observer {
                 return a.cAmplifier;
             }
         }
-        return 1;
+        return 0;
     }
 
 
