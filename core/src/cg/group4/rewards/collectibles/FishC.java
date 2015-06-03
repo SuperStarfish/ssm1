@@ -1,8 +1,5 @@
 package cg.group4.rewards.collectibles;
 
-import java.util.Date;
-
-import cg.group4.rewards.WavelengthToRGB;
 
 /**
  * A collectible with variable colour that can be generated.
@@ -12,48 +9,22 @@ import cg.group4.rewards.WavelengthToRGB;
 public class FishC extends Collectible {
 	
 	/**
-	 * Location of the image of the form of the collectible.
-	 */
-	protected final String cImageLocation = "images/FishC.png";
-	
-	/**
-	 * Wavelength representing the colour of the collectible.
-	 */
-	protected final int cWavelength;
-	
-	/**
 	 * Constructs a FishA collectible.
 	 * @param wavelength representing the colour of the collectible.
 	 */
 	public FishC(final int wavelength) {
-		cWavelength = wavelength;
-	}
-
-	@Override
-	public float[] getColour() {
-		return WavelengthToRGB.wavelengthToRGB(cWavelength);
+		super(wavelength);
 	}
 
 	@Override
 	public String getImagePath() {
-		return cImageLocation;
+		return "images/FishC.png";
 	}
 
 	@Override
-	public Date getDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public double getFormRarity() {
+		final double formRarity = 0.7;
+		return formRarity;
 	}
 
-	@Override
-	public double getRarity() {
-		// TODO Auto-generated method stub
-		return 1.5;
-	}
-
-	@Override
-	public int getAmount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

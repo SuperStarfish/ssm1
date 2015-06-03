@@ -1,16 +1,25 @@
 package cg.group4.view.screen_mechanics;
 
+import java.awt.Checkbox;
+
+import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 /**
@@ -74,6 +83,7 @@ public class GameSkin extends Skin {
         this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
+        this.add("default_checkboxStyle", generateDefaultCheckboxStyle());
     }
 
     /**
@@ -93,6 +103,15 @@ public class GameSkin extends Skin {
     public final Label.LabelStyle getDefaultLabelStyle() {
         return get("default_labelStyle", Label.LabelStyle.class);
     }
+    
+    /**
+     * Easy method to return the default CheckboxStyle as a proper class.
+     * 
+     * @return CheckboxStyle object
+     */
+    public final CheckBox.CheckBoxStyle getDefaultCheckboxStyle() {
+    	return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
+    }
 
     /**
      * The default text button skin.
@@ -111,6 +130,16 @@ public class GameSkin extends Skin {
         buttonStyle.up = new SpriteDrawable(sprite);
 
         return buttonStyle;
+    }
+
+    protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
+    	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+    	checkboxStyle.checkboxOff = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOff.png"))));
+    	checkboxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOn.png"))));
+    	checkboxStyle.font = this.get("default_font", BitmapFont.class);
+    	checkboxStyle.fontColor = Color.GREEN;
+    	
+    	return checkboxStyle;
     }
 
     /**
@@ -177,6 +206,11 @@ public class GameSkin extends Skin {
     	Label result = new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
     	result.setAlignment(Align.center);
         return result;
+    }
+    
+    public final CheckBox generateDefaultCheckbox(final String text) {
+    	return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
+ 
     }
 
     /**

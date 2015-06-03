@@ -12,23 +12,65 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * Screen to be displayed when pressing the "Collection" button on the home screen.
+ */
 public class CollectiblesScreen extends ScreenLogic {
 	
+	/**
+	 * cContentTable contains the collectibles of the collection.
+	 * cContainer contains the scrollpane displaying the collectibles.
+	 */
 	protected Table cContentTable, cContainer;
+	
+	/**
+	 * ScrollPane displaying the collectibles of the collection.
+	 */
 	protected ScrollPane cScrollPane;
+	
+	/**
+	 * Collection of the player.
+	 */
 	protected Collection cCollection;
+	
+	/**
+	 * Button that takes the player back to the home screen.
+	 */
 	protected TextButton cBackButton;
-	protected final int cItemsOnScreen = 10;
+	
+	/**
+	 * Numbers of collectibles displayed without scrolling, and the amount of
+	 * checkboxes in the menu.
+	 */
+	protected final int cItemsOnScreen = 10, cNumberOfCheckboxes = 1;
+	
+	/**
+	 * Object that creates images for the collectibles.
+	 */
 	protected CollectibleDrawer cDrawer;
+	
+	/**
+	 * Object that sorts the collectibles in the collection.
+	 */
 	protected CollectibleSorter cSorter;
 	
-	public CollectiblesScreen(Collection collection) {
+	/**
+	 * Checkbox that sets the CollectibleSorter to sorting by rarity.
+	 */
+	protected CheckBox cSortRarity;
+	
+	/**
+	 * Creates a new CollectibleScreen.
+	 * @param collection of the player.
+	 */
+	public CollectiblesScreen(final Collection collection) {
 		cCollection = collection;
 		cSorter = new SortByRarity();
 	}
@@ -57,9 +99,9 @@ public class CollectiblesScreen extends ScreenLogic {
 		cScrollPane = new ScrollPane(cContentTable);
 		cScrollPane.setForceScroll(false, true);
 		
-		cContainer.add(cGameSkin.generateDefaultLabel("CHECKBUTTONSSSSS"));
+		cContainer.add(cSortRarity);
 		cContainer.row();
-		cContainer.add(cScrollPane).colspan(2);
+		cContainer.add(cScrollPane).colspan(cNumberOfCheckboxes + 1);
 		
 		constructContents(screenWidth, screenHeight);
 		
@@ -71,7 +113,8 @@ public class CollectiblesScreen extends ScreenLogic {
 		this.getWidgetGroup();
 		int screenWidth = Gdx.graphics.getWidth();
 		int screenHeight = Gdx.graphics.getHeight();
-
+		
+		cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
 		cContentTable.clear();
 		constructContents(screenWidth, screenHeight);
 		
@@ -82,13 +125,29 @@ public class CollectiblesScreen extends ScreenLogic {
 		return "Home";
 	}
 	
-	protected void constructContents(int screenWidth, int screenHeight) {
+	/**
+	 * Helper method that should not be called outside of this class.
+	 * Sorts and rebuilds all the collectibles in the collection. Called upon initialisation
+	 * of the screen and on resizes.
+	 * 
+	 * @param screenWidth current width of the screen in pixels.
+	 * @param screenHeight current height of the screen in pixels.
+	 */
+	protected void constructContents(final int screenWidth, final int screenHeight) {
 		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection.getCollection());
 		
 		for (Collectible c : sortedList) {
 			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth);
 			cContentTable.add(cGameSkin.generateDefaultLabel(Double.toString(c.getRarity())));
 		}
+	}
+	
+	/**
+	 * Helper method that should not be called outside of this class.
+	 * Clears all the checkboxes.
+	 */
+	protected void clearCheckboxes() {
+		cSortRarity.setChecked(false);
 	}
 
 }

@@ -8,12 +8,12 @@ package cg.group4.rewards;
  *http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm
  *http://stackoverflow.com/questions/1472514/convert-light-frequency-to-rgb
  */
-public final class WavelengthToRGB {
+public final class RewardUtil {
 	
 	/**
 	 * Hidden constructor because it is a utility class.
 	 */
-	private WavelengthToRGB() {
+	private RewardUtil() {
 	}
 	
 	/**
@@ -138,5 +138,17 @@ public final class WavelengthToRGB {
 			return 0;
 		}
 		return (float) (cMaxIntensity * Math.pow(colour * factor, cGamma));
+	}
+	
+	/**
+	 * Returns the rarity of the color.
+	 * With 100 being the most rare and 0 being the least rare.
+	 * @param currentWavelength
+	 * @return double representing the rarity of the colour. [100-0]
+	 */
+	public static double getColorRarity(int currentWavelength) {
+		final int lowestWavelength = 380, highestWavelength = 780, maxRarity = 100;
+		double perStep = maxRarity / (highestWavelength - lowestWavelength);
+		return maxRarity - (currentWavelength * perStep);
 	}
 }
