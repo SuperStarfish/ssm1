@@ -4,12 +4,9 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-import cg.group4.view.screen.EventScreen;
-import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -42,14 +39,6 @@ public class TestStrollEvent extends StrollEvent {
      * Sound effect played when a task is completed.
      */
     protected final Sound cCompletedTaskSound;
-    /**
-     * The screen where the event is displayed.
-     */
-    protected EventScreen cScreen;
-    /**
-     * The label where the event instructions are displayed.
-     */
-    protected Label cLabel;
     
     /**
      * operationNr: Movement operation that must be done.
@@ -88,8 +77,6 @@ public class TestStrollEvent extends StrollEvent {
      */
     public TestStrollEvent() {
         super();
-        cScreen = new EventScreen();
-        cLabel = cScreen.getLabel();
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;
         cPrevOperationNr = 0;
@@ -97,7 +84,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStartObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cLabel.setText("Wrong! Try " + cDirection + " again!");
+                cLabelSubject.update("Wrong! Try " + cDirection + " again!");
                 cDelayNewInput = true;
             }
         };
@@ -137,30 +124,30 @@ public class TestStrollEvent extends StrollEvent {
         switch (cOperationNr) {
             case MOVE_LEFT:
                 cDirection = "left";
-                cLabel.setText("Move your phone to the left!");
+                cLabelSubject.update("Move your phone to the left!");
                 break;
             case MOVE_RIGHT:
                 cDirection = "right";
-                cLabel.setText("Move your phone to the right!");
+                cLabelSubject.update("Move your phone to the right!");
                 break;
             case MOVE_DOWN:
                 cDirection = "down";
-                cLabel.setText("Move your phone down!");
+                cLabelSubject.update("Move your phone down!");
                 break;
             case MOVE_UP:
                 cDirection = "up";
-                cLabel.setText("Move your phone up!");
+                cLabelSubject.update("Move your phone up!");
                 break;
             case MOVE_AWAY:
                 cDirection = "away from you";
-                cLabel.setText("Move your phone away from you!");
+                cLabelSubject.update("Move your phone away from you!");
                 break;
             case MOVE_TOWARDS:
                 cDirection = "towards you";
-                cLabel.setText("Move your phone towards you!");
+                cLabelSubject.update("Move your phone towards you!");
                 break;
             default:
-                cLabel.setText("doTask Unknown Operation Number: " + cOperationNr);
+                cLabelSubject.update("doTask Unknown Operation Number: " + cOperationNr);
                 break;
         }
     }
@@ -243,7 +230,7 @@ public class TestStrollEvent extends StrollEvent {
                     }
                     break;
                 default:
-                    cLabel.setText("processInput Unknown Operation Number: " + cOperationNr);
+                    cLabelSubject.update("processInput Unknown Operation Number: " + cOperationNr);
                     break;
             }
         }
@@ -252,11 +239,6 @@ public class TestStrollEvent extends StrollEvent {
     @Override
     public final int getReward() {
         return REWARDS;
-    }
-
-    @Override
-    public final ScreenLogic createScreen() {
-        return cScreen;
     }
 
     @Override

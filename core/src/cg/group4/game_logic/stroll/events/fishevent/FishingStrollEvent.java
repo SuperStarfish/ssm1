@@ -5,12 +5,9 @@ import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-import cg.group4.view.screen.EventScreen;
-import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -25,20 +22,10 @@ public class FishingStrollEvent extends StrollEvent {
      */
 	protected static final int REWARDS = 10;
 
-    /**
-     * The screen this event belongs to.
-     */
-	protected EventScreen cScreen;
-
 	/**
 	 * Sound played when the task is completed.
 	 */
 	protected Sound cCompletedTaskSound;
-
-	/**
-	 * Text that gets displayed on screen.
-	 */
-	protected Label cLabel;
 
 	/**
 	 * The state where the event is in.
@@ -87,8 +74,6 @@ public class FishingStrollEvent extends StrollEvent {
 	 */
 	public FishingStrollEvent() {
 		super();
-        cScreen = new EventScreen();
-        cLabel = cScreen.getLabel();
 
 		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
 
@@ -147,14 +132,13 @@ public class FishingStrollEvent extends StrollEvent {
 	}
 
 	@Override
-	public final ScreenLogic createScreen() {
-		return cScreen;
-	}
-
-	@Override
 	protected final void clearEvent() {
 		super.dispose();
 		TimerStore.getInstance().removeTimer(cDelayInputTimer);
 		TimerStore.getInstance().removeTimer(cFishTimer);
 	}
+
+    public void setText(String text) {
+        cLabelSubject.update(text);
+    }
 }

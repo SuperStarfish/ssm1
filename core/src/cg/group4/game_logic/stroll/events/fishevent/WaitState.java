@@ -34,7 +34,7 @@ public class WaitState implements FishEventState {
     public WaitState(final FishingStrollEvent event) {
         cEvent = event;
 
-        cEvent.cLabel.setText("Wait for the fish....");
+        cEvent.setText("Wait for the fish....");
 
         cEvent.cFishTimer = new Timer("WAITFORFISH", TIME);
         TimerStore.getInstance().addTimer(cEvent.cFishTimer);
