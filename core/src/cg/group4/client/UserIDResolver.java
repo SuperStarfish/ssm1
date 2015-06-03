@@ -1,4 +1,5 @@
 package cg.group4.client;
 
-public class UserIDResolver {
+public interface UserIDResolver {
+    String getID();
 }

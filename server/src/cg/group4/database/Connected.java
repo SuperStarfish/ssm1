@@ -2,7 +2,9 @@ package cg.group4.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
 /**
@@ -30,8 +32,29 @@ public class Connected extends ConnectionWrapper {
     public Connected() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         cConnection = DriverManager.getConnection("jdbc:sqlite:data.sqlite");
+        cConnection.setAutoCommit(false);
         LOGGER.info("Succesfully connected to the database.");
     }
+
+    @Override
+    public void commit() {
+        try {
+            cConnection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Statement query() {
+        try {
+            return cConnection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
     @Override
     public final ConnectionWrapper openConnection() {

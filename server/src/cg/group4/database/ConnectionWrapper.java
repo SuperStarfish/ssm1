@@ -1,5 +1,7 @@
 package cg.group4.database;
 
+import java.sql.Statement;
+
 /**
  * Wrapper used for the 'Connected' states.
  *
@@ -20,4 +22,8 @@ public abstract class ConnectionWrapper {
      * @return A Connected State.
      */
     public abstract ConnectionWrapper closeConnection();
+
+    public abstract void commit();
+
+    public abstract Statement query();
 }

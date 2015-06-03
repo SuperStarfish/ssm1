@@ -1,4 +1,5 @@
 package cg.group4.client.query;
 
-public class Data {
-}
+import java.io.Serializable;
+
+public abstract class Data implements Serializable { }

@@ -1,5 +1,6 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -171,6 +172,7 @@ public final class HomeScreen extends ScreenLogic {
                 if (cIsClickable) {
                     StandUp.getInstance().startStroll();
                     ScreenStore.getInstance().setScreen("Stroll");
+                    Client.getInstance().updateTimers(System.currentTimeMillis());
                 }
             }
         });

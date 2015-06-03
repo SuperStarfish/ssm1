@@ -1,6 +1,7 @@
 package cg.group4;
 
 import cg.group4.client.Client;
+import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
 import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
@@ -44,13 +45,16 @@ public class Launcher extends Game {
      */
     private final AccelerationStatus cAccelerationStatus;
 
+    private final UserIDResolver cIDResolver;
+
     /**
      * Tunnels the acceleration status through the launcher to the android project.
      * @param accelerationStatus The movement status of the player.
      */
-    public Launcher(final AccelerationStatus accelerationStatus) {
+    public Launcher(final AccelerationStatus accelerationStatus, UserIDResolver IDResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
+        cIDResolver = IDResolver;
     }
 
     /**
@@ -70,6 +74,8 @@ public class Launcher extends Game {
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
+
+        Client.getInstance().setUserIDResolver(cIDResolver);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());

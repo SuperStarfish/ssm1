@@ -1,23 +1,27 @@
 package cg.group4.client;
 
-import cg.group4.client.connection.Connected;
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.Unconnected;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import cg.group4.client.query.Data;
+import cg.group4.client.query.UserData;
+import cg.group4.util.timer.Timer;
 
 /**
  * @author Jurgen van Schagen
  */
 public class Client {
+    protected static Client cInstance;
+
+    public static Client getInstance() {
+        if(cInstance == null) {
+            cInstance = new Client();
+        }
+        return cInstance;
+    }
+
     protected Connection cConnection;
+
+    protected UserIDResolver cUserIDResolver;
 
     public static final String defaultIP = "192.168.2.20";
 
@@ -35,6 +39,31 @@ public class Client {
 
     public void closeConnection() {
         cConnection = cConnection.disconnect();
+    }
+
+    public void updateTimers(long timeStamp) {
+        UserData data = new UserData();
+        data.ID = cUserIDResolver.getID();
+        data.intervalTimeStamp = timeStamp + Timer.Global.INTERVAL.getDuration();
+        data.strollTimeStamp = timeStamp + Timer.Global.STROLL.getDuration();
+
+        cConnection.updateUserData(data);
+    }
+
+    public void updateUsername(String username) {
+        UserData data = new UserData();
+        data.ID = cUserIDResolver.getID();
+        data.username = username;
+
+        cConnection.updateUserData(data);
+    }
+
+    public Data getUserData() {
+        return cConnection.requestUserData(cUserIDResolver.getID());
+    }
+
+    public void setUserIDResolver(UserIDResolver idResolver) {
+        cUserIDResolver = idResolver;
     }
 
 }

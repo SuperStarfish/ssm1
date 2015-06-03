@@ -1,6 +1,9 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.client.query.Data;
+import cg.group4.client.query.NoReply;
+import cg.group4.client.query.UserData;
 import cg.group4.game_logic.StandUp;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
@@ -65,19 +68,34 @@ public final class NetworkScreen extends ScreenLogic{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
-                    StandUp.getInstance().getClient().connectToServer(cIP.getText(), Integer.parseInt(cPort.getText()));
+                    Client.getInstance().connectToServer(cIP.getText(), Integer.parseInt(cPort.getText()));
                 } catch (NumberFormatException e){
                     e.printStackTrace();
                 }
+
+                Data reply = Client.getInstance().getUserData();
+                if (reply instanceof UserData) {
+                    handleReply((UserData) reply);
+                } else {
+                    handleReply((NoReply) reply);
+                }
             }
         };
+    }
+
+    protected void handleReply(UserData data) {
+        System.out.println(data.toString());
+    }
+
+    protected void handleReply(NoReply message) {
+        System.out.println("asidofjasoidfj");
     }
 
     protected ChangeListener disconnectBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getClient().closeConnection();
+                Client.getInstance().closeConnection();
             }
         };
     }

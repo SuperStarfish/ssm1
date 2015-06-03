@@ -43,11 +43,6 @@ public final class StandUp {
     protected Subject cNewStrollSubject;
 
     /**
-     * Client used for interaction with the Server.
-     */
-    protected Client cClient;
-
-    /**
      * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
@@ -59,7 +54,6 @@ public final class StandUp {
         cUpdateSubject = new Subject();
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
-        cClient = new Client();
     }
 
     /**
@@ -135,7 +129,5 @@ public final class StandUp {
     public SensorReader getSensorReader() {
         return cSensorReader;
     }
-
-    public Client getClient() { return cClient; }
 
 }

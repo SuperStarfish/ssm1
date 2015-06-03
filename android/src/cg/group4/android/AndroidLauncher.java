@@ -4,6 +4,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
 import cg.group4.sensor.AndroidAccelerationStatus;
+import cg.group4.server.AndroidIDResolver;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
@@ -21,8 +22,9 @@ public class AndroidLauncher extends AndroidApplication {
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        AndroidIDResolver IDResolver = new AndroidIDResolver(getContext());
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
-		initialize(new Launcher(), config);
+		initialize(new Launcher(new AndroidAccelerationStatus(cSensorManager), IDResolver), config);
 	}
 }

@@ -1,6 +1,8 @@
 package cg.group4.database;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
 /**
@@ -11,6 +13,14 @@ public class NoConnection extends ConnectionWrapper {
      * Default Java logging tool. Used for logging inside the class.
      */
     protected static final Logger LOGGER = Logger.getLogger(NoConnection.class.getName());
+
+    @Override
+    public Statement query() {
+        return null;
+    }
+
+    @Override
+    public void commit() { }
 
     @Override
     public final ConnectionWrapper openConnection() {
