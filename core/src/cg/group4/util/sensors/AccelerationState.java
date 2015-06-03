@@ -1,4 +1,4 @@
-package cg.group4.sensor;
+package cg.group4.util.sensors;
 
 /**
  * States of acceleration.

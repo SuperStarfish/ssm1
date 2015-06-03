@@ -1,6 +1,8 @@
 package cg.group4.sensor;
 
 import android.hardware.SensorManager;
+import cg.group4.util.sensors.AccelerationState;
+import cg.group4.util.sensors.AccelerationStatus;
 import com.accellibandroid.Creator;
 import com.accellibandroid.MovementEventListener;
 import com.accellibandroid.Utilities.Movement;

@@ -1,6 +1,9 @@
 package cg.group4.sensor;
 
 
+import cg.group4.util.sensors.AccelerationState;
+import cg.group4.util.sensors.AccelerationStatus;
+
 /**
  * Desktop implementation of thee acceleration status.
  */
