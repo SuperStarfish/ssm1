@@ -1,7 +1,7 @@
 package cg.group4;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.sensor.AccelerationStatus;
+import cg.group4.util.sensors.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenStore;

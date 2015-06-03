@@ -1,8 +1,7 @@
 package cg.group4.sensor;
 
-import org.junit.Test; 
-import org.junit.Before; 
-import org.junit.After;
+import cg.group4.util.sensors.AccelerationState;
+import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;

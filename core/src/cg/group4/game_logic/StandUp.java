@@ -1,7 +1,7 @@
 package cg.group4.game_logic;
 
 import cg.group4.game_logic.stroll.Stroll;
-import cg.group4.sensor.AccelerationStatus;
+import cg.group4.util.sensors.AccelerationStatus;
 import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
