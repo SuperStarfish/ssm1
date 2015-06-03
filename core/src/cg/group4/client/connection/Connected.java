@@ -1,9 +1,11 @@
 package cg.group4.client.connection;
 
+import cg.group4.client.query.CollectionWrapper;
 import cg.group4.client.query.Update;
 import cg.group4.client.query.UserData;
 import cg.group4.client.query.Reply;
 import cg.group4.client.query.Request;
+import cg.group4.rewards.Collection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
@@ -59,12 +61,28 @@ public class Connected extends Thread implements Connection {
             outputStream.flush();
             Reply reply = (Reply) inputStream.readObject();
             return (UserData) reply.getcData();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean updateCollection(Collection collection, UserData userData) {
+        try {
+            outputStream.writeObject(new Update(new CollectionWrapper(collection, userData)));
+            outputStream.flush();
+            Reply reply = (Reply) inputStream.readObject();
+            return reply.iscSuccess();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     @Override

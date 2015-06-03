@@ -4,6 +4,7 @@ import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.Unconnected;
 import cg.group4.client.query.Data;
 import cg.group4.client.query.UserData;
+import cg.group4.rewards.Collection;
 import cg.group4.util.timer.Timer;
 
 /**
@@ -43,19 +44,25 @@ public class Client {
 
     public void updateTimers(long timeStamp) {
         UserData data = new UserData();
-        data.ID = cUserIDResolver.getID();
-        data.intervalTimeStamp = timeStamp + Timer.Global.INTERVAL.getDuration();
-        data.strollTimeStamp = timeStamp + Timer.Global.STROLL.getDuration();
+        data.setcID(cUserIDResolver.getID());
+        data.setcIntervalTimeStamp(timeStamp + Timer.Global.INTERVAL.getDuration());
+        data.setcStrollTimeStamp(timeStamp + Timer.Global.STROLL.getDuration());
 
         cConnection.updateUserData(data);
     }
 
     public void updateUsername(String username) {
         UserData data = new UserData();
-        data.ID = cUserIDResolver.getID();
-        data.username = username;
+        data.setcID(cUserIDResolver.getID());
+        data.setcUsername(username);
 
         cConnection.updateUserData(data);
+    }
+
+    public boolean updateCollection(Collection collection) {
+        boolean successful = cConnection.updateCollection(collection, new UserData(cUserIDResolver.getID()));
+        System.out.println("Was it a succes?: " + successful);
+        return successful;
     }
 
     public Data getUserData() {

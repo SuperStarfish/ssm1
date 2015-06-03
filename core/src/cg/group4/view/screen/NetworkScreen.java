@@ -5,6 +5,10 @@ import cg.group4.client.query.Data;
 import cg.group4.client.query.NoReply;
 import cg.group4.client.query.UserData;
 import cg.group4.game_logic.StandUp;
+import cg.group4.rewards.Collection;
+import cg.group4.rewards.collectibles.FishA;
+import cg.group4.rewards.collectibles.FishB;
+import cg.group4.rewards.collectibles.FishC;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
@@ -73,12 +77,9 @@ public final class NetworkScreen extends ScreenLogic{
                     e.printStackTrace();
                 }
 
-                Data reply = Client.getInstance().getUserData();
-                if (reply instanceof UserData) {
-                    handleReply((UserData) reply);
-                } else {
-                    handleReply((NoReply) reply);
-                }
+                Collection collection = new Collection();
+                collection.add(new FishC(1000));
+                Client.getInstance().updateCollection(collection);
             }
         };
     }

@@ -27,17 +27,17 @@ public class CollectibleFactory {
 		Collectible result = null;
 		
 		switch(collectible) {
-		case "FishA": 
-			result = new FishA(wavelength);
-			break;
-		case "FishB":
-			result = new FishB(wavelength);
-			break;
-		case "FishC":
-			result = new FishC(wavelength);
-			break;
-		default:
-			break;
+			case "FishA":
+				result = new FishA(wavelength);
+				break;
+			case "FishB":
+				result = new FishB(wavelength);
+				break;
+			case "FishC":
+				result = new FishC(wavelength);
+				break;
+			default:
+				break;
 		}
 		
 		return result;

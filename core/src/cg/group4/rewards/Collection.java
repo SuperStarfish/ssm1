@@ -12,7 +12,7 @@ import java.util.Observer;
  * A collectible exists out of an shape and colour.
  * Only one of each collectibles can exist in one collection.
  */
-public class Collection extends HashSet implements Serializable, Observer {
+public class Collection extends HashSet<Collectible> implements Serializable, Observer {
 
     /**
      * Constructs a HashSet collection to store collectibles gained by the player.
@@ -24,7 +24,7 @@ public class Collection extends HashSet implements Serializable, Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof Collectible) {
-            this.add(arg);
+            this.add((Collectible) arg);
         }
     }
 }

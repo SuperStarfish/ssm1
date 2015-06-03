@@ -1,5 +1,7 @@
 package cg.group4.rewards.collectibles;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cg.group4.rewards.RewardUtil;
@@ -10,7 +12,7 @@ import cg.group4.rewards.RewardUtil;
  * @author Jean de Leeuw
  *
  */
-public abstract class Collectible {
+public abstract class Collectible implements Serializable {
 	
 	/**
 	 * Wavelength of the collectible representing the colour of the collectible.
@@ -20,7 +22,7 @@ public abstract class Collectible {
 	/**
 	 * Most recent date on which a collectible of a certain kind (colour and form) has been obtained.
 	 */
-	protected Date cData;
+	protected Date cDate;
 	
 	/**
 	 * Amount of collectibles that you have of the same kind. (Same colour and form)
@@ -41,7 +43,9 @@ public abstract class Collectible {
 	 * @param wavelength representing the colour of the collectible
 	 */
 	public Collectible(final int wavelength) {
-        cWavelength = clampWaveLength(wavelength);;
+        cWavelength = clampWaveLength(wavelength);
+        cDate = new Date();
+        cAmount = 1;
 	}
 	
 	/**
@@ -64,8 +68,13 @@ public abstract class Collectible {
 	 * @return Date representing the date on which the collectible was obtained.
 	 */
 	public Date getDate() {
-		return null;
+		return cDate;
 	}
+
+    public String getDateAsString() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(cDate);
+    }
 	
 	/**
 	 * The rarity of every collectible can be calculated based on its colour and shape.
@@ -81,7 +90,7 @@ public abstract class Collectible {
 	 * @return Int representing the amount of collectibles of this type that you have.
 	 */
 	public int getAmount() {
-		return 0;
+		return cAmount;
 	}
 	
 	/**
@@ -111,5 +120,9 @@ public abstract class Collectible {
         }
 
         return res;
+    }
+
+    public int getcWavelength() {
+        return cWavelength;
     }
 }
