@@ -10,11 +10,10 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 /**
  * Stroll event used for testing.
- *
- * @author Nick Cleintuar
  */
 public class TestStrollEvent extends StrollEvent {
 
@@ -23,18 +22,14 @@ public class TestStrollEvent extends StrollEvent {
      */
     protected static final int MAX_TASKS = 10;
     /**
-     * Amount of different tasks.
-     */
-    protected static final int AMOUNT_OF_TASKS = 6;
-    /**
-     * Number of tasks that the player must complete before the event is considered a success.
-     */
-    protected static final int REWARDS = 10;
-    /**
      * Constants used for each task case.
      */
-    protected static final int MOVE_LEFT = 1, MOVE_RIGHT = 2, MOVE_DOWN = 3, MOVE_UP = 4,
-            MOVE_AWAY = 5, MOVE_TOWARDS = 6;
+    protected static final int MOVE_LEFT = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_UP = 3,
+            MOVE_AWAY = 4, MOVE_TOWARDS = 5;
+    /**
+     * The string values belonging to each direction.
+     */
+    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
     /**
      * Sound effect played when a task is completed.
      */
@@ -84,7 +79,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStartObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cLabelSubject.update("Wrong! Try " + cDirection + " again!");
+                System.out.println("start");
                 cDelayNewInput = true;
             }
         };
@@ -92,6 +87,8 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
+                System.out.println("stop");
+                cLabelSubject.update("Move your phone " + cDirections[cOperationNr] + "!");
                 cDelayNewInput = false;
             }
         };
@@ -99,57 +96,22 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
         cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
-        TimerStore.getInstance().addTimer(cDelayInputTimer);
 
         cDelayNewInput = false;
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
-        cAccelMeter.filterGravity(true);
-        
-        doTask();
     }
 
     /**
      * Sets the new operation that should be done.
      */
     public final void doTask() {
-        cOperationNr = (int) Math.floor(Math.random() * AMOUNT_OF_TASKS + 1);
-        if (cOperationNr == cPrevOperationNr) {
-            if (cOperationNr == AMOUNT_OF_TASKS) {
-                cOperationNr = 1;
-            } else {
-                cOperationNr++;
-            }
-        }
-        switch (cOperationNr) {
-            case MOVE_LEFT:
-                cDirection = "left";
-                cLabelSubject.update("Move your phone to the left!");
-                break;
-            case MOVE_RIGHT:
-                cDirection = "right";
-                cLabelSubject.update("Move your phone to the right!");
-                break;
-            case MOVE_DOWN:
-                cDirection = "down";
-                cLabelSubject.update("Move your phone down!");
-                break;
-            case MOVE_UP:
-                cDirection = "up";
-                cLabelSubject.update("Move your phone up!");
-                break;
-            case MOVE_AWAY:
-                cDirection = "away from you";
-                cLabelSubject.update("Move your phone away from you!");
-                break;
-            case MOVE_TOWARDS:
-                cDirection = "towards you";
-                cLabelSubject.update("Move your phone towards you!");
-                break;
-            default:
-                cLabelSubject.update("doTask Unknown Operation Number: " + cOperationNr);
-                break;
-        }
+        do {
+            cOperationNr = new Random().nextInt(6);
+        } while (cOperationNr == cPrevOperationNr);
+
+        cDelayInputTimer.reset();
+
     }
 
     /**
@@ -158,6 +120,7 @@ public class TestStrollEvent extends StrollEvent {
     public final void taskCompleted() {
         this.cTasksCompleted++;
         cCompletedTaskSound.play(1.0f);
+        cLabelSubject.update("Good work!");
         if (this.cTasksCompleted < MAX_TASKS) {
             cPrevOperationNr = cOperationNr;
             doTask();
@@ -174,71 +137,58 @@ public class TestStrollEvent extends StrollEvent {
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 
+    @Override
+    public void start() {
+        TimerStore.getInstance().addTimer(cDelayInputTimer);
+        cAccelMeter.filterGravity(true);
+        doTask();
+    }
+
     /**
      * Checks if one of the individual tasks gets completed.
      *
      * @param accelData Vector containing the acceleration in the x,y and z direction.
      */
     public final void processInput(final Vector3 accelData) {
-        //System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
-
         final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
-        final float delta = 2.0f;
+        final float delta = 2.5f;
 
         if (highestAccel >= delta) {
+            System.out.println("jep");
+            Boolean success = false;
             switch (cOperationNr) {
                 case MOVE_LEFT:
-                    cDelayInputTimer.reset();
-                    if (accelData.y >= delta) {
-                        System.out.println("Left Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.y >= delta;
                     break;
                 case MOVE_RIGHT:
-                    cDelayInputTimer.reset();
-                    if (accelData.y <= delta) {
-                        System.out.println("Right Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.y <= delta;
                     break;
                 case MOVE_DOWN:
-                    cDelayInputTimer.reset();
-                    if (accelData.x <= -delta) {
-                        System.out.println("Down Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.x <= -delta;
                     break;
                 case MOVE_UP:
-                    cDelayInputTimer.reset();
-                    if (accelData.x >= delta) {
-                        System.out.println("Up Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.x >= delta;
                     break;
                 case MOVE_AWAY:
-                    cDelayInputTimer.reset();
-                    if (accelData.z <= -delta) {
-                        System.out.println("Away Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.z <= -delta;
                     break;
                 case MOVE_TOWARDS:
-                    cDelayInputTimer.reset();
-                    if (accelData.z >= delta) {
-                        System.out.println("Toward Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.z >= delta;
                     break;
-                default:
-                    cLabelSubject.update("processInput Unknown Operation Number: " + cOperationNr);
-                    break;
+            }
+            if (success) {
+                Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
+                taskCompleted();
+            } else {
+                cDelayInputTimer.reset();
+                cLabelSubject.update("Wrong!");
             }
         }
     }
 
     @Override
     public final int getReward() {
-        return REWARDS;
+        return cTasksCompleted;
     }
 
     @Override

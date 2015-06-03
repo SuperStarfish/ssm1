@@ -92,15 +92,10 @@ public class FishingStrollEvent extends StrollEvent {
         };
 
 		cDelayInputTimer = new Timer("DELAYFISHEVENT", 1);
-		TimerStore.getInstance().addTimer(cDelayInputTimer);
-		cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
+        cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
         
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
-        cAccelMeter.filterGravity(true);
-
-		cDelayInputTimer.reset();
-        cState = new CastForwardState(this);
 	}
 	
 	@Override
@@ -137,6 +132,13 @@ public class FishingStrollEvent extends StrollEvent {
 		TimerStore.getInstance().removeTimer(cDelayInputTimer);
 		TimerStore.getInstance().removeTimer(cFishTimer);
 	}
+
+    @Override
+    public void start() {
+        cAccelMeter.filterGravity(true);
+        TimerStore.getInstance().addTimer(cDelayInputTimer);
+        cState = new CastForwardState(this);
+    }
 
     public void setText(String text) {
         cLabelSubject.update(text);

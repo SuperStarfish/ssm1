@@ -31,8 +31,9 @@ public final class EventScreen extends ScreenLogic {
      * @param event The event belonging to this screen.
      */
     public EventScreen(StrollEvent event) {
-        cTaskToPerform = new Label("TASK:", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTaskToPerform = new Label("Event", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         event.getLabelSubject().addObserver(cLabelObserver);
+        event.start();
     }
 
     @Override
@@ -47,15 +48,6 @@ public final class EventScreen extends ScreenLogic {
     @Override
     protected void rebuildWidgetGroup() {
         cTaskToPerform.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-    }
-
-    /**
-     * Returns the label of the screen.
-     *
-     * @return The label.
-     */
-    public Label getLabel() {
-        return cTaskToPerform;
     }
 
     @Override
