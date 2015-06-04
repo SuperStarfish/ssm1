@@ -14,8 +14,7 @@ import java.util.Observer;
 import java.util.Random;
 
 /**
- * @author Martijn Gribnau
- * @author Benjamin Los
+ * A stroll will generate events for the player based on the players activity.
  */
 public class Stroll implements Observer {
 
@@ -112,7 +111,7 @@ public class Stroll implements Observer {
     /**
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
-    protected final void generatePossibleEvent() {
+    protected void generatePossibleEvent() {
         Random rnd = new Random();
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
@@ -155,7 +154,7 @@ public class Stroll implements Observer {
     /**
      * Method that gets called when the stroll has ended/completed.
      */
-    public final void done() {
+    public void done() {
         Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
 
 
