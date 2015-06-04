@@ -31,9 +31,6 @@ allprojects {
         // log
         slf4jVersion = '1.7.6'
 
-        // json mapper
-        jacksonVersion = '1.8.5'
-
         // testing & analysis tools
         junitVersion = '4.11'
         mockitoVersion = '2.0.6-beta'
@@ -57,7 +54,6 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 		compile "org.slf4j:slf4j-simple:$slf4jVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
 
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"

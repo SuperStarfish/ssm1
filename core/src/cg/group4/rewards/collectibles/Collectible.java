@@ -1,8 +1,6 @@
 package cg.group4.rewards.collectibles;
 
 import cg.group4.rewards.RewardUtil;
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,13 +11,6 @@ import java.util.Date;
  * @author Jean de Leeuw
  *
  */
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type")
-@JsonSubTypes({
-    @JsonSubTypes.Type(value = Date.class, name = "date"),
-})
 public abstract class Collectible implements Serializable {
 	
 	/**
