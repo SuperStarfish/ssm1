@@ -148,7 +148,7 @@ public class CollectiblesScreen extends ScreenLogic {
 	 * @param screenHeight current height of the screen in pixels.
 	 */
 	protected void constructContents(final int screenWidth, final int screenHeight) {
-		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection.getCollection());
+		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection);
 		
 		for (Collectible c : sortedList) {
 			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth);

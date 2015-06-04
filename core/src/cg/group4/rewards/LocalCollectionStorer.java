@@ -1,9 +1,9 @@
 package cg.group4.rewards;
 
+import cg.group4.exceptions.LocalStoreUnavailableException;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
+
+import java.io.*;
 
 /**
  * Stores the collection data on the local storage.
@@ -11,53 +11,67 @@ import com.badlogic.gdx.utils.JsonWriter;
  */
 public class LocalCollectionStorer implements CollectionStorer {
 
+    /**
+     * Debug tag containing the simple class name. Used for debugging purposes.
+     */
     protected String cTag = this.getClass().getSimpleName();
+
+    /**
+     * Collection to be serialized.
+     */
     protected Collection cCollection;
-    protected boolean cEncrypt;
-    protected Json cJson;
+
+    /**
+     * Path to the file in which the serialized Collection object will be stored.
+     */
     protected final String cLocalFile;
 
     /**
-     *
-     * @param collection
+     * Initializes local collection storer.
+     * The local collection storer stores a collection object as a serialized save file.
+     * Uses the java built in ObjectOutputStream for this purpose.
+     * @param collection collection to be serialized and store to a save file
      */
-    public LocalCollectionStorer(Collection collection) {
+    public LocalCollectionStorer(final Collection collection) {
         cCollection = collection;
-        cEncrypt = false;
-        cJson = new Json();
-        cJson.setOutputType(JsonWriter.OutputType.json);
-        cLocalFile = "starfish.json";
+        cLocalFile = "starfish.save";
     }
 
     @Override
     public void store() {
-        if (!isLocalStorageAvailable()) {
-            // rescue
-        }
 
-        // Currently, does not check for an existing file, thus just overwrites existing data.
-        if (!getFile().exists()) {
-            Gdx.app.log(cTag, "Storing new file at: " + Gdx.files.getLocalStoragePath());
+        try {
+            serialize(cCollection, CollectionUtil.getLocalFile(cLocalFile));
+            Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
+        } catch (LocalStoreUnavailableException e) {
+            e.printStackTrace();
         }
-        getFile().writeString(cJson.prettyPrint(cCollection), false);
 
     }
 
     /**
-     * Helper method, which checks the availability of local storage.
-     * Should be checked only after the Gdx initialization has been run.
-     * @return Availability of local storage
+     * Serializes the collection and stores this data as a local save file.
+     * @param collection collection object to be serialized
+     * @param fileStorage path to local save file.
      */
-    private boolean isLocalStorageAvailable() {
-        return Gdx.files.isLocalStorageAvailable();
+    private void serialize(final Collection collection, final String fileStorage) {
+        FileOutputStream fileOutputStream;
+        ObjectOutputStream outputStream;
+
+        try {
+            fileOutputStream = new FileOutputStream(new File(fileStorage));
+            outputStream = new ObjectOutputStream(fileOutputStream);
+            outputStream.writeObject(collection);
+
+            outputStream.close();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ObjectStreamException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-
-    /**
-     * Returns the a FileHandle based on the {#code cLocalFile}
-     * @return
-     */
-    private FileHandle getFile() {
-        return Gdx.files.local(cLocalFile);
-    }
 }
