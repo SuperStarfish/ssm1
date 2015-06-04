@@ -2,6 +2,7 @@ package cg.group4.rewards;
 
 import cg.group4.exceptions.LocalStoreUnavailableException;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 /**
  * Utility class for collection.
@@ -30,5 +31,19 @@ public final class CollectionUtil {
         }
 
         return Gdx.files.local(localFile).toString();
+    }
+
+    /**
+     * Returns the a String based on the {#code cLocalFile}
+     * @param localFile the file requested from the filesystem on the local file path
+     * @return FileHandle representation of the local storage location based on the local storage path from Libgdx.
+     * @see {@link com.badlogic.gdx.Gdx}
+     */
+    public static FileHandle localFileHandle(final String localFile) throws LocalStoreUnavailableException {
+        if (!isLocalStorageAvailable()) {
+            throw new LocalStoreUnavailableException();
+        }
+
+        return Gdx.files.local(localFile);
     }
 }

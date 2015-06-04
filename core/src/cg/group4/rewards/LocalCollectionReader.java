@@ -2,8 +2,12 @@ package cg.group4.rewards;
 
 import cg.group4.exceptions.LocalStoreUnavailableException;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamException;
 
 /**
  * Reads the collection data from the local storage.
@@ -32,43 +36,52 @@ public class LocalCollectionReader implements CollectionReader {
     public Collection read() {
 
         Collection res = null;
-
-        try {
-            res = deserialize(CollectionUtil.localFile(cLocalFile));
-            Gdx.app.log(cTag, "Reading save file from: " + Gdx.files.getLocalStoragePath() + cLocalFile);
-        } catch (LocalStoreUnavailableException e) {
-            e.printStackTrace();
-        }
-
+        res = deserialize();
+        Gdx.app.log(cTag, "Reading save file from: " + Gdx.files.getLocalStoragePath() + cLocalFile);
         return res;
     }
 
     /**
      * Uses java's built in object input stream to deserialize an earlier serialized local collection save file.
      * @see {@link cg.group4.rewards.LocalCollectionStorer }
-     * @param fileStorage save file from which the Collection object will be serialized.
      * @return Collection from file
      */
-    private Collection deserialize(final String fileStorage) {
-        FileInputStream fileInputStream;
-        ObjectInputStream inputStream;
+    private Collection deserialize() {
+        ByteArrayInputStream byteArrayInputStream = null;
+        ObjectInputStream inputStream = null;
 
         Collection res = null;
 
         try {
-            fileInputStream = new FileInputStream(new File(fileStorage));
-            inputStream = new ObjectInputStream(fileInputStream);
+            final byte[] raw = readByteFile();
+            byteArrayInputStream = new ByteArrayInputStream(raw);
+            inputStream = new ObjectInputStream(byteArrayInputStream);
             res = (Collection) inputStream.readObject();
 
-            fileInputStream.close();
-            inputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (ObjectStreamException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                byteArrayInputStream.close();
+                inputStream.close();
+            } catch (Exception e) {}
+        }
+
+        return res;
+    }
+
+    private byte[] readByteFile() {
+        FileHandle fileHandle;
+        byte[] res = null;
+
+        try {
+            fileHandle = CollectionUtil.localFileHandle(cLocalFile);
+            res = fileHandle.readBytes();
+        } catch (LocalStoreUnavailableException e) {
             e.printStackTrace();
         }
 

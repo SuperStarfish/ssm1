@@ -2,8 +2,12 @@ package cg.group4.rewards;
 
 import cg.group4.exceptions.LocalStoreUnavailableException;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
 
 /**
  * Stores the collection data on the local storage.
@@ -39,41 +43,45 @@ public class LocalCollectionStorer implements CollectionStorer {
 
     @Override
     public void store() {
-
-        try {
-            serialize(cCollection, CollectionUtil.localFile(cLocalFile));
-            Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
-        } catch (LocalStoreUnavailableException e) {
-            e.printStackTrace();
-        }
+        serialize(cCollection);
+        Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
 
     }
 
     /**
      * Serializes the collection and stores this data as a local save file.
      * @param collection collection object to be serialized
-     * @param fileStorage path to local save file.
      */
-    private void serialize(final Collection collection, final String fileStorage) {
-        FileOutputStream fileOutputStream = null;
+    private void serialize(final Collection collection) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream outputStream = null;
 
         try {
-            fileOutputStream = new FileOutputStream(new File(fileStorage));
-            outputStream = new ObjectOutputStream(fileOutputStream);
+            outputStream = new ObjectOutputStream(byteArrayOutputStream);
             outputStream.writeObject(collection);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            outputStream.flush();
+            byte[] raw = byteArrayOutputStream.toByteArray();
+            writeByteFile(raw);
         } catch (ObjectStreamException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                fileOutputStream.close();
+                byteArrayOutputStream.close();
                 outputStream.close();
             }
             catch (Exception e) {}
+        }
+    }
+
+    private void writeByteFile(byte[] bytes) {
+        FileHandle fileHandle = null;
+        try {
+            fileHandle = CollectionUtil.localFileHandle(cLocalFile);
+            fileHandle.writeBytes(bytes, false);
+        } catch (LocalStoreUnavailableException e) {
+            e.printStackTrace();
         }
     }
 
