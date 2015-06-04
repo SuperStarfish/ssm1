@@ -110,7 +110,8 @@ public class Stroll implements Observer {
      */
     protected final void generatePossibleEvent() {
         Random rnd = new Random();
-        double eventThreshold = getAmplifier(StandUp.getInstance().getAccelerationStatus().getAccelerationState()) *BASE_THRESHOLD;
+        double eventThreshold = getAmplifier(StandUp.getInstance().getAccelerationStatus().
+                getAccelerationState()) *BASE_THRESHOLD;
         if (rnd.nextDouble() < eventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
@@ -148,6 +149,11 @@ public class Stroll implements Observer {
         }
     }
 
+    /**
+     * Method that returns the amplifier for the event chance.
+     * @param state Movement state gotten from the AccelLib library.
+     * @return Integer used to amplify the chance of getting the event.
+     */
     protected int getAmplifier(AccelerationState state){
         for(Amplifier a : Amplifier.values()){
             if(a.cState == state) {
@@ -195,7 +201,6 @@ public class Stroll implements Observer {
 
     /**
      * Getter for the subject to subscribe to to get updated for the end of the event.
-     *
      * @return Subject to subscribe to.
      */
     public final Subject getEndEventSubject() {
@@ -208,9 +213,21 @@ public class Stroll implements Observer {
         STOP(AccelerationState.RESTING,0),
         CHEAT(AccelerationState.CHEATING,0);
 
+        /**
+         * The state of movement.
+         */
         private AccelerationState cState;
+
+        /**
+         * Amplifier for the movement.
+         */
         private int cAmplifier;
 
+        /**
+         * Constructor for the Enum.
+         * @param state The state of movement.
+         * @param amplifier Amplifier for the movement.
+         */
         Amplifier(AccelerationState state, int amplifier){
             this.cAmplifier = amplifier;
             this.cState = state;

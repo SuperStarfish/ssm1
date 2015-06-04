@@ -86,7 +86,7 @@ public class StandUpTest {
         cStandUp.startStroll();
 
         assertNotNull(cStandUp.getStroll());
-        cStandUp.endStroll(0);
+        cStandUp.endStroll();
         assertNull(cStandUp.getStroll());
     }
 
