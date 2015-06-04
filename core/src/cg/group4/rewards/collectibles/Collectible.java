@@ -5,6 +5,8 @@ import cg.group4.rewards.RewardUtil;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.badlogic.gdx.graphics.Color;
+
 
 /**
  * Forces collectible objects to implement the following methods.
@@ -49,7 +51,7 @@ public abstract class Collectible implements Serializable {
 	 * Every collectible must have a colour.
 	 * @return float[] containing the RGB colours [0-1]
 	 */
-	public float[] getColour() {
+	public Color getColour() {
 		return RewardUtil.wavelengthToRGB(cWavelength);
 	}
 	
