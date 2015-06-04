@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name="cg.group4.notification.AlarmReceiver"/>
+        <receiver android:name="cg.group4.util.notification.AlarmReceiver"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package cg.group4.notification;
+package cg.group4.util.notification;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,6 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
         notificationManager.notify(1, notificationBuilder.build());
     }
 }

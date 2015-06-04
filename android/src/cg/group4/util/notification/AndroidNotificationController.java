@@ -1,11 +1,10 @@
-package cg.group4.notification;
+package cg.group4.util.notification;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import cg.group4.util.notification.NotificationController;
 import com.badlogic.gdx.Gdx;
 
 /**

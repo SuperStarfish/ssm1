@@ -67,12 +67,7 @@ public class Launcher extends Game {
      */
     @Override
     public final void create() {
-        if (CLEAR_SETTINGS) {
-            Preferences preferences = Gdx.app.getPreferences("TIMER");
-            preferences.clear();
-            preferences.flush();
-        }
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        debugSetup();
 
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
@@ -83,6 +78,25 @@ public class Launcher extends Game {
         cScreenStore.init();
         cScreenStore.setScreen("Home");
 
+        notificationInitialization();
+    }
+
+    /**
+     * Sets up the game with the specified debug levels.
+     */
+    private void debugSetup() {
+        if (CLEAR_SETTINGS) {
+            Preferences preferences = Gdx.app.getPreferences("TIMER");
+            preferences.clear();
+            preferences.flush();
+        }
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+    }
+
+    /**
+     * Initializes the game to send notifications.
+     */
+    private void notificationInitialization() {
         final Timer intervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
 
         intervalTimer.getStartSubject().addObserver(new Observer() {

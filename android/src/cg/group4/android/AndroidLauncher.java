@@ -3,8 +3,8 @@ package cg.group4.android;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
-import cg.group4.notification.AndroidNotificationController;
 import cg.group4.sensor.AndroidAccelerationStatus;
+import cg.group4.util.notification.AndroidNotificationController;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
