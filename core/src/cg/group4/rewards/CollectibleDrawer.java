@@ -51,8 +51,6 @@ public class CollectibleDrawer {
 	 * Helper method that should not be called outside of this class.
 	 * Method that replaces pixels with a certain colour with another colour.
 	 * 
-	 * @param replaceColour Colour that needs to be replaced. (RGB)
-	 * @param newColour Colour that replaceColour will be replaced with. (RGB)
 	 * @param pix Pixmap containing the image that needs colour replacement.
 	 */
 	protected final void replaceColours(final Pixmap pix) {

@@ -20,12 +20,12 @@ public class RewardGenerator {
 	/**
 	 * Numbers of possible different colours.
 	 */
-	protected final int cDifferentColours = 400;
+	protected final float cDifferentColours = 1000;
 	
 	/**
 	 * Number of possible different numbers the random number generator can generate.
 	 */
-	protected final int cRandomNumberPossibilities = 400000000;
+	protected final float cRandomNumberPossibilities = Float.MAX_VALUE;
 	
 	/**
 	 * Upper limit of range of numbers that can be generated (not inclusive).
@@ -60,8 +60,8 @@ public class RewardGenerator {
 	protected final Collectible generateOneCollectible() {
 		String[] collectibleList = cCollectibleFactory.getCollectiblesList();
 		int nr = cRNG.nextInt(collectibleList.length);
-		int colour = generateRewardColour();
-		return cCollectibleFactory.generateCollectible(collectibleList[nr], colour);
+		double colour = generateRewardColour();
+		return cCollectibleFactory.generateCollectible(collectibleList[nr], (float) colour);
 	}
 	
 	/**
@@ -84,17 +84,17 @@ public class RewardGenerator {
 	
 	/**
 	 * Helper method that should not be called outside of this class.
-	 * Generates the colour of the reward.
+	 * Generates the colour of the reward between 0 and 1.
 	 * 
-	 * @return RGB values of the colour of the reward. 
+	 * @return hue value of the colour of the reward. 
 	 */
-	protected final int generateRewardColour() {
+	protected final double generateRewardColour() {
 		double random = randomDouble();
 		random = rewardFunction(random);
 		
-		final int lowerEndVisibleSpectrum = 380;
-		int wavelength = (int) (cDifferentColours - random) + lowerEndVisibleSpectrum;
-		return wavelength;
+		double hue = cDifferentColours - (cDifferentColours - random);
+		hue = hue / cDifferentColours; //Clips the value between 0 and 1.
+		return hue;
 	}
 	
 	/**
@@ -104,10 +104,11 @@ public class RewardGenerator {
 	 * @return Random Double
 	 */
 	protected final double randomDouble() {
-		int nr = cRNG.nextInt(cRandomNumberPossibilities);
+		float nr = cRNG.nextFloat() * cRandomNumberPossibilities;
 		
 		double range = cRangeMax - cRangeMin;
 		double perStep = (double) range / cRandomNumberPossibilities;
+		
 		return nr * perStep;
 	}
 	
