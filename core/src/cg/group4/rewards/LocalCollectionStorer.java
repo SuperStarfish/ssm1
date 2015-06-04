@@ -2,8 +2,12 @@ package cg.group4.rewards;
 
 import cg.group4.exceptions.LocalStoreUnavailableException;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
 
 /**
  * Stores the collection data on the local storage.
@@ -37,39 +41,61 @@ public class LocalCollectionStorer implements CollectionStorer {
         cLocalFile = "starfish.save";
     }
 
+    /**
+     * Initializes local collection storer.
+     * The local collection storer stores a collection object as a serialized save file.
+     * Uses the java built in ObjectOutputStream for this purpose.
+     * @param collection collection to be serialized and store to a save file
+     * @param saveFileName name of the file to which the collection game save will be written.
+     */
+    public LocalCollectionStorer(final Collection collection, final String saveFileName) {
+        cCollection = collection;
+        cLocalFile = saveFileName;
+    }
+
     @Override
     public void store() {
-
-        try {
-            serialize(cCollection, CollectionUtil.getLocalFile(cLocalFile));
-            Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
-        } catch (LocalStoreUnavailableException e) {
-            e.printStackTrace();
-        }
+        serialize(cCollection);
+        Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
 
     }
 
     /**
      * Serializes the collection and stores this data as a local save file.
      * @param collection collection object to be serialized
-     * @param fileStorage path to local save file.
      */
-    private void serialize(final Collection collection, final String fileStorage) {
-        FileOutputStream fileOutputStream;
-        ObjectOutputStream outputStream;
+    private void serialize(final Collection collection) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream outputStream = null;
 
         try {
-            fileOutputStream = new FileOutputStream(new File(fileStorage));
-            outputStream = new ObjectOutputStream(fileOutputStream);
+            outputStream = new ObjectOutputStream(byteArrayOutputStream);
             outputStream.writeObject(collection);
-
-            outputStream.close();
-            fileOutputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            outputStream.flush();
+            byte[] raw = byteArrayOutputStream.toByteArray();
+            writeByteFile(raw);
         } catch (ObjectStreamException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                byteArrayOutputStream.close();
+                outputStream.close();
+            } catch (Exception e) { }
+        }
+    }
+
+    /**
+     * Helper method to write raw bytes to a file.
+     * @param bytes raw data to be written
+     */
+    private void writeByteFile(final byte[] bytes) {
+        FileHandle fileHandle = null;
+        try {
+            fileHandle = CollectionUtil.localFileHandle(cLocalFile);
+            fileHandle.writeBytes(bytes, false);
+        } catch (LocalStoreUnavailableException e) {
             e.printStackTrace();
         }
     }

@@ -6,7 +6,6 @@ import java.util.Date;
 
 import cg.group4.rewards.RewardUtil;
 
-
 /**
  * Forces collectible objects to implement the following methods.
  * @author Jean de Leeuw
@@ -129,7 +128,11 @@ public abstract class Collectible implements Serializable {
     public int getcWavelength() {
         return cWavelength;
     }
-
+    
+    /**
+     * Returns a string representation of a collectible, including some of it's values.
+     * @return String string representation of the collectible
+     */
 	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Collectible<");

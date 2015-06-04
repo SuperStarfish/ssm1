@@ -1,9 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import java.awt.Checkbox;
-
-import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -61,6 +57,9 @@ public class GameSkin extends Skin {
      */
     protected int cDefaultBorderWidth = 2;
 
+    /**
+     * Default width for the cursor in TextFields.
+     */
     protected float cCursorWidth = 3f;
 
     /**
@@ -121,10 +120,18 @@ public class GameSkin extends Skin {
     	return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
     }
     
+    /**
+     * Easy method to return the default ListStyle as a proper class.
+     * @return ListStyle object
+     */
     public final List.ListStyle getDefaultListStyle() {
     	return get("default_listStyle", List.ListStyle.class);
     }
     
+    /**
+     * Easy method to return the default SelectBox as a proper class.
+     * @return SelectBox object
+     */
     public final SelectBox.SelectBoxStyle getDefaultSelectboxStyle() {
     	return get("default_selectboxStyle", SelectBox.SelectBoxStyle.class);
     }
@@ -147,17 +154,30 @@ public class GameSkin extends Skin {
 
         return buttonStyle;
     }
-
+    
+    /**
+     * The default Checkbox style.
+     * 
+     * @return CheckBoxStyle
+     */
     protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
     	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-    	checkboxStyle.checkboxOff = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOff.png"))));
-    	checkboxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOn.png"))));
+    	checkboxStyle.checkboxOff = new TextureRegionDrawable(
+    			new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOff.png"))));
+    	checkboxStyle.checkboxOn = new TextureRegionDrawable(
+    			new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOn.png"))));
+    	
     	checkboxStyle.font = this.get("default_font", BitmapFont.class);
     	checkboxStyle.fontColor = Color.GREEN;
-    	
+        
     	return checkboxStyle;
     }
     
+    /**
+     * The default Selectbox style.
+     * 
+     * @return SelectBoxStyle
+     */
     protected final SelectBox.SelectBoxStyle generateDefaultSelectboxStyle() {
     	SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
     	selectboxStyle.font = this.get("default_font", BitmapFont.class);
@@ -167,12 +187,18 @@ public class GameSkin extends Skin {
     	return selectboxStyle;
     }
     
+    /**
+     * The default List style.
+     * 
+     * @return ListStyle
+     */
     protected final List.ListStyle generateDefaultListStyle() {
     	List.ListStyle listStyle = new List.ListStyle();
     	listStyle.font = this.get("default_font", BitmapFont.class);
     	listStyle.fontColorSelected = Color.GREEN;
     	listStyle.fontColorUnselected = Color.WHITE;
-    	listStyle.selection = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/FishD.png"))));
+    	listStyle.selection = new TextureRegionDrawable(
+    			new TextureRegion(new Texture(Gdx.files.internal("images/FishD.png"))));
     	return listStyle;
     }
 
@@ -219,6 +245,10 @@ public class GameSkin extends Skin {
         return cFontGenerator.generateFont(fontParameter);
     }
 
+    /**
+     * Creates a default TextField Style.
+     * @return The style for the TextField.
+     */
     protected final TextField.TextFieldStyle generateDefaultTextFieldStyle() {
         BaseDrawable empty = new BaseDrawable();
         BitmapFont font = this.get("default_font", BitmapFont.class);
@@ -230,10 +260,19 @@ public class GameSkin extends Skin {
         return textFieldStyle;
     }
 
+    /**
+     * Generates a TextField using default settings and supplied text.
+     * @param initialText The text to initially display.
+     * @return A TextField object.
+     */
     public final TextField generateDefaultTextField(String initialText) {
         return new TextField(initialText, getDefaultTextFieldStyle());
     }
 
+    /**
+     * Easy method to get the TextField style.
+     * @return TextField style used.
+     */
     public final TextField.TextFieldStyle getDefaultTextFieldStyle() {
         return this.get("default_textFieldStyle", TextField.TextFieldStyle.class);
     }
@@ -261,17 +300,35 @@ public class GameSkin extends Skin {
         return result;
     }
     
+    /**
+     * Used to generate checkboxes using the default checkbox style.
+     * 
+     * @param text text explaning the function of the checkbox
+     * @return CheckBox
+     */
     public final CheckBox generateDefaultCheckbox(final String text) {
     	return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
 
     }
     
-    public final List generateDefaultList() {
-    	return new List(this.get("default_listStyle", List.ListStyle.class));
+    /**
+     * Used to generate lists using the default list style.
+     * 
+     * @param <T> Objects or primitives
+     * @return List
+     */
+    public final <T> List<T> generateDefaultList() {
+    	return new List<T>(this.get("default_listStyle", List.ListStyle.class));
     }
     
-    public final SelectBox generateDefaultSelectbox() {
-    	return new SelectBox(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
+    /**
+     * Used to generate selectboxes using the default selectbox style.
+     * 
+     * @param <T> Objects or primitives
+     * @return SelectBox.
+     */
+    public final <T> SelectBox<T> generateDefaultSelectbox() {
+    	return new SelectBox<T>(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
     }
 
     /**

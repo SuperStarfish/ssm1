@@ -13,6 +13,7 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -50,7 +51,7 @@ public final class CollectiblesScreen extends ScreenLogic {
 	 * Numbers of collectibles displayed without scrolling, and the amount of
 	 * checkboxes in the menu.
 	 */
-	protected final int cItemsOnScreen = 10, cNumberOfCheckboxes = 1;
+	protected final int cItemsOnScreen = 10, cNumberOfTopBarItems = 3;
 	
 	/**
 	 * Object that creates images for the collectibles.
@@ -67,7 +68,15 @@ public final class CollectiblesScreen extends ScreenLogic {
 	 */
 	protected CheckBox cSortRarity;
 	
+	/**
+	 * Selectbox that contains the groups that the user is currently in.
+	 */
 	protected SelectBox<String> cGroupsBox;
+	
+	/**
+	 * Selectbox that contains all the possible sorting options.
+	 */
+	protected SelectBox<String> cSortBox;
 	
 	/**
 	 * Creates a new CollectibleScreen.
@@ -75,6 +84,7 @@ public final class CollectiblesScreen extends ScreenLogic {
 	 */
 	public CollectiblesScreen(final Collection collection) {
 		cCollection = collection;
+		cDrawer = new CollectibleDrawer();
 		cSorter = new SortByRarity();
 	}
 
@@ -94,25 +104,44 @@ public final class CollectiblesScreen extends ScreenLogic {
                 ScreenStore.getInstance().setScreen("Home");
             }
         });
-		
-		cContainer.add(cBackButton).expandX().height(screenHeight / cItemsOnScreen).fill();
-		
+				
 		cContentTable = new Table();
 		cContentTable.setWidth(screenWidth);
 		cScrollPane = new ScrollPane(cContentTable);
 		cScrollPane.setForceScroll(false, true);
 		
-		//cContainer.add(cSortRarity);
-		//cContainer.row();
+		cSortBox = cGameSkin.generateDefaultSelectbox();
+		String[] def = new String[2];
+		def[0] = "Sort_Rarity";
+		def[1] = "<Insert Sort Object>";
+		cSortBox.setItems(def);
+		cSortBox.addListener(new ChangeListener() {
+			@Override
+			public void changed(final ChangeEvent event, final Actor actor) {
+				System.out.println("Selected Sorting: " + cSortBox.getSelected());
+			}
+		});
+		
 		cGroupsBox = cGameSkin.generateDefaultSelectbox();
 		String[] abc = new String[3];
 		abc[0] = "My Collection";
 		abc[1] = "Group_1";
 		abc[2] = "Group_2";
 		cGroupsBox.setItems(abc);
+		cGroupsBox.addListener(new ChangeListener() {
+			@Override
+			public void changed(final ChangeEvent event, final Actor actor) {
+				System.out.println("Selected Collection: " + cGroupsBox.getSelected());
+			}	
+		});
+		
+		cContainer.row().height(screenHeight / cItemsOnScreen).width(screenWidth / cNumberOfTopBarItems).fill();
+		
+		cContainer.add(cBackButton).fill();
+		cContainer.add(cSortBox).fill();
 		cContainer.add(cGroupsBox).fill();
 		cContainer.row();
-		cContainer.add(cScrollPane).colspan(cNumberOfCheckboxes + 1).fill();
+		cContainer.add(cScrollPane).colspan(cNumberOfTopBarItems).fill();
 		
 		constructContents(screenWidth, screenHeight);
 		
@@ -148,8 +177,13 @@ public final class CollectiblesScreen extends ScreenLogic {
 		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection);
 		
 		for (Collectible c : sortedList) {
-			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth);
+			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth / 5);
+			Image img = new Image(cDrawer.drawCollectible(c));
+			cContentTable.add(img);
 			cContentTable.add(cGameSkin.generateDefaultLabel(Double.toString(c.getRarity())));
+			cContentTable.add(cGameSkin.generateDefaultLabel("DATE"));
+			cContentTable.add(cGameSkin.generateDefaultLabel("OWNER"));
+			cContentTable.add(cGameSkin.generateDefaultLabel("GROUP"));
 		}
 	}
 	
