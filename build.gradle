@@ -97,7 +97,7 @@ project(":android") {
         compile fileTree(dir: 'libs', include: '*.jar')
 
         // android support library
-        compile "com.android.support:support-v4:21.0.0"
+        compile "com.android.support:support-v4:20.0.0"
     }
 }
 

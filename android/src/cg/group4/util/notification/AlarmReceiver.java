@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import cg.group4.android.AndroidLauncher;
 import cg.group4.android.R;
@@ -13,6 +14,10 @@ import cg.group4.android.R;
  * A receiver for the alarm to display the notification.
  */
 public class AlarmReceiver extends BroadcastReceiver {
+    /**
+     * Times for the vibration and led blinking.
+     */
+    protected final int cOnTime = 500, cOffTime = 200;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -27,7 +32,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setContentTitle("Super StarFish Mania")
                         .setContentText("A new stroll is available!")
                         .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
+                        .setAutoCancel(true)
+                        .setLights(Color.BLUE, cOnTime, cOffTime)
+                        .setVibrate(new long[]{cOffTime, cOnTime});
+
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
