@@ -18,9 +18,6 @@ public class LocalStoreUnavailableException extends Exception {
     public LocalStoreUnavailableException() {
         super(new StringBuilder().append("Local storage seems unavailable.")
                 .append(System.lineSeparator())
-                .append("Local storage available: ")
-                .append(Gdx.files.isLocalStorageAvailable())
-                .append(System.lineSeparator())
                 .append("Local storage path: ")
                 .append(Gdx.files.getLocalStoragePath())
                 .toString());

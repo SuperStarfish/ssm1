@@ -9,7 +9,6 @@ import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -76,7 +75,7 @@ public class Launcher extends Game {
         cStandUp = StandUp.getInstance();
         
         //Needs to be moved
-        Collection c = new Collection();
+        Collection c = new Collection("local");
         c.add(new FishA(780));
         c.add(new FishB(580));
         c.add(new FishC(380));
