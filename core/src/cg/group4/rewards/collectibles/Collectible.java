@@ -23,6 +23,10 @@ public abstract class Collectible implements Serializable {
 	 * Most recent date on which a collectible of a certain kind (colour and form) has been obtained.
 	 */
 	protected Date cDate;
+
+	final int minWaveLength = 380;
+	
+	final int maxWaveLength = 780;
 	
 	/**
 	 * Amount of collectibles that you have of the same kind. (Same colour and form)
@@ -111,12 +115,12 @@ public abstract class Collectible implements Serializable {
         int res = waveLength;
 
         // clamp lower bound
-        if (waveLength < 380) {
-            res = 380;
+        if (waveLength < minWaveLength) {
+            res = minWaveLength;
         }
         // clamp upper bound
-        else if (waveLength > 780) {
-            res = 780;
+        else if (waveLength > maxWaveLength) {
+            res = maxWaveLength;
         }
 
         return res;
@@ -125,4 +129,15 @@ public abstract class Collectible implements Serializable {
     public int getcWavelength() {
         return cWavelength;
     }
+
+	public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Collectible<");
+        sb.append("wavelength = ").append(cWavelength).append(", ");
+        sb.append("amount = ").append(getAmount()).append(", ");
+        sb.append("form multiplier = ").append(getFormRarity());
+        sb.append(">");
+        return sb.toString();
+    }
+
 }
