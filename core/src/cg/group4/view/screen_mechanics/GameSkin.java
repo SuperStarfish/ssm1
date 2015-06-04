@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -84,6 +86,8 @@ public class GameSkin extends Skin {
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
         this.add("default_checkboxStyle", generateDefaultCheckboxStyle());
+        this.add("default_selectboxStyle", generateDefaultSelectboxStyle());
+        this.add("default_listStyle", generateDefaultListStyle());
     }
 
     /**
@@ -111,6 +115,14 @@ public class GameSkin extends Skin {
      */
     public final CheckBox.CheckBoxStyle getDefaultCheckboxStyle() {
     	return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
+    }
+    
+    public final List.ListStyle getDefaultListStyle() {
+    	return get("default_listStyle", List.ListStyle.class);
+    }
+    
+    public final SelectBox.SelectBoxStyle getDefaultSelectboxStyle() {
+    	return get("default_selectboxStyle", SelectBox.SelectBoxStyle.class);
     }
 
     /**
@@ -140,6 +152,24 @@ public class GameSkin extends Skin {
     	checkboxStyle.fontColor = Color.GREEN;
     	
     	return checkboxStyle;
+    }
+    
+    protected final SelectBox.SelectBoxStyle generateDefaultSelectboxStyle() {
+    	SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
+    	selectboxStyle.font = this.get("default_font", BitmapFont.class);
+    	selectboxStyle.fontColor = Color.GREEN;
+    	selectboxStyle.listStyle = this.generateDefaultListStyle();
+    	selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
+    	return selectboxStyle;
+    }
+    
+    protected final List.ListStyle generateDefaultListStyle() {
+    	List.ListStyle listStyle = new List.ListStyle();
+    	listStyle.font = this.get("default_font", BitmapFont.class);
+    	listStyle.fontColorSelected = Color.GREEN;
+    	listStyle.fontColorUnselected = Color.WHITE;
+    	listStyle.selection = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/FishD.png"))));
+    	return listStyle;
     }
 
     /**
@@ -210,7 +240,15 @@ public class GameSkin extends Skin {
     
     public final CheckBox generateDefaultCheckbox(final String text) {
     	return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
- 
+
+    }
+    
+    public final List generateDefaultList() {
+    	return new List(this.get("default_listStyle", List.ListStyle.class));
+    }
+    
+    public final SelectBox generateDefaultSelectbox() {
+    	return new SelectBox(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
     }
 
     /**
