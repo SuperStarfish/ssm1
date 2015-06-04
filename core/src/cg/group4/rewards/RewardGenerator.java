@@ -53,14 +53,33 @@ public class RewardGenerator {
 	}
 	
 	/**
+	 * Helper method that should not be called outside of this class.
 	 * Generates a random collectible and return this created collectible.
 	 * @return Collectible object.
 	 */
-	public final Collectible generateCollectible() {
+	protected final Collectible generateOneCollectible() {
 		String[] collectibleList = cCollectibleFactory.getCollectiblesList();
 		int nr = cRNG.nextInt(collectibleList.length);
 		int colour = generateRewardColour();
 		return cCollectibleFactory.generateCollectible(collectibleList[nr], colour);
+	}
+	
+	/**
+	 * Generates a collectible based on the score that was earned in the event.
+	 * The higher the score, the more chance on a more rare collectible.
+	 * @param eventScore score earned during the event.
+	 * @return Collectible object.
+	 */
+	public final Collectible generateCollectible(final int eventScore) {
+		Collectible mostValuable = generateOneCollectible();
+		
+		for (int i = 0; i < eventScore - 1; i++) {
+			Collectible c = generateOneCollectible();
+			if (c.getRarity() > mostValuable.getRarity()) {
+				mostValuable = c;
+			}
+		}
+		return mostValuable;
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package cg.group4.rewards;
 
+import com.badlogic.gdx.graphics.Color;
+
 /**
  * Utility class that converts a wavelength to a RGB colour.
  * @author Jean de Leeuw
@@ -51,16 +53,18 @@ public final class RewardUtil {
 	 * @param wavelength in the visible spectrum (between 380 - 780)
 	 * @return RGB colours [0 - 1.0] corresponding to the given wavelength
 	 */
-	public static float[] wavelengthToRGB(final double wavelength) {
-		float[] RGB = new float[3];
+	public static Color wavelengthToRGB(final double wavelength) {
+		Color RGB = new Color();
 		final float normalize = 255f;
 		
 		double[] colours = setColours(wavelength);
 		double intensity = determineIntensity(wavelength);
 		
-		RGB[0] = adjustColours(colours[0], intensity) / normalize;
-		RGB[1] = adjustColours(colours[1], intensity) / normalize;
-		RGB[2] = adjustColours(colours[2], intensity) / normalize;
+		float R = adjustColours(colours[0], intensity) / normalize;
+		float G = adjustColours(colours[1], intensity) / normalize;
+		float B = adjustColours(colours[2], intensity) / normalize;
+		
+		RGB.add(R, G, B, 1f);
 		
 		return RGB;
 	}

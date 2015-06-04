@@ -22,8 +22,11 @@ public class CollectibleDrawer {
 	/**
 	 * Colour in the image that needs to be replaced.
 	 */
-	protected final float[] cReplacementColour = {
-			cReplaceColourComponent, cReplaceColourComponent, cReplaceColourComponent};
+	protected Color cReplacementColour = new Color(
+			cReplaceColourComponent,
+			cReplaceColourComponent,
+			cReplaceColourComponent,
+			1f);
 	
 	/**
 	 * Alpha value of the new colour.
@@ -38,7 +41,8 @@ public class CollectibleDrawer {
 	 */
 	public final Texture drawCollectible(final Collectible c) {
 		Pixmap pixImage = new Pixmap(Gdx.files.internal(c.getImagePath()));
-		replaceColours(cReplacementColour, c.getColour(), pixImage);
+		pixImage.setColor(c.getColour());
+		replaceColours(pixImage);
 		
 		return new Texture(pixImage);
 	}
@@ -51,38 +55,17 @@ public class CollectibleDrawer {
 	 * @param newColour Colour that replaceColour will be replaced with. (RGB)
 	 * @param pix Pixmap containing the image that needs colour replacement.
 	 */
-	protected final void replaceColours(final float[] replaceColour, final float[] newColour, final Pixmap pix) {
-		pix.setColor(newColour[0], newColour[1], newColour[2], cAlpha);
+	protected final void replaceColours(final Pixmap pix) {
 		
 		for (int y = 0; y < pix.getHeight(); y++) {
 			for (int x = 0; x < pix.getWidth(); x++) {
 				
 				Color currentColour = new Color(pix.getPixel(x, y));
-				float[] currentColourRGB = {
-						currentColour.r,
-						currentColour.g,
-						currentColour.b};
 				
-				if (sameColour(currentColourRGB, replaceColour)) {
+				if (currentColour.equals(cReplacementColour)) {
 					pix.drawPixel(x, y);
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Helper method that should not be called outside of this class.
-	 * Method that checks if two colours are the same colour.
-	 * 
-	 * @param color1 (RGB)
-	 * @param color2 (RGB)
-	 * @return boolean indicating if the two colours are the same.
-	 */
-	protected final boolean sameColour(final float[] color1, final float[] color2) {
-		boolean red = (color1[0] == color2[0]);
-		boolean green = (color1[1] == color2[1]);
-		boolean blue = (color1[2] == color2[2]);
-		
-		return red && green && blue;
 	}
 }
