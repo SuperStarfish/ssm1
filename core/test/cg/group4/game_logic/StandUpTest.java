@@ -38,7 +38,7 @@ public class StandUpTest {
     }
 
     /**
-     * Teardown to run after each test/
+     * Teardown to run after each test.
      */
     @After
     public void tearDown() {

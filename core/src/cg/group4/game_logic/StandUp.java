@@ -25,7 +25,7 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static StandUp INSTANCE = new StandUp();
+    protected static StandUp instance = new StandUp();
 
     /**
      * Stroll logic.
@@ -46,8 +46,11 @@ public final class StandUp {
      * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
-
-    protected AccelerationStatus accelerationStatus;
+    
+    /**
+     * Keeps track of the amount of movement during the game.
+     */
+    protected AccelerationStatus cAccelerationStatus;
 
     /**
      * Instantiate StandUp and TimeKeeper.
@@ -64,14 +67,14 @@ public final class StandUp {
      * @return INSTANCE
      */
     public static StandUp getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     /**
      * Resets the singleton, testing purposes.
      */
     public static void reset() {
-        INSTANCE = new StandUp();
+        instance = new StandUp();
     }
 
     /**
@@ -136,12 +139,20 @@ public final class StandUp {
     public SensorReader getSensorReader() {
         return cSensorReader;
     }
-
-    public void setAccelerationStatus(AccelerationStatus accelerationStatus) {
-        this.accelerationStatus = accelerationStatus;
+    
+    /**
+     * Sets the accelerationstatus of Standup.
+     * @param accelerationStatus Accelerationstatus representing the movement.
+     */
+    public void setAccelerationStatus(final AccelerationStatus accelerationStatus) {
+        this.cAccelerationStatus = accelerationStatus;
     }
-
+    
+    /**
+     * Returns the accelerationstatus of the game.
+     * @return Accelerationstatus representing the movement.
+     */
     public AccelerationStatus getAccelerationStatus() {
-        return this.accelerationStatus;
+        return this.cAccelerationStatus;
     }
 }

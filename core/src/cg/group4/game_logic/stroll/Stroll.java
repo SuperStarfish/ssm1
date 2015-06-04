@@ -111,7 +111,7 @@ public class Stroll implements Observer {
     protected final void generatePossibleEvent() {
         Random rnd = new Random();
         double eventThreshold = getAmplifier(StandUp.getInstance().getAccelerationStatus().
-                getAccelerationState()) *BASE_THRESHOLD;
+                getAccelerationState()) * BASE_THRESHOLD;
         if (rnd.nextDouble() < eventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
@@ -154,9 +154,9 @@ public class Stroll implements Observer {
      * @param state Movement state gotten from the AccelLib library.
      * @return Integer used to amplify the chance of getting the event.
      */
-    protected int getAmplifier(AccelerationState state){
-        for(Amplifier a : Amplifier.values()){
-            if(a.cState == state) {
+    protected int getAmplifier(final AccelerationState state) {
+        for (Amplifier a : Amplifier.values()) {
+            if (a.cState == state) {
                 return a.cAmplifier;
             }
         }
@@ -207,11 +207,30 @@ public class Stroll implements Observer {
         return cEndEventSubject;
     }
 
-    public enum Amplifier{
-        WALK(AccelerationState.WALKING,1),
-        RUN(AccelerationState.RUNNING,2),
-        STOP(AccelerationState.RESTING,0),
-        CHEAT(AccelerationState.CHEATING,0);
+    /**
+     * Amplifier enum.
+     */
+    public enum Amplifier {
+    	
+    	/**
+    	 * When walking, you should get normal chance of an event.
+    	 */
+        WALK(AccelerationState.WALKING, 1),
+        
+        /**
+    	 * When running, you should get double chance of an event.
+    	 */
+        RUN(AccelerationState.RUNNING, 2),
+        
+        /**
+    	 * When not moving at all, you should get no event.
+    	 */
+        STOP(AccelerationState.RESTING, 0),
+        
+        /**
+    	 * When cheating movements, you should get no events as well.
+    	 */
+        CHEAT(AccelerationState.CHEATING, 0);
 
         /**
          * The state of movement.
@@ -228,7 +247,7 @@ public class Stroll implements Observer {
          * @param state The state of movement.
          * @param amplifier Amplifier for the movement.
          */
-        Amplifier(AccelerationState state, int amplifier){
+        Amplifier(final AccelerationState state, final int amplifier) {
             this.cAmplifier = amplifier;
             this.cState = state;
         }

@@ -1,7 +1,5 @@
 package cg.group4.util.sensors;
 
-import cg.group4.util.sensors.AccelerationState;
-
 /**
  * Interface which will be the core module wrapper for the Accel Library Android.
  * @author Martijn Gribnau
