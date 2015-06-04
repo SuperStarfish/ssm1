@@ -1,11 +1,10 @@
 package cg.group4.rewards.collectibles;
 
 import cg.group4.rewards.RewardUtil;
+import com.badlogic.gdx.graphics.Color;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import com.badlogic.gdx.graphics.Color;
 
 
 /**
@@ -18,7 +17,7 @@ public abstract class Collectible implements Serializable {
 	/**
 	 * Wavelength of the collectible representing the colour of the collectible.
 	 */
-	protected int cWavelength;
+	protected float cHue;
 	
 	/**
 	 * Most recent date on which a collectible of a certain kind (colour and form) has been obtained.
@@ -40,11 +39,10 @@ public abstract class Collectible implements Serializable {
 	/**
 	 * Constructs a collectible.
      * The constructed collectible will be based on its shape (the implementing class) and a colour (specified here).
-     * The colour is based on the wavelength of light. The wavelength is clamped between 380 - 780 inclusive.
-	 * @param wavelength representing the colour of the collectible
+	 * @param hue representing the colour of the collectible
 	 */
-	public Collectible(final int wavelength) {
-        cWavelength = clampWaveLength(wavelength);
+	public Collectible(final float hue) {
+		cHue = hue;
 	}
 	
 	/**
@@ -52,7 +50,7 @@ public abstract class Collectible implements Serializable {
 	 * @return float[] containing the RGB colours [0-1]
 	 */
 	public Color getColour() {
-		return RewardUtil.wavelengthToRGB(cWavelength);
+		return RewardUtil.generateColor(cHue);
 	}
 	
 	/**
@@ -75,7 +73,7 @@ public abstract class Collectible implements Serializable {
 	 * @return Double representing the rarity of the collectible.
 	 */
 	public double getRarity() {
-		return getFormRarity() * RewardUtil.getColorRarity(cWavelength);
+		return cHue;
 	}
 	
 	/**
@@ -93,41 +91,19 @@ public abstract class Collectible implements Serializable {
 	 * this collectible becomes)
 	 * @return double representing the form multiplier.
 	 */
-	public abstract double getFormRarity();
+	public abstract float getFormRarity();
 
-    /**
-     * Keeps the wave length between the visible human color range.
-     * The supported range is 380 - 780 (inclusive).
-     * @param waveLength Input to be clamped
-     * @return The clamped wavelength based on the input parameter
-     */
-    private int clampWaveLength(final int waveLength) {
-        int res = waveLength;
-
-		final int minWaveLength = 380;
-		final int maxWaveLength = 780;
-
-        // clamp lower & upper bounds
-        if (waveLength < minWaveLength) {
-            res = minWaveLength;
-        } else if (waveLength > maxWaveLength) {
-            res = maxWaveLength;
-        }
-
-        return res;
-    }
-    
-    /**
-     * Returns a string representation of a collectible, including some of it's values.
+	/**
+	 * Returns a string representation of a collectible, including some of it's values.
      * @return String string representation of the collectible
      */
 	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Collectible<");
-        sb.append("wavelength = ").append(cWavelength).append(", ");
-        sb.append("amount = ").append(getAmount()).append(", ");
-        sb.append("form multiplier = ").append(getFormRarity());
-        sb.append(">");
+		sb.append("wavelength = ").append(cHue).append(", ");
+		sb.append("amount = ").append(getAmount()).append(", ");
+		sb.append("form multiplier = ").append(getFormRarity());
+		sb.append(">");
         return sb.toString();
     }
 

@@ -12,10 +12,10 @@ public class FishA extends Collectible implements Serializable {
 	
 	/**
 	 * Constructs a FishA collectible.
-	 * @param wavelength representing the colour of the collectible
+	 * @param hue representing the colour of the collectible
 	 */
-	public FishA(final int wavelength) {
-		super(wavelength);
+	public FishA(final float hue) {
+		super(hue);
 	}
 
 	@Override
@@ -24,8 +24,8 @@ public class FishA extends Collectible implements Serializable {
 	}
 
 	@Override
-	public double getFormRarity() {
-		final double formRarity = 0.3;
+	public float getFormRarity() {
+		final float formRarity = 0.3f;
 		return formRarity;
 	}
 }

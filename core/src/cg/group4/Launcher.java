@@ -3,8 +3,6 @@ package cg.group4;
 import cg.group4.game_logic.StandUp;
 import cg.group4.rewards.Collection;
 import cg.group4.rewards.collectibles.FishA;
-import cg.group4.rewards.collectibles.FishB;
-import cg.group4.rewards.collectibles.FishC;
 import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerStore;
@@ -76,9 +74,18 @@ public class Launcher extends Game {
         
         //Needs to be moved
         Collection c = new Collection("local");
-        c.add(new FishA(780));
-        c.add(new FishB(580));
-        c.add(new FishC(380));
+        c.add(new FishA(1f));
+        c.add(new FishA(.9f));
+        c.add(new FishA(.8f));
+        c.add(new FishA(.7f));
+        c.add(new FishA(.6f));
+        c.add(new FishA(.5f));
+        c.add(new FishA(.4f));
+        c.add(new FishA(.3f));
+        c.add(new FishA(.2f));
+        c.add(new FishA(.1f));
+        c.add(new FishA(0f));
+
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
