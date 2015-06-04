@@ -1,9 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import java.awt.Checkbox;
-
-import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -19,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -117,10 +111,18 @@ public class GameSkin extends Skin {
     	return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
     }
     
+    /**
+     * Easy method to return the default ListStyle as a proper class.
+     * @return ListStyle object
+     */
     public final List.ListStyle getDefaultListStyle() {
     	return get("default_listStyle", List.ListStyle.class);
     }
     
+    /**
+     * Easy method to return the default SelectBox as a proper class.
+     * @return SelectBox object
+     */
     public final SelectBox.SelectBoxStyle getDefaultSelectboxStyle() {
     	return get("default_selectboxStyle", SelectBox.SelectBoxStyle.class);
     }
@@ -143,17 +145,29 @@ public class GameSkin extends Skin {
 
         return buttonStyle;
     }
-
+    
+    /**
+     * The default Checkbox style.
+     * 
+     * @return CheckBoxStyle
+     */
     protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
     	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-    	checkboxStyle.checkboxOff = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOff.png"))));
-    	checkboxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOn.png"))));
+    	checkboxStyle.checkboxOff = new TextureRegionDrawable(
+    			new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOff.png"))));
+    	checkboxStyle.checkboxOn = new TextureRegionDrawable(
+    			new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOn.png"))));
+    	
     	checkboxStyle.font = this.get("default_font", BitmapFont.class);
     	checkboxStyle.fontColor = Color.GREEN;
-    	
     	return checkboxStyle;
     }
     
+    /**
+     * The default Selectbox style.
+     * 
+     * @return SelectBoxStyle
+     */
     protected final SelectBox.SelectBoxStyle generateDefaultSelectboxStyle() {
     	SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
     	selectboxStyle.font = this.get("default_font", BitmapFont.class);
@@ -163,12 +177,18 @@ public class GameSkin extends Skin {
     	return selectboxStyle;
     }
     
+    /**
+     * The default List style.
+     * 
+     * @return ListStyle
+     */
     protected final List.ListStyle generateDefaultListStyle() {
     	List.ListStyle listStyle = new List.ListStyle();
     	listStyle.font = this.get("default_font", BitmapFont.class);
     	listStyle.fontColorSelected = Color.GREEN;
     	listStyle.fontColorUnselected = Color.WHITE;
-    	listStyle.selection = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/FishD.png"))));
+    	listStyle.selection = new TextureRegionDrawable(
+    			new TextureRegion(new Texture(Gdx.files.internal("images/FishD.png"))));
     	return listStyle;
     }
 
@@ -238,17 +258,35 @@ public class GameSkin extends Skin {
         return result;
     }
     
+    /**
+     * Used to generate checkboxes using the default checkbox style.
+     * 
+     * @param text text explaning the function of the checkbox
+     * @return CheckBox
+     */
     public final CheckBox generateDefaultCheckbox(final String text) {
     	return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
 
     }
     
-    public final List generateDefaultList() {
-    	return new List(this.get("default_listStyle", List.ListStyle.class));
+    /**
+     * Used to generate lists using the default list style.
+     * 
+     * @param <T> Objects or primitives
+     * @return List
+     */
+    public final <T> List<T> generateDefaultList() {
+    	return new List<T>(this.get("default_listStyle", List.ListStyle.class));
     }
     
-    public final SelectBox generateDefaultSelectbox() {
-    	return new SelectBox(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
+    /**
+     * Used to generate selectboxes using the default selectbox style.
+     * 
+     * @param <T> Objects or primitives
+     * @return SelectBox.
+     */
+    public final <T> SelectBox<T> generateDefaultSelectbox() {
+    	return new SelectBox<T>(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
     }
 
     /**

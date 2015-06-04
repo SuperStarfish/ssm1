@@ -59,15 +59,11 @@ public final class ScreenStore {
     /**
      * Initializes the Home Screen, Settings Screen and the Collection Screen,
      * since those are highly likely to be opened.
+     * 
+     * @param collection Collection of the user.
      */
-    public void init() {
+    public void init(final Collection collection) {
         addScreen("Home", new HomeScreen());
-        //STILL NEEDS SERVER IMPLEMENTATION TO COMPLETE. THIS IS JUST TO TEST.
-        Collection collection = new Collection();
-        collection.add(new FishA(500));
-        collection.add(new FishB(380));
-        collection.add(new FishC(660));
-        System.out.println(collection.size());
         addScreen("Collection", new CollectiblesScreen(collection));
         addScreen("Settings", new SettingsScreen());
     }
