@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 /**
  * Class used to make static calls from the Java Libraries. Used for testing.
  */
-public final class StaticsCaller {
+public class StaticsCaller {
 
     /**
      * Returns the localhost.
