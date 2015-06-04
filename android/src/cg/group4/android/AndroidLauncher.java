@@ -3,6 +3,7 @@ package cg.group4.android;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
+import cg.group4.notification.AndroidNotificationController;
 import cg.group4.sensor.AndroidAccelerationStatus;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -23,6 +24,9 @@ public class AndroidLauncher extends AndroidApplication {
 		cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
-		initialize(new Launcher(new AndroidAccelerationStatus(cSensorManager)), config);
-	}
+        initialize(new Launcher(
+                        new AndroidAccelerationStatus(cSensorManager),
+                        new AndroidNotificationController(this)),
+                config);
+    }
 }

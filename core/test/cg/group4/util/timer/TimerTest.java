@@ -49,7 +49,7 @@ public class TimerTest {
      */
     @Test
     public final void testGetRemainingTime() {
-        assertEquals(cTimer.cRemainingTime, cTimer.getRemainingTime());
+        assertEquals(cTimer.cFinishTime, cTimer.getFinishTime());
     }
 
     /**
