@@ -10,7 +10,7 @@ import cg.group4.util.timer.Timer;
 /**
  * @author Jurgen van Schagen
  */
-public class Client {
+public class Client{
     protected static Client cInstance;
 
     public static Client getInstance() {
@@ -30,10 +30,6 @@ public class Client {
 
     public Client() { cConnection = new Unconnected(); }
 
-    public void connectToServer(String ip, int port) {
-        cConnection = cConnection.connect(ip, port);
-    }
-
     public void connectToServer() {
         cConnection = cConnection.connect(defaultIP, defaultPort);
     }
@@ -51,12 +47,12 @@ public class Client {
         cConnection.updateUserData(data);
     }
 
-    public void updateUsername(String username) {
+    public boolean updateUsername(String username) {
         UserData data = new UserData();
         data.setcID(cUserIDResolver.getID());
         data.setcUsername(username);
 
-        cConnection.updateUserData(data);
+        return cConnection.updateUserData(data);
     }
 
     public boolean updateCollection(Collection collection) {
@@ -71,6 +67,10 @@ public class Client {
 
     public void setUserIDResolver(UserIDResolver idResolver) {
         cUserIDResolver = idResolver;
+    }
+
+    public boolean isConnected() {
+        return cConnection.isConnected();
     }
 
 }

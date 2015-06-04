@@ -239,6 +239,7 @@ public class ServerThread implements Callable<Void> {
 
     protected void updateUserData(UserData data) {
         cDatabaseConnection.connect();
+        boolean success = false;
         Statement stateMent = cDatabaseConnection.query();
         String update = "";
 
@@ -259,12 +260,24 @@ public class ServerThread implements Callable<Void> {
                 stateMent.executeUpdate("UPDATE USER SET" + update.substring(1) + " WHERE ID = '" + data.getcID() + "'");
                 cDatabaseConnection.commit();
                 stateMent.close();
+                success = true;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
+        reply(success);
+
         cDatabaseConnection.disconnect();
+    }
+
+    protected void reply(boolean isSuccess) {
+        try {
+            cOutputStream.writeObject(new Reply(isSuccess));
+            cOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void reply(Data data) {

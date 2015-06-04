@@ -1,6 +1,9 @@
 package cg.group4.view.screen_mechanics;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * Abstract class which defines the base screen logic.
@@ -34,7 +37,6 @@ public abstract class ScreenLogic {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
         cPreviousScreenName = setPreviousScreenName();
-
     }
 
     /**
@@ -49,6 +51,17 @@ public abstract class ScreenLogic {
      * their styles using .setStyle().
      */
     protected abstract void rebuildWidgetGroup();
+
+    protected TextButton createBackButton() {
+        TextButton button = cGameSkin.generateDefaultMenuButton("Back");
+        button.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenStore.getInstance().setScreen(cPreviousScreenName);
+            }
+        });
+        return button;
+    }
 
     /**
      * This method defines the Screen to go back to. Simply supplying the name of the Screen is sufficient since

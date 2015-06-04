@@ -6,10 +6,21 @@ import cg.group4.rewards.Collection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class Unconnected implements Connection {
+public class Unconnected extends Thread implements Connection {
     private static final String TAG = Unconnected.class.getSimpleName();
+
+    public Unconnected() {
+        this.start();
+    }
+
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName());
+    }
+
     @Override
     public Connection connect(String ip, int port) {
+        System.out.println(Thread.currentThread().getName());
         try {
             Gdx.app.debug(TAG, "Trying to connect to the server");
             Connection connection = new Connected(ip, port);
@@ -39,5 +50,10 @@ public class Unconnected implements Connection {
     }
 
     @Override
-    public void updateUserData(UserData data) { }
+    public boolean updateUserData(UserData data) { return false; }
+
+    @Override
+    public boolean isConnected() {
+        return false;
+    }
 }

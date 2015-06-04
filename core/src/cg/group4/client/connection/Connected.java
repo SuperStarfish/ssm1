@@ -86,12 +86,23 @@ public class Connected extends Thread implements Connection {
     }
 
     @Override
-    public void updateUserData(UserData data) {
+    public boolean updateUserData(UserData data) {
+        boolean success = false;
         try {
             outputStream.writeObject(new Update(data));
             outputStream.flush();
+            Reply reply = (Reply) inputStream.readObject();
+            success = reply.iscSuccess();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        return success;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return true;
     }
 }

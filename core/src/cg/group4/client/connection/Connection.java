@@ -9,6 +9,7 @@ public interface Connection {
     Connection disconnect();
 
     Data requestUserData(String id);
-    void updateUserData(UserData data);
+    boolean updateUserData(UserData data);
     boolean updateCollection(Collection collection, UserData userData);
+    boolean isConnected();
 }

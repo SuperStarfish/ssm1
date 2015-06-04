@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -19,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -54,11 +55,13 @@ public class GameSkin extends Skin {
     /**
      * Path to the default font.
      */
-    protected String cDefaultFont = "fonts/blow.ttf";
+    protected String cDefaultFont = "fonts/BuxtonSketch.ttf";
     /**
      * Default border width.
      */
     protected int cDefaultBorderWidth = 2;
+
+    protected float cCursorWidth = 3f;
 
     /**
      * Initializes the skin.
@@ -88,6 +91,7 @@ public class GameSkin extends Skin {
         this.add("default_checkboxStyle", generateDefaultCheckboxStyle());
         this.add("default_selectboxStyle", generateDefaultSelectboxStyle());
         this.add("default_listStyle", generateDefaultListStyle());
+        this.add("default_textFieldStyle", generateDefaultTextFieldStyle());
     }
 
     /**
@@ -213,6 +217,25 @@ public class GameSkin extends Skin {
         fontParameter.color = Color.WHITE;
         fontParameter.size = (int) (cDefaultFontSize * cUiScalar);
         return cFontGenerator.generateFont(fontParameter);
+    }
+
+    protected final TextField.TextFieldStyle generateDefaultTextFieldStyle() {
+        BaseDrawable empty = new BaseDrawable();
+        BitmapFont font = this.get("default_font", BitmapFont.class);
+        Color color = Color.GREEN;
+        Drawable cursor = new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/blackpixel.jpg"))));
+        cursor.setMinWidth(cCursorWidth * cUiScalar);
+        Drawable background = new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/debugpixel.png"))));
+        TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle(font, color, cursor, background, empty);
+        return textFieldStyle;
+    }
+
+    public final TextField generateDefaultTextField(String initialText) {
+        return new TextField(initialText, getDefaultTextFieldStyle());
+    }
+
+    public final TextField.TextFieldStyle getDefaultTextFieldStyle() {
+        return this.get("default_textFieldStyle", TextField.TextFieldStyle.class);
     }
 
     /**
