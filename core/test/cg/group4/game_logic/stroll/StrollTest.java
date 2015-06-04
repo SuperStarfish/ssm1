@@ -63,21 +63,20 @@ public class StrollTest {
         verify(cStroll, never()).generatePossibleEvent();
     }
 
-//    Can not be tested because events are not yet decoupled.
-//    /**
-//     * Test the generation of an event.
-//     */
-//    @Test
-//    public void testGeneratePossibleEvent() {
-//        cStroll.cEventThreshold = 1f;
-//        cStroll.cNewEventSubject = spy(cStroll.cNewEventSubject);
-//
-//        cStroll.generatePossibleEvent();
-//
-//        assertTrue(cStroll.cEventGoing);
-//        assertNotNull(cStroll.cEvent);
-//        verify(cStroll.cNewEventSubject).update(cStroll.cEvent);
-//    }
+    /**
+     * Test the generation of an event.
+     */
+    @Test
+    public void testGeneratePossibleEvent() {
+        cStroll.cEventThreshold = 1f;
+        cStroll.cNewEventSubject = spy(cStroll.cNewEventSubject);
+
+        cStroll.generatePossibleEvent();
+
+        assertTrue(cStroll.cEventGoing);
+        assertNotNull(cStroll.cEvent);
+        verify(cStroll.cNewEventSubject).update(cStroll.cEvent);
+    }
 
     /**
      * Tests the mechanics of finishing an event.

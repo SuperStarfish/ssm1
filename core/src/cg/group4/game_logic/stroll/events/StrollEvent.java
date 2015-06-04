@@ -1,9 +1,9 @@
 package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -37,9 +37,15 @@ public abstract class StrollEvent implements Disposable, Observer {
     };
 
     /**
+     * Subject to detect label changes.
+     */
+    protected Subject cLabelSubject;
+
+    /**
      * Constructor, creates a new stroll event.
      */
     public StrollEvent() {
+        cLabelSubject = new Subject();
 
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
@@ -57,16 +63,23 @@ public abstract class StrollEvent implements Disposable, Observer {
     public abstract int getReward();
 
     /**
-     * Returns the screen to be displayed.
-     *
-     * @return the screen
-     */
-    public abstract ScreenLogic createScreen();
-
-    /**
      * Cleanup after the event.
      */
     protected abstract void clearEvent();
+
+    /**
+     * Starts the event.
+     */
+    public abstract void start();
+
+    /**
+     * Getter for the label subject. Detects label changes.
+     *
+     * @return The label subject.
+     */
+    public Subject getLabelSubject() {
+        return cLabelSubject;
+    }
 
     /**
      * Method that gets called to dispose of the event.

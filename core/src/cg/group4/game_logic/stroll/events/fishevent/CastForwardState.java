@@ -23,7 +23,7 @@ public class CastForwardState implements FishEventState {
      */
     public CastForwardState(final FishingStrollEvent event) {
         cEvent = event;
-        cEvent.cLabel.setText("Throw your hook!");
+        cEvent.setText("Throw your hook!");
     }
 
     /**
