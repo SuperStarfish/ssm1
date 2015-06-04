@@ -114,7 +114,11 @@ public abstract class Collectible implements Serializable {
 
         return res;
     }
-
+    
+    /**
+     * Returns a string representation of a collectible, including some of it's values.
+     * @return String string representation of the collectible
+     */
 	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Collectible<");

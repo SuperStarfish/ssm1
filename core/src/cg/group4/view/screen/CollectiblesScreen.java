@@ -68,8 +68,14 @@ public class CollectiblesScreen extends ScreenLogic {
 	 */
 	protected CheckBox cSortRarity;
 	
+	/**
+	 * Selectbox that contains the groups that the user is currently in.
+	 */
 	protected SelectBox<String> cGroupsBox;
 	
+	/**
+	 * Selectbox that contains all the possible sorting options.
+	 */
 	protected SelectBox<String> cSortBox;
 	
 	/**
@@ -111,7 +117,7 @@ public class CollectiblesScreen extends ScreenLogic {
 		cSortBox.setItems(def);
 		cSortBox.addListener(new ChangeListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
+			public void changed(final ChangeEvent event, final Actor actor) {
 				System.out.println("Selected Sorting: " + cSortBox.getSelected());
 			}
 		});
@@ -124,12 +130,12 @@ public class CollectiblesScreen extends ScreenLogic {
 		cGroupsBox.setItems(abc);
 		cGroupsBox.addListener(new ChangeListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
+			public void changed(final ChangeEvent event, final Actor actor) {
 				System.out.println("Selected Collection: " + cGroupsBox.getSelected());
 			}	
 		});
 		
-		cContainer.row().height(screenHeight / 10).width(screenWidth / cNumberOfTopBarItems).fill();
+		cContainer.row().height(screenHeight / cItemsOnScreen).width(screenWidth / cNumberOfTopBarItems).fill();
 		
 		cContainer.add(cBackButton).fill();
 		cContainer.add(cSortBox).fill();
@@ -178,8 +184,6 @@ public class CollectiblesScreen extends ScreenLogic {
 			cContentTable.add(cGameSkin.generateDefaultLabel("DATE"));
 			cContentTable.add(cGameSkin.generateDefaultLabel("OWNER"));
 			cContentTable.add(cGameSkin.generateDefaultLabel("GROUP"));
-	
-			//cContentTable.add(cGameSkin.generateDefaultLabel(Double.toString(c.getRarity())));
 		}
 	}
 	
