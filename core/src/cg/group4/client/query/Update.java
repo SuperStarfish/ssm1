@@ -2,13 +2,27 @@ package cg.group4.client.query;
 
 import java.io.Serializable;
 
-public class Update implements Serializable {
-    Data cData;
+/**
+ * An Update request that can be send with Data.
+ */
+public final class Update implements Serializable {
+    /**
+     * The Data to update.
+     */
+    protected Data cData;
 
-    public Update(Data data) {
+    /**
+     * Creates a new Update request using the Data supplied.
+     * @param data The Data given to update.
+     */
+    public Update(final Data data) {
         cData = data;
     }
 
+    /**
+     * Gets the data from that needs to be updated.
+     * @return The Data.
+     */
     public Data getcData() {
         return cData;
     }

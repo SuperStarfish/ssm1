@@ -1,6 +1,5 @@
 package cg.group4.database;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
@@ -8,7 +7,7 @@ import java.util.logging.Logger;
 /**
  * @author Jurgen van Schagen
  */
-public class NoConnection extends ConnectionWrapper {
+public final class NoConnection extends ConnectionWrapper {
     /**
      * Default Java logging tool. Used for logging inside the class.
      */
@@ -23,7 +22,7 @@ public class NoConnection extends ConnectionWrapper {
     public void commit() { }
 
     @Override
-    public final ConnectionWrapper openConnection() {
+    public ConnectionWrapper openConnection() {
         try {
             return new Connected();
         } catch (ClassNotFoundException e) {
@@ -35,7 +34,7 @@ public class NoConnection extends ConnectionWrapper {
     }
 
     @Override
-    public final ConnectionWrapper closeConnection() {
+    public ConnectionWrapper closeConnection() {
         return this;
     }
 }

@@ -1,6 +1,5 @@
 package cg.group4.database;
 
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,7 +9,7 @@ import java.util.logging.Logger;
  *
  * @author Jurgen van Schagen
  */
-public class DatabaseConnection {
+public final class DatabaseConnection {
     /**
      * Default Java logging tool. Used for logging inside the class.
      */
@@ -32,10 +31,13 @@ public class DatabaseConnection {
     /**
      * Asks the ConnectionWrapper to return the proper Wrapper for opening the connection.
      */
-    public final void connect() {
+    public void connect() {
         cConnection = cConnection.openConnection();
     }
 
+    /**
+     * Commits changes to the database.
+     */
     public void commit() {
         cConnection.commit();
     }
@@ -43,10 +45,15 @@ public class DatabaseConnection {
     /**
      * Asks the ConnectionWrapper to return the proper Wrapper for closing the connection.
      */
-    public final void disconnect() {
+    public void disconnect() {
         cConnection = cConnection.closeConnection();
     }
 
+    /**
+     * Returns a Statement on which queries can be executed.
+     *
+     * @return Statement for queries.
+     */
     public Statement query() {
         return cConnection.query();
     }

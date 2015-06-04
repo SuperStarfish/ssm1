@@ -19,7 +19,6 @@ import java.net.SocketException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
@@ -27,7 +26,7 @@ import java.util.logging.Logger;
 /**
  * The ServerThread interacts with the Client.
  */
-public class ServerThread implements Callable<Void> {
+public final class ServerThread implements Callable<Void> {
     /**
      * Default java logging functionality.
      */
@@ -53,6 +52,9 @@ public class ServerThread implements Callable<Void> {
      */
     protected boolean cKeepAlive = true;
 
+    /**
+     * The connection to the database. This can be a either in a connected state or no connection.
+     */
     protected DatabaseConnection cDatabaseConnection;
 
     /**
@@ -67,7 +69,7 @@ public class ServerThread implements Callable<Void> {
     }
 
     @Override
-    public final Void call() throws Exception {
+    public Void call() throws Exception {
         try {
             createStreams();
             interactWithClient();
@@ -88,7 +90,7 @@ public class ServerThread implements Callable<Void> {
      *
      * @throws IOException IOException
      */
-    protected final void createStreams() throws IOException {
+    protected void createStreams() throws IOException {
         cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
         cOutputStream.flush();
         cInputStream = new ObjectInputStream(cConnection.getInputStream());
@@ -99,7 +101,7 @@ public class ServerThread implements Callable<Void> {
      *
      * @throws IOException IOException
      */
-    protected final void cleanUp() throws IOException {
+    protected void cleanUp() throws IOException {
         String hostName = cConnection.getInetAddress().getHostName();
         cOutputStream.close();
         cInputStream.close();
@@ -110,21 +112,21 @@ public class ServerThread implements Callable<Void> {
     /**
      * This method is used for incoming messages from the client.
      */
-    protected final void interactWithClient() {
+    protected void interactWithClient() {
         do {
             try {
                 Object input = cInputStream.readObject();
-                if(input instanceof Request) {
+                if (input instanceof Request) {
                     handleRequest((Request) input);
-                } else if(input instanceof Update) {
+                } else if (input instanceof Update) {
                     handleUpdate((Update) input);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-            } catch (EOFException e){
+            } catch (EOFException e) {
                 LOGGER.severe("Lost connection with: " + cConnection.getInetAddress().getHostName());
                 cKeepAlive = false;
-            } catch (SocketException e){
+            } catch (SocketException e) {
                 LOGGER.info("Lost connection with: " + cConnection.getInetAddress().getHostName());
                 cKeepAlive = false;
             } catch (IOException e) {
@@ -133,26 +135,43 @@ public class ServerThread implements Callable<Void> {
         } while(cKeepAlive);
     }
 
-    protected void handleRequest(Request request) {
-        if(request.getcData() instanceof UserData) {
-            reply(getUserData((UserData)request.getcData()));
+    /**
+     * Handles an incoming request. Delegates to the proper Data request.
+     *
+     * @param request The request that is made.
+     */
+    protected void handleRequest(final Request request) {
+        if (request.getcData() instanceof UserData) {
+            reply(getUserData((UserData) request.getcData()));
         }
     }
 
-    protected void handleUpdate(Update update) {
+    /**
+     * Handles an incoming update. Delegates to the proper Data update.
+     *
+     * @param update The update that is made.
+     */
+    protected void handleUpdate(final Update update) {
         Data data = update.getcData();
-        if(data instanceof UserData) {
+        if (data instanceof UserData) {
             updateUserData((UserData) data);
-        } else if(data instanceof CollectionWrapper) {
+        } else if (data instanceof CollectionWrapper) {
             CollectionWrapper wrapper = (CollectionWrapper) data;
             updateCollection(wrapper.getcCollection(), wrapper.getcUserData().getcID());
         }
     }
 
-    protected void updateCollection(Collection collection, String userID) {
+    /**
+     * Updates the collection for a user. Tries to see if Collectible already exists. In that case call update.
+     * Otherwise call insert. Sends a reply if success or not.
+     *
+     * @param collection The new entries in the Collection.
+     * @param userID The userID on which to add the Collectibles.
+     */
+    protected void updateCollection(final Collection collection, final String userID) {
         boolean success = true;
         Iterator iterator = collection.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Collectible collectible = (Collectible) iterator.next();
 
             int amount = getCollectible(collectible, userID);
@@ -167,7 +186,6 @@ public class ServerThread implements Callable<Void> {
             }
         }
 
-
         try {
             cOutputStream.writeObject(new Reply(success));
             cOutputStream.flush();
@@ -176,29 +194,46 @@ public class ServerThread implements Callable<Void> {
         }
     }
 
-    protected void insertCollectible(Collectible collectible, String userID) throws SQLException {
+    /**
+     * Inserts a new Collectible in the database.
+     *
+     * @param collectible The collectible to add.
+     * @param userID The user to give the collectible to.
+     * @throws SQLException If something went wrong with the database.
+     */
+    protected void insertCollectible(final Collectible collectible, final String userID) throws SQLException {
         cDatabaseConnection.connect();
         try {
             Statement statement = cDatabaseConnection.query();
-            statement.executeUpdate("INSERT INTO Collectible (OwnerID, Type, WaveLength, Amount, Date, GroupID) VALUES ('" +
-                    userID + "', '" + collectible.getClass().getSimpleName() + "', " + collectible.getcWavelength() + ", " +
-                    collectible.getAmount() + ", '" + collectible.getDateAsString() + "', '" + userID + "')");
+            statement.executeUpdate("INSERT INTO Collectible (OwnerID, Type, WaveLength, Amount, Date, GroupID) "
+                    + "VALUES ('" + userID + "', '" + collectible.getClass().getSimpleName() + "', "
+                    + collectible.getcWavelength() + ", " + collectible.getAmount() + ", '"
+                    + collectible.getDateAsString() + "', '" + userID + "')");
             cDatabaseConnection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             throw e;
         }
         cDatabaseConnection.disconnect();
     }
 
-    protected void updateCollectible(Collectible collectible, String userID, int extra) throws SQLException {
+    /**
+     * Updates the amount of the collectible to the database.
+     *
+     * @param collectible The collectible to update.
+     * @param userID The user to update the collectible for.
+     * @param extra The amount already in the database.
+     * @throws SQLException Something went wrong while updating.
+     */
+    protected void updateCollectible(final Collectible collectible, final String userID,
+                                     final int extra) throws SQLException {
+
         cDatabaseConnection.connect();
 
         try {
             Statement statement = cDatabaseConnection.query();
 
-            String rowToUpdate = "GroupId = '" + userID + "' AND Type = '"+collectible.getClass().getSimpleName()+"'" +
-                    " AND WaveLength = " + collectible.getcWavelength();
+            String rowToUpdate = "GroupId = '" + userID + "' AND Type = '" + collectible.getClass().getSimpleName()
+                    + "'  AND WaveLength = " + collectible.getcWavelength();
 
             statement.executeUpdate("UPDATE Collectible SET Amount = " + (collectible.getAmount() + extra) + " WHERE "
                     + rowToUpdate);
@@ -213,16 +248,23 @@ public class ServerThread implements Callable<Void> {
         cDatabaseConnection.disconnect();
     }
 
-    protected int getCollectible(Collectible collectible, String ownerID) {
+    /**
+     * Returns the amount of this collectible for that user. Returns -1 when not found.
+     *
+     * @param collectible The collectible to find.
+     * @param ownerID The owner of the collectible.
+     * @return The amount found.
+     */
+    protected int getCollectible(final Collectible collectible, final String ownerID) {
         cDatabaseConnection.connect();
         int result = -1;
         try {
             Statement statement = cDatabaseConnection.query();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Collectible WHERE " +
-                    "GroupID = '" + ownerID + "' AND " + "Type = '" + collectible.getClass().getSimpleName() + "'" +
-                    "AND WaveLength = '" + collectible.getcWavelength() + "'");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Collectible WHERE "
+                    + "GroupID = '" + ownerID + "' AND " + "Type = '" + collectible.getClass().getSimpleName() + "'"
+                    + "AND WaveLength = '" + collectible.getcWavelength() + "'");
 
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 result = resultSet.getInt("Amount");
             }
 
@@ -237,7 +279,11 @@ public class ServerThread implements Callable<Void> {
 
     }
 
-    protected void updateUserData(UserData data) {
+    /**
+     * Updates the users data. Updates all values that are not null/0 (except ID).
+     * @param data The data to update.
+     */
+    protected void updateUserData(final UserData data) {
         cDatabaseConnection.connect();
         boolean success = false;
         Statement stateMent = cDatabaseConnection.query();
@@ -255,9 +301,10 @@ public class ServerThread implements Callable<Void> {
             update += ", Stroll = " + data.getcStrollTimeStamp();
         }
 
-        if(!update.equals("")) {
+        if (!update.equals("")) {
             try {
-                stateMent.executeUpdate("UPDATE USER SET" + update.substring(1) + " WHERE ID = '" + data.getcID() + "'");
+                stateMent.executeUpdate("UPDATE USER SET" + update.substring(1) + " WHERE ID = '"
+                        + data.getcID() + "'");
                 cDatabaseConnection.commit();
                 stateMent.close();
                 success = true;
@@ -271,7 +318,12 @@ public class ServerThread implements Callable<Void> {
         cDatabaseConnection.disconnect();
     }
 
-    protected void reply(boolean isSuccess) {
+    /**
+     * Sends a reply with successful or not.
+     *
+     * @param isSuccess If it was successful or not.
+     */
+    protected void reply(final boolean isSuccess) {
         try {
             cOutputStream.writeObject(new Reply(isSuccess));
             cOutputStream.flush();
@@ -280,7 +332,12 @@ public class ServerThread implements Callable<Void> {
         }
     }
 
-    protected void reply(Data data) {
+    /**
+     * Sends a reply that contains the data that is requested.
+     *
+     * @param data The data to reply to the client.
+     */
+    protected void reply(final Data data) {
         try {
             cOutputStream.writeObject(new Reply(data));
             cOutputStream.flush();
@@ -289,11 +346,18 @@ public class ServerThread implements Callable<Void> {
         }
     }
 
-    protected UserData getUserData(UserData data) {
+    /**
+     * Gets the userdata from the database and returns the same object back to the client.
+     *
+     * @param data The users data. Only ID is used.
+     * @return Complete UserData with all info.
+     */
+    protected UserData getUserData(final UserData data) {
         cDatabaseConnection.connect();
         try {
             Statement stateMent = cDatabaseConnection.query();
-            ResultSet resultSet = stateMent.executeQuery("SELECT * FROM USER WHERE ID = '"+ data.getcID() +"' LIMIT 1");
+            ResultSet resultSet = stateMent.executeQuery("SELECT * FROM USER WHERE ID = '" + data.getcID()
+                    + "' LIMIT 1");
 
             while (resultSet.next()) {
                 data.setcID(resultSet.getString("ID"));

@@ -2,37 +2,75 @@ package cg.group4.client.query;
 
 import java.io.Serializable;
 
-public class Reply implements Serializable{
+/**
+ * Reply given between client and server. This should only be given when a request or update is done.
+ */
+public final class Reply implements Serializable {
+    /**
+     * The data to reply.
+     */
     protected Data cData;
 
+    /**
+     * If the request or update was successful.
+     */
     protected boolean cSuccess;
 
-    public Reply(Data data) {
+    /**
+     * A new Reply that only contains Data.
+     * @param data The Data to reply.
+     */
+    public Reply(final Data data) {
         cData = data;
     }
 
-    public Reply(Data data, boolean success) {
+    /**
+     * A new reply with both Data and successful or not.
+     * @param data The Data to reply.
+     * @param success If the request was successful or not.
+     */
+    public Reply(final Data data, final boolean success) {
         cData = data;
         cSuccess = success;
     }
 
-    public Reply(boolean success) {
+    /**
+     * A new reply with only if it was successful or not.
+     * @param success If the request was successful or not.
+     */
+    public Reply(final boolean success) {
         cSuccess = success;
     }
 
+    /**
+     * Gets the data from the object.
+     * @return The data stored in the object.
+     */
     public Data getcData() {
         return cData;
     }
 
-    public void setcData(Data data) {
+    /**
+     * Sets the data to the new Data.
+     * @param data The new Data that can be transmitted.
+     */
+    public void setcData(final Data data) {
         cData = data;
     }
 
+    /**
+     * Gets if the request was successful or not.
+     * @return Successful or not.
+     */
     public boolean iscSuccess() {
         return cSuccess;
     }
 
-    public void setcSuccess(boolean success) {
+    /**
+     * Sets the success to the new boolean.
+     * @param success Successful or not.
+     */
+    public void setcSuccess(final boolean success) {
         cSuccess = success;
     }
 }

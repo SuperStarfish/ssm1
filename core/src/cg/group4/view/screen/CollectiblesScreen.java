@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import cg.group4.rewards.CollectibleDrawer;
 import cg.group4.rewards.Collection;
 import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.rewards.collectibles.FishA;
-import cg.group4.rewards.collectibles.FishB;
-import cg.group4.rewards.collectibles.FishC;
 import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
 import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -26,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 /**
  * Screen to be displayed when pressing the "Collection" button on the home screen.
  */
-public class CollectiblesScreen extends ScreenLogic {
+public final class CollectiblesScreen extends ScreenLogic {
 	
 	/**
 	 * cContentTable contains the collectibles of the collection.

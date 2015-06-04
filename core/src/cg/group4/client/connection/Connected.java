@@ -16,17 +16,41 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-
-public class Connected extends Thread implements Connection {
+/**
+ * A state in which the Client is connected to the server.
+ */
+public final class Connected extends Thread implements Connection {
+    /**
+     * The connection with the server.
+     */
     protected Socket cConnection;
 
+    /**
+     * InputStream for objects from the server.
+     */
     protected ObjectInputStream inputStream;
 
+    /**
+     * OutputStream for objects to the server.
+     */
     protected ObjectOutputStream outputStream;
 
-    public Connected(String ip, int port) throws GdxRuntimeException {
+    /**
+     * How long to try and wait for the connection to the server to be made.
+     * Time is in milliseconds.
+     */
+    protected final int connectionTimeOut = 7000;
+
+    /**
+     * Attempts to create a new connection with the server. Fails after connectionTimeOut milliseconds.
+     *
+     * @param ip The IP to connect to.
+     * @param port The port to connect to.
+     * @throws GdxRuntimeException Connection could not be established.
+     */
+    public Connected(final String ip,  final int port) throws GdxRuntimeException {
         SocketHints hints = new SocketHints();
-        hints.connectTimeout = 7000;
+        hints.connectTimeout = connectionTimeOut;
         cConnection = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, hints);
         try {
             outputStream = new ObjectOutputStream(cConnection.getOutputStream());
@@ -38,7 +62,7 @@ public class Connected extends Thread implements Connection {
     }
 
     @Override
-    public Connection connect(String ip, int port) {
+    public Connection connect(final String ip, final int port) {
         return this;
     }
 
@@ -48,14 +72,14 @@ public class Connected extends Thread implements Connection {
             outputStream.close();
             inputStream.close();
             cConnection.dispose();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return new Unconnected();
     }
 
     @Override
-    public UserData requestUserData(String id) {
+    public UserData requestUserData(final String id) {
         try {
             outputStream.writeObject(new Request(new UserData(id)));
             outputStream.flush();
@@ -70,7 +94,7 @@ public class Connected extends Thread implements Connection {
     }
 
     @Override
-    public boolean updateCollection(Collection collection, UserData userData) {
+    public boolean updateCollection(final Collection collection, final UserData userData) {
         try {
             outputStream.writeObject(new Update(new CollectionWrapper(collection, userData)));
             outputStream.flush();
@@ -86,7 +110,7 @@ public class Connected extends Thread implements Connection {
     }
 
     @Override
-    public boolean updateUserData(UserData data) {
+    public boolean updateUserData(final UserData data) {
         boolean success = false;
         try {
             outputStream.writeObject(new Update(data));

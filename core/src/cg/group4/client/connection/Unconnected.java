@@ -6,12 +6,22 @@ import cg.group4.rewards.Collection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class Unconnected extends Thread implements Connection {
+/**
+ * Connection state where no connection is made with the server.
+ */
+public final class Unconnected extends Thread implements Connection {
+    /**
+     * TAG used for logging.
+     */
     private static final String TAG = Unconnected.class.getSimpleName();
 
+    /**
+     * Creates a new unconnected state.
+     */
     public Unconnected() {
         this.start();
     }
+
 
     @Override
     public void run() {
@@ -19,7 +29,7 @@ public class Unconnected extends Thread implements Connection {
     }
 
     @Override
-    public Connection connect(String ip, int port) {
+    public Connection connect(final String ip, final int port) {
         System.out.println(Thread.currentThread().getName());
         try {
             Gdx.app.debug(TAG, "Trying to connect to the server");
@@ -40,17 +50,17 @@ public class Unconnected extends Thread implements Connection {
     }
 
     @Override
-    public NoReply requestUserData(String id) {
+    public NoReply requestUserData(final String id) {
         return new NoReply("Not connected to the server!");
     }
 
     @Override
-    public boolean updateCollection(Collection collection, UserData userData) {
+    public boolean updateCollection(final Collection collection, final UserData userData) {
         return false;
     }
 
     @Override
-    public boolean updateUserData(UserData data) { return false; }
+    public boolean updateUserData(final UserData data) { return false; }
 
     @Override
     public boolean isConnected() {

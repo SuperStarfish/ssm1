@@ -23,7 +23,15 @@ public abstract class ConnectionWrapper {
      */
     public abstract ConnectionWrapper closeConnection();
 
+    /**
+     * Commits changes to the database, since Autocommit = false.
+     */
     public abstract void commit();
 
+    /**
+     * Returns a Statement on which queries can be executed.
+     *
+     * @return Statement for queries.
+     */
     public abstract Statement query();
 }

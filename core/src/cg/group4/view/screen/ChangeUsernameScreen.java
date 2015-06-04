@@ -11,11 +11,31 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
-public class ChangeUsernameScreen extends ScreenLogic{
-    Table cTable;
-    TextButton cSave, cBack;
-    TextField cUsername;
-    Label cMessage;
+/**
+ * Screen where the user can change his username.
+ */
+public final class ChangeUsernameScreen extends ScreenLogic {
+
+    /**
+     * Table used for layout purposes.
+     */
+    protected Table cTable;
+
+    /**
+     * Buttons seen on the screen.
+     */
+    protected TextButton cSave, cBack;
+
+    /**
+     * TextField where the user can change his username.
+     */
+    protected TextField cUsername;
+
+    /**
+     * Label containing messages if the update was successful or not.
+     */
+    protected Label cMessage;
+
     @Override
     protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
@@ -42,11 +62,16 @@ public class ChangeUsernameScreen extends ScreenLogic{
         return cTable;
     }
 
+    /**
+     * Tries to update the username in the server. Changes the visible message into a new message that
+     * shows if it was successful or not.
+     * @return New listener that is fired when clicked.
+     */
     protected ChangeListener saveBehaviour() {
         return new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if(Client.getInstance().updateUsername(cUsername.getText())) {
+            public void changed(final ChangeEvent event, final Actor actor) {
+                if (Client.getInstance().updateUsername(cUsername.getText())) {
                     cMessage.setText("Succes!");
                 } else {
                     cMessage.setText("Something went wrong!");

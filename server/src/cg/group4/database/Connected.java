@@ -2,7 +2,6 @@ package cg.group4.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
@@ -12,7 +11,7 @@ import java.util.logging.Logger;
  * Throws an exception if Connection could not be created in the constructor.
  * @author Jurgen van Schagen
  */
-public class Connected extends ConnectionWrapper {
+public final class Connected extends ConnectionWrapper {
     /**
      * Default Java logging tool. Used for logging inside the class.
      */
@@ -45,6 +44,11 @@ public class Connected extends ConnectionWrapper {
         }
     }
 
+    /**
+     * Returns a Statement on which queries can be executed.
+     *
+     * @return Statement for queries.
+     */
     public Statement query() {
         try {
             return cConnection.createStatement();
@@ -57,12 +61,12 @@ public class Connected extends ConnectionWrapper {
 
 
     @Override
-    public final ConnectionWrapper openConnection() {
+    public ConnectionWrapper openConnection() {
         return this;
     }
 
     @Override
-    public final ConnectionWrapper closeConnection() {
+    public ConnectionWrapper closeConnection() {
         try {
             cConnection.close();
             LOGGER.info("Successfully disconnected from the database.");

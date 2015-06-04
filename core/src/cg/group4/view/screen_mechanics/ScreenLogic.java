@@ -52,11 +52,15 @@ public abstract class ScreenLogic {
      */
     protected abstract void rebuildWidgetGroup();
 
-    protected TextButton createBackButton() {
+    /**
+     * Creates a new back button including functionality when clicked.
+     * @return A new button to go back to the previous screen.
+     */
+    protected final TextButton createBackButton() {
         TextButton button = cGameSkin.generateDefaultMenuButton("Back");
         button.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 ScreenStore.getInstance().setScreen(cPreviousScreenName);
             }
         });

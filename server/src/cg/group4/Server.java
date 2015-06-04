@@ -57,6 +57,9 @@ public class Server {
      */
     protected ExecutorService cPool;
 
+    /**
+     * Used to make calls to static methods. Primarily used for mocking in tests.
+     */
     protected StaticsCaller cStaticsCaller;
 
     /**
