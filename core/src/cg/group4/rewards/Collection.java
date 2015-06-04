@@ -15,14 +15,21 @@ import java.util.Observer;
 public class Collection extends HashSet<Collectible> implements Observer, Serializable {
 
     /**
-     * Constructs a HashSet collection to store collectibles gained by the player.
+     * Identifier of the collection.
      */
-	public Collection() {
+    protected String cId;
+
+    /**
+     * Constructs a HashSet collection to store collectibles gained by the player.
+     * @param id Identifier of the collection.
+     */
+	public Collection(final String id) {
         super();
+        cId = id;
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         if (arg instanceof Collectible) {
             this.add((Collectible) arg);
         }
@@ -46,6 +53,14 @@ public class Collection extends HashSet<Collectible> implements Observer, Serial
         }
         sb.append(">");
         return sb.toString();
+    }
+
+    /**
+     * Returns the identifier of this collection.
+     * @return identifier
+     */
+    public String getId() {
+        return cId;
     }
 
 }

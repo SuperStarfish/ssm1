@@ -21,7 +21,7 @@ public abstract class Collectible implements Serializable {
 	/**
 	 * Most recent date on which a collectible of a certain kind (colour and form) has been obtained.
 	 */
-	protected Date cData;
+	protected Date cDate;
 	
 	/**
 	 * Amount of collectibles that you have of the same kind. (Same colour and form)
@@ -105,12 +105,10 @@ public abstract class Collectible implements Serializable {
 		final int minWaveLength = 380;
 		final int maxWaveLength = 780;
 
-        // clamp lower bound
+        // clamp lower & upper bounds
         if (waveLength < minWaveLength) {
             res = minWaveLength;
-        }
-        // clamp upper bound
-        else if (waveLength > maxWaveLength) {
+        } else if (waveLength > maxWaveLength) {
             res = maxWaveLength;
         }
 
