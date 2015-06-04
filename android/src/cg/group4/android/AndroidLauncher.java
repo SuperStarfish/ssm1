@@ -13,17 +13,17 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
  */
 public class AndroidLauncher extends AndroidApplication {
 
-	/**
-	 * System sensor service of Android. Used for the accelerometer.
-	 */
-	protected SensorManager cSensorManager;
-	
-	@Override
-	protected final void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useWakelock = true;
+    /**
+     * System sensor service of Android. Used for the accelerometer.
+     */
+    protected SensorManager cSensorManager;
+
+    @Override
+    protected final void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        config.useWakelock = true;
         initialize(new Launcher(
                         new AndroidAccelerationStatus(cSensorManager),
                         new AndroidNotificationController(this)),

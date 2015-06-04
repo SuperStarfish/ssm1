@@ -5,7 +5,7 @@ package cg.group4.util.notification;
  */
 public class DesktopNotificationController implements NotificationController {
     @Override
-    public void scheduleNotification(Long time) {
+    public void scheduleNotification(final Long time) {
 
     }
 }

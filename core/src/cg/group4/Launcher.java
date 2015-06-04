@@ -51,7 +51,8 @@ public class Launcher extends Game {
 
     /**
      * Tunnels the acceleration status through the launcher to the android project.
-     * @param accelerationStatus The movement status of the player.
+     *
+     * @param accelerationStatus     The movement status of the player.
      * @param notificationController The notification controller.
      */
     public Launcher(final AccelerationStatus accelerationStatus, final NotificationController notificationController) {
