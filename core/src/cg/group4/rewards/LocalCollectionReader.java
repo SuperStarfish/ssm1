@@ -32,6 +32,14 @@ public class LocalCollectionReader implements CollectionReader {
         cLocalFile = "starfish.save";
     }
 
+    /**
+     * Initialization of the local collection reader.
+     * @param saveFileName name of the file from which the collection game save will be read.
+     */
+    public LocalCollectionReader(final String saveFileName) {
+        cLocalFile = saveFileName;
+    }
+
     @Override
     public Collection read() {
 
@@ -68,12 +76,16 @@ public class LocalCollectionReader implements CollectionReader {
             try {
                 byteArrayInputStream.close();
                 inputStream.close();
-            } catch (Exception e) {}
+            } catch (Exception e) { }
         }
 
         return res;
     }
 
+    /**
+     * Helper method to write raw bytes to a file.
+     * @return raw data read from cLocalFile
+     */
     private byte[] readByteFile() {
         FileHandle fileHandle;
         byte[] res = null;

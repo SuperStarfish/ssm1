@@ -41,6 +41,18 @@ public class LocalCollectionStorer implements CollectionStorer {
         cLocalFile = "starfish.save";
     }
 
+    /**
+     * Initializes local collection storer.
+     * The local collection storer stores a collection object as a serialized save file.
+     * Uses the java built in ObjectOutputStream for this purpose.
+     * @param collection collection to be serialized and store to a save file
+     * @param saveFileName name of the file to which the collection game save will be written.
+     */
+    public LocalCollectionStorer(final Collection collection, final String saveFileName) {
+        cCollection = collection;
+        cLocalFile = saveFileName;
+    }
+
     @Override
     public void store() {
         serialize(cCollection);
@@ -70,12 +82,15 @@ public class LocalCollectionStorer implements CollectionStorer {
             try {
                 byteArrayOutputStream.close();
                 outputStream.close();
-            }
-            catch (Exception e) {}
+            } catch (Exception e) { }
         }
     }
 
-    private void writeByteFile(byte[] bytes) {
+    /**
+     * Helper method to write raw bytes to a file.
+     * @param bytes raw data to be written
+     */
+    private void writeByteFile(final byte[] bytes) {
         FileHandle fileHandle = null;
         try {
             fileHandle = CollectionUtil.localFileHandle(cLocalFile);
