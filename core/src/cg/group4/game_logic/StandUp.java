@@ -25,7 +25,7 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static final StandUp INSTANCE = new StandUp();
+    protected static StandUp INSTANCE = new StandUp();
 
     /**
      * Stroll logic.
@@ -50,7 +50,7 @@ public final class StandUp {
     /**
      * Instantiate StandUp and TimeKeeper.
      */
-    private StandUp() {
+    protected StandUp() {
         cUpdateSubject = new Subject();
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
@@ -63,6 +63,13 @@ public final class StandUp {
      */
     public static StandUp getInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * Resets the singleton, testing perposes.
+     */
+    public static void reset() {
+        INSTANCE = new StandUp();
     }
 
     /**
