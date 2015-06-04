@@ -95,6 +95,9 @@ project(":android") {
         // currently for the AccelLibAndroid; but possibly for other libraries in the future.
         // notice this is only added as dependency for the android module
         compile fileTree(dir: 'libs', include: '*.jar')
+
+        // android support library
+        compile "com.android.support:support-v4:20.0.0"
     }
 }
 
