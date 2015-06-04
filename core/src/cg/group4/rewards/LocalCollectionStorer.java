@@ -41,7 +41,7 @@ public class LocalCollectionStorer implements CollectionStorer {
     public void store() {
 
         try {
-            serialize(cCollection, CollectionUtil.getLocalFile(cLocalFile));
+            serialize(cCollection, CollectionUtil.localFile(cLocalFile));
             Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
         } catch (LocalStoreUnavailableException e) {
             e.printStackTrace();
@@ -55,22 +55,25 @@ public class LocalCollectionStorer implements CollectionStorer {
      * @param fileStorage path to local save file.
      */
     private void serialize(final Collection collection, final String fileStorage) {
-        FileOutputStream fileOutputStream;
-        ObjectOutputStream outputStream;
+        FileOutputStream fileOutputStream = null;
+        ObjectOutputStream outputStream = null;
 
         try {
             fileOutputStream = new FileOutputStream(new File(fileStorage));
             outputStream = new ObjectOutputStream(fileOutputStream);
             outputStream.writeObject(collection);
-
-            outputStream.close();
-            fileOutputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (ObjectStreamException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                fileOutputStream.close();
+                outputStream.close();
+            }
+            catch (Exception e) {}
         }
     }
 

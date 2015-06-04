@@ -34,7 +34,7 @@ public class LocalCollectionReader implements CollectionReader {
         Collection res = null;
 
         try {
-            res = deserialize(CollectionUtil.getLocalFile(cLocalFile));
+            res = deserialize(CollectionUtil.localFile(cLocalFile));
             Gdx.app.log(cTag, "Reading save file from: " + Gdx.files.getLocalStoragePath() + cLocalFile);
         } catch (LocalStoreUnavailableException e) {
             e.printStackTrace();

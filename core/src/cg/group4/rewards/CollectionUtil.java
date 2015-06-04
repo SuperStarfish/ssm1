@@ -24,7 +24,7 @@ public final class CollectionUtil {
      * @return String representation of the local storage location based on the local storage path from Libgdx.
      * @see {@link com.badlogic.gdx.Gdx}
      */
-    public static String getLocalFile(final String localFile) throws LocalStoreUnavailableException {
+    public static String localFile(final String localFile) throws LocalStoreUnavailableException {
         if (!isLocalStorageAvailable()) {
             throw new LocalStoreUnavailableException();
         }
