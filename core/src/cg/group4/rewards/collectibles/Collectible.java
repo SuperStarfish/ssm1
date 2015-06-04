@@ -30,13 +30,6 @@ public abstract class Collectible implements Serializable {
 	protected int cAmount;
 	
 	/**
-	 * Multiplier that represents the rarity of this form of collectible.
-	 * (The higher multiplier, the more rare this form becomes and thus the more rare
-	 * this collectible becomes)
-	 */
-	protected double cFormMultiplier;
-	
-	/**
 	 * Constructs a collectible.
      * The constructed collectible will be based on its shape (the implementing class) and a colour (specified here).
 	 * @param hue representing the colour of the collectible
@@ -65,7 +58,7 @@ public abstract class Collectible implements Serializable {
 	 * @return Date representing the date on which the collectible was obtained.
 	 */
 	public Date getDate() {
-		return null;
+		return cDate;
 	}
 	
 	/**
@@ -73,7 +66,7 @@ public abstract class Collectible implements Serializable {
 	 * @return Double representing the rarity of the collectible.
 	 */
 	public double getRarity() {
-		return cHue;
+		return getFormRarity() * cHue;
 	}
 	
 	/**
@@ -82,7 +75,7 @@ public abstract class Collectible implements Serializable {
 	 * @return Int representing the amount of collectibles of this type that you have.
 	 */
 	public int getAmount() {
-		return 0;
+		return cAmount;
 	}
 	
 	/**
@@ -100,9 +93,9 @@ public abstract class Collectible implements Serializable {
 	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Collectible<");
-		sb.append("wavelength = ").append(cHue).append(", ");
+		sb.append("hue = ").append(cHue).append(", ");
 		sb.append("amount = ").append(getAmount()).append(", ");
-		sb.append("form multiplier = ").append(getFormRarity());
+		sb.append("form rarity = ").append(getFormRarity());
 		sb.append(">");
         return sb.toString();
     }
