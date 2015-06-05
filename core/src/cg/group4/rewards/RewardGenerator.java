@@ -71,11 +71,12 @@ public class RewardGenerator {
 	 * @return Collectible object.
 	 */
 	public final Collectible generateCollectible(final int eventScore) {
-		Collectible mostValuable = generateOneCollectible();
+		Collectible mostValuable = null;
+		double mostRare = -Double.MAX_VALUE;
 		
-		for (int i = 0; i < eventScore - 1; i++) {
+		for (int i = 0; i < eventScore; i++) {
 			Collectible c = generateOneCollectible();
-			if (c.getRarity() > mostValuable.getRarity()) {
+			if (c.getRarity() >= mostRare) {
 				mostValuable = c;
 			}
 		}
