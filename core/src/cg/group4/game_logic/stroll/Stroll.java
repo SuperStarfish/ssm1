@@ -24,11 +24,14 @@ public class Stroll implements Observer {
      * The base threshold used for generating events.
      */
     protected static final double BASE_THRESHOLD = 0.002;
+
     /**
      * Tag used for debugging.
      */
     private static final String TAG = Stroll.class.getSimpleName();
 
+
+    protected double cEventThreshold;
     /**
      * Amount of rewards collected.
      */
@@ -67,6 +70,15 @@ public class Stroll implements Observer {
             }
         }
     };
+
+    protected Observer cUpdateMovementObserver = new Observer() {
+
+        @Override
+        public void update(final Observable o, final Object arg) {
+            cEventThreshold = BASE_THRESHOLD * getAmplifier((AccelerationState) arg);
+        }
+    };
+
     /**
      * Subject for new event.
      */
@@ -84,16 +96,20 @@ public class Stroll implements Observer {
         Gdx.app.log(TAG, "Started new stroll");
         cRewards = 0;
         cEventGoing = false;
+        cEventThreshold = BASE_THRESHOLD;
         cFinished = false;
         cEndStrollSubject = new Subject();
         cNewEventSubject = new Subject();
         cEndEventSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
+        StandUp.getInstance().getAccelerationStatus().getSubject().addObserver(cUpdateMovementObserver);
 
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
+
         cStrollTimer.reset();
+
 
     }
 
@@ -110,9 +126,7 @@ public class Stroll implements Observer {
      */
     protected final void generatePossibleEvent() {
         Random rnd = new Random();
-        double eventThreshold = getAmplifier(StandUp.getInstance().getAccelerationStatus().
-                getAccelerationState()) * BASE_THRESHOLD;
-        if (rnd.nextDouble() < eventThreshold) {
+        if (rnd.nextDouble() < cEventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
             switch(chosenEvent) {
@@ -195,7 +209,7 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public final Subject getNewEventSubject() {
+    public final Subject getNewEventSubject(){
         return cNewEventSubject;
     }
 

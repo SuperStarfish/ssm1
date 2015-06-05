@@ -46,7 +46,7 @@ public final class StandUp {
      * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
-    
+
     /**
      * Keeps track of the amount of movement during the game.
      */
@@ -139,20 +139,12 @@ public final class StandUp {
     public SensorReader getSensorReader() {
         return cSensorReader;
     }
-    
-    /**
-     * Sets the accelerationstatus of Standup.
-     * @param accelerationStatus Accelerationstatus representing the movement.
-     */
-    public void setAccelerationStatus(final AccelerationStatus accelerationStatus) {
-        this.cAccelerationStatus = accelerationStatus;
+
+    public void setAccelerationStatus(AccelerationStatus status) {
+        cAccelerationStatus = status;
     }
-    
-    /**
-     * Returns the accelerationstatus of the game.
-     * @return Accelerationstatus representing the movement.
-     */
+
     public AccelerationStatus getAccelerationStatus() {
-        return this.cAccelerationStatus;
+        return cAccelerationStatus;
     }
 }

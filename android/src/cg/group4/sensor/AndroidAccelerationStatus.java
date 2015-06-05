@@ -3,6 +3,7 @@ package cg.group4.sensor;
 import android.hardware.SensorManager;
 import cg.group4.util.sensors.AccelerationState;
 import cg.group4.util.sensors.AccelerationStatus;
+import cg.group4.util.subscribe.Subject;
 import com.accellibandroid.Creator;
 import com.accellibandroid.MovementEventListener;
 import com.accellibandroid.Utilities.Movement;
@@ -29,6 +30,8 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
      */
     protected Creator cCreator;
 
+    protected Subject cUpdateMovementSubject;
+
     /**
      *  State to return to the application (which will be obtained from the accel library android).
      */
@@ -40,6 +43,7 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
      */
     public AndroidAccelerationStatus(final SensorManager sensorManager) {
         cSensorManager = sensorManager;
+        cUpdateMovementSubject = new Subject();
         init();
     }
 
@@ -60,6 +64,12 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
         return cAccelerationState;
     }
 
+    @Override
+    public Subject getSubject() {
+        return cUpdateMovementSubject;
+    }
+
+
     /**
      * Event listener for the accelerometer.
      * @param movement Amount of movement.
@@ -69,15 +79,20 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
         if (movement.name().equals("WALKING")) {
             Gdx.app.debug(tag, "You are walking!");
             cAccelerationState = AccelerationState.WALKING;
+            cUpdateMovementSubject.update(AccelerationState.WALKING);
         } else if (movement.name().equals("RUNNING")) {
             Gdx.app.debug(tag, "You are running!");
             cAccelerationState = AccelerationState.RUNNING;
+            cUpdateMovementSubject.update(AccelerationState.RUNNING);
         } else if (movement.name().equals("CHEATING")) {
             Gdx.app.debug(tag, "You are impossible!");
             cAccelerationState = AccelerationState.CHEATING;
+            cUpdateMovementSubject.update(AccelerationState.CHEATING);
         } else {
             Gdx.app.debug(tag, "You are resting!");
             cAccelerationState = AccelerationState.RESTING;
+            cUpdateMovementSubject.update(AccelerationState.RESTING);
+
         }
     }
 }
