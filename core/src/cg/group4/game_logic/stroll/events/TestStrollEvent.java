@@ -127,7 +127,7 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Clears the current event.
      */
-    public final void clearEvent() {
+    public void clearEvent() {
         super.dispose();
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
@@ -189,7 +189,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final void update(final Observable o, final Object arg) {
+    public void update(final Observable o, final Object arg) {
         Vector3 readings = cAccelMeter.update();
         //Done outside of the if to keep the resulting readings relevant. Needs testing
         if (!cDelayNewInput) {
