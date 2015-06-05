@@ -1,6 +1,8 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.util.timer.TimerStore;
+import cg.group4.util.timer.Timer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
