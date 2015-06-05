@@ -7,8 +7,10 @@ import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+
 import com.badlogic.gdx.Gdx;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -28,9 +30,9 @@ public class Stroll implements Observer {
     private static final String TAG = Stroll.class.getSimpleName();
 
     /**
-     * Amount of rewards collected.
+     * Score of each completed event.
      */
-    protected int cRewards;
+    protected ArrayList<Integer> cRewards;
     /**
      * The chance of an event happening this second.
      */
@@ -84,7 +86,7 @@ public class Stroll implements Observer {
      */
     public Stroll() {
         Gdx.app.log(TAG, "Started new stroll");
-        cRewards = 0;
+        cRewards = new ArrayList<Integer>();
         cEventGoing = false;
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
@@ -140,7 +142,7 @@ public class Stroll implements Observer {
 
         cEndEventSubject.update(rewards);
 
-        cRewards += rewards;
+        cRewards.add(rewards);
         cEvent = null;
         cEventGoing = false;
 

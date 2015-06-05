@@ -1,6 +1,7 @@
 package cg.group4.desktop;
 
 import cg.group4.Launcher;
+import cg.group4.client.DesktopIDResolver;
 import cg.group4.sensor.DesktopAccelerationStatus;
 import cg.group4.util.notification.DesktopNotificationController;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -29,7 +30,8 @@ public class DesktopLauncher {
 
         new LwjglApplication(new Launcher(
                 new DesktopAccelerationStatus(),
-                new DesktopNotificationController()),
+                new DesktopNotificationController(),
+                new DesktopIDResolver()),
                 config);
 
     }

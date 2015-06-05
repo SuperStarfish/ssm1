@@ -84,15 +84,14 @@ public class StrollTest {
     @Test
     public void testEventFinished() {
         cStroll.cEndEventSubject = spy(cStroll.cEndEventSubject);
-        final int bonusRewards = 5;
-        int rewards = cStroll.cRewards;
+        int numberOfRewards = cStroll.cRewards.size();
 
-        cStroll.eventFinished(bonusRewards);
+        cStroll.eventFinished(2);
 
-        verify(cStroll.cEndEventSubject).update(bonusRewards);
+        verify(cStroll.cEndEventSubject).update(2);
         assertNull(cStroll.cEvent);
         assertFalse(cStroll.cEventGoing);
-        assertEquals(rewards + bonusRewards, cStroll.cRewards);
+        assertEquals(numberOfRewards + 1, cStroll.cRewards.size());
     }
 
     /**

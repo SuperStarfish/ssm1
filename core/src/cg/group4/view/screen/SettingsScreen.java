@@ -3,6 +3,7 @@ package cg.group4.view.screen;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,6 +30,7 @@ public final class SettingsScreen extends ScreenLogic {
             cButtonStopInterval,
             cButtonResetStroll,
             cButtonStopStroll,
+            cNetworkScreen,
             cButtonBack;
 
     /**
@@ -63,6 +65,7 @@ public final class SettingsScreen extends ScreenLogic {
         cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
@@ -80,6 +83,9 @@ public final class SettingsScreen extends ScreenLogic {
 
         cButtonStopStroll = createButton("Stop Stroll");
         cButtonStopStroll.addListener(stopStrollBehaviour());
+
+        cNetworkScreen = createButton("Network");
+        cNetworkScreen.addListener(networkScreenBehaviour());
 
         cButtonBack = createButton("Back");
         cButtonBack.addListener(backBehaviour());
@@ -139,6 +145,20 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 cIntervalTimer.stop();
+            }
+        };
+    }
+
+    /**
+     * Goes to the network Screen.
+     * 
+     * @return ChangeListener
+     */
+    protected ChangeListener networkScreenBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Network");
             }
         };
     }

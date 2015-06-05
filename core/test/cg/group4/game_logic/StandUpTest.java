@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -34,7 +35,8 @@ public class StandUpTest {
      */
     @Before
     public void setUp() {
-        cStandUp = StandUp.getInstance();
+        cStandUp = new StandUp();
+        StandUp.INSTANCE = cStandUp;
     }
 
     /**
@@ -42,19 +44,9 @@ public class StandUpTest {
      */
     @After
     public void tearDown() {
-        StandUp.reset();
         Preferences preferences = Gdx.app.getPreferences("TIMER");
         preferences.clear();
         preferences.flush();
-    }
-
-    /**
-     * Tests the reset of the singleton..
-     */
-    @Test
-    public void testReset() {
-        StandUp.reset();
-        assertNotEquals(cStandUp, StandUp.getInstance());
     }
 
     /**
@@ -62,7 +54,7 @@ public class StandUpTest {
      */
     @Test
     public void testGetInstance() {
-        assertEquals(cStandUp, StandUp.getInstance());
+        assertEquals(cStandUp, cStandUp.getInstance());
     }
 
     /**
@@ -86,7 +78,7 @@ public class StandUpTest {
         cStandUp.startStroll();
 
         assertNotNull(cStandUp.getStroll());
-        cStandUp.endStroll(0);
+        cStandUp.endStroll(new ArrayList<Integer>());
         assertNull(cStandUp.getStroll());
     }
 
