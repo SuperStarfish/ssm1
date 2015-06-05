@@ -3,6 +3,7 @@ package cg.group4.desktop;
 import cg.group4.Launcher;
 import cg.group4.client.DesktopIDResolver;
 import cg.group4.sensor.DesktopAccelerationStatus;
+import cg.group4.util.notification.DesktopNotificationController;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -19,13 +20,20 @@ public class DesktopLauncher {
 
     /**
      * Starts the application.
+     *
      * @param arg Arguments of the application.
      */
-	public static void main(final String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+    public static void main(final String[] arg) {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = ASPECT.getWidth();
         config.height = ASPECT.getHeight();
-		new LwjglApplication(new Launcher(new DesktopAccelerationStatus(), new DesktopIDResolver()), config);
+
+        new LwjglApplication(new Launcher(
+                new DesktopAccelerationStatus(),
+                new DesktopNotificationController(),
+                new DesktopIDResolver()),
+                config);
+
     }
 
     /**
@@ -73,8 +81,7 @@ public class DesktopLauncher {
         protected int cWidth, cHeight;
 
         /**
-         *
-         * @param width Width in pixels
+         * @param width  Width in pixels
          * @param height Height in pixels
          */
         Aspect(final int width, final int height) {
@@ -84,6 +91,7 @@ public class DesktopLauncher {
 
         /**
          * Returns the width of the ratio.
+         *
          * @return Width in pixels.
          */
         public int getWidth() {
@@ -92,6 +100,7 @@ public class DesktopLauncher {
 
         /**
          * Returns the width of the ratio.
+         *
          * @return Width in pixels.
          */
         public int getHeight() {
@@ -100,8 +109,11 @@ public class DesktopLauncher {
 
         /**
          * Returns the ratio as float.
+         *
          * @return Float equal to width / height of the ratio.
          */
-        public float getRatio() { return cWidth / (float) cHeight; }
+        public float getRatio() {
+            return cWidth / (float) cHeight;
+        }
     }
 }
