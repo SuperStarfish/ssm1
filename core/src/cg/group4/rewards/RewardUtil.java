@@ -1,5 +1,7 @@
 package cg.group4.rewards;
 
+import com.badlogic.gdx.graphics.Color;
+
 /**
  * Utility class that converts a wavelength to a RGB colour.
  * @author Jean de Leeuw
@@ -9,146 +11,61 @@ package cg.group4.rewards;
  *http://stackoverflow.com/questions/1472514/convert-light-frequency-to-rgb
  */
 public final class RewardUtil {
-	
 	/**
-	 * Hidden constructor because it is a utility class.
+	 * Number of color categories.
 	 */
-	private RewardUtil() {
+	protected static final int NUMBER_OF_COLORS = 6;
+
+	/**
+	 * Hue is capped to prevent double colors with high and low rarity.
+	 */
+	protected static final float HUE_CAP = .8f;
+
+	/**
+	 * Int belonging to each color category.
+	 */
+	protected static final int ORANGE = 0, LIGHT_GREEN = 1, DARK_GREEN = 2, CYAN = 3, MAGENTA = 4, PURPLE = 5;
+
+	/**
+	 * Utilities needed for rewards.
+	 */
+	protected RewardUtil() {
+
 	}
-	
+
 	/**
-	 * Gamma value.
+	 * Generates a color based on the hue given.
+	 * @param hue The hue (between 0 and 1)
+	 * @return The color belonging to the hue
 	 */
-	protected static final double cGamma = 0.80d;
-	
-	/**
-	 * Max value of RGB.
-	 */
-	protected static final int cMaxIntensity = 255;
-	
-	/**
-	 * Colour interval values of the visible spectrum.
-	 */
-	protected static final int cCinterval1 = 380, 
-			cCinterval2 = 440,
-			cCinterval3 = 490,
-			cCinterval4 = 510,
-			cCinterval5 = 580,
-			cCinterval6 = 645,
-			cCinterval7 = 781;
-	
-	/**
-	 * Intensity interval values.
-	 */
-	protected static final int cIinterval1 = 380,
-			cIinterval2 = 420,
-			cIinterval3 = 700,
-			cIinterval4 = 780;
-	
-	/**
-	 * Returns the RGB values of the given wavelength.
-	 * 
-	 * @param wavelength in the visible spectrum (between 380 - 780)
-	 * @return RGB colours [0 - 1.0] corresponding to the given wavelength
-	 */
-	public static float[] wavelengthToRGB(final double wavelength) {
-		float[] RGB = new float[3];
-		final float normalize = 255f;
-		
-		double[] colours = setColours(wavelength);
-		double intensity = determineIntensity(wavelength);
-		
-		RGB[0] = adjustColours(colours[0], intensity) / normalize;
-		RGB[1] = adjustColours(colours[1], intensity) / normalize;
-		RGB[2] = adjustColours(colours[2], intensity) / normalize;
-		
-		return RGB;
-	}
-	
-	/**
-	 * Helper method that should not be called outside of this class.
-	 * Returns the initial RGB values of the given wavelength.
-	 *  
-	 * @param wavelength in the visible spectrum (between 380 - 780)
-	 * @return Initial RGB colours corresponding to the given wavelength
-	 */
-	protected static double[] setColours(final double wavelength) {
-		double[] RGB = {0d, 0d, 0d};
-		
-		if (wavelength >= cCinterval1 && wavelength < cCinterval2) {
-			RGB[0] = -(wavelength - cCinterval2) / (cCinterval2 - cCinterval1);
-			RGB[1] = 0d;
-			RGB[2] = 1d;
-		} else if (wavelength >= cCinterval2 && wavelength < cCinterval3) {
-			RGB[0] = 0d;
-			RGB[1] = (wavelength - cCinterval2) / (cCinterval3 - cCinterval2);
-			RGB[2] = 1d;
-		} else if (wavelength >= cCinterval3 && wavelength < cCinterval4) {
-			RGB[0] = 0d;
-			RGB[1] = 1d;
-			RGB[2] = -(wavelength - cCinterval4) / (cCinterval4 - cCinterval3);
-		} else if (wavelength >= cCinterval4 && wavelength < cCinterval5) {
-			RGB[0] = (wavelength - cCinterval4) / (cCinterval5 - cCinterval4);
-			RGB[1] = 1d;
-			RGB[2] = 0d;
-		} else if (wavelength >= cCinterval5 && wavelength < cCinterval6) {
-			RGB[0] = 1d;
-			RGB[1] = -(wavelength - cCinterval6) / (cCinterval6 - cCinterval5);
-			RGB[2] = 0d;
-		} else if (wavelength >= cCinterval6 && wavelength < cCinterval7) {
-			RGB[0] = 1d;
-			RGB[1] = 0d;
-			RGB[2] = 0d;
+	public static Color generateColor(final float hue) {
+		float h = hue * HUE_CAP * NUMBER_OF_COLORS;
+		float f = h - (float) java.lang.Math.floor(h);
+		float q = 1 - f;
+		float t = 1 - q;
+		Color color;
+		switch ((int) h) {
+			case ORANGE:
+				color = new Color(1, f, 0, 1);
+				break;
+			case LIGHT_GREEN:
+				color = new Color(q, 1, 0, 1);
+				break;
+			case DARK_GREEN:
+				color = new Color(0, 1, f, 1);
+				break;
+			case CYAN:
+				color = new Color(0, q, 1, 1);
+				break;
+			case MAGENTA:
+				color = new Color(f, 0, 1, 1);
+				break;
+			case PURPLE:
+				color = new Color(1, 0, q, 1);
+				break;
+			default:
+				color = new Color(0, 0, 0, 1);
 		}
-		return RGB;
-	}
-	
-	/**
-	 * Helper method that should not be called outside of this class.
-	 * Determines the intensity of the given wavelength
-	 * (Intensity falls of near the end of the visible spectrum).
-	 * 
-	 * @param wavelength in the visible spectrum (between 380 - 780)
-	 * @return Intensity value
-	 */
-	protected static double determineIntensity(final double wavelength) {
-		double factor = 0d;
-		final double factor1 = 0.3, factor2 = 0.7;
-		
-		if (wavelength >= cIinterval1 && wavelength < cIinterval2) {
-			factor = factor1 + factor2 * (wavelength - cIinterval1) / (cIinterval2 - cIinterval1);
-		} else if (wavelength >= cIinterval2 && wavelength < cIinterval3 + 1) {
-			factor = 1d;
-		} else if (wavelength >= cIinterval3 + 1 && wavelength < cIinterval4 + 1) {
-			factor = factor1 + factor2 * (cIinterval4 - wavelength) / (cIinterval4 - cIinterval3);
-		}
-		return factor;
-	}
-	
-	/**
-	 *  Helper method that should not be called outside of this class.
-	 *  Adjusts the initial calculated RGB values to the correct RGB values.
-	 *  
-	 * @param colour initial RGB values
-	 * @param factor intensity value
-	 * @return Correct RGB values
-	 */
-	protected static float adjustColours(final double colour, final double factor) {
-		if (colour == 0d) {
-			return 0;
-		}
-		return (float) (cMaxIntensity * Math.pow(colour * factor, cGamma));
-	}
-	
-	/**
-	 * Returns the rarity of the color.
-	 * With 100 being the most rare and 0 being the least rare.
-	 * @param currentWavelength
-	 * @return double representing the rarity of the colour. [100-0]
-	 */
-	public static double getColorRarity(int currentWavelength) {
-		final int lowestWavelength = 380, highestWavelength = 780, maxRarity = 100;
-		double perStep = maxRarity / (highestWavelength - lowestWavelength);
-		return maxRarity - (currentWavelength * perStep);
+		return color;
 	}
 }

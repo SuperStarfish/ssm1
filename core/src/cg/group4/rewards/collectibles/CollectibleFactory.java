@@ -20,24 +20,24 @@ public class CollectibleFactory {
 	 * Generates a collectible of the class of the given string, with colour wavelength.
 	 * 
 	 * @param collectible represents the class of the collectible
-	 * @param wavelength represent colour of the collectible
+	 * @param hue represent colour of the collectible
 	 * @return Collectible object
 	 */
-	public final Collectible generateCollectible(final String collectible, final int wavelength) {
+	public final Collectible generateCollectible(final String collectible, final float hue) {
 		Collectible result = null;
 		
 		switch(collectible) {
-			case "FishA":
-				result = new FishA(wavelength);
-				break;
-			case "FishB":
-				result = new FishB(wavelength);
-				break;
-			case "FishC":
-				result = new FishC(wavelength);
-				break;
-			default:
-				break;
+		case "FishA": 
+			result = new FishA(hue);
+			break;
+		case "FishB":
+			result = new FishB(hue);
+			break;
+		case "FishC":
+			result = new FishC(hue);
+			break;
+		default:
+			break;
 		}
 		
 		return result;

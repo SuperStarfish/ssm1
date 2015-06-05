@@ -1,7 +1,6 @@
 package cg.group4.rewards;
 
 import cg.group4.exceptions.LocalStoreUnavailableException;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 import java.io.ByteArrayOutputStream;
@@ -13,7 +12,7 @@ import java.io.ObjectStreamException;
  * Stores the collection data on the local storage.
  * Reason for not using the internal storage: is read only.
  */
-public class LocalCollectionStorer implements CollectionStorer {
+public class LocalCollectionWriter implements CollectionWriter {
 
     /**
      * Debug tag containing the simple class name. Used for debugging purposes.
@@ -21,43 +20,17 @@ public class LocalCollectionStorer implements CollectionStorer {
     protected String cTag = this.getClass().getSimpleName();
 
     /**
-     * Collection to be serialized.
-     */
-    protected Collection cCollection;
-
-    /**
-     * Path to the file in which the serialized Collection object will be stored.
-     */
-    protected final String cLocalFile;
-
-    /**
      * Initializes local collection storer.
      * The local collection storer stores a collection object as a serialized save file.
      * Uses the java built in ObjectOutputStream for this purpose.
-     * @param collection collection to be serialized and store to a save file
      */
-    public LocalCollectionStorer(final Collection collection) {
-        cCollection = collection;
-        cLocalFile = "starfish.save";
+    public LocalCollectionWriter() {
     }
 
-    /**
-     * Initializes local collection storer.
-     * The local collection storer stores a collection object as a serialized save file.
-     * Uses the java built in ObjectOutputStream for this purpose.
-     * @param collection collection to be serialized and store to a save file
-     * @param saveFileName name of the file to which the collection game save will be written.
-     */
-    public LocalCollectionStorer(final Collection collection, final String saveFileName) {
-        cCollection = collection;
-        cLocalFile = saveFileName;
-    }
 
     @Override
-    public void store() {
-        serialize(cCollection);
-        Gdx.app.log(cTag, "Storing new save file at: " + Gdx.files.getLocalStoragePath() + cLocalFile);
-
+    public void store(final Collection collection) {
+        serialize(collection);
     }
 
     /**
@@ -73,7 +46,7 @@ public class LocalCollectionStorer implements CollectionStorer {
             outputStream.writeObject(collection);
             outputStream.flush();
             byte[] raw = byteArrayOutputStream.toByteArray();
-            writeByteFile(raw);
+            writeByteFile(raw, collection.getId());
         } catch (ObjectStreamException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -89,11 +62,15 @@ public class LocalCollectionStorer implements CollectionStorer {
     /**
      * Helper method to write raw bytes to a file.
      * @param bytes raw data to be written
+     * @param id identifier used as filename
      */
-    private void writeByteFile(final byte[] bytes) {
+    private void writeByteFile(final byte[] bytes, final String id) {
         FileHandle fileHandle = null;
+
+        final String ext = ".save";
+
         try {
-            fileHandle = CollectionUtil.localFileHandle(cLocalFile);
+            fileHandle = CollectionUtil.localFileHandle(id + ext);
             fileHandle.writeBytes(bytes, false);
         } catch (LocalStoreUnavailableException e) {
             e.printStackTrace();

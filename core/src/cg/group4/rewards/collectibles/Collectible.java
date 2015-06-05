@@ -1,10 +1,12 @@
 package cg.group4.rewards.collectibles;
 
+import cg.group4.rewards.RewardUtil;
+import com.badlogic.gdx.graphics.Color;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cg.group4.rewards.RewardUtil;
 
 /**
  * Forces collectible objects to implement the following methods.
@@ -16,16 +18,12 @@ public abstract class Collectible implements Serializable {
 	/**
 	 * Wavelength of the collectible representing the colour of the collectible.
 	 */
-	protected int cWavelength;
+	protected float cHue;
 	
 	/**
 	 * Most recent date on which a collectible of a certain kind (colour and form) has been obtained.
 	 */
 	protected Date cDate;
-
-	final int minWaveLength = 380;
-	
-	final int maxWaveLength = 780;
 	
 	/**
 	 * Amount of collectibles that you have of the same kind. (Same colour and form)
@@ -33,30 +31,22 @@ public abstract class Collectible implements Serializable {
 	protected int cAmount;
 	
 	/**
-	 * Multiplier that represents the rarity of this form of collectible.
-	 * (The higher multiplier, the more rare this form becomes and thus the more rare
-	 * this collectible becomes)
-	 */
-	protected double cFormMultiplier;
-	
-	/**
 	 * Constructs a collectible.
      * The constructed collectible will be based on its shape (the implementing class) and a colour (specified here).
-     * The colour is based on the wavelength of light. The wavelength is clamped between 380 - 780 inclusive.
-	 * @param wavelength representing the colour of the collectible
+	 * @param hue representing the colour of the collectible
 	 */
-	public Collectible(final int wavelength) {
-        cWavelength = clampWaveLength(wavelength);
-        cDate = new Date();
-        cAmount = 1;
+	public Collectible(final float hue) {
+		cHue = hue;
+		cDate = new Date();
+		cAmount = 1;
 	}
 	
 	/**
 	 * Every collectible must have a colour.
 	 * @return float[] containing the RGB colours [0-1]
 	 */
-	public float[] getColour() {
-		return RewardUtil.wavelengthToRGB(cWavelength);
+	public Color getColour() {
+		return RewardUtil.generateColor(cHue);
 	}
 	
 	/**
@@ -74,6 +64,10 @@ public abstract class Collectible implements Serializable {
 		return cDate;
 	}
 
+	/**
+	 * Returns the date as a string that is properly formatted for the server.
+	 * @return yyyy-MM-dd
+	 */
     public String getDateAsString() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(cDate);
@@ -84,7 +78,7 @@ public abstract class Collectible implements Serializable {
 	 * @return Double representing the rarity of the collectible.
 	 */
 	public double getRarity() {
-		return getFormRarity() * RewardUtil.getColorRarity(cWavelength);
+		return getFormRarity() * cHue * 100;
 	}
 	
 	/**
@@ -102,44 +96,19 @@ public abstract class Collectible implements Serializable {
 	 * this collectible becomes)
 	 * @return double representing the form multiplier.
 	 */
-	public abstract double getFormRarity();
+	public abstract float getFormRarity();
 
-    /**
-     * Keeps the wave length between the visible human color range.
-     * The supported range is 380 - 780 (inclusive).
-     * @param waveLength Input to be clamped
-     * @return The clamped wavelength based on the input parameter
-     */
-    private int clampWaveLength(final int waveLength) {
-        int res = waveLength;
-
-        // clamp lower bound
-        if (waveLength < minWaveLength) {
-            res = minWaveLength;
-        }
-        // clamp upper bound
-        else if (waveLength > maxWaveLength) {
-            res = maxWaveLength;
-        }
-
-        return res;
-    }
-
-    public int getcWavelength() {
-        return cWavelength;
-    }
-    
-    /**
-     * Returns a string representation of a collectible, including some of it's values.
+	/**
+	 * Returns a string representation of a collectible, including some of it's values.
      * @return String string representation of the collectible
      */
 	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Collectible<");
-        sb.append("wavelength = ").append(cWavelength).append(", ");
-        sb.append("amount = ").append(getAmount()).append(", ");
-        sb.append("form multiplier = ").append(getFormRarity());
-        sb.append(">");
+		sb.append("hue = ").append(cHue).append(", ");
+		sb.append("amount = ").append(getAmount()).append(", ");
+		sb.append("form rarity = ").append(getFormRarity());
+		sb.append(">");
         return sb.toString();
     }
 

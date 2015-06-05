@@ -7,8 +7,9 @@ public interface CollectionReader {
 
     /**
      * Reads a stored collection into a Collection object.
+     * @param id used for the storage of collections (to keep names unique).
      * @return The created collection object.
      */
-    Collection read();
+    Collection read(String id);
 }
 

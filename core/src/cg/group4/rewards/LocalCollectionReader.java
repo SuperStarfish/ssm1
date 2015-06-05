@@ -1,7 +1,6 @@
 package cg.group4.rewards;
 
 import cg.group4.exceptions.LocalStoreUnavailableException;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 import java.io.ByteArrayInputStream;
@@ -21,47 +20,32 @@ public class LocalCollectionReader implements CollectionReader {
     protected String cTag = this.getClass().getSimpleName();
 
     /**
-     * Path to the file which contains the collection data to be deserialized.
-     */
-    protected final String cLocalFile;
-
-    /**
      * Initialization of the local collection reader.
      */
     public LocalCollectionReader() {
-        cLocalFile = "starfish.save";
     }
 
-    /**
-     * Initialization of the local collection reader.
-     * @param saveFileName name of the file from which the collection game save will be read.
-     */
-    public LocalCollectionReader(final String saveFileName) {
-        cLocalFile = saveFileName;
-    }
 
     @Override
-    public Collection read() {
-
-        Collection res = null;
-        res = deserialize();
-        Gdx.app.log(cTag, "Reading save file from: " + Gdx.files.getLocalStoragePath() + cLocalFile);
+    public Collection read(final String id) {
+        final Collection res = deserialize(id);
         return res;
     }
 
     /**
      * Uses java's built in object input stream to deserialize an earlier serialized local collection save file.
-     * @see {@link cg.group4.rewards.LocalCollectionStorer }
+     * @param id collection id (used for uniqueness of storage).
+     *           Note: the id is not validated here!
      * @return Collection from file
      */
-    private Collection deserialize() {
+    private Collection deserialize(final String id) {
         ByteArrayInputStream byteArrayInputStream = null;
         ObjectInputStream inputStream = null;
 
         Collection res = null;
 
         try {
-            final byte[] raw = readByteFile();
+            final byte[] raw = readByteFile(id);
             byteArrayInputStream = new ByteArrayInputStream(raw);
             inputStream = new ObjectInputStream(byteArrayInputStream);
             res = (Collection) inputStream.readObject();
@@ -84,14 +68,17 @@ public class LocalCollectionReader implements CollectionReader {
 
     /**
      * Helper method to write raw bytes to a file.
+     * @param id Unique id used to determine the filename
      * @return raw data read from cLocalFile
      */
-    private byte[] readByteFile() {
+    private byte[] readByteFile(final String id) {
         FileHandle fileHandle;
         byte[] res = null;
 
+        final String ext = ".save";
+
         try {
-            fileHandle = CollectionUtil.localFileHandle(cLocalFile);
+            fileHandle = CollectionUtil.localFileHandle(id + ext);
             res = fileHandle.readBytes();
         } catch (LocalStoreUnavailableException e) {
             e.printStackTrace();
