@@ -1,39 +1,35 @@
 package cg.group4.rewards.collectibles;
 
-import cg.group4.rewards.WavelengthToRGB;
+
+import java.io.Serializable;
 
 /**
  * A collectible with variable colour that can be generated.
  * @author Jean de Leeuw
  *
  */
-public class FishB extends Collectible {
+public class FishB extends Collectible implements Serializable {
+	
+	/**
+	 * The rarity of this collectible.
+	 */
+	protected final float cFormRarity = 0.6f;
 
-	/**
-	 * Location of the image of the form of the collectible.
-	 */
-	protected final String cImageLocation = "images/FishB.png";
-	
-	/**
-	 * Wavelength representing the colour of the collectible.
-	 */
-	protected final int cWavelength;
-	
 	/**
 	 * Constructs a FishA collectible.
-	 * @param wavelength representing the colour of the collectible.
+	 * @param hue representing the colour of the collectible.
 	 */
-	public FishB(final int wavelength) {
-		cWavelength = wavelength;
-	}
-
-	@Override
-	public float[] getColour() {
-		return WavelengthToRGB.wavelengthToRGB(cWavelength);
+	public FishB(final float hue) {
+		super(hue);
 	}
 
 	@Override
 	public String getImagePath() {
-		return cImageLocation;
+		return "images/FishB.png";
+	}
+
+	@Override
+	public float getFormRarity() {
+		return cFormRarity;
 	}
 }

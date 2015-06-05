@@ -226,12 +226,12 @@ public class Timer implements Observer {
     }
 
     /**
-     * Returns the remaining time before the timer ends.
+     * Returns the time the timer ends.
      *
-     * @return The remaining time.
+     * @return The finish time.
      */
-    public final int getRemainingTime() {
-        return cRemainingTime;
+    public final long getFinishTime() {
+        return cFinishTime;
     }
 
     /**

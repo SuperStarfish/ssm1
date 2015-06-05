@@ -7,15 +7,16 @@ import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+
 import com.badlogic.gdx.Gdx;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
 /**
- * @author Martijn Gribnau
- * @author Benjamin Los
+ * A stroll will generate events for the player based on the players activity.
  */
 public class Stroll implements Observer {
 
@@ -29,9 +30,9 @@ public class Stroll implements Observer {
     private static final String TAG = Stroll.class.getSimpleName();
 
     /**
-     * Amount of rewards collected.
+     * Score of each completed event.
      */
-    protected int cRewards;
+    protected ArrayList<Integer> cRewards;
     /**
      * The chance of an event happening this second.
      */
@@ -85,7 +86,7 @@ public class Stroll implements Observer {
      */
     public Stroll() {
         Gdx.app.log(TAG, "Started new stroll");
-        cRewards = 0;
+        cRewards = new ArrayList<Integer>();
         cEventGoing = false;
         cFinished = false;
         cEventThreshold = BASE_THRESHOLD;
@@ -112,7 +113,7 @@ public class Stroll implements Observer {
     /**
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
-    protected final void generatePossibleEvent() {
+    protected void generatePossibleEvent() {
         Random rnd = new Random();
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
@@ -141,7 +142,7 @@ public class Stroll implements Observer {
 
         cEndEventSubject.update(rewards);
 
-        cRewards += rewards;
+        cRewards.add(rewards);
         cEvent = null;
         cEventGoing = false;
 
@@ -155,7 +156,7 @@ public class Stroll implements Observer {
     /**
      * Method that gets called when the stroll has ended/completed.
      */
-    public final void done() {
+    public void done() {
         Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
 
 

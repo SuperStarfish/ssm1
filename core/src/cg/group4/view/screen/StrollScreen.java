@@ -34,7 +34,7 @@ public final class StrollScreen extends ScreenLogic {
     protected Observer cNewEventObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            cScreenStore.addScreen("Event", ((StrollEvent) arg).createScreen());
+            cScreenStore.addScreen("Event", new EventScreen((StrollEvent) arg));
             cScreenStore.setScreen("Event");
         }
     };
