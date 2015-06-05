@@ -29,7 +29,7 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static final StandUp INSTANCE = new StandUp();
+    protected static StandUp INSTANCE = new StandUp();
 
     /**
      * Stroll logic.
