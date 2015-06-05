@@ -40,7 +40,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String defaultIP = "145.94.181.204";
+    protected final String defaultIP = "127.0.0.1";
 
     /**
      * The default port to connect to.

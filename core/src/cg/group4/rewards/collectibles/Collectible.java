@@ -98,6 +98,14 @@ public abstract class Collectible implements Serializable {
 	 */
 	public abstract float getFormRarity();
 
+    /**
+     * Returns the Hue of this collectible.
+     * @return The hue.
+     */
+	public float getcHue() {
+		return cHue;
+	}
+
 	/**
 	 * Returns a string representation of a collectible, including some of it's values.
      * @return String string representation of the collectible

@@ -207,7 +207,7 @@ public final class ServerThread implements Callable<Void> {
             Statement statement = cDatabaseConnection.query();
             statement.executeUpdate("INSERT INTO Collectible (OwnerID, Type, WaveLength, Amount, Date, GroupID) "
                     + "VALUES ('" + userID + "', '" + collectible.getClass().getSimpleName() + "', "
-                    + collectible.getcWavelength() + ", " + collectible.getAmount() + ", '"
+                    + collectible.getcHue() + ", " + collectible.getAmount() + ", '"
                     + collectible.getDateAsString() + "', '" + userID + "')");
             cDatabaseConnection.commit();
         } catch (SQLException e) {
@@ -233,7 +233,7 @@ public final class ServerThread implements Callable<Void> {
             Statement statement = cDatabaseConnection.query();
 
             String rowToUpdate = "GroupId = '" + userID + "' AND Type = '" + collectible.getClass().getSimpleName()
-                    + "'  AND WaveLength = " + collectible.getcWavelength();
+                    + "'  AND WaveLength = " + collectible.getcHue();
 
             statement.executeUpdate("UPDATE Collectible SET Amount = " + (collectible.getAmount() + extra) + " WHERE "
                     + rowToUpdate);
@@ -262,7 +262,7 @@ public final class ServerThread implements Callable<Void> {
             Statement statement = cDatabaseConnection.query();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Collectible WHERE "
                     + "GroupID = '" + ownerID + "' AND " + "Type = '" + collectible.getClass().getSimpleName() + "'"
-                    + "AND WaveLength = '" + collectible.getcWavelength() + "'");
+                    + "AND WaveLength = '" + collectible.getcHue() + "'");
 
             if (resultSet.next()) {
                 result = resultSet.getInt("Amount");
