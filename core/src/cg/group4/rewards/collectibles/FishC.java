@@ -9,6 +9,11 @@ import java.io.Serializable;
  *
  */
 public class FishC extends Collectible implements Serializable {
+
+	/**
+	 * The rarity of this collectible.
+	 */
+	protected final float cFormRarity = 0.7f;
 	
 	/**
 	 * Constructs a FishA collectible.
@@ -25,8 +30,7 @@ public class FishC extends Collectible implements Serializable {
 
 	@Override
 	public float getFormRarity() {
-		final float formRarity = 0.7f;
-		return formRarity;
+		return cFormRarity;
 	}
 
 }

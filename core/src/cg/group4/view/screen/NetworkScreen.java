@@ -40,12 +40,13 @@ public final class NetworkScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-        if (client.isConnected()) {
-            addLabel("Connected");
-
-        } else {
-            addLabel("Not Connected!");
-        }
+        addLabel("Connected");
+//        if (client.isConnected()) {
+//            addLabel("Connected");
+//
+//        } else {
+//            addLabel("Not Connected!");
+//        }
 
         addChangeUserName();
 

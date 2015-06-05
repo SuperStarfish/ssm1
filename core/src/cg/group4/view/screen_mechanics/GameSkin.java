@@ -60,7 +60,7 @@ public class GameSkin extends Skin {
     /**
      * Default width for the cursor in TextFields.
      */
-    protected float cCursorWidth = 3f;
+    protected final float cCursorWidth = 3f;
 
     /**
      * Initializes the skin.
@@ -265,7 +265,7 @@ public class GameSkin extends Skin {
      * @param initialText The text to initially display.
      * @return A TextField object.
      */
-    public final TextField generateDefaultTextField(String initialText) {
+    public final TextField generateDefaultTextField(final String initialText) {
         return new TextField(initialText, getDefaultTextFieldStyle());
     }
 

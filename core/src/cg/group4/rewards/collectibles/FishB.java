@@ -9,7 +9,11 @@ import java.io.Serializable;
  *
  */
 public class FishB extends Collectible implements Serializable {
-	
+	/**
+	 * The rarity of this collectible.
+	 */
+	protected final float cFormRarity = 0.5f;
+
 	/**
 	 * Constructs a FishA collectible.
 	 * @param hue representing the colour of the collectible.
@@ -25,7 +29,6 @@ public class FishB extends Collectible implements Serializable {
 
 	@Override
 	public float getFormRarity() {
-		final float formRarity = 0.5f;
-		return formRarity;
+		return cFormRarity;
 	}
 }
