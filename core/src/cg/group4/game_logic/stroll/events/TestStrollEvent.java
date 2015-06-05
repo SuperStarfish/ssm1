@@ -64,6 +64,11 @@ public class TestStrollEvent extends StrollEvent {
     protected Accelerometer cAccelMeter;
 
     /**
+     * Creates random variables for the class.
+     */
+    protected Random cRandom;
+
+    /**
      * Constructor for the test event.
      */
     public TestStrollEvent() {
@@ -71,6 +76,7 @@ public class TestStrollEvent extends StrollEvent {
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;
         cPrevOperationNr = -1;
+        cRandom = new Random();
 
         cDelayInputStartObserver = new Observer() {
             @Override
@@ -99,9 +105,9 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Sets the new operation that should be done.
      */
-    public final void doTask() {
+    public void doTask() {
         do {
-            cOperationNr = new Random().nextInt(cDirections.length);
+            cOperationNr = cRandom.nextInt(cDirections.length);
         } while (cOperationNr == cPrevOperationNr);
 
     }
