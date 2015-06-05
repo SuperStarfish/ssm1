@@ -66,7 +66,7 @@ public abstract class Collectible implements Serializable {
 	 * @return Double representing the rarity of the collectible.
 	 */
 	public double getRarity() {
-		return getFormRarity() * cHue;
+		return getFormRarity() * cHue * 100;
 	}
 	
 	/**

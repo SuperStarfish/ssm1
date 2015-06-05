@@ -7,11 +7,13 @@ import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
 import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -138,7 +140,7 @@ public class CollectiblesScreen extends ScreenLogic {
 		
 		constructContents(screenWidth, screenHeight);
 		
-		return cContainer.debugAll();
+		return cContainer;
 	}
 
 	@Override
@@ -168,12 +170,13 @@ public class CollectiblesScreen extends ScreenLogic {
 	 */
 	protected void constructContents(final int screenWidth, final int screenHeight) {
 		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection);
+		DecimalFormat format = new DecimalFormat("#.00");
 		
 		for (Collectible c : sortedList) {
 			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth / 5);
 			Image img = new Image(cDrawer.drawCollectible(c));
 			cContentTable.add(img);
-			cContentTable.add(cGameSkin.generateDefaultLabel(Double.toString(c.getRarity())));
+			cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
 			cContentTable.add(cGameSkin.generateDefaultLabel("DATE"));
 			cContentTable.add(cGameSkin.generateDefaultLabel("OWNER"));
 			cContentTable.add(cGameSkin.generateDefaultLabel("GROUP"));

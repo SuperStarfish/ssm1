@@ -2,11 +2,15 @@ package cg.group4;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.rewards.Collection;
+import cg.group4.rewards.RewardGenerator;
+import cg.group4.rewards.collectibles.Collectible;
 import cg.group4.rewards.collectibles.FishA;
+import cg.group4.rewards.collectibles.FishB;
 import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenStore;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -72,20 +76,23 @@ public class Launcher extends Game {
 
         cStandUp = StandUp.getInstance();
         
+        int fa = 0, fb = 0, fc = 0;
         //Needs to be moved
         Collection c = new Collection("local");
-        c.add(new FishA(1f));
-        c.add(new FishA(.9f));
-        c.add(new FishA(.8f));
-        c.add(new FishA(.7f));
-        c.add(new FishA(.6f));
-        c.add(new FishA(.5f));
-        c.add(new FishA(.4f));
-        c.add(new FishA(.3f));
-        c.add(new FishA(.2f));
-        c.add(new FishA(.1f));
-        c.add(new FishA(0f));
-
+        RewardGenerator gen = new RewardGenerator();
+        for(int i = 0; i < 500; i++) {
+        	Collectible ca = gen.generateCollectible(1);
+        	c.add(ca);
+        	if(ca instanceof FishA) {
+        		fa++;
+        	} else if (ca instanceof FishB) {
+        		fb++;
+        	} else {
+        		fc++;
+        	}
+        }
+        
+        System.out.println("Fish A: " + fa + " Fish B: " + fb + " Fish C: " + fc);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());

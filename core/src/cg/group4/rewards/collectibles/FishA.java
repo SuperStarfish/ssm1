@@ -25,7 +25,7 @@ public class FishA extends Collectible implements Serializable {
 
 	@Override
 	public float getFormRarity() {
-		final float formRarity = 0.3f;
+		final float formRarity = 0.1f;
 		return formRarity;
 	}
 }
