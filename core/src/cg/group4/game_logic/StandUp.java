@@ -1,7 +1,5 @@
 package cg.group4.game_logic;
 
-import java.util.ArrayList;
-
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.rewards.RewardGenerator;
 import cg.group4.rewards.collectibles.Collectible;
@@ -9,8 +7,9 @@ import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-
 import com.badlogic.gdx.Gdx;
+
+import java.util.ArrayList;
 
 /**
  * Class which handles the game logic.
@@ -30,6 +29,11 @@ public final class StandUp {
      * Singleton of game logic handler.
      */
     protected static StandUp INSTANCE = new StandUp();
+
+    /**
+     * Player of the game.
+     */
+    protected Player cPlayer;
 
     /**
      * Stroll logic.
@@ -64,6 +68,7 @@ public final class StandUp {
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
         cGenerator = new RewardGenerator();
+        cPlayer = new Player();
     }
 
     /**
@@ -104,11 +109,19 @@ public final class StandUp {
 
     /**
      * Getter for Stroll.
-     *
      * @return cStroll
      */
     public Stroll getStroll() {
         return cStroll;
+    }
+
+    /**
+     * Getter for Player
+     *
+     * @return The player of the game.
+     */
+    public Player getPlayer() {
+        return cPlayer;
     }
 
     /**

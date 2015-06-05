@@ -3,18 +3,12 @@ package cg.group4;
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
-import cg.group4.rewards.Collection;
-import cg.group4.rewards.RewardGenerator;
-import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.rewards.collectibles.FishA;
-import cg.group4.rewards.collectibles.FishB;
 import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.notification.NotificationController;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -88,30 +82,13 @@ public class Launcher extends Game {
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
-        
-        int fa = 0, fb = 0, fc = 0;
-        //Needs to be moved
-        Collection c = new Collection("local");
-        RewardGenerator gen = new RewardGenerator();
-        for(int i = 0; i < 500; i++) {
-        	Collectible ca = gen.generateCollectible(1);
-        	c.add(ca);
-        	if(ca instanceof FishA) {
-        		fa++;
-        	} else if (ca instanceof FishB) {
-        		fb++;
-        	} else {
-        		fc++;
-        	}
-        }
-        
-        System.out.println("Fish A: " + fa + " Fish B: " + fb + " Fish C: " + fc);
+
 
         Client.getInstance().setUserIDResolver(cIDResolver);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init(c);
+        cScreenStore.init();
         cScreenStore.setScreen("Home");
 
         notificationInitialization();

@@ -3,9 +3,7 @@ package cg.group4.rewards;
 import cg.group4.rewards.collectibles.Collectible;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Collection which can hold collectibles.
@@ -53,6 +51,12 @@ public class Collection extends HashSet<Collectible> implements Observer, Serial
         }
         sb.append(">");
         return sb.toString();
+    }
+
+    public ArrayList<Collectible> sort(Comparator<Collectible> comparator) {
+        ArrayList<Collectible> list = new ArrayList<Collectible>(this);
+        Collections.sort(list, comparator);
+        return list;
     }
 
     /**

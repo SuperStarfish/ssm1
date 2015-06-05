@@ -1,13 +1,12 @@
 package cg.group4.view.screen;
 
-import cg.group4.rewards.CollectibleDrawer;
+import cg.group4.game_logic.StandUp;
 import cg.group4.rewards.Collection;
 import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
-import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
+import cg.group4.view.util.reward.CollectibleDrawer;
+import cg.group4.view.util.reward.RarityComparator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -33,11 +32,6 @@ public final class CollectiblesScreen extends ScreenLogic {
 	protected ScrollPane cScrollPane;
 	
 	/**
-	 * Collection of the player.
-	 */
-	protected Collection cCollection;
-	
-	/**
 	 * Button that takes the player back to the home screen.
 	 */
 	protected TextButton cBackButton;
@@ -52,11 +46,6 @@ public final class CollectiblesScreen extends ScreenLogic {
 	 * Object that creates images for the collectibles.
 	 */
 	protected CollectibleDrawer cDrawer;
-	
-	/**
-	 * Object that sorts the collectibles in the collection.
-	 */
-	protected CollectibleSorter cSorter;
 	
 	/**
 	 * Checkbox that sets the CollectibleSorter to sorting by rarity.
@@ -75,12 +64,9 @@ public final class CollectiblesScreen extends ScreenLogic {
 	
 	/**
 	 * Creates a new CollectibleScreen.
-	 * @param collection of the player.
 	 */
-	public CollectiblesScreen(final Collection collection) {
-		cCollection = collection;
+	public CollectiblesScreen() {
 		cDrawer = new CollectibleDrawer();
-		cSorter = new SortByRarity();
 	}
 
 	@Override
@@ -169,7 +155,9 @@ public final class CollectiblesScreen extends ScreenLogic {
 	 * @param screenHeight current height of the screen in pixels.
 	 */
 	protected void constructContents(final int screenWidth, final int screenHeight) {
-		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection);
+		Collection collection = StandUp.getInstance().getPlayer().getCollection();
+		ArrayList<Collectible> sortedList = collection.sort(new RarityComparator());
+
 		DecimalFormat format = new DecimalFormat("#.00");
 		
 		for (Collectible c : sortedList) {

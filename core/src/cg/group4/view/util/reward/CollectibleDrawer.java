@@ -1,11 +1,10 @@
-package cg.group4.rewards;
+package cg.group4.view.util.reward;
 
 import cg.group4.rewards.collectibles.Collectible;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Color;
 
 /**
  * Class that creates images from collectibles and returns these created images.
