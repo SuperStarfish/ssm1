@@ -34,7 +34,17 @@ public class TestStrollEventTest {
         cTestEvent.cTasksCompleted = 1;
         TestStrollEvent spy = Mockito.spy(cTestEvent);
 
-        cTestEvent.taskCompleted();
+        spy.taskCompleted();
         Mockito.verify(spy).doTask();
+    }
+
+    @Test
+    public void taskCompletedComplete() {
+        cTestEvent.cTasksCompleted = 20;
+        TestStrollEvent spy = Mockito.spy(cTestEvent);
+        Mockito.doNothing().when(spy).clearEvent();
+
+        spy.taskCompleted();
+        Mockito.verify(spy).clearEvent();
     }
 }
