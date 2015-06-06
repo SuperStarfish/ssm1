@@ -84,7 +84,7 @@ public final class StandUp {
         if (cStroll == null) {
             Gdx.app.log(TAG, "Starting up stroll, created new one.");
             TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
-            cStroll = new Stroll();
+            cStroll = new Stroll(cAccelerationStatus);
             cNewStrollSubject.update(null);
         }
     }

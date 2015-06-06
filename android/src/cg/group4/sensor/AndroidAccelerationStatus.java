@@ -79,20 +79,16 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
         if (movement.name().equals("WALKING")) {
             Gdx.app.debug(tag, "You are walking!");
             cAccelerationState = AccelerationState.WALKING;
-            cUpdateMovementSubject.update(AccelerationState.WALKING);
         } else if (movement.name().equals("RUNNING")) {
             Gdx.app.debug(tag, "You are running!");
             cAccelerationState = AccelerationState.RUNNING;
-            cUpdateMovementSubject.update(AccelerationState.RUNNING);
         } else if (movement.name().equals("CHEATING")) {
             Gdx.app.debug(tag, "You are impossible!");
             cAccelerationState = AccelerationState.CHEATING;
-            cUpdateMovementSubject.update(AccelerationState.CHEATING);
         } else {
             Gdx.app.debug(tag, "You are resting!");
             cAccelerationState = AccelerationState.RESTING;
-            cUpdateMovementSubject.update(AccelerationState.RESTING);
-
         }
+        cUpdateMovementSubject.update(cAccelerationState);
     }
 }

@@ -5,6 +5,7 @@ import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.util.sensors.AccelerationState;
+import cg.group4.util.sensors.AccelerationStatus;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -29,7 +30,6 @@ public class Stroll implements Observer {
      * Tag used for debugging.
      */
     private static final String TAG = Stroll.class.getSimpleName();
-
 
     protected double cEventThreshold;
     /**
@@ -92,7 +92,7 @@ public class Stroll implements Observer {
     /**
      * Constructor, creates a new Stroll object.
      */
-    public Stroll() {
+    public Stroll(AccelerationStatus status) {
         Gdx.app.log(TAG, "Started new stroll");
         cRewards = 0;
         cEventGoing = false;
@@ -103,7 +103,8 @@ public class Stroll implements Observer {
         cEndEventSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
-        StandUp.getInstance().getAccelerationStatus().getSubject().addObserver(cUpdateMovementObserver);
+
+        status.getSubject().addObserver(cUpdateMovementObserver);
 
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
