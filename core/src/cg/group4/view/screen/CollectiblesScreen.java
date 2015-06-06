@@ -7,7 +7,6 @@ import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
 import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -145,7 +144,6 @@ public final class CollectiblesScreen extends ScreenLogic {
 
 	@Override
 	protected void rebuildWidgetGroup() {
-		this.getWidgetGroup();
 		int screenWidth = Gdx.graphics.getWidth();
 		int screenHeight = Gdx.graphics.getHeight();
 		

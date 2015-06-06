@@ -59,7 +59,6 @@ public final class SettingsScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        getWidgetGroup();
         cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());

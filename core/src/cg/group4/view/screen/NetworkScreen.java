@@ -92,8 +92,6 @@ public final class NetworkScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        getWidgetGroup();
-
         cBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
