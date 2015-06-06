@@ -1,7 +1,10 @@
 package cg.group4.game_logic.stroll;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.game_logic.StandUp;
 import cg.group4.util.sensors.AccelerationState;
+import cg.group4.util.sensors.AccelerationStatus;
+import cg.group4.util.subscribe.Subject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +27,21 @@ public class StrollTest {
      */
     @Before
     public void setUp() {
+        StandUp.getInstance().setAccelerationStatus(new AccelerationStatus() {
+
+            protected Subject tempsubject = new Subject();
+            @Override
+            public AccelerationState getAccelerationState() {
+                return null;
+            }
+
+            @Override
+            public Subject getSubject() {
+                return tempsubject;
+            }
+        });
         cStroll = new Stroll();
+
     }
 
     /**

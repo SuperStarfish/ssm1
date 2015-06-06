@@ -1,6 +1,9 @@
 package cg.group4.game_logic;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.util.sensors.AccelerationState;
+import cg.group4.util.sensors.AccelerationStatus;
+import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
@@ -34,6 +37,19 @@ public class StandUpTest {
      */
     @Before
     public void setUp() {
+        StandUp.getInstance().setAccelerationStatus(new AccelerationStatus() {
+
+            protected Subject tempsubject = new Subject();
+            @Override
+            public AccelerationState getAccelerationState() {
+                return null;
+            }
+
+            @Override
+            public Subject getSubject() {
+                return tempsubject;
+            }
+        });
         cStandUp = StandUp.getInstance();
     }
 
