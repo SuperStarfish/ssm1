@@ -1,6 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.collection.Collection;
 import cg.group4.view.screen.CollectiblesScreen;
 import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen.NetworkScreen;
@@ -57,12 +56,10 @@ public final class ScreenStore {
     /**
      * Initializes the Home Screen, Settings Screen and the Collection Screen,
      * since those are highly likely to be opened.
-     * 
-     * @param collection Collection of the user.
      */
-    public void init(final Collection collection) {
+    public void init() {
         addScreen("Home", new HomeScreen());
-        addScreen("Collection", new CollectiblesScreen(collection));
+        addScreen("Collection", new CollectiblesScreen());
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
     }

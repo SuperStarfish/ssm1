@@ -31,6 +31,11 @@ public final class StandUp {
     protected static StandUp INSTANCE = new StandUp();
 
     /**
+     * Player of the game.
+     */
+    protected Player cPlayer;
+
+    /**
      * Stroll logic.
      */
     protected Stroll cStroll;
@@ -63,6 +68,7 @@ public final class StandUp {
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
         cGenerator = new RewardGenerator();
+        cPlayer = new Player();
     }
 
     /**
@@ -103,11 +109,19 @@ public final class StandUp {
 
     /**
      * Getter for Stroll.
-     *
      * @return cStroll
      */
     public Stroll getStroll() {
         return cStroll;
+    }
+
+    /**
+     * Getter for Player
+     *
+     * @return The player of the game.
+     */
+    public Player getPlayer() {
+        return cPlayer;
     }
 
     /**

@@ -2,10 +2,6 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
-import cg.group4.collection.Collection;
-import cg.group4.collection.RewardGenerator;
-import cg.group4.collection.collectibles.Collectible;
-import cg.group4.database.datastructures.UserData;
 import cg.group4.game_logic.StandUp;
 import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.notification.NotificationController;
@@ -87,20 +83,12 @@ public class Launcher extends Game {
 
         cStandUp = StandUp.getInstance();
 
-        //Needs to be moved
-        Collection c = new Collection("local");
-        RewardGenerator gen = new RewardGenerator();
-        for (int i = 0; i < 10; i++) {
-            Collectible ca = gen.generateCollectible(1);
-        	c.add(ca);
-        }
-
         Client.getInstance().setUserIDResolver(cIDResolver);
         Client.getInstance().connectToServer();
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init(c);
+        cScreenStore.init();
         cScreenStore.setScreen("Home");
 
         notificationInitialization();
