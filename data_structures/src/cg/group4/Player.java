@@ -1,16 +1,18 @@
-package cg.group4.database.datastructures;
+package cg.group4;
+
+import cg.group4.collection.Collection;
 
 import java.io.Serializable;
 
 /**
- * UserData containing all the data needed for that user.
+ * Contains all the data of the user.
  */
-public final class UserData implements Serializable {
+public class Player implements Serializable {
 
     /**
      * The id belonging to this user.
      */
-    protected String cID;
+    protected String cId;
 
     /**
      * The username for this user.
@@ -28,79 +30,108 @@ public final class UserData implements Serializable {
     protected long cIntervalTimeStamp;
 
     /**
-     * A new empty UserData object.
+     * The collection of the player.
      */
-    public UserData() { }
+    protected Collection cCollection;
 
     /**
      * A new UserData object containing the id for the current user.
+     *
      * @param id The ID that belongs to the user.
      */
-    public UserData(final String id) {
-        cID = id;
+    public Player(final String id) {
+        cId = id;
+        cCollection = new Collection(cId);
+        cUsername = "Anonymous";
     }
 
     /**
      * Gets the current user id.
+     *
      * @return The ID that belongs to the user.
      */
-    public String getcID() {
-        return cID;
+    public String getId() {
+        return cId;
     }
 
     /**
      * Sets the userID to the new id.
+     *
      * @param id The new id.
      */
-    public void setcID(final String id) {
-        cID = id;
+    public void setId(final String id) {
+        cId = id;
     }
 
     /**
      * Gets the current username.
+     *
      * @return The username that belongs to the user.
      */
-    public String getcUsername() {
+    public String getUsername() {
         return cUsername;
     }
 
     /**
      * Sets the username to the new username.
+     *
      * @param username The new username.
      */
-    public void setcUsername(final String username) {
+    public void setUsername(final String username) {
         cUsername = username;
     }
 
     /**
      * Gets the current users last stroll time.
+     *
      * @return The timestamp for the stroll.
      */
-    public long getcStrollTimeStamp() {
+    public long getStrollTimeStamp() {
         return cStrollTimeStamp;
     }
 
     /**
      * Sets the stroll timestamp to the new timestamp.
+     *
      * @param strollTimeStamp The new timestamp;
      */
-    public void setcStrollTimeStamp(final long strollTimeStamp) {
+    public void setStrollTimeStamp(final long strollTimeStamp) {
         cStrollTimeStamp = strollTimeStamp;
     }
 
     /**
      * Gets the current users last interval time.
+     *
      * @return The timestamp for the interval.
      */
-    public long getcIntervalTimeStamp() {
+    public long getIntervalTimeStamp() {
         return cIntervalTimeStamp;
     }
 
     /**
      * Sets the interval timestamp to the new timestamp.
+     *
      * @param intervalTimeStamp The new timestamp.
      */
-    public void setcIntervalTimeStamp(final long intervalTimeStamp) {
+    public void setIntervalTimeStamp(final long intervalTimeStamp) {
         cIntervalTimeStamp = intervalTimeStamp;
+    }
+
+    /**
+     * Gets the players collection.
+     *
+     * @return The players collection.
+     */
+    public Collection getCollection() {
+        return cCollection;
+    }
+
+    /**
+     * Sets the players collection.
+     *
+     * @param cCollection The players collection.
+     */
+    public void setCollection(Collection cCollection) {
+        this.cCollection = cCollection;
     }
 }

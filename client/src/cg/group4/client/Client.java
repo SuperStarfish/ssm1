@@ -1,10 +1,10 @@
 package cg.group4.client;
 
+import cg.group4.Player;
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.LocalConnection;
-import cg.group4.database.datastructures.UserData;
-import cg.group4.database.query.RequestUserData;
-import cg.group4.database.query.UpdateUserData;
+import cg.group4.database.query.RequestPlayer;
+import cg.group4.database.query.UpdatePlayer;
 
 /**
  * @author Jurgen van Schagen
@@ -74,7 +74,7 @@ public final class Client {
 //     */
 //    public void updateTimers(final long timeStamp) {
 //        UserData data = new UserData();
-//        data.setcID(cUserIDResolver.getID());
+//        data.setcId(cUserIDResolver.getID());
 //        data.setcIntervalTimeStamp(timeStamp + Timer.Global.INTERVAL.getDuration());
 //        data.setcStrollTimeStamp(timeStamp + Timer.Global.STROLL.getDuration());
 //
@@ -86,13 +86,11 @@ public final class Client {
      * @param username The new username.
      * @return Successful or not.
      */
-    public Boolean updateUsername(final String username) {
+    public Boolean updatePlayer(final String username) {
 
-        UserData userData = new UserData();
-        userData.setcUsername(username);
-        userData.setcID(cUserIDResolver.getID());
+        Player player = new Player(cUserIDResolver.getID());
 
-        return cConnection.send(new UpdateUserData(userData)).isSuccess();
+        return cConnection.send(new UpdatePlayer(player)).isSuccess();
     }
 //
 //    /**
@@ -110,8 +108,8 @@ public final class Client {
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
      * @return All the userdata.
      */
-    public UserData getUserData() {
-        return (UserData) cConnection.send(new RequestUserData(cUserIDResolver.getID())).getData();
+    public Player getPlayer() {
+        return (Player) cConnection.send(new RequestPlayer(cUserIDResolver.getID())).getData();
     }
 
     /**

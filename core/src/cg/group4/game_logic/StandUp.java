@@ -1,5 +1,7 @@
 package cg.group4.game_logic;
 
+import cg.group4.Player;
+import cg.group4.client.Client;
 import cg.group4.collection.Collection;
 import cg.group4.collection.RewardGenerator;
 import cg.group4.game_logic.stroll.Stroll;
@@ -66,7 +68,7 @@ public final class StandUp {
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
         cGenerator = new RewardGenerator();
-        cPlayer = new Player();
+        cPlayer = Client.getInstance().getPlayer();
     }
 
     /**

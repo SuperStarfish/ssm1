@@ -88,7 +88,7 @@ public abstract class StrollEvent implements Disposable, Observer {
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         cEventTimer.getStopSubject().deleteObserver(cEventStopObserver);
-        cEventTimer.stop();
+        cEventTimer.dispose();
         StandUp.getInstance().getStroll().eventFinished(getReward());
     }
 }

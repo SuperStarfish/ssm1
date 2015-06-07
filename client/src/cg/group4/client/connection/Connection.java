@@ -31,8 +31,8 @@ public interface Connection {
     /**
      * Sends data to the server and receives a serializable.
      *
-     * @param data
-     * @return
+     * @param data Data to be sent to the server.
+     * @return Response received from the server.
      */
     Response send(Query data);
 }

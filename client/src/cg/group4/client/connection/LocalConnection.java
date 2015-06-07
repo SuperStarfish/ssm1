@@ -2,17 +2,18 @@ package cg.group4.client.connection;
 
 import cg.group4.database.Response;
 import cg.group4.database.query.Query;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.GdxRuntimeException;
+
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Connection state where no connection is made with the server.
  */
 public final class LocalConnection extends Thread implements Connection {
     /**
-     * TAG used for logging.
+     * Default java logging functionality.
      */
-    private static final String TAG = LocalConnection.class.getSimpleName();
+    protected static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 
     /**
      * Creates a new unconnected state.
@@ -29,16 +30,16 @@ public final class LocalConnection extends Thread implements Connection {
 
     @Override
     public Connection connect(final String ip, final int port) {
-        System.out.println(Thread.currentThread().getName());
+        LOGGER.info("Trying to connect to the server");
         try {
-            Gdx.app.debug(TAG, "Trying to connect to the server");
+            LOGGER.info("Trying to connect to the server");
             Connection connection = new RemoteConnection(ip, port);
 
-            Gdx.app.debug(TAG, "Managed to connect!");
+            LOGGER.info("Managed to connect!");
 
             return connection;
-        } catch (GdxRuntimeException e) {
-            Gdx.app.debug(TAG, "Connection failed!");
+        } catch (IOException e) {
+            LOGGER.info("Connection failed!");
         }
         return this;
     }
@@ -50,7 +51,7 @@ public final class LocalConnection extends Thread implements Connection {
 
     @Override
     public Response send(Query data) {
-        Gdx.app.debug(TAG, "Local connection not yet implemented.");
+        LOGGER.info("Local connection not yet implemented.");
         return null;
     }
 

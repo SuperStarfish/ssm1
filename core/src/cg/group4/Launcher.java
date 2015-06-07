@@ -79,12 +79,12 @@ public class Launcher extends Game {
     public final void create() {
         debugSetup();
 
+        Client.getInstance().setUserIDResolver(cIDResolver);
+        Client.getInstance().connectToServer();
+
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
-
-        Client.getInstance().setUserIDResolver(cIDResolver);
-        Client.getInstance().connectToServer();
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());

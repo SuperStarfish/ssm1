@@ -2,15 +2,11 @@ package cg.group4.client.connection;
 
 import cg.group4.database.Response;
 import cg.group4.database.query.Query;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  * A state in which the Client is connected to the server.
@@ -39,21 +35,15 @@ public final class RemoteConnection extends Thread implements Connection {
 
     /**
      * Attempts to create a new connection with the server. Fails after connectionTimeOut milliseconds.
-     *
      * @param ip The IP to connect to.
      * @param port The port to connect to.
-     * @throws GdxRuntimeException Connection could not be established.
+     * @throws IOException Exception if connection fails.
      */
-    public RemoteConnection(final String ip, final int port) throws GdxRuntimeException {
-        SocketHints hints = new SocketHints();
-        hints.connectTimeout = connectionTimeOut;
-        cConnection = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, hints);
-        try {
-            outputStream = new ObjectOutputStream(cConnection.getOutputStream());
-            inputStream = new ObjectInputStream(cConnection.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public RemoteConnection(final String ip, final int port) throws IOException {
+        cConnection = new Socket(ip, port);
+        outputStream = new ObjectOutputStream(cConnection.getOutputStream());
+        inputStream = new ObjectInputStream(cConnection.getInputStream());
+
         this.start();
     }
 
@@ -67,7 +57,7 @@ public final class RemoteConnection extends Thread implements Connection {
         try {
             outputStream.close();
             inputStream.close();
-            cConnection.dispose();
+            cConnection.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.game_logic.StandUp;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -37,7 +38,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-        cUsername = cGameSkin.generateDefaultTextField("Anonymous");
+        cUsername = cGameSkin.generateDefaultTextField(StandUp.getInstance().getPlayer().getUsername());
         cUsername.setAlignment(Align.center);
         cTable.row().expandY();
         cTable.add(cUsername).fillX();
@@ -66,7 +67,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                if (Client.getInstance().updateUsername(cUsername.getText())) {
+                if (Client.getInstance().updatePlayer(cUsername.getText())) {
                     cMessage.setText("Succes!");
                 } else {
                     cMessage.setText("Something went wrong!");
