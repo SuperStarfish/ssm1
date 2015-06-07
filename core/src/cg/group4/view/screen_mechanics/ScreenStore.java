@@ -1,6 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.rewards.Collection;
+
 import cg.group4.view.screen.CollectiblesScreen;
 import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen.NetworkScreen;

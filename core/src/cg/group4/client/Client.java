@@ -1,11 +1,10 @@
 package cg.group4.client;
 
 import cg.group4.client.connection.Connection;
-import cg.group4.client.connection.Unconnected;
-import cg.group4.client.query.Data;
-import cg.group4.client.query.UserData;
-import cg.group4.rewards.Collection;
-import cg.group4.util.timer.Timer;
+import cg.group4.client.connection.LocalConnection;
+import cg.group4.database.datastructures.UserData;
+import cg.group4.database.query.RequestUserData;
+import cg.group4.database.query.UpdateUserData;
 
 /**
  * @author Jurgen van Schagen
@@ -40,7 +39,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String defaultIP = "127.0.0.1";
+    protected final String defaultIP = "128.127.39.32";
 
     /**
      * The default port to connect to.
@@ -50,7 +49,9 @@ public final class Client {
     /**
      * Constructs a new Client and sets the state to unconnected.
      */
-    public Client() { cConnection = new Unconnected(); }
+    public Client() {
+        cConnection = new LocalConnection();
+    }
 
     /**
      * Connects to the server. Behaviour depends on the state.
@@ -66,50 +67,51 @@ public final class Client {
         cConnection = cConnection.disconnect();
     }
 
-    /**
-     * Updates the timers in the database. Behaviour depends on the state.
-     *
-     * @param timeStamp The timestamp from which to add the timer durations.
-     */
-    public void updateTimers(final long timeStamp) {
-        UserData data = new UserData();
-        data.setcID(cUserIDResolver.getID());
-        data.setcIntervalTimeStamp(timeStamp + Timer.Global.INTERVAL.getDuration());
-        data.setcStrollTimeStamp(timeStamp + Timer.Global.STROLL.getDuration());
-
-        cConnection.updateUserData(data);
-    }
-
+//    /**
+//     * Updates the timers in the database. Behaviour depends on the state.
+//     *
+//     * @param timeStamp The timestamp from which to add the timer durations.
+//     */
+//    public void updateTimers(final long timeStamp) {
+//        UserData data = new UserData();
+//        data.setcID(cUserIDResolver.getID());
+//        data.setcIntervalTimeStamp(timeStamp + Timer.Global.INTERVAL.getDuration());
+//        data.setcStrollTimeStamp(timeStamp + Timer.Global.STROLL.getDuration());
+//
+//        cConnection.updateUserData(data);
+//    }
+//
     /**
      * Updates the username in the server. Behaviour depends on the state.
      * @param username The new username.
      * @return Successful or not.
      */
-    public boolean updateUsername(final String username) {
-        UserData data = new UserData();
-        data.setcID(cUserIDResolver.getID());
-        data.setcUsername(username);
+    public Boolean updateUsername(final String username) {
 
-        return cConnection.updateUserData(data);
-    }
+        UserData userData = new UserData();
+        userData.setcUsername(username);
+        userData.setcID(cUserIDResolver.getID());
 
-    /**
-     * Adds the collection to the server. Behaviour depends on the state.
-     * @param collection The collection to add to the server.
-     * @return Successful or not.
-     */
-    public boolean updateCollection(final Collection collection) {
-        boolean successful = cConnection.updateCollection(collection, new UserData(cUserIDResolver.getID()));
-        System.out.println("Was it a succes?: " + successful);
-        return successful;
+        return cConnection.send(new UpdateUserData(userData)).isSuccess();
     }
+//
+//    /**
+//     * Adds the collection to the server. Behaviour depends on the state.
+//     * @param collection The collection to add to the server.
+//     * @return Successful or not.
+//     */
+//    public boolean updateCollection(final Collection collection) {
+//        boolean successful = cConnection.updateCollection(collection, new UserData(cUserIDResolver.getID()));
+//        System.out.println("Was it a succes?: " + successful);
+//        return successful;
+//    }
 
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
      * @return All the userdata.
      */
-    public Data getUserData() {
-        return cConnection.requestUserData(cUserIDResolver.getID());
+    public UserData getUserData() {
+        return (UserData) cConnection.send(new RequestUserData(cUserIDResolver.getID())).getData();
     }
 
     /**

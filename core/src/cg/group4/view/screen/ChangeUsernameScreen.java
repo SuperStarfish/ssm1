@@ -1,13 +1,8 @@
 package cg.group4.view.screen;
 
-import cg.group4.client.Client;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -71,11 +66,11 @@ public final class ChangeUsernameScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                if (Client.getInstance().updateUsername(cUsername.getText())) {
-                    cMessage.setText("Succes!");
-                } else {
-                    cMessage.setText("Something went wrong!");
-                }
+//                if (Client.getInstance().updateUsername(cUsername.getText())) {
+//                    cMessage.setText("Succes!");
+//                } else {
+//                    cMessage.setText("Something went wrong!");
+//                }
             }
         };
     }

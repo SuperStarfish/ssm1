@@ -79,8 +79,16 @@ project(":server") {
 
     dependencies {
         compile "org.xerial:sqlite-jdbc:3.8.6"
-        compile project(':core')
 
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+    }
+}
+
+project(":data_structures") {
+    apply plugin: "java"
+
+    dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
     }

@@ -1,12 +1,12 @@
 package cg.group4.view.screen;
 
-import cg.group4.rewards.CollectibleDrawer;
+import cg.group4.collection.collectibles.Collectible;
+import cg.group4.collection.collectibles.collectible_sorters.CollectibleSorter;
+import cg.group4.collection.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.rewards.Collection;
-import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
-import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
