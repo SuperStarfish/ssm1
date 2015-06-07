@@ -170,7 +170,7 @@ public class Stroll implements Observer {
      * @param state Movement state gotten from the AccelLib library.
      * @return Integer used to amplify the chance of getting the event.
      */
-    protected int getAmplifier(final AccelerationState state) {
+    protected final int getAmplifier(final AccelerationState state) {
         for (Amplifier a : Amplifier.values()) {
             if (a.cState == state) {
                 return a.cAmplifier;

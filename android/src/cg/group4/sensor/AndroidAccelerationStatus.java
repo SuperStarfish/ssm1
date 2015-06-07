@@ -30,6 +30,9 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
      */
     protected Creator cCreator;
 
+    /**
+     * Notifies every observer when the movement changes.
+     */
     protected Subject cUpdateMovementSubject;
 
     /**
@@ -67,7 +70,7 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
     }
 
     @Override
-    public Subject getSubject() {
+    public final Subject getSubject() {
         return cUpdateMovementSubject;
     }
 

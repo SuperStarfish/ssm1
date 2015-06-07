@@ -137,7 +137,7 @@ public class FishingStrollEvent extends StrollEvent {
      * Processes the input for the event, takes the processInput method of his state.
      * @param input Vector containg the acceleration in the x,y,z direction.
      */
-	protected void processInput(final Vector3 input) {
+	protected final void processInput(final Vector3 input) {
 		cState.processInput(input);
 	}
 
