@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.rewards.RewardGenerator;
 import cg.group4.rewards.collectibles.Collectible;
+import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 /**
  * Class which handles the game logic.

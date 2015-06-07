@@ -42,7 +42,7 @@ public final class SettingsScreen extends ScreenLogic {
     protected Observer cAudioEnabledChanged = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            if((boolean) arg) {
+            if(AudioPlayer.getInstance().getAudioEnabled()) {
                 cVolumeLabelText = "Disable Audio";
             } else {
                 cVolumeLabelText = "Enable Audio";
@@ -110,6 +110,11 @@ public final class SettingsScreen extends ScreenLogic {
         cNetworkScreen = createButton("Network");
         cNetworkScreen.addListener(networkScreenBehaviour());
 
+        if(AudioPlayer.getInstance().getAudioEnabled()) {
+            cVolumeLabelText = "Disable Audio";
+        } else {
+            cVolumeLabelText = "Enable Audio";
+        }
         cButtonVolume = createButton(cVolumeLabelText);
         cNetworkScreen.addListener(volumeBehavior());
 

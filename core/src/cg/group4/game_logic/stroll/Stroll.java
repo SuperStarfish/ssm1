@@ -4,11 +4,13 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
+import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -59,6 +61,11 @@ public class Stroll implements Observer {
     protected Timer cStrollTimer;
 
     /**
+     * The background music to be played during the stroll.
+     */
+    protected Music cBackgroundMusic;
+
+    /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
     protected Observer cStrollStopObserver = new Observer() {
@@ -95,6 +102,10 @@ public class Stroll implements Observer {
         cEndEventSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
+
+        cBackgroundMusic =  Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
+        cBackgroundMusic.setLooping(true);
+        AudioPlayer.getInstance().playAudio(cBackgroundMusic);
 
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
