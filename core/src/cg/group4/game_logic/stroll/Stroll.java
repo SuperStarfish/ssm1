@@ -96,7 +96,8 @@ public class Stroll implements Observer {
         Gdx.app.log(TAG, "Started new stroll");
         cRewards = 0;
         cEventGoing = false;
-        cEventThreshold = BASE_THRESHOLD;
+        cEventThreshold = getAmplifier(StandUp.getInstance().
+                getAccelerationStatus().getAccelerationState());
         cFinished = false;
         cEndStrollSubject = new Subject();
         cNewEventSubject = new Subject();
