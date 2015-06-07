@@ -19,22 +19,40 @@ public class AudioPlayer {
     public AudioPlayer() {
         cAudioChangedSubject = new Subject();
         cPreferences = Gdx.app.getPreferences("AUDIO");
-        setAudioEnabled(cPreferences.getBoolean("ENABLED", true));
+        changeAudioEnabled(cPreferences.getBoolean("ENABLED", true));
     }
 
-    public static AudioPlayer getInstance(){
+    public static AudioPlayer getInstance() {
         return instance;
     }
 
-    public void setAudioEnabled(boolean bool){
+    public boolean getAudioEnabled() {
+        return cAudioEnabled;
+    }
+
+    public void changeAudioEnabled() {
+        cAudioEnabled = !cAudioEnabled;
+        cPreferences.putBoolean("ENABLED",cAudioEnabled);
+        cAudioChangedSubject.notifyObservers();
+        cPreferences.flush();
+    }
+
+    public void changeAudioEnabled(boolean bool) {
         cAudioEnabled = bool;
         cPreferences.putBoolean("ENABLED",cAudioEnabled);
         cAudioChangedSubject.notifyObservers();
+        cPreferences.flush();
     }
 
-    public void playMusic(Music music){
+    public void playAudio(Music music) {
+        if(cAudioEnabled){
+            music.play();
+        }
     }
 
-    public void playSound(Sound sound){
+    public void playAudio(Sound sound) {
+        if(cAudioEnabled){
+            sound.play();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.sensors.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -112,7 +113,7 @@ public class TestStrollEvent extends StrollEvent {
     public final void taskCompleted() {
         this.cTasksCompleted++;
         Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
-        cCompletedTaskSound.play(1.0f);
+        AudioPlayer.getInstance().playAudio(cCompletedTaskSound);
         cLabelSubject.update("Good work!");
         cDelayInputTimer.reset();
 

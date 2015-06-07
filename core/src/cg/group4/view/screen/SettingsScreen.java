@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Screen from which the settings of the application can be configured by a user.
  *
@@ -35,6 +38,18 @@ public final class SettingsScreen extends ScreenLogic {
             cButtonStopStroll,
             cNetworkScreen,
             cButtonBack;
+
+    protected Observer cAudioEnabledChanged = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            if((boolean) arg) {
+                cVolumeLabelText = "Disable Audio";
+            } else {
+                cVolumeLabelText = "Enable Audio";
+            }
+            cButtonVolume.setText(cVolumeLabelText);
+        }
+    };
 
     /**
      * References to the STROLL Timer and INTERVAL Timer.
@@ -95,7 +110,6 @@ public final class SettingsScreen extends ScreenLogic {
         cNetworkScreen = createButton("Network");
         cNetworkScreen.addListener(networkScreenBehaviour());
 
-        cVolumeLabelText =
         cButtonVolume = createButton(cVolumeLabelText);
         cNetworkScreen.addListener(volumeBehavior());
 
@@ -108,9 +122,9 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AudioPlayer.changeAudioEnabled();
+                AudioPlayer.getInstance().changeAudioEnabled();
             }
-        }
+        };
     }
 
     /**
