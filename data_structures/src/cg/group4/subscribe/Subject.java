@@ -1,4 +1,4 @@
-package cg.group4.util.subscribe;
+package cg.group4.subscribe;
 
 import java.util.Observable;
 

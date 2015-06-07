@@ -30,6 +30,11 @@ public class Player implements Serializable {
     protected long cIntervalTimeStamp;
 
     /**
+     * The id of the group the member is from.
+     */
+    protected String cGroupId;
+
+    /**
      * The collection of the player.
      */
     protected Collection cCollection;
@@ -115,6 +120,24 @@ public class Player implements Serializable {
      */
     public void setIntervalTimeStamp(final long intervalTimeStamp) {
         cIntervalTimeStamp = intervalTimeStamp;
+    }
+
+    /**
+     * Gets the group id.
+     *
+     * @return The group id
+     */
+    public String getGroupId() {
+        return cGroupId;
+    }
+
+    /**
+     * Sets the group id.
+     *
+     * @param cGroupId The group id.
+     */
+    public void setGroupId(String cGroupId) {
+        this.cGroupId = cGroupId;
     }
 
     /**

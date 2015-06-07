@@ -1,6 +1,7 @@
 package cg.group4.util.timer;
 
-import cg.group4.util.subscribe.Subject;
+
+import cg.group4.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 
 /**

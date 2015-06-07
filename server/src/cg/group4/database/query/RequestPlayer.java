@@ -1,6 +1,7 @@
 package cg.group4.database.query;
 
 import cg.group4.Player;
+import cg.group4.collection.Collection;
 import cg.group4.database.DatabaseConnection;
 
 import java.io.Serializable;
@@ -30,18 +31,27 @@ public class RequestPlayer extends Query {
     @Override
     public Serializable query(DatabaseConnection databaseConnection) throws SQLException {
         Statement statement = databaseConnection.query();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM USER WHERE ID = '" + cId + "' LIMIT 1");
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM User WHERE ID = '" + cId + "' LIMIT 1");
 
         Player player = new Player(cId);
-        while (resultSet.next()) {
+        if (resultSet.isBeforeFirst()) {
+            resultSet.next();
+
             player.setId(resultSet.getString("ID"));
             player.setUsername(resultSet.getString("Username"));
             player.setIntervalTimeStamp(resultSet.getInt("Interval"));
             player.setStrollTimeStamp(resultSet.getInt("Stroll"));
+
+        } else {
+            statement.executeUpdate("INSERT INTO User (ID) VALUES ('"
+                    + player.getId() + "')");
+            databaseConnection.commit();
         }
 
         resultSet.close();
         statement.close();
+
+        player.setCollection((Collection) new RequestCollection(cId).query(databaseConnection));
 
         return player;
     }

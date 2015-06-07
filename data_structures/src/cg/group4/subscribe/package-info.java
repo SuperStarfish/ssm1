@@ -3,4 +3,4 @@
  *
  * @author Benjamin Los
  */
-package cg.group4.util.subscribe;
+package cg.group4.subscribe;

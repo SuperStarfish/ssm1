@@ -61,6 +61,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
     /**
      * Tries to update the username in the server. Changes the visible message into a new message that
      * shows if it was successful or not.
+     *
      * @return New listener that is fired when clicked.
      */
     protected ChangeListener saveBehaviour() {
@@ -68,7 +69,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 if (Client.getInstance().updatePlayer(cUsername.getText())) {
-                    cMessage.setText("Succes!");
+                    cMessage.setText("Success!");
                 } else {
                     cMessage.setText("Something went wrong!");
                 }

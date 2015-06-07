@@ -69,6 +69,7 @@ public final class NetworkScreen extends ScreenLogic {
 
     /**
      * Adds the label with the message the user should at first.
+     *
      * @param text The text for the message.
      */
     protected void addLabel(final String text) {
@@ -79,6 +80,7 @@ public final class NetworkScreen extends ScreenLogic {
 
     /**
      * Adds the screen toggling behaviour to the 'change username screen'.
+     *
      * @return Listener for when clicked on.
      */
     protected ChangeListener usernameBehaviour() {

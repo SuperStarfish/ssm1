@@ -89,6 +89,7 @@ public final class Client {
     public Boolean updatePlayer(final String username) {
 
         Player player = new Player(cUserIDResolver.getID());
+        player.setUsername(username);
 
         return cConnection.send(new UpdatePlayer(player)).isSuccess();
     }

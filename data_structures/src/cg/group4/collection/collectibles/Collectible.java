@@ -26,20 +26,33 @@ public abstract class Collectible implements Serializable {
 	 * Amount of collectibles that you have of the same kind. (Same colour and form)
 	 */
 	protected int cAmount;
-	
-	/**
-	 * Constructs a collectible.
+
+    /**
+     * The owner who originally got the collectible.
+     */
+    protected String cOwnerId;
+
+    /**
+     * Constructs a collectible.
      * The constructed collectible will be based on its shape (the implementing class) and a colour (specified here).
 	 * @param hue representing the colour of the collectible
-	 */
-	public Collectible(final float hue) {
-		cHue = hue;
-		cDate = new Date();
-		cAmount = 1;
-	}
-	
-	/**
-	 * Every collectible must have a corresponding image of its form.
+     */
+    public Collectible(final float hue, final String ownerId) {
+        cHue = hue;
+        cDate = new Date();
+        cAmount = 1;
+        cOwnerId = ownerId;
+    }
+
+    public Collectible(final float hue, final int amount, final Date date, final String ownerId) {
+        cHue = hue;
+        cAmount = amount;
+        cDate = date;
+        cOwnerId = ownerId;
+    }
+
+    /**
+     * Every collectible must have a corresponding image of its form.
 	 * @return path to the location of the image inside the assets.
 	 */
 	public abstract String getImagePath();
@@ -77,10 +90,17 @@ public abstract class Collectible implements Serializable {
 	 */
 	public int getAmount() {
 		return cAmount;
-	}
-	
-	/**
-	 * Returns the multiplier that represents the rarity of this form of collectible.
+    }
+
+    /**
+     * Increments the amount of this collectible.
+     */
+    public void incrementAmount() {
+        cAmount++;
+    }
+
+    /**
+     * Returns the multiplier that represents the rarity of this form of collectible.
 	 * (The higher multiplier, the more rare this form becomes and thus the more rare
 	 * this collectible becomes)
 	 * @return double representing the form multiplier.
@@ -93,20 +113,24 @@ public abstract class Collectible implements Serializable {
      */
 	public float getHue() {
 		return cHue;
-	}
+    }
 
-	/**
-	 * Returns a string representation of a collectible, including some of it's values.
+    /**
+     * Returns the owner id of this collectible.
+     *
+     * @return The owner id.
+     */
+    public String getOwnerId() {
+        return cOwnerId;
+    }
+
+    /**
+     * Returns a string representation of a collectible, including some of it's values.
      * @return String string representation of the collectible
      */
 	public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Collectible<");
-		sb.append("hue = ").append(cHue).append(", ");
-		sb.append("amount = ").append(getAmount()).append(", ");
-		sb.append("form rarity = ").append(getFormRarity());
-		sb.append(">");
-        return sb.toString();
+        return "Collectible<" + "hue = " + cHue + ", " + "amount = " + getAmount() +
+                ", " + "form rarity = " + getFormRarity() + ">";
     }
 
 }

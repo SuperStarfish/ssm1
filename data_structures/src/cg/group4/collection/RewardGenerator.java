@@ -19,13 +19,18 @@ public class RewardGenerator {
      * Generates random numbers used in the generation of the rewards.
      */
     protected Random cRNG;
+    /**
+     * The owner of the collectibles that are generated.
+     */
+    protected String cOwnerId;
 
     /**
      * Constructs a new reward generator.
      */
-    public RewardGenerator() {
+    public RewardGenerator(final String ownerId) {
         cRNG = new Random();
         cCollectibleFactory = new CollectibleFactory();
+        cOwnerId = ownerId;
     }
 
     /**
@@ -58,8 +63,8 @@ public class RewardGenerator {
     protected final Collectible generateOneCollectible() {
         String[] collectibleList = cCollectibleFactory.getCollectiblesList();
         int nr = cRNG.nextInt(collectibleList.length);
-        double hue = rewardFunction(cRNG.nextFloat());
-        return cCollectibleFactory.generateCollectible(collectibleList[nr], (float) hue);
+        float hue = rewardFunction(cRNG.nextFloat());
+        return cCollectibleFactory.generateCollectible(collectibleList[nr], hue, cOwnerId);
     }
 
     /**
@@ -71,8 +76,8 @@ public class RewardGenerator {
      * @param x Input
      * @return Result after applying the function to the input
      */
-    protected final double rewardFunction(final double x) {
+    protected final float rewardFunction(final double x) {
         final int exponent = 4;
-        return Math.pow(x, exponent);
+        return (float) Math.pow(x, exponent);
     }
 }

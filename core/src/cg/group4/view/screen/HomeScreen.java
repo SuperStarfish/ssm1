@@ -195,20 +195,20 @@ public final class HomeScreen extends ScreenLogic {
         cTable.row().expandY();
         cTable.add(cSettingsButton);
     }
-    
+
     /**
      * Initializes the collection button on the home screen.
      */
     public void initCollectionButton() {
-    	cCollectionButton = cGameSkin.generateDefaultMenuButton("Collection");
-    	cCollectionButton.addListener(new ChangeListener() {
-    		@Override
-    		public void changed(final ChangeEvent event, final Actor actor) {
-    			ScreenStore.getInstance().setScreen("Collection");
-    		}
-    	});
-    	cTable.row().expandY();
-    	cTable.add(cCollectionButton);
+        cCollectionButton = cGameSkin.generateDefaultMenuButton("Collection");
+        cCollectionButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Collection");
+            }
+        });
+        cTable.row().expandY();
+        cTable.add(cCollectionButton);
     }
 
     @Override

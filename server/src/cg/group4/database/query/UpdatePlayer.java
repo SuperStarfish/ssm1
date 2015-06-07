@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *
+ * Updates the player data on the server.
  */
 public class UpdatePlayer extends Query {
 
@@ -32,6 +32,14 @@ public class UpdatePlayer extends Query {
 
         if (cPlayer.getStrollTimeStamp() != 0) {
             update += ", Stroll = " + cPlayer.getStrollTimeStamp();
+        }
+
+        if (cPlayer.getGroupId() != null) {
+            update += ", GroupId = '" + cPlayer.getGroupId() + "'";
+        }
+
+        if (cPlayer.getCollection() != null) {
+            new UpdateCollection(cPlayer.getCollection()).query(databaseConnection);
         }
 
         Statement statement = databaseConnection.query();

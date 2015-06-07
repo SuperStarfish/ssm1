@@ -42,7 +42,6 @@ public final class RewardUtil {
 		float h = hue * HUE_CAP * NUMBER_OF_COLORS;
 		float f = h - (float) java.lang.Math.floor(h);
 		float q = 1 - f;
-		float t = 1 - q;
 		Color color;
 		switch ((int) h) {
 			case ORANGE:

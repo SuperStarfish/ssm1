@@ -3,10 +3,9 @@ package cg.group4.game_logic;
 import cg.group4.Player;
 import cg.group4.client.Client;
 import cg.group4.collection.Collection;
-import cg.group4.collection.RewardGenerator;
 import cg.group4.game_logic.stroll.Stroll;
+import cg.group4.subscribe.Subject;
 import cg.group4.util.sensors.SensorReader;
-import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -54,11 +53,6 @@ public final class StandUp {
      * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
-    
-    /**
-     * Generates the rewards.
-     */
-    protected RewardGenerator cGenerator;
 
     /**
      * Instantiate StandUp and TimeKeeper.
@@ -67,7 +61,6 @@ public final class StandUp {
         cUpdateSubject = new Subject();
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
-        cGenerator = new RewardGenerator();
         cPlayer = Client.getInstance().getPlayer();
     }
 
