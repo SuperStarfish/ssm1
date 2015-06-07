@@ -1,6 +1,8 @@
 package cg.group4.game_logic;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.collection.Collection;
+import cg.group4.collection.collectibles.FishA;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
@@ -8,13 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -76,10 +76,13 @@ public class StandUpTest {
     @Test
     public void testEndStroll() {
         cStandUp.startStroll();
-
+        final int collectionSize = cStandUp.getPlayer().getCollection().size();
         assertNotNull(cStandUp.getStroll());
-        cStandUp.endStroll(new ArrayList<Integer>());
+        Collection collection = new Collection("");
+        collection.add(new FishA(0));
+        cStandUp.endStroll(collection);
         assertNull(cStandUp.getStroll());
+        assertEquals(cStandUp.getPlayer().getCollection().size(), collectionSize + 1);
     }
 
     /**
