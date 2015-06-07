@@ -96,6 +96,7 @@ public class Launcher extends Game {
         }
 
         Client.getInstance().setUserIDResolver(cIDResolver);
+        Client.getInstance().connectToServer();
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
@@ -103,19 +104,6 @@ public class Launcher extends Game {
         cScreenStore.setScreen("Home");
 
         notificationInitialization();
-
-        Client.getInstance().connectToServer();
-        UserData userData = Client.getInstance().getUserData();
-
-        System.out.println(userData.getcID());
-        System.out.println(userData.getcUsername());
-
-        System.out.println(Client.getInstance().updateUsername("Anonymous"));
-
-        userData = Client.getInstance().getUserData();
-
-        System.out.println(userData.getcID());
-        System.out.println(userData.getcUsername());
     }
 
     /**

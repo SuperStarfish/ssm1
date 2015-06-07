@@ -1,4 +1,4 @@
-package cg.group4.rewards;
+package cg.group4.collection;
 
 import org.junit.After;
 import org.junit.Before;

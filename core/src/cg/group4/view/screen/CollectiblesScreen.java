@@ -1,9 +1,9 @@
 package cg.group4.view.screen;
 
+import cg.group4.collection.Collection;
 import cg.group4.collection.collectibles.Collectible;
 import cg.group4.collection.collectibles.collectible_sorters.CollectibleSorter;
 import cg.group4.collection.collectibles.collectible_sorters.SortByRarity;
-import cg.group4.rewards.Collection;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;

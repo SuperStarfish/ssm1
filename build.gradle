@@ -51,6 +51,7 @@ project(":core") {
 	apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
 	
     dependencies {
+        compile project(":server")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 		compile "org.slf4j:slf4j-simple:$slf4jVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
@@ -78,6 +79,7 @@ project(":server") {
     apply plugin: "java"
 
     dependencies {
+        compile project(":data_structures")
         compile "org.xerial:sqlite-jdbc:3.8.6"
 
         testCompile "junit:junit:$junitVersion"

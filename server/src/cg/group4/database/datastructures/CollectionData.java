@@ -1,6 +1,6 @@
 package cg.group4.database.datastructures;
 
-
+import cg.group4.collection.Collection;
 
 /**
  * Wraps the collection and makes it transmittable to the server.

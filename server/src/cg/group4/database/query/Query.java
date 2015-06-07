@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * Query's the database of the server.
  */
-public abstract class Query {
+public abstract class Query implements Serializable {
 
     public abstract Serializable query(DatabaseConnection databaseConnection) throws SQLException;
 }
