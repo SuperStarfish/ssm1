@@ -1,5 +1,6 @@
 package cg.group4.view.screen;
 
+import cg.group4.collection.Collection;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,7 +17,7 @@ public final class RewardScreen extends ScreenLogic {
     /**
      * Reward that has to be displayed of the screen.
      */
-    protected int cReward;
+    protected Collection cRewardCollection;
     /**
      * Button to return to the HomeScreen.
      */
@@ -31,8 +32,8 @@ public final class RewardScreen extends ScreenLogic {
      *
      * @param reward The reward to be displayed on the reward screen.
      */
-    public RewardScreen(final int reward) {
-        cReward = reward;
+    public RewardScreen(final Collection reward) {
+        cRewardCollection = reward;
     }
 
     @Override
@@ -40,7 +41,7 @@ public final class RewardScreen extends ScreenLogic {
         Table table = new Table();
         table.setFillParent(true);
 
-        cRewardLabel = new Label(Integer.toString(cReward),
+        cRewardLabel = new Label("Not yet implemented",
                 cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
         table.add(cRewardLabel);

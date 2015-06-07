@@ -1,5 +1,7 @@
 package cg.group4.game_logic.stroll;
 
+import cg.group4.collection.Collection;
+import cg.group4.collection.RewardGenerator;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
@@ -7,7 +9,6 @@ import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-
 import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
@@ -159,15 +160,20 @@ public class Stroll implements Observer {
     public void done() {
         Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
 
+        RewardGenerator gen = new RewardGenerator();
+        Collection collection = new Collection("Reward");
+        for (Integer i : cRewards) {
+            collection.add(gen.generateCollectible(i));
+        }
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cEndStrollSubject.update(cRewards);
+        cEndStrollSubject.update(collection);
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
 
-        StandUp.getInstance().endStroll(cRewards);
+        StandUp.getInstance().endStroll(collection);
     }
 
     /**

@@ -1,15 +1,13 @@
 package cg.group4.game_logic;
 
+import cg.group4.collection.Collection;
 import cg.group4.collection.RewardGenerator;
-import cg.group4.collection.collectibles.Collectible;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.util.sensors.SensorReader;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
-
-import java.util.ArrayList;
 
 /**
  * Class which handles the game logic.
@@ -95,16 +93,13 @@ public final class StandUp {
     /**
      * Ends the current stroll.
      *
-     * @param cRewards rewards gained by the stroll.
+     * @param rewardsCollection rewards gained by the stroll.
      */
-    public void endStroll(final ArrayList<Integer> cRewards) {
+    public void endStroll(final Collection rewardsCollection) {
         Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
-        
-        for (int score : cRewards) {
-        	Collectible c = cGenerator.generateCollectible(score);
-        	//ADD COLLECTIBLE TO COLLECTION HERE
-        }
+
+        cPlayer.getCollection().addAll(rewardsCollection);
     }
 
     /**
