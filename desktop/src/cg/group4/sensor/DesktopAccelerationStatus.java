@@ -22,7 +22,7 @@ public class DesktopAccelerationStatus implements AccelerationStatus {
     }
 
     @Override
-    public Subject getSubject() {
+    public final Subject getSubject() {
         return uselessSubject;
     }
 }
