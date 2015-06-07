@@ -3,9 +3,7 @@ package cg.group4.collection;
 import cg.group4.collection.collectibles.Collectible;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Collection which can hold collectibles.
@@ -63,4 +61,15 @@ public class Collection extends HashSet<Collectible> implements Observer, Serial
         return cId;
     }
 
+    /**
+     * Sorts a list based on a given comparator.
+     *
+     * @param comparator The comparator.
+     * @return The sorted list.
+     */
+    public ArrayList<Collectible> sort(Comparator<Collectible> comparator) {
+        ArrayList<Collectible> list = new ArrayList<Collectible>(this);
+        Collections.sort(list, comparator);
+        return list;
+    }
 }

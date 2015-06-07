@@ -1,7 +1,8 @@
 package cg.group4.game_logic;
 
-import cg.group4.rewards.Collection;
-import cg.group4.rewards.RewardGenerator;
+
+import cg.group4.collection.Collection;
+import cg.group4.collection.RewardGenerator;
 
 /**
  * Class containing user specific data.
@@ -25,7 +26,7 @@ public class Player {
         cCollection = new Collection(cId);
 
         RewardGenerator gen = new RewardGenerator();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             cCollection.add(gen.generateCollectible(1));
         }
     }

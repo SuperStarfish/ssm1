@@ -1,11 +1,11 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import cg.group4.client.Client;
 
 /**
  * Screen where the user can change his username.
@@ -36,7 +36,6 @@ public final class ChangeUsernameScreen extends ScreenLogic {
     protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
         cTable.setFillParent(true);
-        cTable.debugAll();
 
         cUsername = cGameSkin.generateDefaultTextField("Anonymous");
         cUsername.setAlignment(Align.center);
