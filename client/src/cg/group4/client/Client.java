@@ -166,6 +166,16 @@ public final class Client {
         return null;
     }
 
+    public Collection getCollection(final String groupId) {
+        Response response = cConnection.send(new RequestCollection(groupId));
+        if (response.isSuccess()) {
+            return (Collection) response.getData();
+        }
+        return null;
+    }
+
+
+
     /**
      * Sets the userid using the device ID.
      *
