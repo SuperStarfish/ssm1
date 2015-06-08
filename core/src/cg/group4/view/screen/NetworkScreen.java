@@ -2,6 +2,8 @@ package cg.group4.view.screen;
 
 import cg.group4.client.Client;
 import cg.group4.game_logic.StandUp;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -105,7 +107,13 @@ public final class NetworkScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getPlayer().getCollection();
+                StandUp.getInstance().getPlayer().getCollection().resetCollection();
+                Client.getRemoteInstance().resetPlayerData(new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+
+                    }
+                });
             }
         };
     }

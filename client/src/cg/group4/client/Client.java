@@ -30,7 +30,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "128.127.39.32";
+    protected final String cDefaultIp = "82.169.19.191";
     /**
      * The default port to connect to.
      */
@@ -236,10 +236,10 @@ public final class Client {
     }
 
     protected boolean tryToSend(final Query query, final ResponseHandler responseHandler) {
-        if(!cAwaitingResponse) {
-            cAwaitingResponse = true;
-            cConnection.send(query, responseHandler);
-        }
+
+        cAwaitingResponse = true;
+        cConnection.send(query, responseHandler);
+
         return cAwaitingResponse;
     }
 
@@ -286,7 +286,9 @@ public final class Client {
         return null;
     }
 
+    public void resetPlayerData(ResponseHandler responseHandler) {
 
+    }
 
     /**
      * Sets the userid using the device ID.

@@ -25,7 +25,7 @@ public class Player {
     protected Observer cAddChangeObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            Client.getLocalInstance().updateCollection((Collection) arg, null);
+            Client.getRemoteInstance().updateCollection((Collection) arg, null);
         }
     };
 
@@ -40,12 +40,12 @@ public class Player {
                 if (response.isSuccess()) {
                     playerData = (PlayerData) response.getData();
                 } else {
-                    playerData = new PlayerData(Client.getLocalInstance().getUserID());
+                    playerData = new PlayerData(Client.getRemoteInstance().getUserID());
                 }
                 cPlayerData = playerData;
-                cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
             }
         });
+        cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 
     public PlayerData getPlayerData() {
