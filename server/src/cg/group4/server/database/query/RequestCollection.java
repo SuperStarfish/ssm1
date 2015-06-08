@@ -4,7 +4,6 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.CollectibleFactory;
 import cg.group4.server.database.DatabaseConnection;
 
-import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,7 +29,7 @@ public class RequestCollection extends Query {
     }
 
     @Override
-    public Serializable query(final DatabaseConnection databaseConnection) throws SQLException {
+    public Collection query(final DatabaseConnection databaseConnection) throws SQLException {
         Collection collection = new Collection(cGroupId);
         Statement statement = databaseConnection.query();
 

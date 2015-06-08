@@ -2,10 +2,12 @@ package cg.group4.data_structures.groups;
 
 import cg.group4.data_structures.collection.Collection;
 
+import java.io.Serializable;
+
 /**
  * Representation of a group.
  */
-public class Group {
+public class Group implements Serializable {
 
     /**
      * Defines the id of a group.
@@ -37,6 +39,7 @@ public class Group {
     protected Collection cCollection;
 
     public Group(final String id) {
+        cGroupId = id;
         cCollection = new Collection(id);
     }
 
