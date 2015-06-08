@@ -1,7 +1,6 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
-import cg.group4.data_structures.groups.Group;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -52,21 +51,23 @@ public class JoinGroupScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
-                if (tryJoin()) {
-                    cStatusLabel.setText("Successfully joined a group");
-                } else {
-                    cStatusLabel.setText("Unable to join group");
-                }
+                tryJoin();
             }
         };
     }
 
     private boolean tryJoin() {
+        System.out.println("Event Listener works");
         boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getMessageText(), new ResponseHandler() {
+
             @Override
             public void handleResponse(Response response) {
-                Group g = (Group)response.getData();
+                System.out.println("Handle response works");
+                if (response.isSuccess()) {
+                    cStatusLabel.setText("Successfully joined a group");
+                } else {
+                    cStatusLabel.setText("Unable to join group");
+                }
             }
         });
         return tryJoin;
