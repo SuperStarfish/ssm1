@@ -14,7 +14,6 @@ import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -102,14 +101,16 @@ public final class CollectiblesScreen extends ScreenLogic {
         cDrawer = new CollectibleDrawer();
         
         Client.getRemoteInstance().getGroupData(new ResponseHandler() {
-			@Override
-			public void handleResponse(Response response) {
-				cGroups = (ArrayList<GroupData>) response.getData();
-			}
+            @Override
+            public void handleResponse(Response response) {
+                cGroups = (ArrayList<GroupData>) response.getData();
+            }
         });
         StandUp.getInstance().getPlayer().getCollection().add(new FishA(0.3f, "ABC"));
         StandUp.getInstance().getPlayer().getCollection().add(new FishB(0.5f, "123"));
         StandUp.getInstance().getPlayer().getCollection().add(new FishC(0.8f, "XYZ"));
+
+        cSelectedCollection = StandUp.getInstance().getPlayer().getCollection();
     }
 
     @Override
@@ -171,8 +172,8 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void createGroupBox() {
         cGroupsBox = cGameSkin.generateDefaultSelectbox();
-        
-        cGroupsBox.setItems((GroupData[]) cGroups.toArray());
+
+        cGroupsBox.setItems((GroupData[]) cGroups.toArray(new GroupData[cGroups.size()]));
         cGroupsBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
