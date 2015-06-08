@@ -15,7 +15,7 @@ import java.sql.Statement;
 public class CreateGroup extends Query {
 
     protected final String cGroupName;
-    private final String cOwnerId;
+    protected final String cOwnerId;
 
     public CreateGroup(String groupName, String ownerId) {
         cGroupName = groupName;
@@ -49,7 +49,10 @@ public class CreateGroup extends Query {
 
         Group group = new Group(Integer.toString(groupData.getGroupId()), groupData);
         PlayerData playerData = new PlayerData(cOwnerId);
+        playerData.setUsername(null);
+
         playerData.setGroupId(Integer.toString(groupId));
+
         new UpdatePlayerData(playerData).query(databaseConnection);
 
         return group;

@@ -60,7 +60,7 @@ public class NewGroupScreen extends ScreenLogic {
     }
 
     private boolean addNewGroup() {
-        boolean tryNewGroup = Client.getRemoteInstance().createGroup(cGroupNameField.getMessageText(), new ResponseHandler() {
+        boolean tryNewGroup = Client.getRemoteInstance().createGroup(cGroupNameField.getText(), new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
                 final Group group = (Group) response.getData();

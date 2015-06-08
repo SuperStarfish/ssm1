@@ -19,7 +19,7 @@ public class GetGroupData extends Query {
         Statement statement = databaseConnection.query();
         ResultSet resultSet = statement.executeQuery(
                 "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId AS OwnerId, U.Username AS Username, U.Id "
-                        + "FROM 'Group' G INNER JOIN User u ON G.OwnerId = U.Id");
+                        + "FROM 'Group' G INNER JOIN User U ON G.OwnerId = U.Id");
         while (resultSet.next()) {
             list.add(new GroupData(
                     resultSet.getInt("GroupId"),
