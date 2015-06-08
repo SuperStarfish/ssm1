@@ -6,9 +6,6 @@ import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.Query;
-import cg.group4.server.database.query.RequestPlayerData;
-import cg.group4.server.database.query.UpdatePlayerData;
 import cg.group4.server.database.query.*;
 
 import java.util.ArrayList;
@@ -204,6 +201,10 @@ public final class Client {
         return tryToSend(new UpdatePlayerData(playerData), responseHandler);
     }
 
+    public boolean getCollection(final String groupId, ResponseHandler responseHandler) {
+        return tryToSend(new RequestCollection(groupId), responseHandler);
+    }
+
     /**
      * Adds the collection to the server. Behaviour depends on the state.
      *
@@ -263,14 +264,6 @@ public final class Client {
 //        if (response.isSuccess()) {
 //            return (String) response.getData();
 //        }
-        return null;
-    }
-
-    public Collection getCollection(final String groupId) {
-        Response response = cConnection.send(new RequestCollection(groupId));
-        if (response.isSuccess()) {
-            return (Collection) response.getData();
-        }
         return null;
     }
 
