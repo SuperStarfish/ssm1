@@ -21,10 +21,10 @@ public class GetGroupData extends Query {
                 "SELECT * FROM 'Group' INNER JOIN User ON 'Group'.OwnerId = User.Id");
         while (resultSet.next()) {
             list.add(new GroupData(
-                    resultSet.getInt("Key"),
-                    resultSet.getString("Name"),
-                    resultSet.getString("OwnerId"),
-                    resultSet.getString("Username")
+                    resultSet.getInt("'Group'.Key"),
+                    resultSet.getString("'Group'.Name"),
+                    resultSet.getString("'Group'.OwnerId"),
+                    resultSet.getString("User.Username")
             ));
         }
         resultSet.close();

@@ -35,10 +35,10 @@ public class CreateGroup extends Query {
 
 
         GroupData groupData = new GroupData(
-                resultSet.getInt("Key"),
-                resultSet.getString("Name"),
-                resultSet.getString("OwnerId"),
-                resultSet.getString("Username")
+                resultSet.getInt("'Group'.Key"),
+                resultSet.getString("'Group'.Name"),
+                resultSet.getString("'Group'.OwnerId"),
+                resultSet.getString("User.Username")
         );
         Group group = new Group(Integer.toString(groupData.getGroupId()), groupData);
 
