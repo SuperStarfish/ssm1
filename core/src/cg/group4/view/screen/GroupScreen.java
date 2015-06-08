@@ -1,6 +1,6 @@
 package cg.group4.view.screen;
 
-import cg.group4.groups.ConcreteGroup;
+import cg.group4.data_structures.groups.Group;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,7 +19,7 @@ public class GroupScreen extends ScreenLogic {
     protected Table cTable;
     protected Table cInnerTable;
     protected ScrollPane cScrollPane;
-    protected ArrayList<ConcreteGroup> cGroupsDisplayList;
+    protected ArrayList<Group> cGroupsDisplayList;
     private Button cRefreshButton;
 
 
@@ -30,7 +30,7 @@ public class GroupScreen extends ScreenLogic {
         cTable.setFillParent(true);
         cTable.debugAll();
 
-        cGroupsDisplayList = new ArrayList<ConcreteGroup>();
+        cGroupsDisplayList = new ArrayList<Group>();
 
         createTitle();
         createNewGroupButton();
