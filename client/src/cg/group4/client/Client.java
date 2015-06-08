@@ -176,6 +176,10 @@ public final class Client {
         return tryToSend(new UpdatePlayerData(playerData), responseHandler);
     }
 
+    public boolean createGroup(final String groupId, ResponseHandler responseHandler) {
+        return tryToSend(new CreateGroup(groupId, cUserIDResolver.getID()), responseHandler);
+    }
+
     /**
      * Updates the interval timers in the database.
      *
