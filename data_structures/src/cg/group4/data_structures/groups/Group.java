@@ -28,6 +28,7 @@ public class Group implements Serializable {
         cGroupData = groupData;
     }
 
+
     // group data
     public GroupData getGroupData() {
         return cGroupData;
