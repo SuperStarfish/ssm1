@@ -90,7 +90,7 @@ public class AudioPlayer {
         if(!cAudioEnabled){
             cLastPlayed.stop();
         } else {
-            StandUp.getInstance().getBackGroundMusic().play();
+            AudioPlayer.getInstance().playAudio(StandUp.getInstance().getBackGroundMusic());
         }
 
         cPreferences.putBoolean("ENABLED",cAudioEnabled);
@@ -107,7 +107,9 @@ public class AudioPlayer {
                 cLastPlayed.stop();
             }
             music.play();
-            cLastPlayed = music;
+            if(!music.equals(cLastPlayed)){
+                cLastPlayed = music;
+            }
         }
     }
 
