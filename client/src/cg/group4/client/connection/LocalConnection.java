@@ -55,7 +55,6 @@ public final class LocalConnection implements Connection {
 
     @Override
     public void send(final Query data, final ResponseHandler responseHandler) {
-        LOGGER.info("Local connection not yet implemented.");
         try {
             cOutputStream.writeObject(data);
             cOutputStream.flush();

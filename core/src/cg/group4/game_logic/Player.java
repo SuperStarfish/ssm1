@@ -33,7 +33,6 @@ public class Player {
      * Constructs a player object.
      */
     public Player() {
-        System.out.println(Client.getLocalInstance());
          Client.getLocalInstance().getPlayerData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
@@ -44,7 +43,6 @@ public class Player {
                     playerData = new PlayerData(Client.getLocalInstance().getUserID());
                 }
                 cPlayerData = playerData;
-                System.out.println(cPlayerData);
             }
         });
         cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
