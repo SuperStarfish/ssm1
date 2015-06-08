@@ -4,12 +4,16 @@ import cg.group4.server.host.ExternalHost;
 import cg.group4.server.host.Host;
 import cg.group4.server.host.LocalHost;
 import cg.group4.server.host.UnknownHost;
+import cg.group4.util.IpResolver;
 import cg.group4.util.StaticsCaller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.ConnectException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,10 +43,6 @@ public class Server {
      */
     protected final int cMaxThreads = 50;
     /**
-     * String to be used for the URL to check external IP.
-     */
-    protected final String cVerifyURl = "http://checkip.amazonaws.com";
-    /**
      * Containers for the local and external INetAddress. Can be UnknownHost if lookup failed.
      */
     protected Host cLocalHost, cExternalHost;
@@ -58,10 +58,6 @@ public class Server {
      * Used to make calls to static methods. Primarily used for mocking in tests.
      */
     protected StaticsCaller cStaticsCaller;
-    /**
-     * URL used to check the external IP address.
-     */
-    protected URL cWhatIsMyIP;
 
 
     /**
@@ -69,11 +65,6 @@ public class Server {
      */
     public Server() {
         cStaticsCaller = new StaticsCaller();
-        try {
-            cWhatIsMyIP = new URL(cVerifyURl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -123,32 +114,14 @@ public class Server {
      * Attempts to get the External IP address. If it fails it assigns as UnknownHost.
      */
     protected final void createExternalIP() {
+        IpResolver ipResolver = new IpResolver();
         try {
-            cExternalHost = new ExternalHost(cStaticsCaller.getByName(getExternalIP()));
+            cExternalHost = new ExternalHost(cStaticsCaller.getByName(ipResolver.getExternalIP()));
             LOGGER.info("External IP: " + cExternalHost.toString());
         } catch (UnknownHostException e) {
             cExternalHost = new UnknownHost();
             LOGGER.severe("Could not set up local IP!");
         }
-    }
-
-    /**
-     * Contacts the Amazonaws ip check service. If it fails, the server is offline and the external IP address cannot
-     * be created. Otherwise returns the external IP.
-     *
-     * @return The external IP.
-     * @throws UnknownHostException If offline, the UnknownHostException is send back to start().
-     */
-    protected final String getExternalIP() throws UnknownHostException {
-        String result = "";
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(cWhatIsMyIP.openStream()));
-            result = in.readLine();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     /**

@@ -47,7 +47,7 @@ public class UpdatePlayerData extends Query {
         }
 
         if (cPlayerData.getCollection() != null) {
-            new UpdateCollection(cPlayerData.getCollection()).query(databaseConnection);
+            new AddCollection(cPlayerData.getCollection()).query(databaseConnection);
         }
 
         Statement statement = databaseConnection.query();
