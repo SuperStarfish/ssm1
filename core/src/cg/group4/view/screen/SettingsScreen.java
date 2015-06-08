@@ -41,7 +41,7 @@ public final class SettingsScreen extends ScreenLogic {
     protected Observer cAudioEnabledChanged = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            if(AudioPlayer.getInstance().getAudioEnabled()) {
+            if (AudioPlayer.getInstance().getAudioEnabled()) {
                 cVolumeLabelText = "Disable Audio";
             } else {
                 cVolumeLabelText = "Enable Audio";
@@ -125,7 +125,7 @@ public final class SettingsScreen extends ScreenLogic {
     private ChangeListener volumeBehavior() {
         return new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 AudioPlayer.getInstance().changeAudioEnabled();
             }
         };

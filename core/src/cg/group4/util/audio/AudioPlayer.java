@@ -1,7 +1,7 @@
 package cg.group4.util.audio;
 
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -76,6 +76,10 @@ public class AudioPlayer {
         afterChange();
     }
 
+    /**
+     * Sets the last played Music.
+     * @param music Music to be set as last played.
+     */
     public final void setLastPlayed(Music music) {
         cLastPlayed = music;
     }

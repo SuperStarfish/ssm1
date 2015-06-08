@@ -1,7 +1,7 @@
 package cg.group4.util.audio;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.util.subscribe.Subject;
+import cg.group4.data_structures.subscribe.Subject;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import org.junit.Before;
@@ -13,6 +13,9 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test class for the AudioPlayer.test class;
+ */
 @RunWith(GdxTestRunner.class)
 public class AudioPlayerTest {
 
@@ -37,7 +40,7 @@ public class AudioPlayerTest {
     Sound cSoundMock;
 
     /**
-     * Setup method, gets ran before every test
+     * Setup method, gets ran before every test.
      **/
     @Before
     public void setUp() {
