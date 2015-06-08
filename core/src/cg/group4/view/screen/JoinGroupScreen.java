@@ -8,13 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 /**
- * Players can add new groups here.
+ * Players can join groups here.
  */
-public class NewGroupScreen extends ScreenLogic {
+public class JoinGroupScreen extends ScreenLogic {
 
     protected Table cTable;
     protected TextField cGroupNameField;
-    protected TextButton cAddGroupButton, cBack;
+    protected TextButton cJoinGroupButton, cBack;
     protected Label cStatusLabel;
 
 
@@ -23,19 +23,19 @@ public class NewGroupScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-        cGroupNameField = cGameSkin.generateDefaultTextField("Name");
+        cGroupNameField = cGameSkin.generateDefaultTextField("0");
         cGroupNameField.setAlignment(Align.center);
         cTable.row().expandY();
         cTable.add(cGroupNameField).fillX();
 
-        cStatusLabel = cGameSkin.generateDefaultLabel("Click below to start a new group");
+        cStatusLabel = cGameSkin.generateDefaultLabel("Required: join code");
         cTable.row().expandY();
         cTable.add(cStatusLabel).expandX();
 
-        cAddGroupButton = cGameSkin.generateDefaultMenuButton("Create group");
-        cAddGroupButton.addListener(addGroupListener());
+        cJoinGroupButton = cGameSkin.generateDefaultMenuButton("Join group");
+        cJoinGroupButton.addListener(addGroupListener());
         cTable.row().expandY();
-        cTable.add(cAddGroupButton);
+        cTable.add(cJoinGroupButton);
 
         cBack = createBackButton();
         cTable.row().expandY();
@@ -49,9 +49,9 @@ public class NewGroupScreen extends ScreenLogic {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (false) {
-                    cStatusLabel.setText("Successfully created new group");
+                    cStatusLabel.setText("Successfully joined a group");
                 } else {
-                    cStatusLabel.setText("Unable to create new group");
+                    cStatusLabel.setText("Unable to join group");
                 }
             }
         };
@@ -60,7 +60,7 @@ public class NewGroupScreen extends ScreenLogic {
     @Override
     protected void rebuildWidgetGroup() {
         cBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cAddGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cJoinGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cGroupNameField.setStyle(cGameSkin.getDefaultTextFieldStyle());
         cStatusLabel.setStyle(cGameSkin.getDefaultLabelStyle());
     }

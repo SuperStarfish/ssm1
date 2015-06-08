@@ -15,18 +15,17 @@ import java.util.ArrayList;
 public class GroupScreen extends ScreenLogic {
 
     protected Label cTitle;
-    protected TextButton cNewGroupButton;
+    protected TextButton cNewGroupButton, cJoinGroupButton, cBackButton;
     protected Table cTable;
     protected Table cInnerTable;
     protected ScrollPane cScrollPane;
     protected ArrayList<Group> cGroupsDisplayList;
-    protected TextButton cRefreshButton;
-
 
     @Override
     protected WidgetGroup createWidgetGroup() {
         ScreenStore screenStore = ScreenStore.getInstance();
         screenStore.addScreen("New-Group", new NewGroupScreen());
+        screenStore.addScreen("Join-Group", new JoinGroupScreen());
 
         cTable = new Table();
         cTable.setFillParent(true);
@@ -37,6 +36,11 @@ public class GroupScreen extends ScreenLogic {
         createTitle();
         createNewGroupButton();
         createGroupsOverview();
+        createJoinGroupButton();
+
+        cBackButton = createBackButton();
+        cTable.row();
+        cTable.add(cBackButton);
 
         return cTable;
 
@@ -57,18 +61,17 @@ public class GroupScreen extends ScreenLogic {
             }
         });
         cTable.add(cNewGroupButton);
-        cTable.row().expandY();
     }
 
-    protected void createRefreshButton() {
-        cRefreshButton = cGameSkin.generateDefaultMenuButton("Refresh");
-        cRefreshButton.addListener(new ChangeListener() {
+    protected void createJoinGroupButton() {
+        cJoinGroupButton = cGameSkin.generateDefaultMenuButton("Join group");
+        cJoinGroupButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ScreenStore.getInstance().setScreen("Settings"); // TEMP, TODO
+                ScreenStore.getInstance().setScreen("Join-Group");
             }
         });
-        cTable.add(cRefreshButton);
+        cTable.add(cJoinGroupButton);
         cTable.row().expandY();
     }
 
@@ -84,7 +87,7 @@ public class GroupScreen extends ScreenLogic {
     protected void rebuildWidgetGroup() {
         cTitle.setStyle(cGameSkin.getDefaultLabelStyle());
         cNewGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        //cRefreshButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cJoinGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override
