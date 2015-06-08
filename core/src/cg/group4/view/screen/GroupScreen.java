@@ -29,7 +29,6 @@ public class GroupScreen extends ScreenLogic {
 
         cTable = new Table();
         cTable.setFillParent(true);
-        cTable.debugAll();
 
         cGroupsDisplayList = new ArrayList<Group>();
 
