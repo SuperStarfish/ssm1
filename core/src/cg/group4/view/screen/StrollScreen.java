@@ -1,5 +1,6 @@
 package cg.group4.view.screen;
 
+import cg.group4.data_structures.collection.Collection;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.game_logic.stroll.events.StrollEvent;
@@ -56,7 +57,7 @@ public final class StrollScreen extends ScreenLogic {
     protected Observer cEndStrollObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            cScreenStore.addScreen("Reward", new RewardScreen((Integer) arg));
+            cScreenStore.addScreen("Reward", new RewardScreen((Collection) arg));
             cScreenStore.setScreen("Reward");
         }
     };

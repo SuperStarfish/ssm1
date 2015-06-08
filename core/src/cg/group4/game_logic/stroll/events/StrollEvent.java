@@ -1,7 +1,7 @@
 package cg.group4.game_logic.stroll.events;
 
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -18,11 +18,6 @@ import java.util.Observer;
  * @author Martijn Gribnau
  */
 public abstract class StrollEvent implements Disposable, Observer {
-	
-    /**
-     * Every strollEvent has a respective timer.
-     */
-    protected Timer cEventTimer;
 
     /**
      * Timer to constrain the amount of time spent on an event.
@@ -35,7 +30,10 @@ public abstract class StrollEvent implements Disposable, Observer {
             clearEvent();
         }
     };
-
+    /**
+     * Every strollEvent has a respective timer.
+     */
+    protected Timer cEventTimer;
     /**
      * Subject to detect label changes.
      */
@@ -88,7 +86,7 @@ public abstract class StrollEvent implements Disposable, Observer {
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         cEventTimer.getStopSubject().deleteObserver(cEventStopObserver);
-        cEventTimer.stop();
+        cEventTimer.dispose();
         StandUp.getInstance().getStroll().eventFinished(getReward());
     }
 }

@@ -10,6 +10,7 @@ public class StaticsCaller {
 
     /**
      * Returns the localhost.
+     *
      * @return Localhost.
      * @throws UnknownHostException Localhost could not be found.
      */
@@ -19,6 +20,7 @@ public class StaticsCaller {
 
     /**
      * Generates an InetAddress from a string.
+     *
      * @param ip The IP to try and make the connection to.
      * @return The InetAddress to that IP.
      * @throws UnknownHostException Host could not be created.

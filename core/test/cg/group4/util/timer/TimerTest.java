@@ -1,7 +1,6 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.util.timer.Timer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
@@ -12,9 +11,7 @@ import org.junit.runner.RunWith;
 import java.util.Observable;
 import java.util.Observer;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -25,18 +22,20 @@ import static org.mockito.Mockito.*;
 public class TimerTest {
 
     /**
+     * Seconds in a minute.
+     */
+    protected final int cTimeInMinute = 60;
+    /**
      * Timer that will be tested upon.
      */
     protected Timer cTimer;
-
-    final int time60 = 60;
 
     /**
      * Initializes objects for a test.
      */
     @Before
     public final void setUp() {
-        cTimer = new Timer("TEST", 5);
+        cTimer = new Timer("TEST", cTimeInMinute);
     }
 
     /**
@@ -108,9 +107,9 @@ public class TimerTest {
      */
     @Test
     public final void testSetFinishTimePersistent() {
-        cTimer = new Timer(cTimer.getName(), time60, true);
-        cTimer = new Timer(cTimer.getName(), time60);
-        cTimer = new Timer(cTimer.getName(), time60, true);
+        cTimer = new Timer(cTimer.getName(), cTimeInMinute, true);
+        cTimer = new Timer(cTimer.getName(), cTimeInMinute);
+        cTimer = new Timer(cTimer.getName(), cTimeInMinute, true);
         assertTrue(cTimer.cRunning);
     }
 
@@ -119,9 +118,9 @@ public class TimerTest {
      */
     @Test
     public final void testSetFinishTimePersistentFinished() {
-        cTimer = new Timer(cTimer.getName(), time60, true);
+        cTimer = new Timer(cTimer.getName(), cTimeInMinute, true);
         cTimer.cPreferences.putLong(cTimer.cName, System.currentTimeMillis() - cTimer.cDuration);
-        cTimer = new Timer(cTimer.getName(), time60, true);
+        cTimer = new Timer(cTimer.getName(), cTimeInMinute, true);
         assertFalse(cTimer.cRunning);
     }
 
@@ -131,7 +130,7 @@ public class TimerTest {
     @Test
     public final void testResetFinishTime() {
         final long tick = 1000;
-        Timer timer = new Timer("BLABLA", time60, true);
+        Timer timer = new Timer("BLABLA", cTimeInMinute, true);
         long time = timer.cPreferences.getLong(timer.cName);
         timer.tick(System.currentTimeMillis() + tick);
         timer.resetFinishTime();
@@ -154,7 +153,7 @@ public class TimerTest {
      */
     @Test
     public final void testTimerEnumINTERVAL() {
-        assertEquals(time60 * time60, Timer.Global.INTERVAL.getDuration());
+        assertEquals(cTimeInMinute * cTimeInMinute, Timer.Global.INTERVAL.getDuration());
     }
 
     /**
@@ -162,7 +161,7 @@ public class TimerTest {
      */
     @Test
     public final void testTimerEnumSTROLL() {
-        assertEquals(5 * time60, Timer.Global.STROLL.getDuration());
+        assertEquals(5 * cTimeInMinute, Timer.Global.STROLL.getDuration());
     }
 
     /**
@@ -170,7 +169,7 @@ public class TimerTest {
      */
     @Test
     public final void testTimerEnumEVENT() {
-        assertEquals(time60, Timer.Global.EVENT.getDuration());
+        assertEquals(cTimeInMinute, Timer.Global.EVENT.getDuration());
     }
 
     /**
