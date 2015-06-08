@@ -39,7 +39,7 @@ public class StandUpTest {
     @Before
     public void setUp() {
         cStandUp = new StandUp();
-        StandUp.INSTANCE = cStandUp;
+        StandUp.cInstance = cStandUp;
         StandUp.getInstance().setAccelerationStatus(new AccelerationStatus() {
 
             protected Subject tempsubject = new Subject();
@@ -54,7 +54,7 @@ public class StandUpTest {
             }
         });
         cStandUp = StandUp.getInstance();
-        StandUp.INSTANCE = cStandUp;
+        StandUp.cInstance = cStandUp;
     }
 
     /**
