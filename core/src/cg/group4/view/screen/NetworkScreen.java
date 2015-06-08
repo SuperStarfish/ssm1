@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.game_logic.StandUp;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -25,7 +26,7 @@ public final class NetworkScreen extends ScreenLogic {
     /**
      * The buttons that are seen on this screen.
      */
-    protected TextButton cChangeUsername, cBack;
+    protected TextButton cChangeUsername, cResetUser, cBack;
 
     /**
      * The label containing if we are connected with the server or not.
@@ -53,6 +54,8 @@ public final class NetworkScreen extends ScreenLogic {
         }
 
         addChangeUserName();
+
+        addResetCollection();
 
         cBack = createBackButton();
         cTable.row().expandY();
@@ -89,6 +92,22 @@ public final class NetworkScreen extends ScreenLogic {
         cChangeUsername.addListener(usernameBehaviour());
         cTable.row().expandY();
         cTable.add(cChangeUsername);
+    }
+
+    protected void addResetCollection() {
+        cResetUser = cGameSkin.generateDefaultMenuButton("Reset Stats");
+        cResetUser.addListener(resetPlayerDataBehaviour());
+        cTable.row().expandY();
+        cTable.add(cResetUser);
+    }
+
+    protected ChangeListener resetPlayerDataBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                StandUp.getInstance().getPlayer().getCollection();
+            }
+        };
     }
 
     /**

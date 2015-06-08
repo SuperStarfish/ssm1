@@ -209,6 +209,21 @@ public final class Client {
         return tryToSend(new RequestCollection(groupId), responseHandler);
     }
 
+    public boolean joinGroup(final String groupId, ResponseHandler responseHandler) {
+        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
+        playerData.setGroupId(groupId);
+        return tryToSend(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
+     *
+     * @return All the userdata.
+     */
+    public boolean getPlayerData(ResponseHandler responseHandler) {
+        return tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
+    }
+
     /**
      * Adds the collection to the server. Behaviour depends on the state.
      *
@@ -228,15 +243,6 @@ public final class Client {
         return cAwaitingResponse;
     }
 
-    /**
-     * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
-     *
-     * @return All the userdata.
-     */
-    public boolean getPlayerData(ResponseHandler responseHandler) {
-        return tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
-    }
-    
     /**
      * Gets the groupdata from the server. Behaviour depends on the state.
      *

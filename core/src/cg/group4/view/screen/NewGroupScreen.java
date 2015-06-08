@@ -1,5 +1,11 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
+import cg.group4.data_structures.groups.Group;
+import cg.group4.game_logic.Player;
+import cg.group4.game_logic.StandUp;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -48,13 +54,29 @@ public class NewGroupScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (false) {
+                boolean tryNewGroup = addNewGroup();
+                if (tryNewGroup) {
                     cStatusLabel.setText("Successfully created new group");
                 } else {
                     cStatusLabel.setText("Unable to create new group");
                 }
             }
         };
+    }
+
+    private boolean addNewGroup() {
+        boolean tryNewGroup = Client.getRemoteInstance().createGroup(cGroupNameField.getMessageText(), new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                final Group group = (Group) response.getData();
+                final int groupId = group.getGroupData().getGroupId();
+
+                final Player player = StandUp.getInstance().getPlayer();
+                player.setPlayerDataGroupId(groupId);
+            }
+        });
+
+        return tryNewGroup;
     }
 
     @Override

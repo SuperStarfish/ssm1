@@ -81,7 +81,7 @@ public class Launcher extends Game {
         server.start();
 
         Client.getLocalInstance().setUserIDResolver(cIDResolver);
-        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+//        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
         Client.getRemoteInstance().setUserIDResolver(cIDResolver);
 
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();

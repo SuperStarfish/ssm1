@@ -1,5 +1,8 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -48,13 +51,24 @@ public class JoinGroupScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (false) {
+
+                if (tryJoin()) {
                     cStatusLabel.setText("Successfully joined a group");
                 } else {
                     cStatusLabel.setText("Unable to join group");
                 }
             }
         };
+    }
+
+    private boolean tryJoin() {
+        boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getMessageText(), new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+
+            }
+        });
+        return tryJoin;
     }
 
     @Override

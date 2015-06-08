@@ -78,4 +78,12 @@ public class Player {
     public String getId() {
         return cPlayerData.getId();
     }
+
+    /**
+     * 
+     * @param groupId
+     */
+    public void setPlayerDataGroupId(int groupId) {
+        cPlayerData.setGroupId(Integer.toString(groupId));
+    }
 }
