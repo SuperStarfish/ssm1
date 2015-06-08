@@ -1,5 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.util.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -63,9 +64,15 @@ public class GameSkin extends Skin {
     protected final float cCursorWidth = 3f;
 
     /**
+     * Container for all the assets.
+     */
+    protected Assets cAssets;
+
+    /**
      * Initializes the skin.
      */
     public GameSkin() {
+        cAssets = Assets.getInstance();
         cFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(cDefaultFont));
     }
 
@@ -146,7 +153,7 @@ public class GameSkin extends Skin {
         buttonStyle.fontColor = Color.GREEN;
         buttonStyle.font = this.get("default_font", BitmapFont.class);
 
-        Sprite sprite = new Sprite(new Texture(Gdx.files.internal("images/wooden_sign.png")));
+        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
         final float scalar = 0.42f;
         sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
 
@@ -163,9 +170,9 @@ public class GameSkin extends Skin {
     protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
     	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
     	checkboxStyle.checkboxOff = new TextureRegionDrawable(
-    			new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOff.png"))));
+    			new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
     	checkboxStyle.checkboxOn = new TextureRegionDrawable(
-    			new TextureRegion(new Texture(Gdx.files.internal("images/CheckBoxOn.png"))));
+    			new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
     	
     	checkboxStyle.font = this.get("default_font", BitmapFont.class);
     	checkboxStyle.fontColor = Color.GREEN;
@@ -198,7 +205,7 @@ public class GameSkin extends Skin {
     	listStyle.fontColorSelected = Color.GREEN;
     	listStyle.fontColorUnselected = Color.WHITE;
     	listStyle.selection = new TextureRegionDrawable(
-    			new TextureRegion(new Texture(Gdx.files.internal("images/FishD.png"))));
+    			new TextureRegion(cAssets.getTexture("images/FishD.png")));
     	return listStyle;
     }
 
@@ -253,9 +260,9 @@ public class GameSkin extends Skin {
         BaseDrawable empty = new BaseDrawable();
         BitmapFont font = this.get("default_font", BitmapFont.class);
         Color color = Color.GREEN;
-        Drawable cursor = new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/blackpixel.jpg"))));
+        Drawable cursor = new SpriteDrawable(new Sprite(cAssets.getTexture("images/blackpixel.jpg")));
         cursor.setMinWidth(cCursorWidth * cUiScalar);
-        Drawable background = new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("images/debugpixel.png"))));
+        Drawable background = new SpriteDrawable(new Sprite(cAssets.getTexture("images/debugpixel.png")));
         TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle(font, color, cursor, background, empty);
         return textFieldStyle;
     }

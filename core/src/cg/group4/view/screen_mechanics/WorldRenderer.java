@@ -1,6 +1,7 @@
 package cg.group4.view.screen_mechanics;
 
 import cg.group4.game_logic.StandUp;
+import cg.group4.util.Assets;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -76,6 +77,11 @@ public class WorldRenderer extends InputAdapter implements Screen {
      */
     protected boolean cIsLandscape;
 
+    /**
+     * All assets are stored here.
+     */
+    protected Assets cAssets;
+
     @Override
     public final void show() {
         initDefaults();
@@ -96,6 +102,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
                 cCamera);
         cBatch = new SpriteBatch();
         cStage = new Stage();
+        cAssets = Assets.getInstance();
         cScreenStore = ScreenStore.getInstance();
     }
 
@@ -185,23 +192,17 @@ public class WorldRenderer extends InputAdapter implements Screen {
      * @param filename PATH to the image.
      */
     public final void setBackground(final String filename) {
-        FileHandle fileHandle = Gdx.files.internal(filename);
-        if (fileHandle.exists()) {
-            setBackground(fileHandle);
+        if (cAssets.isLoaded(filename)) {
+            setBackground(cAssets.getTexture(filename));
         }
     }
 
     /**
-     * Discards previous background textures (if existing) and then sets the background to the file in the FileHandle.
-     * If the new background does not fit the aspect ratio, the default background will be set.
+     * Sets the background to the texture that is provided. Fits in in the middle of the screen.
      *
-     * @param fileHandle The FileHandle to the file.
+     * @param texture The texture to use as background.
      */
-    public final void setBackground(final FileHandle fileHandle) {
-        if (cBackgroundSprite != null) {
-            cBackgroundSprite.getTexture().dispose();
-        }
-        Texture texture = new Texture(fileHandle);
+    public final void setBackground(final Texture texture) {
         if (texture.getWidth() > texture.getHeight() != cIsLandscape) {
             setDefaultBackground();
         } else {

@@ -1,5 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.util.Assets;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -31,12 +32,18 @@ public abstract class ScreenLogic {
     protected ScreenStore cScreenStore;
 
     /**
+     * Reference to the Assets for easy access within screens if needed.
+     */
+    protected Assets cAssets;
+
+    /**
      * A default constructor which initializes the screen logic.
      */
     public ScreenLogic() {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
         cPreviousScreenName = setPreviousScreenName();
+        cAssets = Assets.getInstance();
     }
 
     /**

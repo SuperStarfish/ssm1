@@ -13,6 +13,7 @@ import cg.group4.util.notification.NotificationController;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
 
 import com.badlogic.gdx.Application;
@@ -85,10 +86,14 @@ public class Launcher extends Game {
     public final void create() {
         debugSetup();
 
+        setScreen(new LoadingScreen(this));
+    }
+
+    public void assetsdone(){
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
-        
+
         int fa = 0, fb = 0, fc = 0;
         //Needs to be moved
         Collection c = new Collection("local");
@@ -104,7 +109,7 @@ public class Launcher extends Game {
         		fc++;
         	}
         }
-        
+
         System.out.println("Fish A: " + fa + " Fish B: " + fb + " Fish C: " + fc);
 
         Client.getInstance().setUserIDResolver(cIDResolver);
@@ -153,8 +158,10 @@ public class Launcher extends Game {
     @Override
     public final void render() {
         super.render();
-        cStandUp.update();
-        cTimeKeeper.update();
+        if(cStandUp != null && cTimeKeeper != null){
+            cTimeKeeper.update();
+            cStandUp.update();
+        }
     }
 
 }
