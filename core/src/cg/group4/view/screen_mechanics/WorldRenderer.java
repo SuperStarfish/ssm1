@@ -1,9 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.game_logic.StandUp;
-import cg.group4.util.Assets;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;

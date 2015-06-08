@@ -4,10 +4,6 @@ import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
 import cg.group4.rewards.Collection;
-import cg.group4.rewards.RewardGenerator;
-import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.rewards.collectibles.FishA;
-import cg.group4.rewards.collectibles.FishB;
 import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.notification.NotificationController;
 import cg.group4.util.timer.TimeKeeper;
@@ -70,7 +66,8 @@ public class Launcher extends Game {
      * @param notificationController The notification controller.
      * @param idResolver             The userID resolver for unique device id.
      */
-    public Launcher(final AccelerationStatus accelerationStatus, final NotificationController notificationController, final UserIDResolver idResolver) {
+    public Launcher(final AccelerationStatus accelerationStatus,
+                    final NotificationController notificationController, final UserIDResolver idResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;
@@ -89,28 +86,16 @@ public class Launcher extends Game {
         setScreen(new LoadingScreen(this));
     }
 
-    public void assetsdone(){
+    /**
+     * Once the Assets are done loading, this method is called to properly initialize the game.
+     */
+    public void assetsDone() {
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
 
-        int fa = 0, fb = 0, fc = 0;
         //Needs to be moved
         Collection c = new Collection("local");
-        RewardGenerator gen = new RewardGenerator();
-        for(int i = 0; i < 500; i++) {
-        	Collectible ca = gen.generateCollectible(1);
-        	c.add(ca);
-        	if(ca instanceof FishA) {
-        		fa++;
-        	} else if (ca instanceof FishB) {
-        		fb++;
-        	} else {
-        		fc++;
-        	}
-        }
-
-        System.out.println("Fish A: " + fa + " Fish B: " + fb + " Fish C: " + fc);
 
         Client.getInstance().setUserIDResolver(cIDResolver);
 
@@ -158,7 +143,7 @@ public class Launcher extends Game {
     @Override
     public final void render() {
         super.render();
-        if(cStandUp != null && cTimeKeeper != null){
+        if (cStandUp != null && cTimeKeeper != null) {
             cTimeKeeper.update();
             cStandUp.update();
         }
