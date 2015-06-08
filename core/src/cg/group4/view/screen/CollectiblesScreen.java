@@ -73,7 +73,7 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected Collection cSelectedCollection;
     
-    protected ArrayList<GroupData> cGroups;
+    protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
 
     /**
      * Observers additions made to the collection.
@@ -178,7 +178,13 @@ public final class CollectiblesScreen extends ScreenLogic {
             public void changed(final ChangeEvent event, final Actor actor) {
                 System.out.println("Selected Collection: " + cGroupsBox.getSelected());
                 int groupId = cGroupsBox.getSelected().getGroupId();
-                //cSelectedCollection = cGroupsBox.getSelected().getGroupId()
+                Client.getRemoteInstance().getCollection(Integer.toString(groupId), new ResponseHandler() {
+					@Override
+					public void handleResponse(Response response) {
+						cSelectedCollection = (Collection) response.getData();
+						constructContents();
+					}
+                });
             }
         });
     }
