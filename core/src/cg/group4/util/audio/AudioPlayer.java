@@ -13,7 +13,7 @@ public class AudioPlayer {
      * Class is a singleton, we only have one AudioPlayer which keeps track of the
      * settings and audio played.
      */
-    protected static final AudioPlayer instance = new AudioPlayer();
+    protected static final AudioPlayer INSTANCE = new AudioPlayer();
 
     /**
      * Subject which notifies everyone when the audio is enabled or disabled.
@@ -49,14 +49,14 @@ public class AudioPlayer {
      * @return The AudioPlayer singleton.
      */
     public static AudioPlayer getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     /**
      * Returns whether or not the audio is enabled.
      * @return Returns true if enabled, false if not.
      */
-    public boolean getAudioEnabled() {
+    public final boolean getAudioEnabled() {
         return cAudioEnabled;
     }
 
@@ -64,19 +64,19 @@ public class AudioPlayer {
      * Returns the subject which notifies all observers when audio is enabled/disabled.
      * @return Subject
      */
-    public Subject getSubject() {
+    public final Subject getSubject() {
         return cAudioChangedSubject;
     }
 
     /**
      * Toggles whether or not the audio should be enabled.
      */
-    public void changeAudioEnabled() {
+    public final void changeAudioEnabled() {
         cAudioEnabled = !cAudioEnabled;
         afterChange();
     }
 
-    public void setLastPlayed(Music music) {
+    public final void setLastPlayed(Music music) {
         cLastPlayed = music;
     }
 
@@ -84,7 +84,7 @@ public class AudioPlayer {
      * Gets ran after the audio enabled gets toggled. Updates every observer, stops or plays a new track
      * according to the cAudioEnabled variable. Finally updates the value stored in the preferences.
      */
-    protected void afterChange() {
+    protected final void afterChange() {
         cAudioChangedSubject.update();
 
         if(!cAudioEnabled){
@@ -101,7 +101,7 @@ public class AudioPlayer {
      * Plays a music file using the AudioPlayer. Stops the previous
      * @param music The music file to be played.
      */
-    public void playAudio(Music music) {
+    public final void playAudio(Music music) {
         if (cAudioEnabled){
             if (cLastPlayed.isPlaying()) {
                 cLastPlayed.stop();
@@ -115,7 +115,7 @@ public class AudioPlayer {
      * Plays a sound file using the AudioPlayer.
      * @param sound The sound file to be played
      */
-    public void playAudio(Sound sound) {
+    public final void playAudio(Sound sound) {
         if(cAudioEnabled){
             sound.play();
         }

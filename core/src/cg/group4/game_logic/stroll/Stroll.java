@@ -4,13 +4,11 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
-import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 
 import java.util.ArrayList;
 import java.util.Observable;
