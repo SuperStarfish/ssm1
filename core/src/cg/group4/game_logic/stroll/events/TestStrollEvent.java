@@ -1,23 +1,19 @@
 package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.sensors.Accelerometer;
+import cg.group4.util.sensor.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-import cg.group4.view.screen.EventScreen;
-import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 /**
  * Stroll event used for testing.
- *
- * @author Nick Cleintuar
  */
 public class TestStrollEvent extends StrollEvent {
 
@@ -26,31 +22,18 @@ public class TestStrollEvent extends StrollEvent {
      */
     protected static final int MAX_TASKS = 10;
     /**
-     * Amount of different tasks.
-     */
-    protected static final int AMOUNT_OF_TASKS = 6;
-    /**
-     * Number of tasks that the player must complete before the event is considered a success.
-     */
-    protected static final int REWARDS = 10;
-    /**
      * Constants used for each task case.
      */
-    protected static final int MOVE_LEFT = 1, MOVE_RIGHT = 2, MOVE_DOWN = 3, MOVE_UP = 4,
-            MOVE_AWAY = 5, MOVE_TOWARDS = 6;
+    protected static final int MOVE_LEFT = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_UP = 3,
+            MOVE_AWAY = 4, MOVE_TOWARDS = 5;
     /**
      * Sound effect played when a task is completed.
      */
     protected final Sound cCompletedTaskSound;
     /**
-     * The screen where the event is displayed.
+     * The string values belonging to each direction.
      */
-    protected EventScreen cScreen;
-    /**
-     * The label where the event instructions are displayed.
-     */
-    protected Label cLabel;
-    
+    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
     /**
      * operationNr: Movement operation that must be done.
      * prevOperationNr: Previous movement operation that was done.
@@ -65,10 +48,6 @@ public class TestStrollEvent extends StrollEvent {
      * Delays input to better determine the acceleration direction.
      */
     protected Timer cDelayInputTimer;
-    /**
-     * Direction of the current task.
-     */
-    protected String cDirection;
     /**
      * Tasks which will execute when a delay is initiated.
      */
@@ -88,16 +67,13 @@ public class TestStrollEvent extends StrollEvent {
      */
     public TestStrollEvent() {
         super();
-        cScreen = new EventScreen();
-        cLabel = cScreen.getLabel();
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;
-        cPrevOperationNr = 0;
+        cPrevOperationNr = -1;
 
         cDelayInputStartObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cLabel.setText("Wrong! Try " + cDirection + " again!");
                 cDelayNewInput = true;
             }
         };
@@ -105,6 +81,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
+                cLabelSubject.update("Move your phone " + cDirections[cOperationNr] + "!");
                 cDelayNewInput = false;
             }
         };
@@ -112,57 +89,20 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
         cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
         cDelayInputTimer.getStopSubject().addObserver(cDelayInputStopObserver);
-        TimerStore.getInstance().addTimer(cDelayInputTimer);
 
         cDelayNewInput = false;
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
-        cAccelMeter.filterGravity(true);
-        
-        doTask();
     }
 
     /**
      * Sets the new operation that should be done.
      */
     public final void doTask() {
-        cOperationNr = (int) Math.floor(Math.random() * AMOUNT_OF_TASKS + 1);
-        if (cOperationNr == cPrevOperationNr) {
-            if (cOperationNr == AMOUNT_OF_TASKS) {
-                cOperationNr = 1;
-            } else {
-                cOperationNr++;
-            }
-        }
-        switch (cOperationNr) {
-            case MOVE_LEFT:
-                cDirection = "left";
-                cLabel.setText("Move your phone to the left!");
-                break;
-            case MOVE_RIGHT:
-                cDirection = "right";
-                cLabel.setText("Move your phone to the right!");
-                break;
-            case MOVE_DOWN:
-                cDirection = "down";
-                cLabel.setText("Move your phone down!");
-                break;
-            case MOVE_UP:
-                cDirection = "up";
-                cLabel.setText("Move your phone up!");
-                break;
-            case MOVE_AWAY:
-                cDirection = "away from you";
-                cLabel.setText("Move your phone away from you!");
-                break;
-            case MOVE_TOWARDS:
-                cDirection = "towards you";
-                cLabel.setText("Move your phone towards you!");
-                break;
-            default:
-                cLabel.setText("doTask Unknown Operation Number: " + cOperationNr);
-                break;
-        }
+        do {
+            cOperationNr = new Random().nextInt(cDirections.length);
+        } while (cOperationNr == cPrevOperationNr);
+
     }
 
     /**
@@ -170,7 +110,11 @@ public class TestStrollEvent extends StrollEvent {
      */
     public final void taskCompleted() {
         this.cTasksCompleted++;
+        Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
         cCompletedTaskSound.play(1.0f);
+        cLabelSubject.update("Good work!");
+        cDelayInputTimer.reset();
+
         if (this.cTasksCompleted < MAX_TASKS) {
             cPrevOperationNr = cOperationNr;
             doTask();
@@ -187,76 +131,60 @@ public class TestStrollEvent extends StrollEvent {
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 
+    @Override
+    public void start() {
+        TimerStore.getInstance().addTimer(cDelayInputTimer);
+        cAccelMeter.filterGravity(true);
+        doTask();
+        cDelayInputTimer.stop();
+    }
+
     /**
      * Checks if one of the individual tasks gets completed.
      *
      * @param accelData Vector containing the acceleration in the x,y and z direction.
      */
     public final void processInput(final Vector3 accelData) {
-        //System.out.println("processedInput: X: " + accelData.x + " Y: " + accelData.y + " Z: " + accelData.z);
-
         final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
-        final float delta = 2.0f;
+        final float delta = 2.5f;
 
         if (highestAccel >= delta) {
+            Boolean success;
             switch (cOperationNr) {
                 case MOVE_LEFT:
-                    cDelayInputTimer.reset();
-                    if (accelData.y >= delta) {
-                        System.out.println("Left Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.y >= delta;
                     break;
                 case MOVE_RIGHT:
-                    cDelayInputTimer.reset();
-                    if (accelData.y <= delta) {
-                        System.out.println("Right Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.y <= delta;
                     break;
                 case MOVE_DOWN:
-                    cDelayInputTimer.reset();
-                    if (accelData.x <= -delta) {
-                        System.out.println("Down Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.x <= -delta;
                     break;
                 case MOVE_UP:
-                    cDelayInputTimer.reset();
-                    if (accelData.x >= delta) {
-                        System.out.println("Up Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.x >= delta;
                     break;
                 case MOVE_AWAY:
-                    cDelayInputTimer.reset();
-                    if (accelData.z <= -delta) {
-                        System.out.println("Away Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.z <= -delta;
                     break;
                 case MOVE_TOWARDS:
-                    cDelayInputTimer.reset();
-                    if (accelData.z >= delta) {
-                        System.out.println("Toward Succes!");
-                        taskCompleted();
-                    }
+                    success = accelData.z >= delta;
                     break;
                 default:
-                    cLabel.setText("processInput Unknown Operation Number: " + cOperationNr);
+                    success = false;
                     break;
+            }
+            if (success) {
+                taskCompleted();
+            } else {
+                cDelayInputTimer.reset();
+                cLabelSubject.update("Wrong!");
             }
         }
     }
 
     @Override
     public final int getReward() {
-        return REWARDS;
-    }
-
-    @Override
-    public final ScreenLogic createScreen() {
-        return cScreen;
+        return cTasksCompleted;
     }
 
     @Override

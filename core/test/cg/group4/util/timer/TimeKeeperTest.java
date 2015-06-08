@@ -1,14 +1,11 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.util.subscribe.Subject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
 
 /**
  * Tests for the timeKeeper class.
@@ -35,17 +32,5 @@ public class TimeKeeperTest {
     public final void testGetTimerSubject() {
         assertEquals(cTimeKeeper.getTimerSubject(), cTimeKeeper.cTimerSubject);
     }
-
-    /**
-     * Test to verify the getter returns the right object.
-     */
-    @Test
-    public final void testUpdate() {
-        cTimeKeeper.cTimerSubject = mock(Subject.class);
-        cTimeKeeper.cPreviousTick -= 1000;
-        cTimeKeeper.update();
-        verify(cTimeKeeper.cTimerSubject, times(1)).notifyObservers(anyLong());
-    }
-
 
 }

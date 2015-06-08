@@ -1,14 +1,21 @@
 package cg.group4;
 
+import cg.group4.client.Client;
+import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.sensors.AccelerationStatus;
+import cg.group4.util.notification.NotificationController;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
+import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * The Launcher class serves as an input point for the LibGDX application.
@@ -17,39 +24,47 @@ import com.badlogic.gdx.Preferences;
  * <p/>
  * The Launcher creates and initializes the StandUp, which serves as the
  * main game logic backbone.
- *
- * @author Benjamin Los
- * @author Martijn Gribnau
- * @author Jurgen van Schagen
  */
 public class Launcher extends Game {
     /**
      * Used to clear all preferences and other data to start with a 'clean' game.
      */
     public static final boolean CLEAR_SETTINGS = false;
-
+    /**
+     * Gets the device id as uniquer user ID.
+     */
+    protected final UserIDResolver cIDResolver;
     /**
      * Keeps track of the game mechanics.
      */
-    private StandUp cStandUp;
-
+    protected StandUp cStandUp;
     /**
      * Keeps track of timers throughout the game.
      */
-    private TimeKeeper cTimeKeeper;
-
+    protected TimeKeeper cTimeKeeper;
     /**
      * Accelerometer status.
      */
-    private final AccelerationStatus cAccelerationStatus;
+    protected AccelerationStatus cAccelerationStatus;
+    /**
+     * The notification controller to schedule notifications, passed with the constructor of the launcher.
+     */
+    protected NotificationController cNotificationController;
 
     /**
      * Tunnels the acceleration status through the launcher to the android project.
-     * @param accelerationStatus The movement status of the player.
+     *
+     * @param accelerationStatus     The movement status of the player.
+     * @param notificationController The notification controller.
+     * @param idResolver             The userID resolver for unique device id.
      */
-    public Launcher(final AccelerationStatus accelerationStatus) {
+    public Launcher(final AccelerationStatus accelerationStatus,
+                    final NotificationController notificationController,
+                    final UserIDResolver idResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
+        cNotificationController = notificationController;
+        cIDResolver = idResolver;
     }
 
     /**
@@ -59,12 +74,10 @@ public class Launcher extends Game {
      */
     @Override
     public final void create() {
-        if (CLEAR_SETTINGS) {
-            Preferences preferences = Gdx.app.getPreferences("TIMER");
-            preferences.clear();
-            preferences.flush();
-        }
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        debugSetup();
+
+        Client.getInstance().setUserIDResolver(cIDResolver);
+        Client.getInstance().connectToServer();
 
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
@@ -75,6 +88,37 @@ public class Launcher extends Game {
         setScreen(cScreenStore.getWorldRenderer());
         cScreenStore.init();
         cScreenStore.setScreen("Home");
+
+        notificationInitialization();
+    }
+
+    /**
+     * Sets up the game with the specified debug levels.
+     */
+    private void debugSetup() {
+        if (CLEAR_SETTINGS) {
+            Preferences preferences = Gdx.app.getPreferences("TIMER");
+            preferences.clear();
+            preferences.flush();
+        }
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+    }
+
+    /**
+     * Initializes the game to send notifications.
+     */
+    private void notificationInitialization() {
+        final Timer intervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
+
+        intervalTimer.getStartSubject().addObserver(new Observer() {
+            @Override
+            public void update(final Observable o, final Object arg) {
+                cNotificationController.scheduleNotification(intervalTimer.getFinishTime());
+            }
+        });
+        if (intervalTimer.isRunning()) {
+            cNotificationController.scheduleNotification(intervalTimer.getFinishTime());
+        }
     }
 
     /**

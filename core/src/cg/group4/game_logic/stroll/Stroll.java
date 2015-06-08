@@ -1,22 +1,24 @@
 package cg.group4.game_logic.stroll;
 
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.RewardGenerator;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
-import cg.group4.util.sensors.AccelerationState;
-import cg.group4.util.subscribe.Subject;
+import cg.group4.util.sensor.AccelerationState;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
 /**
- * @author Martijn Gribnau
- * @author Benjamin Los
+ * A stroll will generate events for the player based on the players activity.
  */
 public class Stroll implements Observer {
 
@@ -33,9 +35,9 @@ public class Stroll implements Observer {
 
     protected double cEventThreshold;
     /**
-     * Amount of rewards collected.
+     * Score of each completed event.
      */
-    protected int cRewards;
+    protected ArrayList<Integer> cRewards;
     /**
      * Whether or not you're busy with an event.
      */
@@ -94,7 +96,7 @@ public class Stroll implements Observer {
      */
     public Stroll() {
         Gdx.app.log(TAG, "Started new stroll");
-        cRewards = 0;
+        cRewards = new ArrayList<Integer>();
         cEventGoing = false;
         cEventThreshold = getAmplifier(StandUp.getInstance().
                 getAccelerationStatus().getAccelerationState());
@@ -111,8 +113,7 @@ public class Stroll implements Observer {
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
-
-
+        
     }
 
 
@@ -126,16 +127,16 @@ public class Stroll implements Observer {
     /**
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
-    protected final void generatePossibleEvent() {
+    protected void generatePossibleEvent() {
         Random rnd = new Random();
         if (rnd.nextDouble() < cEventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
-            switch(chosenEvent) {
-                case(0):
+            switch (chosenEvent) {
+                case (0):
                     cEvent = new FishingStrollEvent();
                     break;
-                case(1):
+                case (1):
                     cEvent = new TestStrollEvent();
                     break;
                 default:
@@ -155,7 +156,7 @@ public class Stroll implements Observer {
 
         cEndEventSubject.update(rewards);
 
-        cRewards += rewards;
+        cRewards.add(rewards);
         cEvent = null;
         cEventGoing = false;
 
@@ -183,18 +184,23 @@ public class Stroll implements Observer {
     /**
      * Method that gets called when the stroll has ended/completed.
      */
-    public final void done() {
+    public void done() {
         Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
 
+        RewardGenerator gen = new RewardGenerator(StandUp.getInstance().getPlayer().getId());
+        Collection collection = new Collection("Reward");
+        for (Integer i : cRewards) {
+            collection.add(gen.generateCollectible(i));
+        }
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cEndStrollSubject.update(cRewards);
+        cEndStrollSubject.update(collection);
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
 
-        StandUp.getInstance().endStroll();
+        StandUp.getInstance().endStroll(collection);
     }
 
     /**

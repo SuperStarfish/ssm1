@@ -19,15 +19,17 @@ public class CastForwardState implements FishEventState {
 
     /**
      * Constructor of the state, connects the state to the event.
+     *
      * @param event The event this state belongs to
      */
     public CastForwardState(final FishingStrollEvent event) {
         cEvent = event;
-        cEvent.cLabel.setText("Throw your hook!");
+        cEvent.setText("Throw your hook!");
     }
 
     /**
      * Method that processes the input to match the movement of casting your line into the water.
+     *
      * @param input Vector containing the acceleration in the x,y,z directions respectively.
      */
     public final void processInput(final Vector3 input) {

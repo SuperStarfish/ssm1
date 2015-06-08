@@ -2,14 +2,12 @@ package cg.group4.game_logic.stroll;
 
 import cg.group4.GdxTestRunner;
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.sensors.AccelerationState;
-import cg.group4.util.sensors.AccelerationStatus;
-import cg.group4.util.subscribe.Subject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * JUnit test class for the Stroll.java class.
@@ -18,61 +16,132 @@ import static org.junit.Assert.assertEquals;
 public class StrollTest {
 
     /**
-     * Keeps track of the stroll object.
+     * Instance of the stroll to be tested.
      */
     protected Stroll cStroll;
 
     /**
-     * Setup method, gets run before every test.
+     * SetUp to run before each test.
      */
     @Before
     public void setUp() {
-        StandUp.getInstance().setAccelerationStatus(new AccelerationStatus() {
-
-            protected Subject tempsubject = new Subject();
-            @Override
-            public AccelerationState getAccelerationState() {
-                return null;
-            }
-
-            @Override
-            public Subject getSubject() {
-                return tempsubject;
-            }
-        });
         cStroll = new Stroll();
-
     }
 
     /**
-     * The chance of getting an event while walking should be the base value.
+     * Tests the functionality of the stroll stop observer.
      */
     @Test
-    public void getAmplifierWalkingTest() {
-        assertEquals(1, cStroll.getAmplifier(AccelerationState.WALKING));
+    public void testStrollStopObserver() {
+        cStroll.cStrollStopObserver.update(null, null);
+        assertTrue(cStroll.cFinished);
     }
 
     /**
-     * The chance of getting an event while running should be doubled.
+     * Good weather test for method update.
      */
     @Test
-    public void getAmplifierRunningTest() {
-        assertEquals(2, cStroll.getAmplifier(AccelerationState.RUNNING));
+    public void testUpdateGood() {
+        cStroll = spy(cStroll);
+        doNothing().when(cStroll).generatePossibleEvent();
+
+        cStroll.update(null, null);
+
+        verify(cStroll).generatePossibleEvent();
     }
 
     /**
-     * You shouldn't get an event while cheating movement with your phone, so the chance should be 0.
+     * Bad weather test for method update.
      */
     @Test
-    public void getAmplifierCheatingTest() {
-        assertEquals(0, cStroll.getAmplifier(AccelerationState.CHEATING));
+    public void testUpdateBad() {
+        cStroll = spy(cStroll);
+        cStroll.cEventGoing = true;
+
+        cStroll.update(null, null);
+
+        verify(cStroll, never()).generatePossibleEvent();
     }
 
     /**
-     * You shouldn't get an event while you're not moving at all, so the chance should be 0.
+     * Test the generation of an event.
      */
     @Test
-    public void getAmplifierRestingTest() {
-        assertEquals(0, cStroll.getAmplifier(AccelerationState.RESTING));
+    public void testGeneratePossibleEvent() {
+        cStroll.cEventThreshold = 1f;
+        cStroll.cNewEventSubject = spy(cStroll.cNewEventSubject);
+
+        cStroll.generatePossibleEvent();
+
+        assertTrue(cStroll.cEventGoing);
+        assertNotNull(cStroll.cEvent);
+        verify(cStroll.cNewEventSubject).update(cStroll.cEvent);
+    }
+
+    /**
+     * Tests the mechanics of finishing an event.
+     */
+    @Test
+    public void testEventFinished() {
+        cStroll.cEndEventSubject = spy(cStroll.cEndEventSubject);
+        int numberOfRewards = cStroll.cRewards.size();
+
+        cStroll.eventFinished(2);
+
+        verify(cStroll.cEndEventSubject).update(2);
+        assertNull(cStroll.cEvent);
+        assertFalse(cStroll.cEventGoing);
+        assertEquals(numberOfRewards + 1, cStroll.cRewards.size());
+    }
+
+    /**
+     * Tests the mechanics of finishing an event when the stroll is done.
+     */
+    @Test
+    public void testEventFinishedDone() {
+        cStroll = spy(cStroll);
+        cStroll.cFinished = true;
+
+        cStroll.eventFinished(0);
+
+        verify(cStroll).done();
+    }
+
+    /**
+     * Tests for the completion of a stroll.
+     */
+    @Test
+    public void testDone() {
+        cStroll.cEndStrollSubject = spy(cStroll.cEndStrollSubject);
+
+        cStroll.done();
+
+        verify(cStroll.getEndStrollSubject()).update(cStroll.cRewards);
+        assertEquals(0, cStroll.getEndStrollSubject().countObservers());
+        assertNull(StandUp.getInstance().getStroll());
+    }
+
+    /**
+     * Tests the retrieval of the EndStrollSubject.
+     */
+    @Test
+    public void testGetEndStrollSubject() {
+        assertEquals(cStroll.cEndStrollSubject, cStroll.getEndStrollSubject());
+    }
+
+    /**
+     * Tests the retrieval of the NewEventSubject.
+     */
+    @Test
+    public void testGetNewEventSubject() {
+        assertEquals(cStroll.cNewEventSubject, cStroll.getNewEventSubject());
+    }
+
+    /**
+     * Tests the retrieval of the EndEventSubject.
+     */
+    @Test
+    public void testGetEndEventSubject() {
+        assertEquals(cStroll.cEndEventSubject, cStroll.getEndEventSubject());
     }
 }

@@ -239,6 +239,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cStage = new Stage();
         cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
+        cScreen.display();
         cInputMultiplexer.addProcessor(cStage);
     }
 
@@ -266,7 +267,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
 
     @Override
     public final boolean keyDown(final int keycode) {
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
             String previousScreenName = cScreen.getPreviousScreenName();
             if (previousScreenName == null) {
                 Gdx.app.exit();
