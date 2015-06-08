@@ -3,6 +3,9 @@ package cg.group4.game_logic;
 import cg.group4.GdxTestRunner;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.FishA;
+import cg.group4.data_structures.subscribe.Subject;
+import cg.group4.util.sensor.AccelerationState;
+import cg.group4.util.sensor.AccelerationStatus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
@@ -36,6 +39,21 @@ public class StandUpTest {
     @Before
     public void setUp() {
         cStandUp = new StandUp();
+        StandUp.INSTANCE = cStandUp;
+        StandUp.getInstance().setAccelerationStatus(new AccelerationStatus() {
+
+            protected Subject tempsubject = new Subject();
+            @Override
+            public AccelerationState getAccelerationState() {
+                return null;
+            }
+
+            @Override
+            public Subject getSubject() {
+                return tempsubject;
+            }
+        });
+        cStandUp = StandUp.getInstance();
         StandUp.INSTANCE = cStandUp;
     }
 

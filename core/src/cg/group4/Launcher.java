@@ -82,6 +82,7 @@ public class Launcher extends Game {
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
+        cStandUp.setAccelerationStatus(cAccelerationStatus);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
