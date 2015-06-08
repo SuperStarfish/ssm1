@@ -13,6 +13,7 @@ GroupScreen
     - Feedback (name uniqueness); Success/fail/validate
     - Submit
 
+improvement
 4. Edit group name
     - Name
     - Feedback (name uniqueness); Success/fail/validate
