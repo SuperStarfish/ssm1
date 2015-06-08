@@ -50,29 +50,46 @@ public final class RemoteConnection implements Connection {
 
     @Override
     public void send(final Query data, final ResponseHandler responseHandler) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    cOutputStream.writeObject(data);
-                    cOutputStream.flush();
-                    final Response response = (Response) cInputStream.readObject();
-                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(responseHandler != null) {
-                                responseHandler.handleResponse(response);
-                            }
-                        }
-                    });
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        try {
+            cOutputStream.writeObject(data);
+            cOutputStream.flush();
+            Response response = (Response) cInputStream.readObject();
+            if(responseHandler != null) {
+                responseHandler.handleResponse(response);
             }
-        }).start();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Client.getLocalInstance().enableRequests();
     }
+
+//    @Override
+//    public void send(final Query data, final ResponseHandler responseHandler) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    cOutputStream.writeObject(data);
+//                    cOutputStream.flush();
+//                    final Response response = (Response) cInputStream.readObject();
+//                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(responseHandler != null) {
+//                                responseHandler.handleResponse(response);
+//                            }
+//                        }
+//                    });
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
     @Override
     public boolean isConnected() {

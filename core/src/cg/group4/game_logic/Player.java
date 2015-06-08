@@ -33,7 +33,7 @@ public class Player {
      * Constructs a player object.
      */
     public Player() {
-         Client.getLocalInstance().getPlayerData(new ResponseHandler() {
+         Client.getRemoteInstance().getPlayerData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
                 PlayerData playerData;
@@ -43,9 +43,9 @@ public class Player {
                     playerData = new PlayerData(Client.getLocalInstance().getUserID());
                 }
                 cPlayerData = playerData;
+                cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
             }
         });
-        cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 
     /**

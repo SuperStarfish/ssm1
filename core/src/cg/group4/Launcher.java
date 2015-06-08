@@ -145,8 +145,6 @@ public class Launcher extends Game {
             cTimeKeeper.update();
             cStandUp.update();
         }
-        cStandUp.update();
-        cTimeKeeper.update();
 
         for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
