@@ -1,6 +1,7 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.groups.Group;
+import cg.group4.data_structures.groups.GroupData;
 import cg.group4.server.database.DatabaseConnection;
 
 import java.sql.ResultSet;
@@ -29,18 +30,17 @@ public class GetGroup extends Query {
     public Group query(DatabaseConnection databaseConnection) throws SQLException {
         Group group = new Group(cGroupId);
         Statement statement = databaseConnection.query();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM Group WHERE Key = '" + cGroupId + "' LIMIT 1");
+        ResultSet resultSet = statement.executeQuery(
+                "SELECT * FROM 'Group' INNER JOIN User ON 'Group'.OwnerId = User.Id "
+                        + "WHERE 'Group'.Key = '" + cGroupId + "' LIMIT 1");
 
         if (resultSet.next()) {
-            group.setOwnerId(resultSet.getString("OwnerId"));
-            group.setName(resultSet.getString("Name"));
-
-            resultSet.close();
-            resultSet = statement.executeQuery("SELECT Username FROM User WHERE Id = '" + group.getOwnerId() + "'");
-
-            if (resultSet.next()) {
-                group.setOwnerName(resultSet.getString("Username"));
-            }
+            group.setGroupData(new GroupData(
+                    resultSet.getInt("Key"),
+                    resultSet.getString("Name"),
+                    resultSet.getString("OwnerId"),
+                    resultSet.getString("Username")
+            ));
         }
         resultSet.close();
         statement.close();

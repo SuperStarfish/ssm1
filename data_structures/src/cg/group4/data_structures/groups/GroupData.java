@@ -1,9 +1,11 @@
 package cg.group4.data_structures.groups;
 
+import java.io.Serializable;
+
 /**
  * Created by Martijn on 2015-06-08.
  */
-public class GroupData {
+public class GroupData implements Serializable {
     /**
      * Defines the id of a group.
      * Used to uniquely identify the group.
