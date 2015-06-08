@@ -5,6 +5,7 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.sensor.SensorReader;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -60,6 +61,11 @@ public final class StandUp {
     protected SensorReader cSensorReader;
 
     /**
+     * Keeps track of the amount of movement during the game.
+     */
+    protected AccelerationStatus cAccelerationStatus;
+
+    /**
      * Instantiate StandUp and TimeKeeper.
      */
     protected StandUp() {
@@ -100,7 +106,6 @@ public final class StandUp {
 
     /**
      * Ends the current stroll.
-     *
      * @param rewardsCollection rewards gained by the stroll.
      */
     public void endStroll(final Collection rewardsCollection) {
@@ -164,5 +169,13 @@ public final class StandUp {
 
     public Music getBackGroundMusic() {
         return cBackgroundMusic;
+    }
+
+    public void setAccelerationStatus(AccelerationStatus status) {
+        cAccelerationStatus = status;
+    }
+
+    public AccelerationStatus getAccelerationStatus() {
+        return cAccelerationStatus;
     }
 }
