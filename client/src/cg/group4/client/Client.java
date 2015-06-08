@@ -231,6 +231,15 @@ public final class Client {
     public boolean getPlayerData(ResponseHandler responseHandler) {
         return tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
     }
+    
+    /**
+     * Gets the groupdata from the server. Behaviour depends on the state.
+     *
+     * @return All the groupdata.
+     */
+    public boolean getGroupData(ResponseHandler responseHandler) {
+    	return tryToSend(new GetGroupData(), responseHandler);
+    }
 
     /**
      * Stores the host ip on the server with a generated code that it will return to let the client connect.
