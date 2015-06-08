@@ -25,15 +25,19 @@ public final class Connected extends ConnectionWrapper {
 
     /**
      * Attempts to establish a connection with the SQLite database.
-     *
+     * @param isRemote Determines if to use remote db or local db.
      * @throws ClassNotFoundException Thrown if sqlite.JDBC dependencies are missing.
      * @throws SQLException           Thrown if connection could not be established.
      */
-    public Connected() throws ClassNotFoundException, SQLException {
+    public Connected(boolean isRemote) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        cConnection = DriverManager.getConnection("jdbc:sqlite:data.sqlite");
+        if(isRemote) {
+            cConnection = DriverManager.getConnection("jdbc:sqlite:remote.sqlite");
+        } else {
+            cConnection = DriverManager.getConnection("jdbc:sqlite:local.sqlite");
+        }
         cConnection.setAutoCommit(false);
-        LOGGER.info("Succesfully connected to the database.");
+        LOGGER.info("Successfully connected to the database.");
     }
 
     @Override
@@ -61,7 +65,7 @@ public final class Connected extends ConnectionWrapper {
 
 
     @Override
-    public ConnectionWrapper openConnection() {
+    public ConnectionWrapper openConnection(boolean isRemote) {
         return this;
     }
 

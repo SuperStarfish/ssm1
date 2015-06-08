@@ -23,9 +23,9 @@ public final class NoConnection extends ConnectionWrapper {
     }
 
     @Override
-    public ConnectionWrapper openConnection() {
+    public ConnectionWrapper openConnection(boolean isRemote) {
         try {
-            return new Connected();
+            return new Connected(isRemote);
         } catch (ClassNotFoundException e) {
             LOGGER.severe("SQLite.JDBC dependency missing! Cannot establish connection to the database.");
         } catch (SQLException e) {

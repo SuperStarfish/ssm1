@@ -25,7 +25,7 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static StandUp cInstance = new StandUp();
+    protected static StandUp cInstance;
 
     /**
      * Player of the game.
@@ -68,6 +68,9 @@ public final class StandUp {
      * @return cInstance
      */
     public static StandUp getInstance() {
+        if(cInstance == null) {
+            cInstance = new StandUp();
+        }
         return cInstance;
     }
 

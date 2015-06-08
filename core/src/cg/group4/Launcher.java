@@ -3,6 +3,7 @@ package cg.group4;
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
+import cg.group4.server.Server;
 import cg.group4.util.notification.NotificationController;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
@@ -76,8 +77,12 @@ public class Launcher extends Game {
     public final void create() {
         debugSetup();
 
-        Client.getInstance().setUserIDResolver(cIDResolver);
-        Client.getInstance().connectToServer();
+        Server server = new Server(false);
+        server.start();
+
+        Client.getLocalInstance().setUserIDResolver(cIDResolver);
+        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        Client.getRemoteInstance().setUserIDResolver(cIDResolver);
 
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
@@ -129,6 +134,11 @@ public class Launcher extends Game {
         super.render();
         cStandUp.update();
         cTimeKeeper.update();
+
+        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+            Gdx.app.postRunnable(toRunBeforeNextCycle);
+        }
+        Client.getRemoteInstance().resetPostRunnables();
     }
 
 }

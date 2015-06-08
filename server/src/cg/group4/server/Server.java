@@ -63,11 +63,17 @@ public class Server {
      */
     protected URL cWhatIsMyIP;
 
+    /**
+     * Is this server remote or not.
+     */
+    protected boolean cIsRemote;
 
     /**
      * Creates an instance of Server.
+     * @param isRemote Is the server remote or not.
      */
-    public Server() {
+    public Server(boolean isRemote) {
+        cIsRemote = isRemote;
         cStaticsCaller = new StaticsCaller();
         try {
             cWhatIsMyIP = new URL(cVerifyURl);
@@ -77,34 +83,30 @@ public class Server {
     }
 
     /**
-     * Starts a server.
-     *
-     * @param args Not used, but default for main method.
-     */
-    public static void main(final String[] args) {
-        Server server = new Server();
-        server.LOGGER.setLevel(Level.INFO);
-        server.start();
-    }
-
-    /**
-     * Starts the Server. First looks up the Local IP and then the External IP. After that it tries to create a
-     * ServerSocket on the default port. If it fails it asks to give a new port on which to make the ServerSocket.
-     * Then validates to see if the Server can be contacted through the external IP address.
-     * Finally keeps waiting for new connections forever.
+     * Starts the Server. This can be either an internal or external server, defined by isRemote.
+     * If the server is internal it will not attempt to check its external IP.
+     * Uses default port if remote, otherwise uses 0 (random) port.
      */
     public final void start() {
         createLocalIP();
 
-        createExternalIP();
-
-        createServerSocket(cDefaultPort);
-
-        validateExternalConnection();
-
-        while (true) {
-            acceptConnections();
+        if(cIsRemote) {
+            createServerSocket(cDefaultPort);
+            createExternalIP();
+            validateExternalConnection();
+        } else {
+            createServerSocket(0);
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LOGGER.info("Accepting incoming connections");
+                while (true) {
+                    acceptConnections();
+                }
+            }
+        }).start();
     }
 
     /**
@@ -159,7 +161,7 @@ public class Server {
     protected final void createServerSocket(final int port) {
         try {
             cServerSocket = new ServerSocket(port);
-            LOGGER.info("Successfully bound to port " + port + ".");
+            LOGGER.info("Successfully bound to port " + cServerSocket.getLocalPort() + ".");
         } catch (IOException e) {
             LOGGER.severe("Port " + port + " is already in use!");
             createServerSocket(askForPort());
@@ -206,10 +208,10 @@ public class Server {
             LOGGER.info("Checking if the port is open.");
             Socket socket = new Socket(cExternalHost.toString(), cDefaultPort);
             cServerSocket.accept();
-            LOGGER.info("Port " + cDefaultPort + " is open. Managed to connect over external IP");
+            LOGGER.info("Port " + cServerSocket.getLocalPort() + " is open. Managed to connect over external IP");
             socket.close();
         } catch (ConnectException e) {
-            LOGGER.severe("Port " + cDefaultPort + " does not appear to be open! "
+            LOGGER.severe("Port " + cServerSocket.getLocalPort() + " does not appear to be open! "
                     + "Can't connect over external IP. Use local IP to connect to the server.");
         } catch (IOException e) {
             e.printStackTrace();
@@ -223,7 +225,7 @@ public class Server {
         try {
             cPool = Executors.newFixedThreadPool(cMaxThreads);
             Socket connection = cServerSocket.accept();
-            Callable<Void> task = new ServerThread(connection);
+            Callable<Void> task = new ServerThread(connection, cIsRemote);
             cPool.submit(task);
         } catch (IOException e) {
             e.printStackTrace();
@@ -237,6 +239,21 @@ public class Server {
         result += "Local IP: " + cLocalHost.toString() + lineSeparator;
         result += "External IP: " + cExternalHost.toString() + lineSeparator;
         return result;
+    }
+
+    /**
+     * Starts a server.
+     *
+     * @param args Not used, but default for main method.
+     */
+    public static void main(final String[] args) {
+        Server server = new Server(true);
+        LOGGER.setLevel(Level.INFO);
+        server.start();
+    }
+
+    public int getSocketPort() {
+        return cServerSocket.getLocalPort();
     }
 
 }

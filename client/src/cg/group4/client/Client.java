@@ -1,26 +1,39 @@
 package cg.group4.client;
 
 import cg.group4.client.connection.Connection;
-import cg.group4.client.connection.LocalConnection;
+import cg.group4.client.connection.UnConnected;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
-import cg.group4.server.database.Response;
+import cg.group4.data_structures.subscribe.Subject;
+import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
 import cg.group4.server.database.query.RequestPlayerData;
 import cg.group4.server.database.query.UpdateCollection;
 import cg.group4.server.database.query.UpdatePlayerData;
+
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * @author Jurgen van Schagen
  */
 public final class Client {
     /**
-     * Instance for Singleton.
+     * Default Logger in Java used for the purpose of logging changes in the Server.
      */
-    protected static Client cInstance;
+    private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
+    /**
+     * The Client connection with the internal storage server.
+     */
+    protected static Client cLocalInstance;
+    /**
+     * The Client connection with the remote server.
+     */
+    protected static Client cRemoteInstance;
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "128.127.39.32";
+    protected final String cDefaultIp = "82.169.19.191";
     /**
      * The default port to connect to.
      */
@@ -33,13 +46,30 @@ public final class Client {
      * The user id. Android Phone ID or Desktop name.
      */
     protected UserIDResolver cUserIDResolver;
+    /**
+     * Notifies all listeners that the server has either connected or disconnected.
+     */
+    protected Subject cChangeSubject;
+
+    /**
+     * A list of Runnable that have to be run at the end of a render cycle.
+     * These are added to the Gdx.app.postRunnable().
+     */
+    protected ArrayList<Runnable> cPostRunnables;
+
+    /**
+     * Determines if a request to the server has been made. If so, no new requests can be made.
+     */
+    protected boolean cAwaitingResponse = false;
 
     /**
      * Constructs a new Client and sets the state to unconnected.
      */
     public Client() {
-        cConnection = new LocalConnection();
+        cConnection = new UnConnected();
         cUserIDResolver = new DummyUserIdResolver();
+        cChangeSubject = new Subject();
+        cPostRunnables = new ArrayList<Runnable>();
     }
 
     /**
@@ -47,26 +77,93 @@ public final class Client {
      *
      * @return The Client.
      */
-    public static Client getInstance() {
-        if (cInstance == null) {
-            cInstance = new Client();
+    public static Client getLocalInstance() {
+        if (cLocalInstance == null) {
+            cLocalInstance = new Client();
         }
-        return cInstance;
+        return cLocalInstance;
+    }
+
+    /**
+     * Gets the Singleton instance.
+     *
+     * @return The Client.
+     */
+    public static Client getRemoteInstance() {
+        if (cRemoteInstance == null) {
+            cRemoteInstance = new Client();
+        }
+        return cRemoteInstance;
+    }
+
+    /**
+     * Returns the ChangeSubject that notifies whenever a change in the remote connection status occurs.
+     * @return Subject that can be subscribed on.
+     */
+    public Subject getChangeSubject() {
+        return cChangeSubject;
+    }
+
+    /**
+     * Returns the list of Runnable that need to be processed in the Gdx.app.postRunnable()
+     * @return ArrayList with the Runnables.
+     */
+    public ArrayList<Runnable> getPostRunnables() {
+        return cPostRunnables;
+    }
+
+    /**
+     * Adds another Runnable to the PostRunnable list.
+     */
+    public void addPostRunnables(Runnable runnable) {
+        cPostRunnables.add(runnable);
+    }
+
+    /**
+     * Clears the PostRunnable ArrayList.
+     */
+    public void resetPostRunnables() {
+        cPostRunnables.clear();
     }
 
     /**
      * Connects to the server. Behaviour depends on the state.
      */
     public void connectToServer() {
-        cConnection = cConnection.connect(cDefaultIp, cDefaultPort);
+        if(!cAwaitingResponse) {
+            cAwaitingResponse = true;
+            cConnection.connect(cDefaultIp, cDefaultPort);
+        }
     }
 
     /**
-     * column_1
-     * Closes the connection with the server. Behaviour depends on the state.
+     * Connects to a server given an IP and port. If the server is null, it will connect to localhost.
+     * @param ip Ip to connect to. If null localhost.
+     * @param port Port to connect to.
      */
-    public void closeConnection() {
-        cConnection = cConnection.disconnect();
+    public void connectToServer(String ip, int port) {
+        if(!cAwaitingResponse) {
+            cAwaitingResponse = true;
+            cConnection.connect(ip, port);
+        }
+    }
+
+    /**
+     * Enables the client to take a new request.
+     */
+    public void enableRequests() {
+        cAwaitingResponse = false;
+    }
+
+    /**
+     * Sets the connection to the new connection.
+     * @param connection The connection that needs to be set.
+     */
+    public void setConnection(final Connection connection) {
+        LOGGER.info("Is connected: " + connection.isConnected());
+        cConnection = connection;
+        cChangeSubject.update(connection.isConnected());
+        enableRequests();
     }
 
     /**
@@ -75,11 +172,11 @@ public final class Client {
      * @param timeStamp The timestamp when the timer should end.
      * @return Whether the query succeeded.
      */
-    public boolean updateStrollTimer(final Long timeStamp) {
+    public boolean updateStrollTimer(final Long timeStamp, ResponseHandler responseHandler) {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setStrollTimeStamp(timeStamp);
 
-        return cConnection.send(new UpdatePlayerData(playerData)).isSuccess();
+        return tryToSend(new UpdatePlayerData(playerData), responseHandler);
     }
 
     /**
@@ -88,11 +185,11 @@ public final class Client {
      * @param timeStamp The timestamp when the timer should end.
      * @return Whether the query succeeded.
      */
-    public boolean updateIntervalTimer(final Long timeStamp) {
+    public boolean updateIntervalTimer(final Long timeStamp, ResponseHandler responseHandler) {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setIntervalTimeStamp(timeStamp);
 
-        return cConnection.send(new UpdatePlayerData(playerData)).isSuccess();
+        return tryToSend(new UpdatePlayerData(playerData), responseHandler);
     }
 
     /**
@@ -101,11 +198,10 @@ public final class Client {
      * @param username The new username.
      * @return Successful or not.
      */
-    public boolean updatePlayer(final String username) {
+    public boolean updatePlayer(final String username, ResponseHandler responseHandler) {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setUsername(username);
-
-        return cConnection.send(new UpdatePlayerData(playerData)).isSuccess();
+        return tryToSend(new UpdatePlayerData(playerData), responseHandler);
     }
 
     /**
@@ -114,9 +210,17 @@ public final class Client {
      * @param collection The collection to add to the server.
      * @return Successful or not.
      */
-    public boolean updateCollection(final Collection collection) {
+    public boolean updateCollection(final Collection collection, ResponseHandler responseHandler) {
         collection.setGroupId(cUserIDResolver.getID());
-        return cConnection.send(new UpdateCollection(collection)).isSuccess();
+        return tryToSend(new UpdateCollection(collection), responseHandler);
+    }
+
+    protected boolean tryToSend(final Query query, final ResponseHandler responseHandler) {
+        if(!cAwaitingResponse) {
+            cAwaitingResponse = true;
+            cConnection.send(query, responseHandler);
+        }
+        return cAwaitingResponse;
     }
 
     /**
@@ -124,16 +228,8 @@ public final class Client {
      *
      * @return All the userdata.
      */
-    public PlayerData getPlayerData() {
-        Response response = cConnection.send(new RequestPlayerData(cUserIDResolver.getID()));
-        PlayerData playerData;
-        if (response.isSuccess()) {
-            playerData = (PlayerData) response.getData();
-        } else {
-            playerData = new PlayerData(cUserIDResolver.getID());
-        }
-
-        return playerData;
+    public boolean getPlayerData(ResponseHandler responseHandler) {
+        return tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
     }
 
     /**
@@ -143,6 +239,10 @@ public final class Client {
      */
     public void setUserIDResolver(final UserIDResolver idResolver) {
         cUserIDResolver = idResolver;
+    }
+
+    public String getUserID() {
+        return cLocalInstance.cUserIDResolver.getID();
     }
 
     /**

@@ -3,6 +3,8 @@ package cg.group4.game_logic;
 import cg.group4.client.Client;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -23,7 +25,7 @@ public class Player {
     protected Observer cAddChangeObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            Client.getInstance().updateCollection((Collection) arg);
+            Client.getLocalInstance().updateCollection((Collection) arg, null);
         }
     };
 
@@ -31,7 +33,20 @@ public class Player {
      * Constructs a player object.
      */
     public Player() {
-        cPlayerData = Client.getInstance().getPlayerData();
+        System.out.println(Client.getLocalInstance());
+         Client.getLocalInstance().getPlayerData(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                PlayerData playerData;
+                if (response.isSuccess()) {
+                    playerData = (PlayerData) response.getData();
+                } else {
+                    playerData = new PlayerData(Client.getLocalInstance().getUserID());
+                }
+                cPlayerData = playerData;
+                System.out.println(cPlayerData);
+            }
+        });
         cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 

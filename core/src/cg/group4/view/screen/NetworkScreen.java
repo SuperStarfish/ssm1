@@ -10,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * The screen where we can interact with the server.
  */
@@ -29,9 +32,11 @@ public final class NetworkScreen extends ScreenLogic {
      */
     protected Label cMessage;
 
+
+
     @Override
     protected WidgetGroup createWidgetGroup() {
-        Client client = Client.getInstance();
+        Client client = Client.getRemoteInstance();
         client.connectToServer();
 
         ScreenStore screenStore = ScreenStore.getInstance();
@@ -40,13 +45,12 @@ public final class NetworkScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-        addLabel("Connected");
-//        if (client.isConnected()) {
-//            addLabel("Connected");
-//
-//        } else {
-//            addLabel("Not Connected!");
-//        }
+        if (client.isConnected()) {
+            addLabel("Connected");
+
+        } else {
+            addLabel("Not Connected!");
+        }
 
         addChangeUserName();
 
@@ -54,7 +58,27 @@ public final class NetworkScreen extends ScreenLogic {
         cTable.row().expandY();
         cTable.add(cBack);
 
+        addConnectionChangeListener();
+
         return cTable;
+    }
+
+    /**
+     * If the connection state changes, this will handle the proper behaviour.
+     */
+    protected void addConnectionChangeListener() {
+        Client.getRemoteInstance().getChangeSubject().addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                boolean isConnected = (Boolean) arg;
+                if(isConnected) {
+                    cMessage.setText("Connected");
+                } else {
+                    cMessage.setText("Not Connected!");
+                }
+                cChangeUsername.setDisabled(!isConnected);
+            }
+        });
     }
 
     /**

@@ -11,10 +11,10 @@ public abstract class ConnectionWrapper {
 
     /**
      * Attempts to return a Connected Wrapper.
-     *
+     * @param isRemote Determines if to use the remote or the local database path.
      * @return A Connected State.
      */
-    public abstract ConnectionWrapper openConnection();
+    public abstract ConnectionWrapper openConnection(boolean isRemote);
 
     /**
      * Attempts to return a NoConnection Wrapper.

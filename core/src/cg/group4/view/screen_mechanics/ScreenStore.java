@@ -18,10 +18,10 @@ public final class ScreenStore {
     /**
      * Singleton of screen handler.
      */
-    protected static final ScreenStore INSTANCE = new ScreenStore();
+    protected static ScreenStore INSTANCE;
 
     /**
-     * Hashmap that contains all the screens.
+     * HashMap that contains all the screens.
      */
     protected Map<String, ScreenLogic> cScreens;
 
@@ -51,6 +51,9 @@ public final class ScreenStore {
      * @return The instance.
      */
     public static ScreenStore getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ScreenStore();
+        }
         return INSTANCE;
     }
 
