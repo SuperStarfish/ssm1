@@ -3,11 +3,14 @@ package cg.group4.android;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
-import cg.group4.sensor.AndroidAccelerationStatus;
 import cg.group4.server.AndroidIDResolver;
 import cg.group4.util.notification.AndroidNotificationController;
+import cg.group4.util.sensor.AndroidAccelerationStatus;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * The AndroidLauncher class runs the application on an Android device.
@@ -22,13 +25,23 @@ public class AndroidLauncher extends AndroidApplication {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        try {
+//            Class.forName("org.sqldroid.SQLDroidDriver");
+//            DriverManager.getConnection("jdbc:sqldroid:/data/data/SSM/databases/local.sqlite");
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
         cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useWakelock = true;
         initialize(new Launcher(
                         new AndroidAccelerationStatus(cSensorManager),
                         new AndroidNotificationController(this),
-						new AndroidIDResolver(getContext())),
+                        new AndroidIDResolver(getContext())),
                 config);
     }
 }

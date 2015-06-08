@@ -238,6 +238,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cStage = new Stage();
         cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
+        cScreen.display();
         cInputMultiplexer.addProcessor(cStage);
     }
 

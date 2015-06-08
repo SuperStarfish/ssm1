@@ -1,6 +1,5 @@
 package cg.group4.view.screen;
 
-import cg.group4.client.Client;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -28,7 +27,7 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Buttons for the stroll, settings, collection.
      */
-    protected TextButton cStrollButton, cSettingsButton, cCollectionButton;
+    protected TextButton cStrollButton, cSettingsButton, cCollectionButton, cGroupButton;
 
     /**
      * Labels for cTitle, timer.
@@ -79,6 +78,7 @@ public final class HomeScreen extends ScreenLogic {
         initStrollButton();
         initCollectionButton();
         initSettingsButton();
+        initGroupButton();
 
         return cTable;
     }
@@ -174,7 +174,7 @@ public final class HomeScreen extends ScreenLogic {
                 if (cIsClickable) {
                     StandUp.getInstance().startStroll();
                     ScreenStore.getInstance().setScreen("Stroll");
-                    Client.getInstance().updateTimers(System.currentTimeMillis());
+//                    Client.getInstance().updateTimers(System.currentTimeMillis());
                 }
             }
         });
@@ -196,20 +196,35 @@ public final class HomeScreen extends ScreenLogic {
         cTable.row().expandY();
         cTable.add(cSettingsButton);
     }
-    
+
     /**
      * Initializes the collection button on the home screen.
      */
     public void initCollectionButton() {
-    	cCollectionButton = cGameSkin.generateDefaultMenuButton("Collection");
-    	cCollectionButton.addListener(new ChangeListener() {
-    		@Override
-    		public void changed(final ChangeEvent event, final Actor actor) {
-    			ScreenStore.getInstance().setScreen("Collection");
-    		}
-    	});
-    	cTable.row().expandY();
-    	cTable.add(cCollectionButton);
+        cCollectionButton = cGameSkin.generateDefaultMenuButton("Collection");
+        cCollectionButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Collection");
+            }
+        });
+        cTable.row().expandY();
+        cTable.add(cCollectionButton);
+    }
+
+    /**
+     * Init groups.
+     */
+    public void initGroupButton() {
+        cGroupButton = cGameSkin.generateDefaultMenuButton("Groups");
+        cGroupButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenStore.getInstance().setScreen("Groups");
+            }
+        });
+        cTable.row().expandY();
+        cTable.add(cGroupButton);
     }
 
     @Override

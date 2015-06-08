@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for the class Stroll.
+ * JUnit test class for the Stroll.java class.
  */
 @RunWith(GdxTestRunner.class)
 public class StrollTest {

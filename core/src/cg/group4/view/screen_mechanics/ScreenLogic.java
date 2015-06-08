@@ -60,6 +60,7 @@ public abstract class ScreenLogic {
 
     /**
      * Creates a new back button including functionality when clicked.
+     *
      * @return A new button to go back to the previous screen.
      */
     protected final TextButton createBackButton() {
@@ -80,6 +81,13 @@ public abstract class ScreenLogic {
      * @return Name of the previous Screen name. Can be null.
      */
     protected abstract String setPreviousScreenName();
+
+    /**
+     * Method that gets called when it gets displayed.
+     */
+    public void display() {
+
+    }
 
     /**
      * Returns the previous Screen name. Has to be set through the setPreviousScreenName() method.

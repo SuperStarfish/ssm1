@@ -31,6 +31,7 @@ public final class EventScreen extends ScreenLogic {
 
     /**
      * Creates an event screen to display the data from an event.
+     *
      * @param event The event belonging to this screen.
      */
     public EventScreen(final StrollEvent event) {

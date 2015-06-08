@@ -3,10 +3,10 @@ apply plugin: 'net.saliman.cobertura'
 // https://github.com/stevesaliman/gradle-cobertura-plugin/blob/master/usage.md
 cobertura {
     coberturaVersion = '2.1.1'
-    coverageFormats = [ 'xml', 'html' ]
+    coverageFormats = ['xml', 'html']
     coverageIgnoreTrivial = true
     coverageReportDir = file("${buildDir}/reports/cobertura")
-    
+
     rootProject.subprojects.each {
         coverageDirs << file("${it.name}/build/classes/main")
     }
@@ -14,7 +14,6 @@ cobertura {
 
 
 test.finalizedBy(project.tasks.cobertura)
-
 
 // PMD
 // config: http://gradle.org/docs/current/dsl/org.gradle.api.plugins.quality.Pmd.html
@@ -24,36 +23,36 @@ apply plugin: 'pmd'
 pmdMain {
 
     source = fileTree('src')
-    
+
     ruleSets = [
-        "java-basic",
-        "java-braces",
-        "java-strings",
-        "java-codesize",
-        "java-coupling",
-        "java-design",
-        "java-imports"
+            "java-basic",
+            "java-braces",
+            "java-strings",
+            "java-codesize",
+            "java-coupling",
+            "java-design",
+            "java-imports"
     ]
-    
+
     ignoreFailures = true
-        
+
 }
 
 pmdTest {
 
     source = fileTree('test')
-    
+
     ruleSets = [
-        "java-basic",
-        "java-braces",
-        "java-strings",
-        "java-codesize",
-        "java-coupling",
-        "java-design",
-        "java-imports"
+            "java-basic",
+            "java-braces",
+            "java-strings",
+            "java-codesize",
+            "java-coupling",
+            "java-design",
+            "java-imports"
     ]
-    
+
     ignoreFailures = true
-        
+
 }
 

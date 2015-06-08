@@ -6,14 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -115,30 +108,32 @@ public class GameSkin extends Skin {
     public final Label.LabelStyle getDefaultLabelStyle() {
         return get("default_labelStyle", Label.LabelStyle.class);
     }
-    
+
     /**
      * Easy method to return the default CheckboxStyle as a proper class.
-     * 
+     *
      * @return CheckboxStyle object
      */
     public final CheckBox.CheckBoxStyle getDefaultCheckboxStyle() {
-    	return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
+        return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
     }
-    
+
     /**
      * Easy method to return the default ListStyle as a proper class.
+     *
      * @return ListStyle object
      */
     public final List.ListStyle getDefaultListStyle() {
-    	return get("default_listStyle", List.ListStyle.class);
+        return get("default_listStyle", List.ListStyle.class);
     }
-    
+
     /**
      * Easy method to return the default SelectBox as a proper class.
+     *
      * @return SelectBox object
      */
     public final SelectBox.SelectBoxStyle getDefaultSelectboxStyle() {
-    	return get("default_selectboxStyle", SelectBox.SelectBoxStyle.class);
+        return get("default_selectboxStyle", SelectBox.SelectBoxStyle.class);
     }
 
     /**
@@ -159,10 +154,10 @@ public class GameSkin extends Skin {
 
         return buttonStyle;
     }
-    
+
     /**
      * The default Checkbox style.
-     * 
+     *
      * @return CheckBoxStyle
      */
     protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
@@ -177,24 +172,24 @@ public class GameSkin extends Skin {
         
     	return checkboxStyle;
     }
-    
+
     /**
      * The default Selectbox style.
-     * 
+     *
      * @return SelectBoxStyle
      */
     protected final SelectBox.SelectBoxStyle generateDefaultSelectboxStyle() {
-    	SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
-    	selectboxStyle.font = this.get("default_font", BitmapFont.class);
-    	selectboxStyle.fontColor = Color.GREEN;
-    	selectboxStyle.listStyle = this.generateDefaultListStyle();
-    	selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
-    	return selectboxStyle;
+        SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
+        selectboxStyle.font = this.get("default_font", BitmapFont.class);
+        selectboxStyle.fontColor = Color.GREEN;
+        selectboxStyle.listStyle = this.generateDefaultListStyle();
+        selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
+        return selectboxStyle;
     }
-    
+
     /**
      * The default List style.
-     * 
+     *
      * @return ListStyle
      */
     protected final List.ListStyle generateDefaultListStyle() {
@@ -252,6 +247,7 @@ public class GameSkin extends Skin {
 
     /**
      * Creates a default TextField Style.
+     *
      * @return The style for the TextField.
      */
     protected final TextField.TextFieldStyle generateDefaultTextFieldStyle() {
@@ -267,6 +263,7 @@ public class GameSkin extends Skin {
 
     /**
      * Generates a TextField using default settings and supplied text.
+     *
      * @param initialText The text to initially display.
      * @return A TextField object.
      */
@@ -276,6 +273,7 @@ public class GameSkin extends Skin {
 
     /**
      * Easy method to get the TextField style.
+     *
      * @return TextField style used.
      */
     public final TextField.TextFieldStyle getDefaultTextFieldStyle() {
@@ -300,40 +298,40 @@ public class GameSkin extends Skin {
      * @return TextButton
      */
     public final Label generateDefaultLabel(final String text) {
-    	Label result = new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
-    	result.setAlignment(Align.center);
+        Label result = new Label(text, this.get("default_labelStyle", Label.LabelStyle.class));
+        result.setAlignment(Align.center);
         return result;
     }
-    
+
     /**
      * Used to generate checkboxes using the default checkbox style.
-     * 
+     *
      * @param text text explaning the function of the checkbox
      * @return CheckBox
      */
     public final CheckBox generateDefaultCheckbox(final String text) {
-    	return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
+        return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
 
     }
-    
+
     /**
      * Used to generate lists using the default list style.
-     * 
+     *
      * @param <T> Objects or primitives
      * @return List
      */
     public final <T> List<T> generateDefaultList() {
-    	return new List<T>(this.get("default_listStyle", List.ListStyle.class));
+        return new List<T>(this.get("default_listStyle", List.ListStyle.class));
     }
-    
+
     /**
      * Used to generate selectboxes using the default selectbox style.
-     * 
+     *
      * @param <T> Objects or primitives
      * @return SelectBox.
      */
     public final <T> SelectBox<T> generateDefaultSelectbox() {
-    	return new SelectBox<T>(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
+        return new SelectBox<T>(this.get("default_selectboxStyle", SelectBox.SelectBoxStyle.class));
     }
 
     /**

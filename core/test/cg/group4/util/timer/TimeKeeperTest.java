@@ -1,15 +1,11 @@
 package cg.group4.util.timer;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.util.subscribe.Subject;
-import cg.group4.util.timer.TimeKeeper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for the timeKeeper class.

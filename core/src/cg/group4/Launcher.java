@@ -3,15 +3,14 @@ package cg.group4;
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
-import cg.group4.rewards.Collection;
-import cg.group4.sensor.AccelerationStatus;
+import cg.group4.server.Server;
 import cg.group4.util.notification.NotificationController;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -33,27 +32,22 @@ public class Launcher extends Game {
      * Used to clear all preferences and other data to start with a 'clean' game.
      */
     public static final boolean CLEAR_SETTINGS = false;
-
-    /**
-     * Keeps track of the game mechanics.
-     */
-    protected StandUp cStandUp;
-
-    /**
-     * Keeps track of timers throughout the game.
-     */
-    protected TimeKeeper cTimeKeeper;
-
-    /**
-     * Accelerometer status.
-     */
-    protected AccelerationStatus cAccelerationStatus;
-
     /**
      * Gets the device id as uniquer user ID.
      */
     protected final UserIDResolver cIDResolver;
-
+    /**
+     * Keeps track of the game mechanics.
+     */
+    protected StandUp cStandUp;
+    /**
+     * Keeps track of timers throughout the game.
+     */
+    protected TimeKeeper cTimeKeeper;
+    /**
+     * Accelerometer status.
+     */
+    protected AccelerationStatus cAccelerationStatus;
     /**
      * The notification controller to schedule notifications, passed with the constructor of the launcher.
      */
@@ -67,7 +61,8 @@ public class Launcher extends Game {
      * @param idResolver             The userID resolver for unique device id.
      */
     public Launcher(final AccelerationStatus accelerationStatus,
-                    final NotificationController notificationController, final UserIDResolver idResolver) {
+                    final NotificationController notificationController,
+                    final UserIDResolver idResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;
@@ -90,18 +85,21 @@ public class Launcher extends Game {
      * Once the Assets are done loading, this method is called to properly initialize the game.
      */
     public void assetsDone() {
+        Server server = new Server(false);
+        server.start();
+
+        Client.getLocalInstance().setUserIDResolver(cIDResolver);
+//        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        Client.getRemoteInstance().setUserIDResolver(cIDResolver);
+
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
-
-        //Needs to be moved
-        Collection c = new Collection("local");
-
-        Client.getInstance().setUserIDResolver(cIDResolver);
+        
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init(c);
+        cScreenStore.init();
         cScreenStore.setScreen("Home");
 
         notificationInitialization();
@@ -147,6 +145,13 @@ public class Launcher extends Game {
             cTimeKeeper.update();
             cStandUp.update();
         }
+        cStandUp.update();
+        cTimeKeeper.update();
+
+        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+            Gdx.app.postRunnable(toRunBeforeNextCycle);
+        }
+        Client.getRemoteInstance().resetPostRunnables();
     }
 
 }
