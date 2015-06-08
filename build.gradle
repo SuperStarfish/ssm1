@@ -10,13 +10,13 @@ buildscript {
 }
 
 plugins {
-	id 'net.saliman.cobertura' version '2.2.8'
+    id 'net.saliman.cobertura' version '2.2.8'
 }
 
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
-	
+
     // application version
     // for our project, the major version is incremented each week
     version = '2.0'
@@ -41,18 +41,19 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-    
-   	
+
+
 }
 
 project(":core") {
     apply plugin: "java"
-	
-	apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
-	
+
+    apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
+
     dependencies {
+        compile project(":client")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-		compile "org.slf4j:slf4j-simple:$slf4jVersion"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
         testCompile "junit:junit:$junitVersion"
@@ -78,9 +79,29 @@ project(":server") {
     apply plugin: "java"
 
     dependencies {
+        compile project(":data_structures")
         compile "org.xerial:sqlite-jdbc:3.8.6"
-        compile project(':core')
 
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+    }
+}
+
+project(":client") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":server")
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+    }
+}
+
+project(":data_structures") {
+    apply plugin: "java"
+
+    dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
     }
@@ -117,7 +138,7 @@ project(":android") {
 
 subprojects {
     if (!"${project}".contains("android")) {
-        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle" 
+        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
     }
 }
 

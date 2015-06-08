@@ -81,7 +81,6 @@ public final class SettingsScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        getWidgetGroup();
         cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
@@ -141,7 +140,7 @@ public final class SettingsScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-               cIntervalTimer.reset();
+                cIntervalTimer.reset();
             }
         };
     }
@@ -191,7 +190,7 @@ public final class SettingsScreen extends ScreenLogic {
 
     /**
      * Goes to the network Screen.
-     * 
+     *
      * @return ChangeListener
      */
     protected ChangeListener networkScreenBehaviour() {

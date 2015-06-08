@@ -1,6 +1,6 @@
 package cg.group4.util.timer;
 
-import cg.group4.util.subscribe.Subject;
+import cg.group4.data_structures.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 

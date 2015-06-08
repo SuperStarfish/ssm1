@@ -1,6 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.game_logic.StandUp;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -240,6 +239,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cStage = new Stage();
         cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
+        cScreen.display();
         cInputMultiplexer.addProcessor(cStage);
     }
 

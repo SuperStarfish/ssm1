@@ -2,7 +2,7 @@ package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.audio.AudioPlayer;
-import cg.group4.util.sensors.Accelerometer;
+import cg.group4.util.sensor.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -22,19 +22,22 @@ public class TestStrollEvent extends StrollEvent {
      * Number of tasks that the player must complete before the event is considered a success.
      */
     protected static final int MAX_TASKS = 10;
+   
     /**
      * Constants used for each task case.
      */
     protected static final int MOVE_LEFT = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_UP = 3,
             MOVE_AWAY = 4, MOVE_TOWARDS = 5;
-    /**
-     * The string values belonging to each direction.
-     */
-    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
+   
     /**
      * Sound effect played when a task is completed.
      */
     protected final Sound cCompletedTaskSound;
+    
+    /**
+     * The string values belonging to each direction.
+     */
+    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
     
     /**
      * operationNr: Movement operation that must be done.
@@ -42,18 +45,22 @@ public class TestStrollEvent extends StrollEvent {
      * tasksCompleted: Number of completed movement operations.
      */
     protected int cOperationNr, cPrevOperationNr, cTasksCompleted;
+  
     /**
      * Whether or not the input is delayed.
      */
     protected boolean cDelayNewInput;
+   
     /**
      * Delays input to better determine the acceleration direction.
      */
     protected Timer cDelayInputTimer;
+   
     /**
      * Tasks which will execute when a delay is initiated.
      */
     protected Observer cDelayInputStartObserver;
+   
     /**
      * Tasks which will execute when a delay is stopped.
      */
