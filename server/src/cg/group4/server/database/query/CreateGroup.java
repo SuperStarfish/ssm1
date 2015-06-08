@@ -1,5 +1,6 @@
 package cg.group4.server.database.query;
 
+import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.groups.Group;
 import cg.group4.data_structures.groups.GroupData;
 import cg.group4.server.database.DatabaseConnection;
@@ -30,20 +31,27 @@ public class CreateGroup extends Query {
         databaseConnection.commit();
 
         ResultSet resultSet = statement.executeQuery(
-                "SELECT * FROM 'Group' INNER JOIN User ON 'Group'.OwnerId = User.Id "
-                        + "WHERE 'Group'.Name = '" + cGroupName + "' AND 'Group'.OwnerId = '" + cOwnerId + "' LIMIT 1");
+                "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId As OwnerId, U.Username AS Username, U.Id "
+                        + "FROM 'Group' G INNER JOIN User U ON G.OwnerId = U.Id "
+                        + "WHERE G.Name = '" + cGroupName + "' AND G.OwnerId = '" + cOwnerId + "' LIMIT 1");
 
+        int groupId = resultSet.getInt("GroupId");
 
         GroupData groupData = new GroupData(
-                resultSet.getInt("Key"),
+                groupId,
                 resultSet.getString("Name"),
                 resultSet.getString("OwnerId"),
                 resultSet.getString("Username")
         );
-        Group group = new Group(Integer.toString(groupData.getGroupId()), groupData);
 
         resultSet.close();
         statement.close();
+
+        Group group = new Group(Integer.toString(groupData.getGroupId()), groupData);
+        PlayerData playerData = new PlayerData(cOwnerId);
+        playerData.setGroupId(Integer.toString(groupId));
+        new UpdatePlayerData(playerData).query(databaseConnection);
+
         return group;
     }
 }

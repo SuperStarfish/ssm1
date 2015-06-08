@@ -70,6 +70,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                cMessage.setText("Waiting for server response!");
                 Client.getRemoteInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {

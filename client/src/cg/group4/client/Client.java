@@ -30,7 +30,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "localhost";
+    protected final String cDefaultIp = "128.127.39.32";
     /**
      * The default port to connect to.
      */
