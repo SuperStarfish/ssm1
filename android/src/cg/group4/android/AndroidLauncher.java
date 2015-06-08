@@ -9,6 +9,9 @@ import cg.group4.util.sensor.AndroidAccelerationStatus;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
  * The AndroidLauncher class runs the application on an Android device.
  */
@@ -22,6 +25,16 @@ public class AndroidLauncher extends AndroidApplication {
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        try {
+//            Class.forName("org.sqldroid.SQLDroidDriver");
+//            DriverManager.getConnection("jdbc:sqldroid:/data/data/SSM/databases/local.sqlite");
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
         cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useWakelock = true;
