@@ -21,7 +21,6 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-
     protected final String cDefaultIp = "127.0.0.1";
 
     /**
