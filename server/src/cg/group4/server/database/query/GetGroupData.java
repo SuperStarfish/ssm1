@@ -18,13 +18,14 @@ public class GetGroupData extends Query {
         ArrayList<GroupData> list = new ArrayList<GroupData>();
         Statement statement = databaseConnection.query();
         ResultSet resultSet = statement.executeQuery(
-                "SELECT * FROM 'Group' INNER JOIN User ON 'Group'.OwnerId = User.Id");
+                "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId AS OwnerId, U.Username AS Username, U.Id "
+                        + "FROM 'Group' G INNER JOIN User u ON G.OwnerId = U.Id");
         while (resultSet.next()) {
             list.add(new GroupData(
-                    resultSet.getInt("'Group'.Key"),
-                    resultSet.getString("'Group'.Name"),
-                    resultSet.getString("'Group'.OwnerId"),
-                    resultSet.getString("User.Username")
+                    resultSet.getInt("GroupId"),
+                    resultSet.getString("Name"),
+                    resultSet.getString("OwnerId"),
+                    resultSet.getString("Username")
             ));
         }
         resultSet.close();
