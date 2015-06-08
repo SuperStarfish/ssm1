@@ -188,6 +188,11 @@ public final class CollectiblesScreen extends ScreenLogic {
 		});
 	}
 
+    /**
+     * Adds row and fits it, based on the screen size and amount of items.
+     * @param screenWidth width of the screen
+     * @param screenHeight height of the screen
+     */
 	protected void fitScrollPaneItems(final int screenWidth, final int screenHeight) {
 		cContainer.row().height(screenHeight / cItemsOnScreen).width(screenWidth / cNumberOfTopBarItems).fill();
 	}
