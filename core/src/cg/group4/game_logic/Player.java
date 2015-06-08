@@ -48,6 +48,10 @@ public class Player {
         cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 
+    public PlayerData getPlayerData() {
+        return cPlayerData;
+    }
+
     /**
      * Retrieves the collection from the players data.
      *

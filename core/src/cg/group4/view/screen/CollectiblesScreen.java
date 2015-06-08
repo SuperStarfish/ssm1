@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.data_structures.Selection;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.collection.collectibles.FishA;
@@ -55,7 +56,7 @@ public final class CollectiblesScreen extends ScreenLogic {
     /**
      * SelectBox that contains the groups that the user is currently in.
      */
-    protected SelectBox<GroupData> cGroupsBox;
+    protected SelectBox<Selection> cGroupsBox;
 
     /**
      * SelectBox that contains all the possible sorting options.
@@ -172,16 +173,20 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void createGroupBox() {
         cGroupsBox = cGameSkin.generateDefaultSelectbox();
-
-        cGroupsBox.setItems((GroupData[]) cGroups.toArray(new GroupData[cGroups.size()]));
+        Selection[] list = new Selection[cGroups.size() + 1];
+        list[0] = new Selection(StandUp.getInstance().getPlayer().getPlayerData());
+        for (int i = 1; i < list.length; i++) {
+            list[i] = new Selection(cGroups.get(i - 1));
+        }
+        cGroupsBox.setItems(list);
         cGroupsBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 System.out.println("Selected Collection: " + cGroupsBox.getSelected());
-                int groupId = cGroupsBox.getSelected().getGroupId();
-                Client.getRemoteInstance().getCollection(Integer.toString(groupId), new ResponseHandler() {
-					@Override
-					public void handleResponse(Response response) {
+                String groupId = cGroupsBox.getSelected().getValue();
+                Client.getRemoteInstance().getCollection(groupId, new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
 						cSelectedCollection = (Collection) response.getData();
 						constructContents();
 					}
