@@ -42,6 +42,9 @@ public class Player {
                 } else {
                     playerData = new PlayerData(Client.getRemoteInstance().getUserID());
                 }
+                if (playerData.getUsername() == null) {
+                    playerData.setUsername("Unknown");
+                }
                 cPlayerData = playerData;
             }
         });

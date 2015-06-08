@@ -4,9 +4,6 @@ import cg.group4.client.Client;
 import cg.group4.data_structures.Selection;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.data_structures.collection.collectibles.FishA;
-import cg.group4.data_structures.collection.collectibles.FishB;
-import cg.group4.data_structures.collection.collectibles.FishC;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.data_structures.groups.GroupData;
 import cg.group4.game_logic.StandUp;
@@ -107,9 +104,6 @@ public final class CollectiblesScreen extends ScreenLogic {
                 cGroups = (ArrayList<GroupData>) response.getData();
             }
         });
-        StandUp.getInstance().getPlayer().getCollection().add(new FishA(0.3f, "ABC"));
-        StandUp.getInstance().getPlayer().getCollection().add(new FishB(0.5f, "123"));
-        StandUp.getInstance().getPlayer().getCollection().add(new FishC(0.8f, "XYZ"));
 
         cSelectedCollection = StandUp.getInstance().getPlayer().getCollection();
     }
@@ -229,6 +223,7 @@ public final class CollectiblesScreen extends ScreenLogic {
 
     @Override
     public void display() {
+        createGroupBox();
         constructContents();
     }
 
