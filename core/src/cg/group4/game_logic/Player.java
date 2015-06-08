@@ -48,6 +48,10 @@ public class Player {
         });
     }
 
+    public PlayerData getPlayerData() {
+        return cPlayerData;
+    }
+
     /**
      * Retrieves the collection from the players data.
      *
@@ -73,5 +77,13 @@ public class Player {
      */
     public String getId() {
         return cPlayerData.getId();
+    }
+
+    /**
+     * 
+     * @param groupId
+     */
+    public void setPlayerDataGroupId(int groupId) {
+        cPlayerData.setGroupId(Integer.toString(groupId));
     }
 }
