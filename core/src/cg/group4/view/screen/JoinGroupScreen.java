@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.data_structures.groups.Group;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -65,7 +66,7 @@ public class JoinGroupScreen extends ScreenLogic {
         boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getMessageText(), new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-
+                Group g = (Group)response.getData();
             }
         });
         return tryJoin;

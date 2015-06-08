@@ -54,12 +54,7 @@ public class NewGroupScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                boolean tryNewGroup = addNewGroup();
-                if (tryNewGroup) {
-                    cStatusLabel.setText("Successfully created new group");
-                } else {
-                    cStatusLabel.setText("Unable to create new group");
-                }
+               addNewGroup();
             }
         };
     }
@@ -73,6 +68,12 @@ public class NewGroupScreen extends ScreenLogic {
 
                 final Player player = StandUp.getInstance().getPlayer();
                 player.setPlayerDataGroupId(groupId);
+
+                if (response.isSuccess()) {
+                    cStatusLabel.setText("Successfully created new group");
+                } else {
+                    cStatusLabel.setText("Failed to create group");
+                }
             }
         });
 
