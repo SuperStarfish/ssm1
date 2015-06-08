@@ -7,7 +7,6 @@ import cg.group4.rewards.collectibles.collectible_sorters.CollectibleSorter;
 import cg.group4.rewards.collectibles.collectible_sorters.SortByRarity;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -92,46 +91,18 @@ public final class CollectiblesScreen extends ScreenLogic {
 		cContainer = new Table();
 		cContainer.setFillParent(true);
 		
-		cBackButton = cGameSkin.generateDefaultMenuButton("Back");
-		cBackButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                ScreenStore.getInstance().setScreen("Home");
-            }
-        });
+		createMenuBackButton();
 				
 		cContentTable = new Table();
 		cContentTable.setWidth(screenWidth);
 		cScrollPane = new ScrollPane(cContentTable);
 		cScrollPane.setForceScroll(false, true);
 		
-		cSortBox = cGameSkin.generateDefaultSelectbox();
-		String[] def = new String[2];
-		def[0] = "Sort_Rarity";
-		def[1] = "<Insert Sort Object>";
-		cSortBox.setItems(def);
-		cSortBox.addListener(new ChangeListener() {
-			@Override
-			public void changed(final ChangeEvent event, final Actor actor) {
-				System.out.println("Selected Sorting: " + cSortBox.getSelected());
-			}
-		});
-		
-		cGroupsBox = cGameSkin.generateDefaultSelectbox();
-		String[] abc = new String[3];
-		abc[0] = "My Collection";
-		abc[1] = "Group_1";
-		abc[2] = "Group_2";
-		cGroupsBox.setItems(abc);
-		cGroupsBox.addListener(new ChangeListener() {
-			@Override
-			public void changed(final ChangeEvent event, final Actor actor) {
-				System.out.println("Selected Collection: " + cGroupsBox.getSelected());
-			}	
-		});
-		
-		cContainer.row().height(screenHeight / cItemsOnScreen).width(screenWidth / cNumberOfTopBarItems).fill();
-		
+		createSortBox(sampleSorters());
+		createGroupBox(sampleGroups());
+
+		fitScrollPaneItems(screenWidth, screenHeight);
+
 		cContainer.add(cBackButton).fill();
 		cContainer.add(cSortBox).fill();
 		cContainer.add(cGroupsBox).fill();
@@ -141,6 +112,84 @@ public final class CollectiblesScreen extends ScreenLogic {
 		constructContents(screenWidth, screenHeight);
 		
 		return cContainer;
+	}
+
+    /**
+     * Creates the back button from the collectible screen to the home screen.
+     */
+	protected void createMenuBackButton() {
+		cBackButton = cGameSkin.generateDefaultMenuButton("Back");
+		cBackButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(final ChangeEvent event, final Actor actor) {
+				ScreenStore.getInstance().setScreen("Home");
+			}
+		});
+	}
+
+    /**
+     * The already existing sample sorters for the group box.
+     * TODO: Should be replaced with the real sorters for achievements.
+     *
+     * @return Sample sorter selectors.
+     */
+    protected String[] sampleSorters() {
+        final int size = 2;
+        String[] def = new String[size];
+        def[0] = "Sort_Rarity";
+        def[1] = "<Insert Sort Object>";
+        return def;
+    }
+
+    /**
+     * Creates the sort selection box (dropdown), but does not add it to the view container.
+     *
+     * @param sorters Representation of the sorters available.
+     */
+	protected void createSortBox(final String[] sorters) {
+		cSortBox = cGameSkin.generateDefaultSelectbox();
+		cSortBox.setItems(sorters);
+		cSortBox.addListener(new ChangeListener() {
+			@Override
+			public void changed(final ChangeEvent event, final Actor actor) {
+				System.out.println("Selected Sorting: " + cSortBox.getSelected());
+			}
+		});
+	}
+
+    /**
+     * The already existing sample groups for the group box.
+     * TODO: Should be replaced with the local collection and group collections from the server.
+     *
+     * @return Sample group selector
+     */
+    protected String[] sampleGroups() {
+        final int size = 3;
+        String[] res = new String[size];
+        res[0] = "Local Collection";
+        res[1] = "Group_1";
+        res[2] = "Group_2";
+        return res;
+    }
+
+    /**
+     * Creates the group selection box (dropdown), but does not add it to the view container.
+     *
+     * @param items Local / groups selector items
+     */
+	protected void createGroupBox(final String[] items) {
+		cGroupsBox = cGameSkin.generateDefaultSelectbox();
+		cGroupsBox.setItems(items);
+		cGroupsBox.addListener(new ChangeListener() {
+			@Override
+			public void changed(final ChangeEvent event, final Actor actor) {
+				System.out.println("Selected Collection: " + cGroupsBox.getSelected());
+			}
+		});
+	}
+
+	protected void fitScrollPaneItems(final int screenWidth, final int screenHeight) {
+		cContainer.row().height(screenHeight / cItemsOnScreen).width(screenWidth / cNumberOfTopBarItems).fill();
 	}
 
 	@Override
@@ -171,9 +220,11 @@ public final class CollectiblesScreen extends ScreenLogic {
 	protected void constructContents(final int screenWidth, final int screenHeight) {
 		ArrayList<Collectible> sortedList = cSorter.sortCollectibles(cCollection);
 		DecimalFormat format = new DecimalFormat("#.00");
-		
+
+        final float amount = 5f;
+
 		for (Collectible c : sortedList) {
-			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth / 5);
+			cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth / amount);
 			Image img = new Image(cDrawer.drawCollectible(c));
 			cContentTable.add(img);
 			cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
