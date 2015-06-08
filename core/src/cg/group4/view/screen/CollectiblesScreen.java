@@ -1,12 +1,20 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.collection.collectibles.FishA;
+import cg.group4.data_structures.collection.collectibles.FishB;
+import cg.group4.data_structures.collection.collectibles.FishC;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
+import cg.group4.data_structures.groups.GroupData;
 import cg.group4.game_logic.StandUp;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -46,14 +54,9 @@ public final class CollectiblesScreen extends ScreenLogic {
     protected CollectibleDrawer cDrawer;
 
     /**
-     * Checkbox that sets the CollectibleSorter to sorting by rarity.
-     */
-    protected CheckBox cSortRarity;
-
-    /**
      * SelectBox that contains the groups that the user is currently in.
      */
-    protected SelectBox<String> cGroupsBox;
+    protected SelectBox<GroupData> cGroupsBox;
 
     /**
      * SelectBox that contains all the possible sorting options.
@@ -64,6 +67,13 @@ public final class CollectiblesScreen extends ScreenLogic {
      * Width and height of the screen.
      */
     protected int cScreenWidth, cScreenHeight;
+    
+    /**
+     * Currently displayed collection.
+     */
+    protected Collection cSelectedCollection;
+    
+    protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
 
     /**
      * Observers additions made to the collection.
@@ -90,6 +100,16 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     public CollectiblesScreen() {
         cDrawer = new CollectibleDrawer();
+        
+        Client.getRemoteInstance().getGroupData(new ResponseHandler() {
+			@Override
+			public void handleResponse(Response response) {
+				cGroups = (ArrayList<GroupData>) response.getData();
+			}
+        });
+        StandUp.getInstance().getPlayer().getCollection().add(new FishA(0.3f, "ABC"));
+        StandUp.getInstance().getPlayer().getCollection().add(new FishB(0.5f, "123"));
+        StandUp.getInstance().getPlayer().getCollection().add(new FishC(0.8f, "XYZ"));
     }
 
     @Override
@@ -151,15 +171,20 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void createGroupBox() {
         cGroupsBox = cGameSkin.generateDefaultSelectbox();
-        String[] abc = new String[3];
-        abc[0] = "My Collection";
-        abc[1] = "Group_1";
-        abc[2] = "Group_2";
-        cGroupsBox.setItems(abc);
+        
+        cGroupsBox.setItems((GroupData[]) cGroups.toArray());
         cGroupsBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 System.out.println("Selected Collection: " + cGroupsBox.getSelected());
+                int groupId = cGroupsBox.getSelected().getGroupId();
+                Client.getRemoteInstance().getCollection(Integer.toString(groupId), new ResponseHandler() {
+					@Override
+					public void handleResponse(Response response) {
+						cSelectedCollection = (Collection) response.getData();
+						constructContents();
+					}
+                });
             }
         });
     }
@@ -207,28 +232,28 @@ public final class CollectiblesScreen extends ScreenLogic {
      * of the screen, resize and collection changes.
      */
     protected void constructContents() {
-        Collection collection = StandUp.getInstance().getPlayer().getCollection();
-        ArrayList<Collectible> sortedList = collection.sort(new RarityComparator());
+        //Collection collection = StandUp.getInstance().getPlayer().getCollection();
+        ArrayList<Collectible> sortedList = cSelectedCollection.sort(new RarityComparator());
         DecimalFormat format = new DecimalFormat("#.00");
 
         cContentTable.clear();
         for (Collectible c : sortedList) {
-            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 5);
+            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
             Image img = new Image(cDrawer.drawCollectible(c));
             cContentTable.add(img);
             cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
             cContentTable.add(cGameSkin.generateDefaultLabel("DATE"));
             cContentTable.add(cGameSkin.generateDefaultLabel("OWNER"));
             cContentTable.add(cGameSkin.generateDefaultLabel("GROUP"));
+            TextButton donate = cGameSkin.generateDefaultMenuButton("DONATE");
+            donate.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					
+				}
+            });
+            cContentTable.add(donate);
+            
         }
     }
-
-    /**
-     * Helper method that should not be called outside of this class.
-     * Clears all the checkboxes.
-     */
-    protected void clearCheckboxes() {
-        cSortRarity.setChecked(false);
-    }
-
 }
