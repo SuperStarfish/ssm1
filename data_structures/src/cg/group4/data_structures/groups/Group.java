@@ -27,6 +27,11 @@ public class Group {
     protected String cOwnerId;
 
     /**
+     * Name of the owner
+     */
+    protected String cOwnerName;
+
+    /**
      * Group collection
      */
     protected Collection cCollection;
@@ -35,35 +40,44 @@ public class Group {
         cCollection = new Collection(id);
     }
 
-    public String getcGroupId() {
+    public String getGroupId() {
         return cGroupId;
     }
 
-    public void setcGroupId(String cGroupId) {
+    public void setGroupId(final String cGroupId) {
         this.cGroupId = cGroupId;
     }
 
-    public String getcName() {
+    public String getName() {
         return cName;
     }
 
-    public void setcName(String cName) {
+    public void setName(final String cName) {
         this.cName = cName;
     }
 
-    public String getcOwnerId() {
+    public String getOwnerId() {
         return cOwnerId;
     }
 
-    public void setcOwnerId(String cOwnerId) {
+    public void setOwnerId(final String cOwnerId) {
         this.cOwnerId = cOwnerId;
     }
 
-    public Collection getcCollection() {
+    public Collection getCollection() {
         return cCollection;
     }
 
-    public void setcCollection(Collection cCollection) {
+    public void setCollection(final Collection cCollection) {
         this.cCollection = cCollection;
     }
+
+    public String getOwnerName() {
+        return cOwnerName;
+    }
+
+    public void setOwnerName(final String cOwnerName) {
+        this.cOwnerName = cOwnerName;
+    }
+
 }
