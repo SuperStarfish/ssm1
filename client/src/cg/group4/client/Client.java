@@ -10,9 +10,14 @@ import cg.group4.server.database.query.Query;
 import cg.group4.server.database.query.RequestPlayerData;
 import cg.group4.server.database.query.UpdateCollection;
 import cg.group4.server.database.query.UpdatePlayerData;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.query.*;
+import cg.group4.util.IpResolver;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import java.net.UnknownHostException;
 
 /**
  * @author Jurgen van Schagen
@@ -33,7 +38,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "82.169.19.191";
+    protected final String cDefaultIp = "128.127.39.32";
     /**
      * The default port to connect to.
      */
@@ -212,6 +217,7 @@ public final class Client {
      */
     public boolean updateCollection(final Collection collection, ResponseHandler responseHandler) {
         collection.setGroupId(cUserIDResolver.getID());
+        return cConnection.send(new AddCollection(collection)).isSuccess();
         return tryToSend(new UpdateCollection(collection), responseHandler);
     }
 
@@ -230,6 +236,44 @@ public final class Client {
      */
     public boolean getPlayerData(ResponseHandler responseHandler) {
         return tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
+    public PlayerData getPlayerData() {
+        Response response = cConnection.send(new RequestPlayerData(cUserIDResolver.getID()));
+        if (response.isSuccess()) {
+            return (PlayerData) response.getData();
+        }
+        return new PlayerData(cUserIDResolver.getID());
+    }
+
+    /**
+     * Stores the host ip on the server with a generated code that it will return to let the client connect.
+     *
+     * @return The code.
+     */
+    public Integer hostEvent() {
+        IpResolver ipResolver = new IpResolver();
+        try {
+            Response response = cConnection.send(new RequestHostCode(ipResolver.getExternalIP()));
+            if (response.isSuccess()) {
+                return (Integer) response.getData();
+            }
+        } catch (UnknownHostException e) {
+            return null;
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves the ip of the host.
+     *
+     * @param code code of the connection.
+     * @return The hosts ip.
+     */
+    public String getHost(final Integer code) {
+        Response response = cConnection.send(new RequestHostIp(code));
+        if (response.isSuccess()) {
+            return (String) response.getData();
+        }
+        return null;
     }
 
     /**
