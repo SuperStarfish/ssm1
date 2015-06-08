@@ -236,7 +236,7 @@ public final class Client {
     }
 
     protected boolean tryToSend(final Query query, final ResponseHandler responseHandler) {
-        if (true) {
+        if(!cAwaitingResponse) {
             cAwaitingResponse = true;
             cConnection.send(query, responseHandler);
         }
