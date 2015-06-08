@@ -76,6 +76,13 @@ public abstract class ScreenLogic {
     protected abstract String setPreviousScreenName();
 
     /**
+     * Method that gets called when it gets displayed.
+     */
+    public void display() {
+
+    }
+
+    /**
      * Returns the previous Screen name. Has to be set through the setPreviousScreenName() method.
      *
      * @return The previous Screen name.

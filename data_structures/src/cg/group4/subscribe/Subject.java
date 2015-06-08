@@ -1,5 +1,6 @@
 package cg.group4.subscribe;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Observable;
  *
  * @author Benjamin Los
  */
-public class Subject extends Observable {
+public class Subject extends Observable implements Serializable {
 
     /**
      * Notifies the subscribers.

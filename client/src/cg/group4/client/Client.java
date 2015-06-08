@@ -1,10 +1,12 @@
 package cg.group4.client;
 
-import cg.group4.Player;
+import cg.group4.PlayerData;
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.LocalConnection;
-import cg.group4.database.query.RequestPlayer;
-import cg.group4.database.query.UpdatePlayer;
+import cg.group4.collection.Collection;
+import cg.group4.database.query.RequestPlayerData;
+import cg.group4.database.query.UpdateCollection;
+import cg.group4.database.query.UpdatePlayerData;
 
 /**
  * @author Jurgen van Schagen
@@ -88,29 +90,28 @@ public final class Client {
      */
     public Boolean updatePlayer(final String username) {
 
-        Player player = new Player(cUserIDResolver.getID());
-        player.setUsername(username);
+        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
+        playerData.setUsername(username);
 
-        return cConnection.send(new UpdatePlayer(player)).isSuccess();
+        return cConnection.send(new UpdatePlayerData(playerData)).isSuccess();
     }
-//
-//    /**
-//     * Adds the collection to the server. Behaviour depends on the state.
-//     * @param collection The collection to add to the server.
-//     * @return Successful or not.
-//     */
-//    public boolean updateCollection(final Collection collection) {
-//        boolean successful = cConnection.updateCollection(collection, new UserData(cUserIDResolver.getID()));
-//        System.out.println("Was it a succes?: " + successful);
-//        return successful;
-//    }
+
+    /**
+     * Adds the collection to the server. Behaviour depends on the state.
+     * @param collection The collection to add to the server.
+     * @return Successful or not.
+     */
+    public boolean updateCollection(final Collection collection) {
+        collection.setGroupId(cUserIDResolver.getID());
+        return cConnection.send(new UpdateCollection(collection)).isSuccess();
+    }
 
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
      * @return All the userdata.
      */
-    public Player getPlayer() {
-        return (Player) cConnection.send(new RequestPlayer(cUserIDResolver.getID())).getData();
+    public PlayerData getPlayerData() {
+        return (PlayerData) cConnection.send(new RequestPlayerData(cUserIDResolver.getID())).getData();
     }
 
     /**
@@ -130,5 +131,4 @@ public final class Client {
     public boolean isConnected() {
         return cConnection.isConnected();
     }
-
 }

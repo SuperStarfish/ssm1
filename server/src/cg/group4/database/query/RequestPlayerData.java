@@ -1,6 +1,6 @@
 package cg.group4.database.query;
 
-import cg.group4.Player;
+import cg.group4.PlayerData;
 import cg.group4.collection.Collection;
 import cg.group4.database.DatabaseConnection;
 
@@ -12,7 +12,7 @@ import java.sql.Statement;
 /**
  * Object that will retrieve user data from the server with the given id.
  */
-public class RequestPlayer extends Query {
+public class RequestPlayerData extends Query {
 
     /**
      * The id of the user data to be retrieved
@@ -24,7 +24,7 @@ public class RequestPlayer extends Query {
      *
      * @param id The id of the player to be retrieved.
      */
-    public RequestPlayer(String id) {
+    public RequestPlayerData(String id) {
         cId = id;
     }
 
@@ -33,26 +33,26 @@ public class RequestPlayer extends Query {
         Statement statement = databaseConnection.query();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM User WHERE ID = '" + cId + "' LIMIT 1");
 
-        Player player = new Player(cId);
+        PlayerData playerData = new PlayerData(cId);
         if (resultSet.isBeforeFirst()) {
             resultSet.next();
 
-            player.setId(resultSet.getString("ID"));
-            player.setUsername(resultSet.getString("Username"));
-            player.setIntervalTimeStamp(resultSet.getInt("Interval"));
-            player.setStrollTimeStamp(resultSet.getInt("Stroll"));
+            playerData.setId(resultSet.getString("ID"));
+            playerData.setUsername(resultSet.getString("Username"));
+            playerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
+            playerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
 
         } else {
-            statement.executeUpdate("INSERT INTO User (ID) VALUES ('"
-                    + player.getId() + "')");
+            statement.executeUpdate("INSERT INTO User (ID,Username) VALUES ('"
+                    + playerData.getId() + "', '" + playerData.getUsername() + "')");
             databaseConnection.commit();
         }
 
         resultSet.close();
         statement.close();
 
-        player.setCollection((Collection) new RequestCollection(cId).query(databaseConnection));
+        playerData.setCollection((Collection) new RequestCollection(cId).query(databaseConnection));
 
-        return player;
+        return playerData;
     }
 }

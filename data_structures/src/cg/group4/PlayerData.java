@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Contains all the data of the user.
  */
-public class Player implements Serializable {
+public class PlayerData implements Serializable {
 
     /**
      * The id belonging to this user.
@@ -44,10 +44,10 @@ public class Player implements Serializable {
      *
      * @param id The ID that belongs to the user.
      */
-    public Player(final String id) {
+    public PlayerData(final String id) {
         cId = id;
         cCollection = new Collection(cId);
-        cUsername = "Anonymous";
+        cUsername = id;
     }
 
     /**

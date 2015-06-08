@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Screen to be displayed when pressing the "Collection" button on the home screen.
@@ -53,14 +55,39 @@ public final class CollectiblesScreen extends ScreenLogic {
     protected CheckBox cSortRarity;
 
     /**
-     * Selectbox that contains the groups that the user is currently in.
+     * SelectBox that contains the groups that the user is currently in.
      */
     protected SelectBox<String> cGroupsBox;
 
     /**
-     * Selectbox that contains all the possible sorting options.
+     * SelectBox that contains all the possible sorting options.
      */
     protected SelectBox<String> cSortBox;
+
+    /**
+     * Width and height of the screen.
+     */
+    protected int cScreenWidth, cScreenHeight;
+
+    /**
+     * Observers additions made to the collection.
+     */
+    protected Observer cAddObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            constructContents();
+        }
+    };
+
+    /**
+     * Observers removals made to the collection.
+     */
+    protected Observer cRemoveObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            constructContents();
+        }
+    };
 
     /**
      * Creates a new CollectibleScreen.
@@ -71,13 +98,32 @@ public final class CollectiblesScreen extends ScreenLogic {
 
     @Override
     protected WidgetGroup createWidgetGroup() {
-        final int screenWidth = Gdx.graphics.getWidth();
-        final int screenHeight = Gdx.graphics.getHeight();
+        cScreenWidth = Gdx.graphics.getWidth();
+        cScreenHeight = Gdx.graphics.getHeight();
+
+        fillDrawer();
+        setBackButton();
+        createSortBox();
+        createGroupBox();
+        fillContainer();
+        return cContainer;
+    }
+
+    /**
+     * Fills the drawer and table of the screen.
+     */
+    protected void fillDrawer() {
         cDrawer = new CollectibleDrawer();
+        cContentTable = new Table();
+        cContentTable.setWidth(cScreenWidth);
+        cScrollPane = new ScrollPane(cContentTable);
+        cScrollPane.setForceScroll(false, true);
+    }
 
-        cContainer = new Table();
-        cContainer.setFillParent(true);
-
+    /**
+     * Sets up the backbutton of the screen.
+     */
+    protected void setBackButton() {
         cBackButton = cGameSkin.generateDefaultMenuButton("Back");
         cBackButton.addListener(new ChangeListener() {
             @Override
@@ -85,12 +131,12 @@ public final class CollectiblesScreen extends ScreenLogic {
                 ScreenStore.getInstance().setScreen("Home");
             }
         });
+    }
 
-        cContentTable = new Table();
-        cContentTable.setWidth(screenWidth);
-        cScrollPane = new ScrollPane(cContentTable);
-        cScrollPane.setForceScroll(false, true);
-
+    /**
+     * Creates the dropdown box to specify the sorting of the collection.
+     */
+    protected void createSortBox() {
         cSortBox = cGameSkin.generateDefaultSelectbox();
         String[] def = new String[2];
         def[0] = "Sort_Rarity";
@@ -102,7 +148,12 @@ public final class CollectiblesScreen extends ScreenLogic {
                 System.out.println("Selected Sorting: " + cSortBox.getSelected());
             }
         });
+    }
 
+    /**
+     * Creates the dropdown box to select the collection to display.
+     */
+    protected void createGroupBox() {
         cGroupsBox = cGameSkin.generateDefaultSelectbox();
         String[] abc = new String[3];
         abc[0] = "My Collection";
@@ -115,28 +166,32 @@ public final class CollectiblesScreen extends ScreenLogic {
                 System.out.println("Selected Collection: " + cGroupsBox.getSelected());
             }
         });
+    }
 
-        cContainer.row().height(screenHeight / cItemsOnScreen).width(screenWidth / cNumberOfTopBarItems).fill();
-
+    /**
+     * Fills the container (screen).
+     */
+    protected void fillContainer() {
+        cContainer = new Table();
+        cContainer.setFillParent(true);
+        cContainer.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cNumberOfTopBarItems).fill();
         cContainer.add(cBackButton).fill();
         cContainer.add(cSortBox).fill();
         cContainer.add(cGroupsBox).fill();
         cContainer.row();
         cContainer.add(cScrollPane).colspan(cNumberOfTopBarItems).fill();
 
-        constructContents(screenWidth, screenHeight);
-
-        return cContainer;
+        constructContents();
     }
 
     @Override
     protected void rebuildWidgetGroup() {
-        int screenWidth = Gdx.graphics.getWidth();
-        int screenHeight = Gdx.graphics.getHeight();
+        cScreenWidth = Gdx.graphics.getWidth();
+        cScreenHeight = Gdx.graphics.getHeight();
+        cContentTable.setWidth(cScreenWidth);
 
         cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cContentTable.clear();
-        constructContents(screenWidth, screenHeight);
+        constructContents();
 
     }
 
@@ -145,22 +200,24 @@ public final class CollectiblesScreen extends ScreenLogic {
         return "Home";
     }
 
+    @Override
+    public void display() {
+        constructContents();
+    }
+
     /**
      * Helper method that should not be called outside of this class.
      * Sorts and rebuilds all the collectibles in the collection. Called upon initialisation
-     * of the screen and on resizes.
-     *
-     * @param screenWidth  current width of the screen in pixels.
-     * @param screenHeight current height of the screen in pixels.
+     * of the screen, resize and collection changes.
      */
-    protected void constructContents(final int screenWidth, final int screenHeight) {
+    protected void constructContents() {
         Collection collection = StandUp.getInstance().getPlayer().getCollection();
         ArrayList<Collectible> sortedList = collection.sort(new RarityComparator());
-
         DecimalFormat format = new DecimalFormat("#.00");
 
+        cContentTable.clear();
         for (Collectible c : sortedList) {
-            cContentTable.row().height(screenHeight / cItemsOnScreen).width(screenWidth / 5);
+            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 5);
             Image img = new Image(cDrawer.drawCollectible(c));
             cContentTable.add(img);
             cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));

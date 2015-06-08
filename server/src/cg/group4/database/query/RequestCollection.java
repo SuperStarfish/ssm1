@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Request a collectible form the server.
@@ -38,12 +40,16 @@ public class RequestCollection extends Query {
                 + "GroupId = '" + cGroupId + "'");
 
         while (resultSet.next()) {
-            collection.add(factory.generateCollectible(
-                    resultSet.getString("Type"),
-                    resultSet.getFloat("Hue"),
-                    resultSet.getInt("Amount"),
-                    resultSet.getDate("Date"),
-                    resultSet.getString("OwnerId")));
+            try {
+                collection.add(factory.generateCollectible(
+                        resultSet.getString("Type"),
+                        resultSet.getFloat("Hue"),
+                        resultSet.getInt("Amount"),
+                        new SimpleDateFormat("yyyy-MM-dd").parse(resultSet.getString("Date")),
+                        resultSet.getString("OwnerId")));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         resultSet.close();

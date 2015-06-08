@@ -70,7 +70,7 @@ public class UpdateCollection extends Query {
         statement.executeUpdate("UPDATE Collectible SET Amount = " + (collectible.getAmount() + amount) +
                 " WHERE OwnerId = '" + collectible.getOwnerId() + "' AND " + "Type = '" +
                 collectible.getClass().getSimpleName() + "'" + "AND Hue = '" + collectible.getHue() +
-                "' AND Date = '" + collectible.getDate() + "' AND GroupId = '" + cCollection.getId() + "'");
+                "' AND Date = '" + collectible.getDateAsString() + "' AND GroupId = '" + cCollection.getId() + "'");
 
         databaseConnection.commit();
         statement.close();
@@ -88,7 +88,7 @@ public class UpdateCollection extends Query {
         ResultSet resultSet = statement.executeQuery("SELECT * FROM Collectible" +
                 " WHERE OwnerId = '" + collectible.getOwnerId() + "' AND " + "Type = '" +
                 collectible.getClass().getSimpleName() + "'" + "AND Hue = '" + collectible.getHue() +
-                "' AND Date = '" + collectible.getDate() + "' AND GroupId = '" + cCollection.getId() + "'");
+                "' AND Date = '" + collectible.getDateAsString() + "' AND GroupId = '" + cCollection.getId() + "'");
 
         int result = 0;
         if (resultSet.next()) {

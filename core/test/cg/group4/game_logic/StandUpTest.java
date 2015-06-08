@@ -79,7 +79,7 @@ public class StandUpTest {
         final int collectionSize = cStandUp.getPlayer().getCollection().size();
         assertNotNull(cStandUp.getStroll());
         Collection collection = new Collection("");
-        collection.add(new FishA(0));
+        collection.add(new FishA(0, ""));
         cStandUp.endStroll(collection);
         assertNull(cStandUp.getStroll());
         assertEquals(cStandUp.getPlayer().getCollection().size(), collectionSize + 1);

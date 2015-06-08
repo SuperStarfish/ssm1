@@ -29,7 +29,7 @@ public class RewardGeneratorTest {
      */
     @Before
     public void setUp() {
-        cGenerator = new RewardGenerator();
+        cGenerator = new RewardGenerator("");
     }
 
     /**

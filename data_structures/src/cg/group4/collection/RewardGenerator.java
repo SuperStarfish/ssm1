@@ -63,7 +63,7 @@ public class RewardGenerator {
     protected final Collectible generateOneCollectible() {
         String[] collectibleList = cCollectibleFactory.getCollectiblesList();
         int nr = cRNG.nextInt(collectibleList.length);
-        float hue = rewardFunction(cRNG.nextFloat());
+        float hue = (float) rewardFunction(cRNG.nextFloat());
         return cCollectibleFactory.generateCollectible(collectibleList[nr], hue, cOwnerId);
     }
 
@@ -76,8 +76,8 @@ public class RewardGenerator {
      * @param x Input
      * @return Result after applying the function to the input
      */
-    protected final float rewardFunction(final double x) {
+    protected final double rewardFunction(final double x) {
         final int exponent = 4;
-        return (float) Math.pow(x, exponent);
+        return Math.pow(x, exponent);
     }
 }

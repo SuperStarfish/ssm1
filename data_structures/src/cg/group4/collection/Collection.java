@@ -26,10 +26,7 @@ public class Collection extends HashSet<Collectible> implements Serializable {
      */
     protected Subject cChangeAddSubject;
 
-    /**
-     * Subject that gets notified when something is removed form the HashMap.
-     */
-    protected Subject cChangeRemoveSubject;
+
 
     /**
      * Constructs a HashSet collection to store collectibles gained by the player.
@@ -39,7 +36,6 @@ public class Collection extends HashSet<Collectible> implements Serializable {
         super();
         cId = id;
         cChangeAddSubject = new Subject();
-        cChangeRemoveSubject = new Subject();
     }
 
     /**
@@ -83,31 +79,6 @@ public class Collection extends HashSet<Collectible> implements Serializable {
     }
 
     @Override
-    public boolean add(Collectible collectible) {
-        boolean result = super.add(collectible);
-        Collection collection = new Collection(cId);
-        collection.add(collectible);
-        cChangeAddSubject.update(collection);
-        return result;
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        boolean result = super.remove(o);
-        Collection collection = new Collection(cId);
-        collection.add((Collectible) o);
-        cChangeRemoveSubject.update(collection);
-        return result;
-    }
-
-    @Override
-    public boolean removeAll(java.util.Collection<?> c) {
-        boolean result = super.removeAll(c);
-        cChangeRemoveSubject.update(c);
-        return result;
-    }
-
-    @Override
     public boolean addAll(java.util.Collection<? extends Collectible> c) {
         boolean result = super.addAll(c);
         cChangeAddSubject.update(c);
@@ -124,11 +95,10 @@ public class Collection extends HashSet<Collectible> implements Serializable {
     }
 
     /**
-     * Getter for the change remove subject. Gets notified when something is remove from the HashMap.
-     *
-     * @return The change remove subject.
+     * Sets the group id of this collection.
+     * @param groupId The id of the group.
      */
-    public Subject getChangeRemoveSubject() {
-        return cChangeRemoveSubject;
+    public void setGroupId(String groupId) {
+        cId = groupId;
     }
 }

@@ -1,6 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.collection.Collection;
+import cg.group4.collection.collectibles.Collectible;
+import cg.group4.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -9,15 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 /**
  * Screen to display the rewards that have been gathered during an event.
  */
 public final class RewardScreen extends ScreenLogic {
 
-    /**
-     * Reward that has to be displayed of the screen.
-     */
-    protected Collection cRewardCollection;
     /**
      * Button to return to the HomeScreen.
      */
@@ -33,7 +34,7 @@ public final class RewardScreen extends ScreenLogic {
      * @param reward The reward to be displayed on the reward screen.
      */
     public RewardScreen(final Collection reward) {
-        cRewardCollection = reward;
+        constructContents(reward);
     }
 
     @Override
@@ -68,5 +69,11 @@ public final class RewardScreen extends ScreenLogic {
     @Override
     protected String setPreviousScreenName() {
         return "Home";
+    }
+
+    protected void constructContents(Collection collection) {
+        ArrayList<Collectible> sortedList = collection.sort(new RarityComparator());
+        DecimalFormat format = new DecimalFormat("#.00");
+
     }
 }
