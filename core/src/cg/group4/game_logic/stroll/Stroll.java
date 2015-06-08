@@ -61,11 +61,6 @@ public class Stroll implements Observer {
     protected Timer cStrollTimer;
 
     /**
-     * The background music to be played during the stroll.
-     */
-    protected Music cBackgroundMusic;
-
-    /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
     protected Observer cStrollStopObserver = new Observer() {
@@ -102,10 +97,6 @@ public class Stroll implements Observer {
         cEndEventSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
-
-        cBackgroundMusic =  Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
-        cBackgroundMusic.setLooping(true);
-        AudioPlayer.getInstance().playAudio(cBackgroundMusic);
 
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);

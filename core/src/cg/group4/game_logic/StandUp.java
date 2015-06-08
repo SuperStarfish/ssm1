@@ -34,6 +34,11 @@ public final class StandUp {
     protected static StandUp INSTANCE = new StandUp();
 
     /**
+     * Background music to be played.
+     */
+    protected Music cBackgroundMusic;
+
+    /**
      * Stroll logic.
      */
     protected Stroll cStroll;
@@ -66,6 +71,11 @@ public final class StandUp {
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
         cGenerator = new RewardGenerator();
+
+        cBackgroundMusic =  Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
+        cBackgroundMusic.setLooping(true);
+        AudioPlayer.getInstance().setLastPlayed(cBackgroundMusic);
+        AudioPlayer.getInstance().playAudio(cBackgroundMusic);
     }
 
     /**
@@ -145,5 +155,9 @@ public final class StandUp {
      */
     public SensorReader getSensorReader() {
         return cSensorReader;
+    }
+
+    public Music getBackGroundMusic() {
+        return cBackgroundMusic;
     }
 }

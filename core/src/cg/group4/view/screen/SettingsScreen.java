@@ -6,7 +6,6 @@ import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -116,7 +115,8 @@ public final class SettingsScreen extends ScreenLogic {
             cVolumeLabelText = "Enable Audio";
         }
         cButtonVolume = createButton(cVolumeLabelText);
-        cNetworkScreen.addListener(volumeBehavior());
+        cButtonVolume.addListener(volumeBehavior());
+        AudioPlayer.getInstance().getSubject().addObserver(cAudioEnabledChanged);
 
         cButtonBack = createButton("Back");
         cButtonBack.addListener(backBehaviour());
