@@ -81,6 +81,7 @@ project(":server") {
     dependencies {
         compile project(":data_structures")
         compile "org.xerial:sqlite-jdbc:3.8.6"
+        compile "org.sqldroid:sqldroid:1.0.3"
 
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
