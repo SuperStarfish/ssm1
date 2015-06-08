@@ -30,9 +30,10 @@ public final class DatabaseConnection {
 
     /**
      * Asks the ConnectionWrapper to return the proper Wrapper for opening the connection.
+     * @param isRemote Determines if to use the remote or the local database path.
      */
-    public void connect() {
-        cConnection = cConnection.openConnection();
+    public void connect(boolean isRemote) {
+        cConnection = cConnection.openConnection(isRemote);
     }
 
     /**

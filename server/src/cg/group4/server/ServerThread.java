@@ -46,12 +46,18 @@ public final class ServerThread implements Callable<Void> {
     protected DatabaseConnection cDatabaseConnection;
 
     /**
+     * Is the server remote or local.
+     */
+    protected boolean cIsRemote;
+
+    /**
      * Creates a new ServerThread for communication with the server and the client.
      *
      * @param connection The connection with the Client.
      */
-    public ServerThread(final Socket connection) {
+    public ServerThread(final Socket connection, final boolean isRemote) {
         cConnection = connection;
+        cIsRemote = isRemote;
         cDatabaseConnection = new DatabaseConnection();
         LOGGER.info("Established a connection with: " + cConnection.getInetAddress().getHostName());
     }
@@ -142,7 +148,7 @@ public final class ServerThread implements Callable<Void> {
      * @return The response to be sent back to the client.
      */
     protected Response queryDatabase(final Query query) {
-        cDatabaseConnection.connect();
+        cDatabaseConnection.connect(cIsRemote);
         Serializable serializable = null;
         boolean success = false;
 

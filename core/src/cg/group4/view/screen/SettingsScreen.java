@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.util.audio.AudioPlayer;
+import cg.group4.client.Client;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -198,6 +199,7 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 ScreenStore.getInstance().setScreen("Network");
+                Client.getRemoteInstance().connectToServer();
             }
         };
     }

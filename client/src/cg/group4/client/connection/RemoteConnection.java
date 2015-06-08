@@ -1,6 +1,8 @@
 package cg.group4.client.connection;
 
+import cg.group4.client.Client;
 import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
@@ -11,12 +13,7 @@ import java.net.Socket;
 /**
  * A state in which the Client is connected to the server.
  */
-public final class RemoteConnection extends Thread implements Connection {
-    /**
-     * How long to try and wait for the connection to the server to be made.
-     * Time is in milliseconds.
-     */
-    protected final int cConnectionTimeOut = 7000;
+public final class RemoteConnection implements Connection {
     /**
      * The connection with the server.
      */
@@ -41,39 +38,40 @@ public final class RemoteConnection extends Thread implements Connection {
         cConnection = new Socket(ip, port);
         cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
         cInputStream = new ObjectInputStream(cConnection.getInputStream());
-
-        this.start();
     }
 
+    /**
+     * Has an empty body because the server connection has already been made.
+     * @param ip   The IP to connect to.
+     * @param port The port to connect to.
+     */
     @Override
-    public Connection connect(final String ip, final int port) {
-        return this;
-    }
+    public void connect(final String ip, final int port) { }
 
     @Override
-    public Connection disconnect() {
-        try {
-            cOutputStream.close();
-            cInputStream.close();
-            cConnection.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new LocalConnection();
-    }
-
-    @Override
-    public Response send(final Query data) {
-        try {
-            cOutputStream.writeObject(data);
-            cOutputStream.flush();
-            return (Response) cInputStream.readObject();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void send(final Query data, final ResponseHandler responseHandler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    cOutputStream.writeObject(data);
+                    cOutputStream.flush();
+                    final Response response = (Response) cInputStream.readObject();
+                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(responseHandler != null) {
+                                responseHandler.handleResponse(response);
+                            }
+                        }
+                    });
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

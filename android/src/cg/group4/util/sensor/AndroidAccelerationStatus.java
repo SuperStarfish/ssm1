@@ -1,6 +1,7 @@
 package cg.group4.util.sensor;
 
 import android.hardware.SensorManager;
+import cg.group4.data_structures.subscribe.Subject;
 import com.accellibandroid.Creator;
 import com.accellibandroid.MovementEventListener;
 import com.accellibandroid.Utilities.Movement;
@@ -9,12 +10,12 @@ import com.badlogic.gdx.Gdx;
 /**
  * Gives back the acceleration status of the android device.
  */
-public class AndroidAccelerationStatus extends AccelerationStatus implements MovementEventListener {
+public class AndroidAccelerationStatus implements MovementEventListener, AccelerationStatus {
 
     /**
      * Tag for debugging & logging purposes.
      */
-    private final String cTag = this.getClass().getSimpleName();
+    private static final String TAG = AndroidAccelerationStatus.class.getSimpleName();
 
     /**
      * Sensor manager which handles the sensor input.
@@ -27,17 +28,24 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
     protected Creator cCreator;
 
     /**
-     * State to return to the application (which will be obtained from the accel library android).
+     * Notifies every observer when the movement changes.
      */
-    protected AccelerationState cAccelerationState;
+    protected Subject cUpdateMovementSubject;
+
+    /**
+     *  State to return to the application (which will be obtained from the accel library for android).
+     *  Standard set to resting to avoid NullPointerExceptions when referenced from the stroll
+     *  constructor. Changes accordingly to the movementChanged method below.
+     */
+    protected AccelerationState cAccelerationState = AccelerationState.RESTING;
 
     /**
      * Constructs the class for android devices which will return the state of the movement by the user.
-     *
      * @param sensorManager Sensor
      */
     public AndroidAccelerationStatus(final SensorManager sensorManager) {
         cSensorManager = sensorManager;
+        cUpdateMovementSubject = new Subject();
         init();
     }
 
@@ -51,7 +59,6 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
 
     /**
      * Will return the state of the accelerometer from the accel library android to the main application.
-     *
      * @return One of the four predeined states.
      */
     @Override
@@ -59,25 +66,31 @@ public class AndroidAccelerationStatus extends AccelerationStatus implements Mov
         return cAccelerationState;
     }
 
+    @Override
+    public final Subject getSubject() {
+        return cUpdateMovementSubject;
+    }
+
+
     /**
      * Event listener for the accelerometer.
-     *
      * @param movement Amount of movement.
      */
     @Override
     public final void movementChanged(final Movement movement) {
         if (movement.name().equals("WALKING")) {
-            Gdx.app.debug(cTag, "You are walking!");
+            Gdx.app.debug(TAG, "You are walking!");
             cAccelerationState = AccelerationState.WALKING;
         } else if (movement.name().equals("RUNNING")) {
-            Gdx.app.debug(cTag, "You are running!");
+            Gdx.app.debug(TAG, "You are running!");
             cAccelerationState = AccelerationState.RUNNING;
         } else if (movement.name().equals("CHEATING")) {
-            Gdx.app.debug(cTag, "You are impossible!");
+            Gdx.app.debug(TAG, "You are impossible!");
             cAccelerationState = AccelerationState.CHEATING;
         } else {
-            Gdx.app.debug(cTag, "You are resting!");
+            Gdx.app.debug(TAG, "You are resting!");
             cAccelerationState = AccelerationState.RESTING;
         }
+        cUpdateMovementSubject.update(cAccelerationState);
     }
 }

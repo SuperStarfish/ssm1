@@ -2,6 +2,8 @@ package cg.group4.view.screen;
 
 import cg.group4.client.Client;
 import cg.group4.game_logic.StandUp;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -11,7 +13,7 @@ import com.badlogic.gdx.utils.Align;
 /**
  * Screen where the user can change his username.
  */
-public final class ChangeUsernameScreen extends ScreenLogic {
+public final class ChangeUsernameScreen extends ScreenLogic implements ResponseHandler {
 
     /**
      * Table used for layout purposes.
@@ -65,16 +67,24 @@ public final class ChangeUsernameScreen extends ScreenLogic {
      * @return New listener that is fired when clicked.
      */
     protected ChangeListener saveBehaviour() {
+        final ResponseHandler myself = this;
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                if (Client.getInstance().updatePlayer(cUsername.getText())) {
-                    cMessage.setText("Success!");
-                } else {
-                    cMessage.setText("Something went wrong!");
+                if (Client.getRemoteInstance().updatePlayer(cUsername.getText(), myself)) {
+                    cMessage.setText("Waiting for reply...");
                 }
             }
         };
+    }
+
+    @Override
+    public void handleResponse(Response response) {
+        if(response.isSuccess()) {
+            cMessage.setText("Success!");
+        } else {
+            cMessage.setText("Something went wrong!");
+        }
     }
 
     @Override
