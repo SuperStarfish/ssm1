@@ -8,16 +8,11 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.Query;
 import cg.group4.server.database.query.RequestPlayerData;
-import cg.group4.server.database.query.UpdateCollection;
 import cg.group4.server.database.query.UpdatePlayerData;
-import cg.group4.server.database.Response;
 import cg.group4.server.database.query.*;
-import cg.group4.util.IpResolver;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
-import java.net.UnknownHostException;
 
 /**
  * @author Jurgen van Schagen
@@ -217,8 +212,7 @@ public final class Client {
      */
     public boolean updateCollection(final Collection collection, ResponseHandler responseHandler) {
         collection.setGroupId(cUserIDResolver.getID());
-        return cConnection.send(new AddCollection(collection)).isSuccess();
-        return tryToSend(new UpdateCollection(collection), responseHandler);
+        return tryToSend(new AddCollection(collection), responseHandler);
     }
 
     protected boolean tryToSend(final Query query, final ResponseHandler responseHandler) {
@@ -236,12 +230,6 @@ public final class Client {
      */
     public boolean getPlayerData(ResponseHandler responseHandler) {
         return tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
-    public PlayerData getPlayerData() {
-        Response response = cConnection.send(new RequestPlayerData(cUserIDResolver.getID()));
-        if (response.isSuccess()) {
-            return (PlayerData) response.getData();
-        }
-        return new PlayerData(cUserIDResolver.getID());
     }
 
     /**
@@ -249,16 +237,17 @@ public final class Client {
      *
      * @return The code.
      */
+    @Deprecated
     public Integer hostEvent() {
-        IpResolver ipResolver = new IpResolver();
-        try {
-            Response response = cConnection.send(new RequestHostCode(ipResolver.getExternalIP()));
-            if (response.isSuccess()) {
-                return (Integer) response.getData();
-            }
-        } catch (UnknownHostException e) {
-            return null;
-        }
+//        IpResolver ipResolver = new IpResolver();
+//        try {
+//            Response response = cConnection.send(new RequestHostCode(ipResolver.getExternalIP()));
+//            if (response.isSuccess()) {
+//                return (Integer) response.getData();
+//            }
+//        } catch (UnknownHostException e) {
+//            return null;
+//        }
         return null;
     }
 
@@ -268,11 +257,12 @@ public final class Client {
      * @param code code of the connection.
      * @return The hosts ip.
      */
+    @Deprecated
     public String getHost(final Integer code) {
-        Response response = cConnection.send(new RequestHostIp(code));
-        if (response.isSuccess()) {
-            return (String) response.getData();
-        }
+//        Response response = cConnection.send(new RequestHostIp(code));
+//        if (response.isSuccess()) {
+//            return (String) response.getData();
+//        }
         return null;
     }
 
