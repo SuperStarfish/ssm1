@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Align;
 /**
  * Screen where the user can change his username.
  */
-public final class ChangeUsernameScreen extends ScreenLogic implements ResponseHandler {
+public final class ChangeUsernameScreen extends ScreenLogic {
 
     /**
      * Table used for layout purposes.
@@ -67,24 +67,22 @@ public final class ChangeUsernameScreen extends ScreenLogic implements ResponseH
      * @return New listener that is fired when clicked.
      */
     protected ChangeListener saveBehaviour() {
-        final ResponseHandler myself = this;
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                if (Client.getRemoteInstance().updatePlayer(cUsername.getText(), myself)) {
-                    cMessage.setText("Waiting for reply...");
-                }
+                Client.getLocalInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+                        System.out.println(response.isSuccess());
+                        if(response.isSuccess()) {
+                            cMessage.setText("Success!");
+                        } else {
+                            cMessage.setText("Something went wrong!");
+                        }
+                    }
+                });
             }
         };
-    }
-
-    @Override
-    public void handleResponse(Response response) {
-        if(response.isSuccess()) {
-            cMessage.setText("Success!");
-        } else {
-            cMessage.setText("Something went wrong!");
-        }
     }
 
     @Override

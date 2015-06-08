@@ -67,6 +67,7 @@ public final class LocalConnection implements Connection {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Client.getLocalInstance().enableRequests();
     }
 
     @Override
