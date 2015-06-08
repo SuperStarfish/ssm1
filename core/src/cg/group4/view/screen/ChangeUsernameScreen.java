@@ -70,7 +70,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                Client.getLocalInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
+                Client.getRemoteInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
                         System.out.println(response.isSuccess());
