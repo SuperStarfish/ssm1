@@ -54,6 +54,7 @@ public class StandUpTest {
             }
         });
         cStandUp = StandUp.getInstance();
+        StandUp.INSTANCE = cStandUp;
     }
 
     /**

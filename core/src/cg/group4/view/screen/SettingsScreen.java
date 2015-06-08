@@ -1,5 +1,6 @@
 package cg.group4.view.screen;
 
+import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -9,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Screen from which the settings of the application can be configured by a user.
@@ -27,16 +31,34 @@ public final class SettingsScreen extends ScreenLogic {
      * Buttons for the options in the settings menu.
      */
     protected TextButton cButtonResetInterval,
+            cButtonVolume,
             cButtonStopInterval,
             cButtonResetStroll,
             cButtonStopStroll,
             cNetworkScreen,
             cButtonBack;
 
+    protected Observer cAudioEnabledChanged = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            if (AudioPlayer.getInstance().getAudioEnabled()) {
+                cVolumeLabelText = "Disable Audio";
+            } else {
+                cVolumeLabelText = "Enable Audio";
+            }
+            cButtonVolume.setText(cVolumeLabelText);
+        }
+    };
+
     /**
      * References to the STROLL Timer and INTERVAL Timer.
      */
     protected Timer cIntervalTimer, cStrollTimer;
+
+    /**
+     * Whether or not the audio should be enabled or disable
+     */
+    private String cVolumeLabelText;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
@@ -86,9 +108,27 @@ public final class SettingsScreen extends ScreenLogic {
         cNetworkScreen = createButton("Network");
         cNetworkScreen.addListener(networkScreenBehaviour());
 
+        if(AudioPlayer.getInstance().getAudioEnabled()) {
+            cVolumeLabelText = "Disable Audio";
+        } else {
+            cVolumeLabelText = "Enable Audio";
+        }
+        cButtonVolume = createButton(cVolumeLabelText);
+        cButtonVolume.addListener(volumeBehavior());
+        AudioPlayer.getInstance().getSubject().addObserver(cAudioEnabledChanged);
+
         cButtonBack = createButton("Back");
         cButtonBack.addListener(backBehaviour());
 
+    }
+
+    private ChangeListener volumeBehavior() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                AudioPlayer.getInstance().changeAudioEnabled();
+            }
+        };
     }
 
     /**
