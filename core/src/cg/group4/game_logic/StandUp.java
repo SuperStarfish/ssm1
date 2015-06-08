@@ -31,7 +31,7 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static StandUp INSTANCE = new StandUp();
+    protected static StandUp instance = new StandUp();
 
     /**
      * Background music to be played.
@@ -84,7 +84,7 @@ public final class StandUp {
      * @return INSTANCE
      */
     public static StandUp getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     /**

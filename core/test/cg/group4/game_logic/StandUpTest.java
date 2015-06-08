@@ -36,7 +36,7 @@ public class StandUpTest {
     @Before
     public void setUp() {
         cStandUp = new StandUp();
-        StandUp.INSTANCE = cStandUp;
+        StandUp.instance = cStandUp;
     }
 
     /**

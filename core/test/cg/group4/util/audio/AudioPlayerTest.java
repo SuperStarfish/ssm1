@@ -1,7 +1,6 @@
 package cg.group4.util.audio;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.game_logic.StandUp;
 import cg.group4.util.subscribe.Subject;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
