@@ -223,6 +223,7 @@ public final class CollectiblesScreen extends ScreenLogic {
 
     @Override
     public void display() {
+        createGroupBox();
         constructContents();
     }
 

@@ -58,7 +58,7 @@ public class JoinGroupScreen extends ScreenLogic {
 
     private boolean tryJoin() {
         System.out.println("Event Listener works");
-        boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getMessageText(), new ResponseHandler() {
+        boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
 
             @Override
             public void handleResponse(Response response) {
