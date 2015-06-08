@@ -8,28 +8,9 @@ import cg.group4.data_structures.collection.Collection;
 public class Group {
 
     /**
-     * Defines the id of a group.
-     * Used to uniquely identify the group.
+     * group data.
      */
-    protected String cGroupId;
-
-    /**
-     * Defines the name of a group.
-     * This name is not necessarily unique.
-     */
-    protected String cName;
-
-    /**
-     * Defines the owner of the group.
-     * The owner of the group is based on a player id, which is unique.
-     *
-     */
-    protected String cOwnerId;
-
-    /**
-     * Name of the owner
-     */
-    protected String cOwnerName;
+    protected GroupData cGroupData;
 
     /**
      * Group collection
@@ -40,29 +21,19 @@ public class Group {
         cCollection = new Collection(id);
     }
 
-    public String getGroupId() {
-        return cGroupId;
+    public Group(final String id, final GroupData groupData) {
+        cCollection = new Collection(id);
+        cGroupData = groupData;
     }
 
-    public void setGroupId(final String cGroupId) {
-        this.cGroupId = cGroupId;
+    public GroupData getGroupData() {
+        return cGroupData;
     }
 
-    public String getName() {
-        return cName;
+    public void setGroupData(final GroupData cGroupData) {
+        this.cGroupData = cGroupData;
     }
 
-    public void setName(final String cName) {
-        this.cName = cName;
-    }
-
-    public String getOwnerId() {
-        return cOwnerId;
-    }
-
-    public void setOwnerId(final String cOwnerId) {
-        this.cOwnerId = cOwnerId;
-    }
 
     public Collection getCollection() {
         return cCollection;
@@ -72,12 +43,6 @@ public class Group {
         this.cCollection = cCollection;
     }
 
-    public String getOwnerName() {
-        return cOwnerName;
-    }
 
-    public void setOwnerName(final String cOwnerName) {
-        this.cOwnerName = cOwnerName;
-    }
 
 }

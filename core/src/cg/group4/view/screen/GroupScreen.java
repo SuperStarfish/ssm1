@@ -15,12 +15,12 @@ import java.util.ArrayList;
 public class GroupScreen extends ScreenLogic {
 
     protected Label cTitle;
-    protected Button cNewGroupButton;
+    protected TextButton cNewGroupButton;
     protected Table cTable;
     protected Table cInnerTable;
     protected ScrollPane cScrollPane;
     protected ArrayList<Group> cGroupsDisplayList;
-    private Button cRefreshButton;
+    protected TextButton cRefreshButton;
 
 
     @Override
@@ -43,7 +43,7 @@ public class GroupScreen extends ScreenLogic {
     protected void createTitle() {
         cTitle = new Label("Groups", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.add(cTitle);
-        cTable.row();
+        cTable.row().expandY();
     }
 
     protected void createNewGroupButton() {
@@ -55,7 +55,7 @@ public class GroupScreen extends ScreenLogic {
             }
         });
         cTable.add(cNewGroupButton);
-        cTable.row();
+        cTable.row().expandY();
     }
 
     protected void createRefreshButton() {
@@ -67,7 +67,7 @@ public class GroupScreen extends ScreenLogic {
             }
         });
         cTable.add(cRefreshButton);
-        cTable.row();
+        cTable.row().expandY();
     }
 
     protected void createGroupsOverview() {
@@ -82,11 +82,23 @@ public class GroupScreen extends ScreenLogic {
     protected void rebuildWidgetGroup() {
         cTitle.setStyle(cGameSkin.getDefaultLabelStyle());
         cNewGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cRefreshButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        //cRefreshButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override
     protected String setPreviousScreenName() {
         return "Home";
+    }
+
+    protected void addDisplayedGroup(final Group group) {
+        cGroupsDisplayList.add(group);
+    }
+
+    protected void addDisplayedGroups(final ArrayList<Group> groups) {
+        cGroupsDisplayList.addAll(groups);
+    }
+
+    protected void fillGroupPanel() {
+
     }
 }

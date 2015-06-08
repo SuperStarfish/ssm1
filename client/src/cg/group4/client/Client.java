@@ -21,11 +21,9 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-<<<<<<< HEAD
-    protected final String cDefaultIp = "localhost";
-=======
+
     protected final String cDefaultIp = "127.0.0.1";
->>>>>>> ddfa885ceeea9eb33ffb69fccb3acbbfeefbf0ca
+
     /**
      * The default port to connect to.
      */
