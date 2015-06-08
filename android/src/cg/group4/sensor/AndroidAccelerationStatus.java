@@ -13,12 +13,12 @@ import com.badlogic.gdx.Gdx;
  * Gives back the acceleration status of the android device.
  *
  */
-public class AndroidAccelerationStatus implements MovementEventListener,AccelerationStatus {
+public class AndroidAccelerationStatus implements MovementEventListener, AccelerationStatus {
 
     /**
      * Tag for debugging & logging purposes.
      */
-    private final String tag = this.getClass().getSimpleName();
+    private static final String TAG = AndroidAccelerationStatus.class.getSimpleName();
 
     /**
      * Sensor manager which handles the sensor input.
@@ -82,16 +82,16 @@ public class AndroidAccelerationStatus implements MovementEventListener,Accelera
     @Override
     public final void movementChanged(final Movement movement) {
         if (movement.name().equals("WALKING")) {
-            Gdx.app.debug(tag, "You are walking!");
+            Gdx.app.debug(TAG, "You are walking!");
             cAccelerationState = AccelerationState.WALKING;
         } else if (movement.name().equals("RUNNING")) {
-            Gdx.app.debug(tag, "You are running!");
+            Gdx.app.debug(TAG, "You are running!");
             cAccelerationState = AccelerationState.RUNNING;
         } else if (movement.name().equals("CHEATING")) {
-            Gdx.app.debug(tag, "You are impossible!");
+            Gdx.app.debug(TAG, "You are impossible!");
             cAccelerationState = AccelerationState.CHEATING;
         } else {
-            Gdx.app.debug(tag, "You are resting!");
+            Gdx.app.debug(TAG, "You are resting!");
             cAccelerationState = AccelerationState.RESTING;
         }
         cUpdateMovementSubject.update(cAccelerationState);
