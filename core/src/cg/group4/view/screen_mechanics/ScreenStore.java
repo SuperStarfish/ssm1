@@ -1,14 +1,12 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.view.screen.CollectiblesScreen;
 import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen.NetworkScreen;
 import cg.group4.view.screen.SettingsScreen;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import cg.group4.rewards.Collection;
-import cg.group4.view.screen.CollectiblesScreen;
 
 /**
  * Keeps track of all the screens throughout the game.
@@ -49,6 +47,7 @@ public final class ScreenStore {
 
     /**
      * Getter for screen store instance.
+     *
      * @return The instance.
      */
     public static ScreenStore getInstance() {
@@ -58,12 +57,10 @@ public final class ScreenStore {
     /**
      * Initializes the Home Screen, Settings Screen and the Collection Screen,
      * since those are highly likely to be opened.
-     * 
-     * @param collection Collection of the user.
      */
-    public void init(final Collection collection) {
+    public void init() {
         addScreen("Home", new HomeScreen());
-        addScreen("Collection", new CollectiblesScreen(collection));
+        addScreen("Collection", new CollectiblesScreen());
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
     }
@@ -75,6 +72,7 @@ public final class ScreenStore {
      * @param screen Screen to be stored.
      */
     public void addScreen(final String tag, final ScreenLogic screen) {
+        screen.getWidgetGroup();
         cScreens.put(tag, screen);
     }
 
