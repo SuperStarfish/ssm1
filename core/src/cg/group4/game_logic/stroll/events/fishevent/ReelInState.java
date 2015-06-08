@@ -1,5 +1,6 @@
 package cg.group4.game_logic.stroll.events.fishevent;
 
+import cg.group4.util.audio.AudioPlayer;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -34,7 +35,7 @@ public class ReelInState implements FishEventState {
      */
     public final void processInput(final Vector3 input) {
         if (input.z < DELTA) {
-            cEvent.cCompletedTaskSound.play();
+            AudioPlayer.getInstance().playAudio(cEvent.cCompletedTaskSound);
             cEvent.eventCompleted();
         }
     }
