@@ -4,6 +4,7 @@ import cg.group4.PlayerData;
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.LocalConnection;
 import cg.group4.collection.Collection;
+import cg.group4.database.Response;
 import cg.group4.database.query.RequestPlayerData;
 import cg.group4.database.query.UpdateCollection;
 import cg.group4.database.query.UpdatePlayerData;
@@ -53,6 +54,7 @@ public final class Client {
      */
     public Client() {
         cConnection = new LocalConnection();
+        cUserIDResolver = new MockUserIdResolver();
     }
 
     /**
@@ -62,34 +64,43 @@ public final class Client {
         cConnection = cConnection.connect(defaultIP, defaultPort);
     }
 
-    /**
+    /**column_1
      * Closes the connection with the server. Behaviour depends on the state.
      */
     public void closeConnection() {
         cConnection = cConnection.disconnect();
     }
 
-//    /**
-//     * Updates the timers in the database. Behaviour depends on the state.
-//     *
-//     * @param timeStamp The timestamp from which to add the timer durations.
-//     */
-//    public void updateTimers(final long timeStamp) {
-//        UserData data = new UserData();
-//        data.setcId(cUserIDResolver.getID());
-//        data.setcIntervalTimeStamp(timeStamp + Timer.Global.INTERVAL.getDuration());
-//        data.setcStrollTimeStamp(timeStamp + Timer.Global.STROLL.getDuration());
-//
-//        cConnection.updateUserData(data);
-//    }
-//
+    /**
+     * Updates the stroll timers in the database.
+     *
+     * @param timeStamp The timestamp when the timer should end.
+     */
+    public boolean updateStrollTimer(Long timeStamp) {
+        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
+        playerData.setStrollTimeStamp(timeStamp);
+
+        return cConnection.send(new UpdatePlayerData(playerData)).isSuccess();
+    }
+
+    /**
+     * Updates the interval timers in the database.
+     *
+     * @param timeStamp The timestamp when the timer should end.
+     */
+    public boolean updateIntervalTimer(Long timeStamp) {
+        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
+        playerData.setIntervalTimeStamp(timeStamp);
+
+        return cConnection.send(new UpdatePlayerData(playerData)).isSuccess();
+    }
+
     /**
      * Updates the username in the server. Behaviour depends on the state.
      * @param username The new username.
      * @return Successful or not.
      */
-    public Boolean updatePlayer(final String username) {
-
+    public boolean updatePlayer(final String username) {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setUsername(username);
 
@@ -111,7 +122,15 @@ public final class Client {
      * @return All the userdata.
      */
     public PlayerData getPlayerData() {
-        return (PlayerData) cConnection.send(new RequestPlayerData(cUserIDResolver.getID())).getData();
+        Response response = cConnection.send(new RequestPlayerData(cUserIDResolver.getID()));
+        PlayerData playerData;
+        if (response.isSuccess()) {
+            playerData = (PlayerData) response.getData();
+        } else {
+            playerData = new PlayerData(cUserIDResolver.getID());
+        }
+
+        return playerData;
     }
 
     /**

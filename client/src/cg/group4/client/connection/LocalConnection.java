@@ -52,7 +52,7 @@ public final class LocalConnection extends Thread implements Connection {
     @Override
     public Response send(Query data) {
         LOGGER.info("Local connection not yet implemented.");
-        return null;
+        return new Response(false, null);
     }
 
     @Override
