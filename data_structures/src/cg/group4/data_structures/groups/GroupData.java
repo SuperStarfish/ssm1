@@ -8,7 +8,7 @@ public class GroupData {
      * Defines the id of a group.
      * Used to uniquely identify the group.
      */
-    protected String cGroupId;
+    protected int cGroupId;
 
     /**
      * Defines the name of a group.
@@ -31,7 +31,7 @@ public class GroupData {
     public GroupData() {
     }
 
-    public GroupData(String groupId, String groupName, String ownerId, String ownerName) {
+    public GroupData(int groupId, String groupName, String ownerId, String ownerName) {
         cGroupId = groupId;
         cName = groupName;
         cOwnerId = ownerId;
@@ -46,11 +46,11 @@ public class GroupData {
         this.cOwnerName = cOwnerName;
     }
 
-    public String getGroupId() {
+    public int getGroupId() {
         return cGroupId;
     }
 
-    public void setGroupId(final String cGroupId) {
+    public void setGroupId(final int cGroupId) {
         this.cGroupId = cGroupId;
     }
 

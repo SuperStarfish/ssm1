@@ -20,7 +20,6 @@ public class Group implements Serializable {
     protected Collection cCollection;
 
     public Group(final String id) {
-        cGroupId = id;
         cCollection = new Collection(id);
     }
 
@@ -29,6 +28,7 @@ public class Group implements Serializable {
         cGroupData = groupData;
     }
 
+    // group data
     public GroupData getGroupData() {
         return cGroupData;
     }
@@ -37,7 +37,7 @@ public class Group implements Serializable {
         this.cGroupData = cGroupData;
     }
 
-
+    // collections
     public Collection getCollection() {
         return cCollection;
     }
