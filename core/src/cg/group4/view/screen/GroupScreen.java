@@ -25,6 +25,8 @@ public class GroupScreen extends ScreenLogic {
 
     @Override
     protected WidgetGroup createWidgetGroup() {
+        ScreenStore screenStore = ScreenStore.getInstance();
+        screenStore.addScreen("New-Group", new NewGroupScreen());
 
         cTable = new Table();
         cTable.setFillParent(true);
@@ -51,7 +53,7 @@ public class GroupScreen extends ScreenLogic {
         cNewGroupButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ScreenStore.getInstance().setScreen("Home"); // TEMP, TODO
+                ScreenStore.getInstance().setScreen("New-Group");
             }
         });
         cTable.add(cNewGroupButton);
@@ -98,6 +100,7 @@ public class GroupScreen extends ScreenLogic {
         cGroupsDisplayList.addAll(groups);
     }
 
+    // fills the scroll pane with all listed groups
     protected void fillGroupPanel() {
 
     }

@@ -3,10 +3,7 @@ package cg.group4.view.screen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -17,8 +14,8 @@ public class NewGroupScreen extends ScreenLogic {
 
     protected Table cTable;
     protected TextField cGroupNameField;
-    protected TextButton cAddGroupButton;
-
+    protected TextButton cAddGroupButton, cBack;
+    protected Label cStatusLabel;
 
 
     @Override
@@ -29,10 +26,20 @@ public class NewGroupScreen extends ScreenLogic {
         cGroupNameField = cGameSkin.generateDefaultTextField("Name");
         cGroupNameField.setAlignment(Align.center);
         cTable.row().expandY();
-        cTable.add(cGroupNameField);
+        cTable.add(cGroupNameField).fillX();
+
+        cStatusLabel = cGameSkin.generateDefaultLabel("Click create group to start a new group");
+        cTable.row().expandY();
+        cTable.add(cStatusLabel).expandX();
 
         cAddGroupButton = cGameSkin.generateDefaultMenuButton("Create group");
         cAddGroupButton.addListener(addGroupListener());
+        cAddGroupButton.row().expandY();
+        cTable.add(cAddGroupButton);
+
+        cBack = createBackButton();
+        cTable.row().expandY();
+        cTable.add(cBack);
 
         return cTable;
     }
@@ -41,18 +48,25 @@ public class NewGroupScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //
+                if (false) {
+                    cStatusLabel.setText("Succesfully created new group");
+                } else {
+                    cStatusLabel.setText("Unable to create new group");
+                }
             }
         };
     }
 
     @Override
     protected void rebuildWidgetGroup() {
-
+        cBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cAddGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cGroupNameField.setStyle(cGameSkin.getDefaultTextFieldStyle());
+        cStatusLabel.setStyle(cGameSkin.getDefaultLabelStyle());
     }
 
     @Override
     protected String setPreviousScreenName() {
-        return null;
+        return "Groups";
     }
 }
