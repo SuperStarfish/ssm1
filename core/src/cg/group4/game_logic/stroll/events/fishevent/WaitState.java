@@ -34,6 +34,7 @@ public class WaitState implements FishEventState {
 
     /**
      * Constructor, creates a new timer for this state.
+     *
      * @param event The event this state belongs to.
      */
     public WaitState(final FishingStrollEvent event) {
@@ -55,6 +56,7 @@ public class WaitState implements FishEventState {
 
     /**
      * Method that processes the input to match the movement of waiting for the fish to bite, so holding still.
+     *
      * @param input Vector containing the acceleration in the x,y,z directions respectively.
      */
     public final void processInput(final Vector3 input) {

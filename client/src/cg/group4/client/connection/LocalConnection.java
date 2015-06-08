@@ -1,7 +1,7 @@
 package cg.group4.client.connection;
 
-import cg.group4.database.Response;
-import cg.group4.database.query.Query;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -50,7 +50,7 @@ public final class LocalConnection extends Thread implements Connection {
     }
 
     @Override
-    public Response send(Query data) {
+    public Response send(final Query data) {
         LOGGER.info("Local connection not yet implemented.");
         return new Response(false, null);
     }

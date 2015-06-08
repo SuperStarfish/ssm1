@@ -1,8 +1,8 @@
 package cg.group4.game_logic;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.collection.Collection;
-import cg.group4.collection.collectibles.FishA;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.FishA;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
@@ -36,7 +36,7 @@ public class StandUpTest {
     @Before
     public void setUp() {
         cStandUp = new StandUp();
-        StandUp.INSTANCE = cStandUp;
+        StandUp.cInstance = cStandUp;
     }
 
     /**

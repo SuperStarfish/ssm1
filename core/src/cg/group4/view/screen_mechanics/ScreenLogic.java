@@ -54,6 +54,7 @@ public abstract class ScreenLogic {
 
     /**
      * Creates a new back button including functionality when clicked.
+     *
      * @return A new button to go back to the previous screen.
      */
     protected final TextButton createBackButton() {

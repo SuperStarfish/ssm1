@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
-import cg.group4.collection.Collection;
-import cg.group4.collection.collectibles.Collectible;
-import cg.group4.collection.collectibles.collectible_comparators.RarityComparator;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -71,7 +71,12 @@ public final class RewardScreen extends ScreenLogic {
         return "Home";
     }
 
-    protected void constructContents(Collection collection) {
+    /**
+     * Constructs the display of the rewards of the reward screen.
+     *
+     * @param collection the collection of the rewards collected during the stroll.
+     */
+    protected void constructContents(final Collection collection) {
         ArrayList<Collectible> sortedList = collection.sort(new RarityComparator());
         DecimalFormat format = new DecimalFormat("#.00");
 

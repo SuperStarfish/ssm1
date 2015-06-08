@@ -1,12 +1,12 @@
 package cg.group4.game_logic.stroll;
 
-import cg.group4.collection.Collection;
-import cg.group4.collection.RewardGenerator;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.RewardGenerator;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
-import cg.group4.subscribe.Subject;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -119,11 +119,11 @@ public class Stroll implements Observer {
         if (rnd.nextFloat() < cEventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
-            switch(chosenEvent) {
-                case(0):
+            switch (chosenEvent) {
+                case (0):
                     cEvent = new FishingStrollEvent();
                     break;
-                case(1):
+                case (1):
                     cEvent = new TestStrollEvent();
                     break;
                 default:

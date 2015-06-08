@@ -1,13 +1,13 @@
 package cg.group4.client;
 
-import cg.group4.PlayerData;
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.LocalConnection;
-import cg.group4.collection.Collection;
-import cg.group4.database.Response;
-import cg.group4.database.query.RequestPlayerData;
-import cg.group4.database.query.UpdateCollection;
-import cg.group4.database.query.UpdatePlayerData;
+import cg.group4.data_structures.PlayerData;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.query.RequestPlayerData;
+import cg.group4.server.database.query.UpdateCollection;
+import cg.group4.server.database.query.UpdatePlayerData;
 
 /**
  * @author Jurgen van Schagen
@@ -17,9 +17,34 @@ public final class Client {
      * Instance for Singleton.
      */
     protected static Client cInstance;
+    /**
+     * The default IP to connect to.
+     */
+    protected final String cDefaultIp = "128.127.39.32";
+    /**
+     * The default port to connect to.
+     */
+    protected final int cDefaultPort = 56789;
+    /**
+     * The connection state with the server.
+     */
+    protected Connection cConnection;
+    /**
+     * The user id. Android Phone ID or Desktop name.
+     */
+    protected UserIDResolver cUserIDResolver;
+
+    /**
+     * Constructs a new Client and sets the state to unconnected.
+     */
+    public Client() {
+        cConnection = new LocalConnection();
+        cUserIDResolver = new DummyUserIdResolver();
+    }
 
     /**
      * Gets the Singleton instance.
+     *
      * @return The Client.
      */
     public static Client getInstance() {
@@ -30,41 +55,14 @@ public final class Client {
     }
 
     /**
-     * The connection state with the server.
-     */
-    protected Connection cConnection;
-
-    /**
-     * The user id. Android Phone ID or Desktop name.
-     */
-    protected UserIDResolver cUserIDResolver;
-
-    /**
-     * The default IP to connect to.
-     */
-    protected final String defaultIP = "128.127.39.32";
-
-    /**
-     * The default port to connect to.
-     */
-    protected final int defaultPort = 56789;
-
-    /**
-     * Constructs a new Client and sets the state to unconnected.
-     */
-    public Client() {
-        cConnection = new LocalConnection();
-        cUserIDResolver = new MockUserIdResolver();
-    }
-
-    /**
      * Connects to the server. Behaviour depends on the state.
      */
     public void connectToServer() {
-        cConnection = cConnection.connect(defaultIP, defaultPort);
+        cConnection = cConnection.connect(cDefaultIp, cDefaultPort);
     }
 
-    /**column_1
+    /**
+     * column_1
      * Closes the connection with the server. Behaviour depends on the state.
      */
     public void closeConnection() {
@@ -75,8 +73,9 @@ public final class Client {
      * Updates the stroll timers in the database.
      *
      * @param timeStamp The timestamp when the timer should end.
+     * @return Whether the query succeeded.
      */
-    public boolean updateStrollTimer(Long timeStamp) {
+    public boolean updateStrollTimer(final Long timeStamp) {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setStrollTimeStamp(timeStamp);
 
@@ -87,8 +86,9 @@ public final class Client {
      * Updates the interval timers in the database.
      *
      * @param timeStamp The timestamp when the timer should end.
+     * @return Whether the query succeeded.
      */
-    public boolean updateIntervalTimer(Long timeStamp) {
+    public boolean updateIntervalTimer(final Long timeStamp) {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setIntervalTimeStamp(timeStamp);
 
@@ -97,6 +97,7 @@ public final class Client {
 
     /**
      * Updates the username in the server. Behaviour depends on the state.
+     *
      * @param username The new username.
      * @return Successful or not.
      */
@@ -109,6 +110,7 @@ public final class Client {
 
     /**
      * Adds the collection to the server. Behaviour depends on the state.
+     *
      * @param collection The collection to add to the server.
      * @return Successful or not.
      */
@@ -119,6 +121,7 @@ public final class Client {
 
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
+     *
      * @return All the userdata.
      */
     public PlayerData getPlayerData() {

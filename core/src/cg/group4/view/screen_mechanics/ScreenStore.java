@@ -47,6 +47,7 @@ public final class ScreenStore {
 
     /**
      * Getter for screen store instance.
+     *
      * @return The instance.
      */
     public static ScreenStore getInstance() {

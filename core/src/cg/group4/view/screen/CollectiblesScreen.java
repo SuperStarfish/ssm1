@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
-import cg.group4.collection.Collection;
-import cg.group4.collection.collectibles.Collectible;
-import cg.group4.collection.collectibles.collectible_comparators.RarityComparator;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.game_logic.StandUp;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
@@ -23,27 +23,23 @@ import java.util.Observer;
 public final class CollectiblesScreen extends ScreenLogic {
 
     /**
-     * cContentTable contains the collectibles of the collection.
-     * cContainer contains the scrollpane displaying the collectibles.
-     */
-    protected Table cContentTable, cContainer;
-
-    /**
-     * ScrollPane displaying the collectibles of the collection.
-     */
-    protected ScrollPane cScrollPane;
-
-    /**
-     * Button that takes the player back to the home screen.
-     */
-    protected TextButton cBackButton;
-
-    /**
      * Numbers of collectibles displayed without scrolling, and the amount of
      * checkboxes in the menu.
      */
     protected final int cItemsOnScreen = 10, cNumberOfTopBarItems = 3;
-
+    /**
+     * cContentTable contains the collectibles of the collection.
+     * cContainer contains the scrollpane displaying the collectibles.
+     */
+    protected Table cContentTable, cContainer;
+    /**
+     * ScrollPane displaying the collectibles of the collection.
+     */
+    protected ScrollPane cScrollPane;
+    /**
+     * Button that takes the player back to the home screen.
+     */
+    protected TextButton cBackButton;
     /**
      * Object that creates images for the collectibles.
      */
@@ -74,7 +70,7 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected Observer cAddObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             constructContents();
         }
     };
@@ -84,7 +80,7 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected Observer cRemoveObserver = new Observer() {
         @Override
-        public void update(Observable o, Object arg) {
+        public void update(final Observable o, final Object arg) {
             constructContents();
         }
     };

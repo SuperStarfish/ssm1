@@ -1,9 +1,9 @@
 package cg.group4.game_logic;
 
-import cg.group4.collection.Collection;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
-import cg.group4.subscribe.Subject;
-import cg.group4.util.sensors.SensorReader;
+import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -25,7 +25,7 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static StandUp INSTANCE = new StandUp();
+    protected static StandUp cInstance = new StandUp();
 
     /**
      * Player of the game.
@@ -65,10 +65,10 @@ public final class StandUp {
     /**
      * Getter for StandUp instance.
      *
-     * @return INSTANCE
+     * @return cInstance
      */
     public static StandUp getInstance() {
-        return INSTANCE;
+        return cInstance;
     }
 
     /**
@@ -97,6 +97,7 @@ public final class StandUp {
 
     /**
      * Getter for Stroll.
+     *
      * @return cStroll
      */
     public Stroll getStroll() {
@@ -104,7 +105,7 @@ public final class StandUp {
     }
 
     /**
-     * Getter for Player
+     * Getter for Player.
      *
      * @return The player of the game.
      */

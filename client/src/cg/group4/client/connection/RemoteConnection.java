@@ -1,7 +1,7 @@
 package cg.group4.client.connection;
 
-import cg.group4.database.Response;
-import cg.group4.database.query.Query;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,36 +13,34 @@ import java.net.Socket;
  */
 public final class RemoteConnection extends Thread implements Connection {
     /**
-     * The connection with the server.
-     */
-    protected Socket cConnection;
-
-    /**
-     * InputStream for objects from the server.
-     */
-    protected ObjectInputStream inputStream;
-
-    /**
-     * OutputStream for objects to the server.
-     */
-    protected ObjectOutputStream outputStream;
-
-    /**
      * How long to try and wait for the connection to the server to be made.
      * Time is in milliseconds.
      */
-    protected final int connectionTimeOut = 7000;
+    protected final int cConnectionTimeOut = 7000;
+    /**
+     * The connection with the server.
+     */
+    protected Socket cConnection;
+    /**
+     * InputStream for objects from the server.
+     */
+    protected ObjectInputStream cInputStream;
+    /**
+     * OutputStream for objects to the server.
+     */
+    protected ObjectOutputStream cOutputStream;
 
     /**
-     * Attempts to create a new connection with the server. Fails after connectionTimeOut milliseconds.
-     * @param ip The IP to connect to.
+     * Attempts to create a new connection with the server. Fails after cConnectionTimeOut milliseconds.
+     *
+     * @param ip   The IP to connect to.
      * @param port The port to connect to.
      * @throws IOException Exception if connection fails.
      */
     public RemoteConnection(final String ip, final int port) throws IOException {
         cConnection = new Socket(ip, port);
-        outputStream = new ObjectOutputStream(cConnection.getOutputStream());
-        inputStream = new ObjectInputStream(cConnection.getInputStream());
+        cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
+        cInputStream = new ObjectInputStream(cConnection.getInputStream());
 
         this.start();
     }
@@ -55,8 +53,8 @@ public final class RemoteConnection extends Thread implements Connection {
     @Override
     public Connection disconnect() {
         try {
-            outputStream.close();
-            inputStream.close();
+            cOutputStream.close();
+            cInputStream.close();
             cConnection.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,11 +63,11 @@ public final class RemoteConnection extends Thread implements Connection {
     }
 
     @Override
-    public Response send(Query data) {
+    public Response send(final Query data) {
         try {
-            outputStream.writeObject(data);
-            outputStream.flush();
-            return (Response) inputStream.readObject();
+            cOutputStream.writeObject(data);
+            cOutputStream.flush();
+            return (Response) cInputStream.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

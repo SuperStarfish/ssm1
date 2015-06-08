@@ -3,8 +3,8 @@ package cg.group4;
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
-import cg.group4.sensor.AccelerationStatus;
 import cg.group4.util.notification.NotificationController;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -30,27 +30,22 @@ public class Launcher extends Game {
      * Used to clear all preferences and other data to start with a 'clean' game.
      */
     public static final boolean CLEAR_SETTINGS = false;
-
-    /**
-     * Keeps track of the game mechanics.
-     */
-    protected StandUp cStandUp;
-
-    /**
-     * Keeps track of timers throughout the game.
-     */
-    protected TimeKeeper cTimeKeeper;
-
-    /**
-     * Accelerometer status.
-     */
-    protected AccelerationStatus cAccelerationStatus;
-
     /**
      * Gets the device id as uniquer user ID.
      */
     protected final UserIDResolver cIDResolver;
-
+    /**
+     * Keeps track of the game mechanics.
+     */
+    protected StandUp cStandUp;
+    /**
+     * Keeps track of timers throughout the game.
+     */
+    protected TimeKeeper cTimeKeeper;
+    /**
+     * Accelerometer status.
+     */
+    protected AccelerationStatus cAccelerationStatus;
     /**
      * The notification controller to schedule notifications, passed with the constructor of the launcher.
      */
@@ -63,7 +58,9 @@ public class Launcher extends Game {
      * @param notificationController The notification controller.
      * @param idResolver             The userID resolver for unique device id.
      */
-    public Launcher(final AccelerationStatus accelerationStatus, final NotificationController notificationController, final UserIDResolver idResolver) {
+    public Launcher(final AccelerationStatus accelerationStatus,
+                    final NotificationController notificationController,
+                    final UserIDResolver idResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;

@@ -1,7 +1,7 @@
 package cg.group4.client.connection;
 
-import cg.group4.database.Response;
-import cg.group4.database.query.Query;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.query.Query;
 
 /**
  * Connection interface for either Connected and Unconnected.
@@ -9,7 +9,8 @@ import cg.group4.database.query.Query;
 public interface Connection {
     /**
      * Connects to the server and given IP and port.
-     * @param ip The IP to connect to.
+     *
+     * @param ip   The IP to connect to.
      * @param port The port to connect to.
      * @return The new connection state.
      */
@@ -24,6 +25,7 @@ public interface Connection {
 
     /**
      * Returns if currently connected to the server.
+     *
      * @return Connected or not.
      */
     boolean isConnected();

@@ -6,6 +6,7 @@ package cg.group4.client;
 public interface UserIDResolver {
     /**
      * Returns the ID for the device.
+     *
      * @return Device ID.
      */
     String getID();

@@ -1,6 +1,6 @@
 package cg.group4.view.screen;
 
-import cg.group4.collection.Collection;
+import cg.group4.data_structures.collection.Collection;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.game_logic.stroll.events.StrollEvent;
