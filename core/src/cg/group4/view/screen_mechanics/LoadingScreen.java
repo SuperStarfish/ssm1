@@ -57,8 +57,6 @@ public class LoadingScreen implements Screen {
      */
     protected int cScreenHeight;
 
-    protected boolean cServerConnected = false;
-
     /**
      * Creates a new LoadingScreen with a reference back to the launcher.
      * @param launcher Reference back to the launcher.
@@ -79,16 +77,6 @@ public class LoadingScreen implements Screen {
             setScalar(cScreenHeight);
         } else {
             setScalar(cScreenWidth);
-        }
-        if(Client.getLocalInstance().isConnected()){
-            cServerConnected = true;
-        } else {
-            Client.getLocalInstance().getChangeSubject().addObserver(new Observer() {
-                @Override
-                public void update(Observable o, Object arg) {
-                    cServerConnected = (Boolean) arg;
-                }
-            });
         }
 
         cBatch = new SpriteBatch();
@@ -124,7 +112,7 @@ public class LoadingScreen implements Screen {
 
     @Override
     public void render(final float delta) {
-        if (cAssets.update() && cServerConnected) {
+        if (cAssets.update()) {
             cLauncher.assetsDone();
         } else {
             Gdx.gl.glClearColor(0, 0, 0, 1);

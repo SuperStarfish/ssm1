@@ -42,6 +42,7 @@ public class Player {
         Client.getLocalInstance().getPlayerData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
+                System.out.println("asdfasdfasdf");
                 PlayerData playerData;
                 if (response.isSuccess()) {
                     playerData = (PlayerData) response.getData();

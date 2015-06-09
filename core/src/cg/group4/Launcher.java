@@ -92,13 +92,6 @@ public class Launcher extends Game {
 
         Client.getLocalInstance().setUserIDResolver(cIDResolver);
         Client.getLocalInstance().connectToServer(null, server.getSocketPort());
-        Client.getLocalInstance().getPlayerData(new ResponseHandler() {
-            @Override
-            public void handleResponse(Response response) {
-                System.out.println("I got a response!");
-                System.out.println(((PlayerData)response.getData()).getId());
-            }
-        });
 
         setScreen(new LoadingScreen(this));
     }
@@ -113,7 +106,10 @@ public class Launcher extends Game {
 
         cStandUp = StandUp.getInstance();
         cStandUp.setAccelerationStatus(cAccelerationStatus);
-        
+
+        System.out.println("test");
+        System.out.println("test");
+        System.out.println("test");
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
