@@ -109,13 +109,14 @@ public final class NetworkScreen extends ScreenLogic {
             public void changed(ChangeEvent event, Actor actor) {
                 Player player = StandUp.getInstance().getPlayer();
 
-                Client.getRemoteInstance().removeCollection(player.getCollection(), new ResponseHandler() {
+                Client.getRemoteInstance().resetPlayerData(new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
                         if (response.isSuccess()) {
-                            cMessage.setText("Your collection is emptied");
+                            cMessage.setText("Your account has been reset.");
+                            StandUp.getInstance().getPlayer().update();
                         } else {
-                            cMessage.setText("");
+                            cMessage.setText("Something went wrong.");
                         }
 
                     }

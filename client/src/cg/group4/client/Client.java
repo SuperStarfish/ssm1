@@ -284,8 +284,8 @@ public final class Client {
      * Resets the player data
      * @param responseHandler
      */
-    public boolean resetPlayerData(final String playerId, final ResponseHandler responseHandler) {
-        return tryToSend(new ResetPlayerData(playerId), responseHandler);
+    public boolean resetPlayerData(final ResponseHandler responseHandler) {
+        return tryToSend(new ResetPlayerData(cUserIDResolver.getID()), responseHandler);
     }
 
     /**
