@@ -62,7 +62,7 @@ public final class RemoteConnection implements Connection {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Client.getLocalInstance().enableRequests();
+        Client.getRemoteInstance().enableRequests();
     }
 
 //    @Override

@@ -29,7 +29,7 @@ public class UnConnected implements Connection{
         try {
             LOGGER.info("Trying to connect to the local server");
             Connection connection = new LocalConnection(ip, port);
-            Client client = Client.getLocalInstance();
+            Client client = Client.getRemoteInstance();
             client.setConnection(connection);
         } catch (IOException e) {
             LOGGER.info("Connection failed!");

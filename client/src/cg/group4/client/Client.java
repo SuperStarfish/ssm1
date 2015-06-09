@@ -288,7 +288,9 @@ public final class Client {
         return null;
     }
 
+    public void resetPlayerData(ResponseHandler responseHandler) {
 
+    }
 
     /**
      * Sets the userid using the device ID.

@@ -27,7 +27,7 @@ public class Player {
         public void update(final Observable o, final Object arg) {
             Collection collection = (Collection) arg;
             collection.setGroupId(cPlayerData.getId());
-            Client.getLocalInstance().addCollection(collection, null);
+            Client.getRemoteInstance().addCollection(collection, null);
         }
     };
 
@@ -46,15 +46,15 @@ public class Player {
                 if (response.isSuccess()) {
                     playerData = (PlayerData) response.getData();
                 } else {
-                    playerData = new PlayerData(Client.getLocalInstance().getUserID());
+                    playerData = new PlayerData(Client.getRemoteInstance().getUserID());
                 }
                 if (playerData.getUsername() == null) {
                     playerData.setUsername("Unknown");
                 }
                 cPlayerData = playerData;
-                cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
             }
         });
+        cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 
     public PlayerData getPlayerData() {
