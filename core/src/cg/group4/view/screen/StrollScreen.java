@@ -110,7 +110,7 @@ public final class StrollScreen extends ScreenLogic {
         cTable.row().expandY();
         cCode = cGameSkin.generateDefaultTextField("Enter code");
         cCode.setAlignment(Align.center);
-        cTable.add(cCode).colspan(2);
+        cTable.add(cCode).fillX().colspan(2);
 
         cTable.row().expandY();
         cHost = cGameSkin.generateDefaultMenuButton("Host");
