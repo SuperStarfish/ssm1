@@ -87,6 +87,10 @@ public class Collection extends HashSet<Collectible> implements Serializable {
         return result;
     }
 
+    public void resetCollection(){
+        super.clear();
+    }
+
     /**
      * Getter for the change add subject. Gets notified when something is added to the HashMap.
      *
