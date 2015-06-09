@@ -41,6 +41,7 @@ public class RequestPlayerData extends Query {
             playerData.setUsername(resultSet.getString("Username"));
             playerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
             playerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
+            playerData.setGroupId(resultSet.getString("GroupId"));
 
         } else {
             statement.executeUpdate("INSERT INTO User (ID,Username) VALUES ('"

@@ -71,7 +71,7 @@ public final class CollectiblesScreen extends ScreenLogic {
      * Currently displayed collection.
      */
     protected Collection cSelectedCollection;
-    
+
     /**
      * Currently used sorter.
      */
@@ -154,7 +154,7 @@ public final class CollectiblesScreen extends ScreenLogic {
         Comparator[] list = new Comparator[2];
         list[0] = cSorter;
         list[1] = new HueComparator();
-        
+
         cSortBox.setItems(list);
         cSortBox.addListener(new ChangeListener() {
             @Override
@@ -251,31 +251,34 @@ public final class CollectiblesScreen extends ScreenLogic {
         ArrayList<Collectible> sortedList = cSelectedCollection.sort(cSorter);
         DecimalFormat format = new DecimalFormat("#.00");
 
+        boolean myCollection = cGroupsBox.getSelectedIndex() == 0;
+
         cContentTable.clear();
         for (final Collectible c : sortedList) {
             cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
             Image img = new Image(cDrawer.drawCollectible(c));
             cContentTable.add(img);
             cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
-            cContentTable.add(cGameSkin.generateDefaultLabel("DATE"));
-            cContentTable.add(cGameSkin.generateDefaultLabel("OWNER"));
-            cContentTable.add(cGameSkin.generateDefaultLabel("GROUP"));
-            TextButton donate = cGameSkin.generateDefaultMenuButton("DONATE");
-            donate.addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-                    Collection addCollection = new Collection(StandUp.getInstance().getPlayer().getGroupId());
-                    addCollection.add(c);
-                    Collection removeCollection = new Collection(StandUp.getInstance().getPlayer().getId());
-                    removeCollection.add(c);
+            cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(c.getAmount())));
 
-                    Client.getRemoteInstance().addCollection(addCollection, null);
-                    Client.getRemoteInstance().removeCollection(removeCollection, null);
+            if (myCollection) {
+                TextButton donate = cGameSkin.generateDefaultMenuButton("Donate");
+                donate.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        Collection addCollection = new Collection(StandUp.getInstance().getPlayer().getGroupId());
+                        addCollection.add(c);
+                        Collection removeCollection = new Collection(StandUp.getInstance().getPlayer().getId());
+                        removeCollection.add(c);
 
-                    updateCollection();
-                }
-            });
-            cContentTable.add(donate);
+                        Client.getRemoteInstance().addCollection(addCollection, null);
+                        Client.getRemoteInstance().removeCollection(removeCollection, null);
+
+                        updateCollection();
+                    }
+                });
+                cContentTable.add(donate);
+            }
             
         }
     }
