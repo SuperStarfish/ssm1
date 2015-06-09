@@ -1,16 +1,24 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.game_logic.stroll.events.StrollEvent;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -28,6 +36,10 @@ public final class StrollScreen extends ScreenLogic {
      * Table that all the elements are added to.
      */
     protected Table cTable;
+
+    protected TextField cCode;
+
+    protected TextButton cHost, cJoin;
 
     /**
      * Observer that gets called when the stroll ends.
@@ -93,7 +105,41 @@ public final class StrollScreen extends ScreenLogic {
 
         cTable.row().expandY();
         cText = new Label("Waiting for event", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cTable.add(cText);
+        cTable.add(cText).colspan(2);
+
+        cTable.row().expandY();
+        cCode = cGameSkin.generateDefaultTextField("Enter code");
+        cCode.setAlignment(Align.center);
+        cTable.add(cCode).colspan(2);
+
+        cTable.row().expandY();
+        cHost = cGameSkin.generateDefaultMenuButton("Host");
+        cHost.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Client.getRemoteInstance().hostEvent(new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+                        cCode.setText(Integer.toString((Integer) response.getData()));
+                    }
+                });
+            }
+        });
+        cTable.add(cHost);
+        cJoin = cGameSkin.generateDefaultMenuButton("Join");
+        cJoin.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Client.getRemoteInstance().getHost(Integer.parseInt(cCode.getText()), new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+                        cCode.setText((String) response.getData());
+                    }
+                });
+            }
+        });
+        cTable.add(cJoin);
+
 
         return cTable;
     }
@@ -116,7 +162,7 @@ public final class StrollScreen extends ScreenLogic {
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
 
-        cTable.add(cTimeRemaining);
+        cTable.add(cTimeRemaining).colspan(2);
     }
 
     @Override
