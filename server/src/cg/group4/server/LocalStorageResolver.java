@@ -28,7 +28,7 @@ public abstract class LocalStorageResolver {
     public LocalStorageResolver() {
         cIsLocal = setLocal();
         try {
-            cConnection.setAutoCommit(false);
+//            cConnection.setAutoCommit(false);
             cConnection = createDatabaseConnection();
             LOGGER.info("Database connection established.");
         } catch (SQLException e) {

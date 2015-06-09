@@ -29,16 +29,9 @@ public class RequestPlayerData extends Query {
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
-        System.out.println("BEFORE");
-        System.out.println("BEFORE");
-        System.out.println("BEFORE");
         Statement statement = databaseConnection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM User WHERE ID = '" + cId + "' LIMIT 1");
 
-        System.out.println("AFTER");
-        System.out.println("AFTER");
-        System.out.println("AFTER");
-        System.out.println("AFTER");
         PlayerData playerData = new PlayerData(cId);
 
         if (resultSet.isBeforeFirst()) {
@@ -52,7 +45,6 @@ public class RequestPlayerData extends Query {
         } else {
             statement.executeUpdate("INSERT INTO User (ID,Username) VALUES ('"
                     + playerData.getId() + "', '" + playerData.getUsername() + "')");
-            databaseConnection.commit();
         }
 
         resultSet.close();

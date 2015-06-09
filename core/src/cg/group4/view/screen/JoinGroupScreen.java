@@ -76,7 +76,6 @@ public class JoinGroupScreen extends ScreenLogic {
 
             @Override
             public void handleResponse(Response response) {
-                System.out.println("Handle response works");
 
                 if (response.isSuccess()) {
                     cStatusLabel.setText("Successfully joined a group");

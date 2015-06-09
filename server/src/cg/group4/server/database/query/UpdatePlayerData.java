@@ -55,7 +55,6 @@ public class UpdatePlayerData extends Query {
         statement.executeUpdate("UPDATE USER SET " + update.substring(2) + " WHERE ID = '"
                 + cPlayerData.getId() + "'");
 
-        databaseConnection.commit();
         statement.close();
 
         return null;

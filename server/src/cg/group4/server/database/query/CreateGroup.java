@@ -28,7 +28,6 @@ public class CreateGroup extends Query {
         Statement statement = databaseConnection.createStatement();
         statement.executeUpdate("INSERT INTO 'Group' (OwnerId,Name) VALUES ('"
                 + cOwnerId + "', '" + cGroupName + "')");
-        databaseConnection.commit();
 
         ResultSet resultSet = statement.executeQuery(
                 "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId As OwnerId, U.Username AS Username, U.Id "

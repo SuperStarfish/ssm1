@@ -40,7 +40,6 @@ public class RemoveCollectible extends Query {
                 + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()
                 + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'");
 
-        databaseConnection.commit();
         statement.close();
         return null;
     }

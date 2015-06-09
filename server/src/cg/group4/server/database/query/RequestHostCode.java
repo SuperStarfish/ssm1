@@ -42,7 +42,6 @@ public class RequestHostCode extends Query {
         while (exists);
 
         statement.executeUpdate("INSERT INTO Event_Hosts (Code, Ip) VALUES (" + code + ", '" + cIp + "')");
-        databaseConnection.commit();
 
         statement.close();
         return code;

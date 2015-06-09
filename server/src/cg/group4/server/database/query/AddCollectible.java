@@ -40,7 +40,6 @@ public class AddCollectible extends Query {
                 + cCollectible.getHue() + ", " + cCollectible.getAmount() + ", '" + cCollectible.getDateAsString()
                 + "', '" + cGroupId + "')");
 
-        databaseConnection.commit();
         statement.close();
         return null;
     }

@@ -74,12 +74,6 @@ public final class StandUp {
         cSensorReader = new SensorReader();
         cPlayer = new Player();
 
-        System.out.println("FIXED");
-        System.out.println("FIXED");
-        System.out.println("FIXED");
-        System.out.println("FIXED");
-        System.out.println("FIXED");
-
         cBackgroundMusic =  Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
         cBackgroundMusic.setLooping(true);
         AudioPlayer.getInstance().setLastPlayed(cBackgroundMusic);

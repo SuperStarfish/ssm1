@@ -107,10 +107,6 @@ public class Launcher extends Game {
         cStandUp = StandUp.getInstance();
         cStandUp.setAccelerationStatus(cAccelerationStatus);
 
-        System.out.println("test");
-        System.out.println("test");
-        System.out.println("test");
-
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
         cScreenStore.init();

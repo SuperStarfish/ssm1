@@ -23,10 +23,8 @@ public class ResetPlayerData extends Query {
     public Serializable query(Connection databaseConnection) throws SQLException {
         Statement statement = databaseConnection.createStatement();
         statement.executeUpdate("DELETE FROM Collectible WHERE GroupId = '" + cId + "'");
-        databaseConnection.commit();
 
         statement.executeUpdate("DELETE FROM User WHERE Id = '" + cId + "'");
-        databaseConnection.commit();
 
         statement.close();
 
