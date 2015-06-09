@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.game_logic.Player;
 import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
@@ -107,10 +108,16 @@ public final class NetworkScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getPlayer().getCollection().resetCollection();
-                Client.getRemoteInstance().resetPlayerData(new ResponseHandler() {
+                Player player = StandUp.getInstance().getPlayer();
+                player.getCollection().resetCollection();
+                Client.getRemoteInstance().resetPlayerData(player.getId(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
+                        if (response.isSuccess()) {
+                            cMessage.setText("Your collection is emptied");
+                        } else {
+                            cMessage.setText("");
+                        }
 
                     }
                 });

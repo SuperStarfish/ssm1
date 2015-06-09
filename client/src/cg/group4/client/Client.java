@@ -285,8 +285,12 @@ public final class Client {
         return null;
     }
 
-    public void resetPlayerData(ResponseHandler responseHandler) {
-
+    /**
+     * Resets the player data
+     * @param responseHandler
+     */
+    public boolean resetPlayerData(final String playerId, final ResponseHandler responseHandler) {
+        return tryToSend(new ResetPlayerData(playerId), responseHandler);
     }
 
     /**
