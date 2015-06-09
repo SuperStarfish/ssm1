@@ -88,7 +88,7 @@ public class Launcher extends Game {
         Server server = new Server(false);
         server.start();
 
-        Client.getLocalInstance().setUserIDResolver(cIDResolver);
+//        Client.getLocalInstance().setUserIDResolver(cIDResolver);
 //        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
         Client.getRemoteInstance().setUserIDResolver(cIDResolver);
 
