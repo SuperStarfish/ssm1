@@ -57,13 +57,27 @@ public class JoinGroupScreen extends ScreenLogic {
         };
     }
 
+    private boolean naiveVerify() {
+        if (!cGroupNameField.getText().matches("^-?\\d+$")) {
+            cStatusLabel.setText("Unable to join group (non-decimal value)");
+            return false;
+        }
+        return true;
+    }
+
     private boolean tryJoin() {
         System.out.println("Event Listener works");
+
+        if (!naiveVerify()) {
+            return false;
+        }
+
         boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
 
             @Override
             public void handleResponse(Response response) {
                 System.out.println("Handle response works");
+
                 if (response.isSuccess()) {
                     cStatusLabel.setText("Successfully joined a group");
                 } else {

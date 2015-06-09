@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.game_logic.Player;
 import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -34,7 +36,6 @@ public final class NetworkScreen extends ScreenLogic {
      * The label containing if we are connected with the server or not.
      */
     protected Label cMessage;
-
 
 
     @Override
@@ -107,10 +108,16 @@ public final class NetworkScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getPlayer().getCollection().resetCollection();
-                Client.getRemoteInstance().resetPlayerData(new ResponseHandler() {
+                Player player = StandUp.getInstance().getPlayer();
+                player.getCollection().resetCollection();
+                Client.getRemoteInstance().resetPlayerData(player.getId(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
+                        if (response.isSuccess()) {
+                            cMessage.setText("Your collection is emptied");
+                        } else {
+                            cMessage.setText("");
+                        }
 
                     }
                 });

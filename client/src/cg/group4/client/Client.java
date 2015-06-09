@@ -7,7 +7,9 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
+import cg.group4.util.IpResolver;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -30,7 +32,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "128.127.39.32";
+    protected final String cDefaultIp = "82.169.19.191";
     /**
      * The default port to connect to.
      */
@@ -259,18 +261,13 @@ public final class Client {
      *
      * @return The code.
      */
-    @Deprecated
-    public Integer hostEvent() {
-//        IpResolver ipResolver = new IpResolver();
-//        try {
-//            Response response = cConnection.send(new RequestHostCode(ipResolver.getExternalIP()));
-//            if (response.isSuccess()) {
-//                return (Integer) response.getData();
-//            }
-//        } catch (UnknownHostException e) {
-//            return null;
-//        }
-        return null;
+    public void hostEvent(ResponseHandler responseHandler) {
+        IpResolver ipResolver = new IpResolver();
+        try {
+            tryToSend(new RequestHostCode(ipResolver.getExternalIP()), responseHandler);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -279,17 +276,16 @@ public final class Client {
      * @param code code of the connection.
      * @return The hosts ip.
      */
-    @Deprecated
-    public String getHost(final Integer code) {
-//        Response response = cConnection.send(new RequestHostIp(code));
-//        if (response.isSuccess()) {
-//            return (String) response.getData();
-//        }
-        return null;
+    public void getHost(final Integer code, ResponseHandler responseHandler) {
+        tryToSend(new RequestHostIp(code), responseHandler);
     }
 
-    public void resetPlayerData(ResponseHandler responseHandler) {
-
+    /**
+     * Resets the player data
+     * @param responseHandler
+     */
+    public boolean resetPlayerData(final String playerId, final ResponseHandler responseHandler) {
+        return tryToSend(new ResetPlayerData(playerId), responseHandler);
     }
 
     /**
