@@ -12,11 +12,7 @@ import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -133,7 +129,11 @@ public final class StrollScreen extends ScreenLogic {
                 Client.getRemoteInstance().getHost(Integer.parseInt(cCode.getText()), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
-                        cCode.setText((String) response.getData());
+                        String ip = (String) response.getData();
+                        if (ip == null) {
+                            ip = "Wrong code!";
+                        }
+                        cCode.setText(ip);
                     }
                 });
             }
