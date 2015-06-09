@@ -3,7 +3,12 @@ package cg.group4.view.screen;
 import cg.group4.client.Client;
 import cg.group4.data_structures.Selection;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.collection.collectibles.FishA;
+import cg.group4.data_structures.collection.collectibles.FishB;
+import cg.group4.data_structures.collection.collectibles.FishC;
+import cg.group4.data_structures.collection.collectibles.collectible_comparators.HueComparator;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.data_structures.groups.GroupData;
 import cg.group4.game_logic.StandUp;
@@ -12,6 +17,7 @@ import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -19,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,7 +65,7 @@ public final class CollectiblesScreen extends ScreenLogic {
     /**
      * SelectBox that contains all the possible sorting options.
      */
-    protected SelectBox<String> cSortBox;
+    protected SelectBox<Comparator> cSortBox;
 
     /**
      * Width and height of the screen.
@@ -69,6 +76,11 @@ public final class CollectiblesScreen extends ScreenLogic {
      * Currently displayed collection.
      */
     protected Collection cSelectedCollection;
+    
+    /**
+     * Currently used sorter.
+     */
+    protected Comparator cSorter;
     
     protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
 
@@ -150,16 +162,21 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void createSortBox() {
         cSortBox = cGameSkin.generateDefaultSelectbox();
-        String[] def = new String[2];
-        def[0] = "Sort_Rarity";
-        def[1] = "<Insert Sort Object>";
-        cSortBox.setItems(def);
+        Comparator rarity = new RarityComparator();
+        Comparator[] list = new Comparator[2];
+        list[0] = rarity;
+        list[1] = new HueComparator();
+        
+        cSortBox.setItems(list);
         cSortBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 System.out.println("Selected Sorting: " + cSortBox.getSelected());
+                cSorter = cSortBox.getSelected();
+                constructContents();
             }
         });
+        cSorter = rarity;
     }
 
     /**
@@ -172,12 +189,13 @@ public final class CollectiblesScreen extends ScreenLogic {
         for (int i = 1; i < list.length; i++) {
             list[i] = new Selection(cGroups.get(i - 1));
         }
-        cGroupsBox.setItems(list);
+        
         cGroupsBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 System.out.println("Selected Collection: " + cGroupsBox.getSelected());
                 String groupId = cGroupsBox.getSelected().getValue();
+                System.out.println(groupId);
                 Client.getRemoteInstance().getCollection(groupId, new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
@@ -234,7 +252,7 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void constructContents() {
         //Collection collection = StandUp.getInstance().getPlayer().getCollection();
-        ArrayList<Collectible> sortedList = cSelectedCollection.sort(new RarityComparator());
+        ArrayList<Collectible> sortedList = cSelectedCollection.sort(cSorter);
         DecimalFormat format = new DecimalFormat("#.00");
 
         cContentTable.clear();

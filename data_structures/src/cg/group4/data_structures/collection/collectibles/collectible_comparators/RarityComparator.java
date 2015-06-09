@@ -20,4 +20,9 @@ public class RarityComparator implements Comparator<Collectible> {
         }
         return -1;
     }
+    
+    @Override
+    public String toString() {
+    	return "Rarity";
+    }
 }
