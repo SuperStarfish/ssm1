@@ -240,7 +240,7 @@ public final class CollectiblesScreen extends ScreenLogic {
             cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
             Image img = new Image(cDrawer.drawCollectible(c));
             cContentTable.add(img);
-            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity()))).colspan(2);
+            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
             cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(c.getAmount())));
 
             if (myCollection) {
@@ -259,7 +259,7 @@ public final class CollectiblesScreen extends ScreenLogic {
                         updateCollection();
                     }
                 });
-                cContentTable.add(donate).colspan(2);
+                cContentTable.add(donate);
             }
             
         }

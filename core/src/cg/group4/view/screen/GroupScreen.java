@@ -1,6 +1,10 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
 import cg.group4.data_structures.groups.Group;
+import cg.group4.data_structures.groups.GroupData;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -57,6 +61,21 @@ public class GroupScreen extends ScreenLogic {
         cScrollPane.setForceScroll(false, true);
         cTable.row().expandY();
         cTable.add(cScrollPane).colspan(2);
+        getGroups();
+    }
+
+    protected void getGroups() {
+        Client.getRemoteInstance().getGroupData(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                cInnerTable.clear();
+                ArrayList<GroupData> groups = (ArrayList<GroupData>) response.getData();
+                for (GroupData groupData : groups) {
+                    cInnerTable.row().expandY();
+                    cInnerTable.add(cGameSkin.generateDefaultLabel(groupData.getName()));
+                }
+            }
+        });
     }
 
     protected void createNewGroupButton() {
@@ -105,5 +124,10 @@ public class GroupScreen extends ScreenLogic {
     // fills the scroll pane with all listed groups
     protected void fillGroupPanel() {
 
+    }
+
+    @Override
+    public void display() {
+        getGroups();
     }
 }
