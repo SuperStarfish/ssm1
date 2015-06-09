@@ -23,7 +23,7 @@ public class ResetPlayerData extends Query {
     @Override
     public Serializable query(DatabaseConnection databaseConnection) throws SQLException {
         Statement statement = databaseConnection.query();
-        statement.executeUpdate("DELETE * FROM Collectible WHERE OwnerId = '" + cId + "'");
+        statement.executeUpdate("DELETE FROM Collectible WHERE OwnerId = '" + cId + "'");
 
         databaseConnection.commit();
         statement.close();
