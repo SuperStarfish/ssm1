@@ -4,6 +4,7 @@ import cg.group4.client.Client;
 import cg.group4.data_structures.Selection;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.collection.collectibles.collectible_comparators.HueComparator;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.data_structures.groups.GroupData;
 import cg.group4.game_logic.StandUp;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,7 +60,7 @@ public final class CollectiblesScreen extends ScreenLogic {
     /**
      * SelectBox that contains all the possible sorting options.
      */
-    protected SelectBox<String> cSortBox;
+    protected SelectBox<Comparator> cSortBox;
 
     /**
      * Width and height of the screen.
@@ -69,6 +71,11 @@ public final class CollectiblesScreen extends ScreenLogic {
      * Currently displayed collection.
      */
     protected Collection cSelectedCollection;
+    
+    /**
+     * Currently used sorter.
+     */
+    protected Comparator cSorter;
     
     protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
 
@@ -143,14 +150,18 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void createSortBox() {
         cSortBox = cGameSkin.generateDefaultSelectbox();
-        String[] def = new String[2];
-        def[0] = "Sort_Rarity";
-        def[1] = "<Insert Sort Object>";
-        cSortBox.setItems(def);
+        cSorter = new RarityComparator();
+        Comparator[] list = new Comparator[2];
+        list[0] = cSorter;
+        list[1] = new HueComparator();
+        
+        cSortBox.setItems(list);
         cSortBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 System.out.println("Selected Sorting: " + cSortBox.getSelected());
+                cSorter = cSortBox.getSelected();
+                constructContents();
             }
         });
     }
@@ -237,7 +248,7 @@ public final class CollectiblesScreen extends ScreenLogic {
      * of the screen, resize and collection changes.
      */
     protected void constructContents() {
-        ArrayList<Collectible> sortedList = cSelectedCollection.sort(new RarityComparator());
+        ArrayList<Collectible> sortedList = cSelectedCollection.sort(cSorter);
         DecimalFormat format = new DecimalFormat("#.00");
 
         cContentTable.clear();
