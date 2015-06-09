@@ -74,7 +74,6 @@ public final class ChangeUsernameScreen extends ScreenLogic {
                 Client.getRemoteInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
-                        System.out.println(response.isSuccess());
                         if(response.isSuccess()) {
                             cMessage.setText("Success!");
                         } else {

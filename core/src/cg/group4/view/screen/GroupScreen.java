@@ -33,22 +33,30 @@ public class GroupScreen extends ScreenLogic {
         cGroupsDisplayList = new ArrayList<Group>();
 
         createTitle();
-        createNewGroupButton();
         createGroupsOverview();
+        createNewGroupButton();
         createJoinGroupButton();
 
         cBackButton = createBackButton();
-        cTable.row();
-        cTable.add(cBackButton);
+        cTable.row().expandY();
+        cTable.add(cBackButton).colspan(2);
 
         return cTable;
 
     }
 
     protected void createTitle() {
-        cTitle = new Label("Groups", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cTable.add(cTitle);
+        cTitle = cGameSkin.generateDefaultLabel("Groups");
         cTable.row().expandY();
+        cTable.add(cTitle).colspan(2);
+    }
+
+    protected void createGroupsOverview() {
+        cInnerTable = new Table();
+        cScrollPane = new ScrollPane(cInnerTable);
+        cScrollPane.setForceScroll(false, true);
+        cTable.row().expandY();
+        cTable.add(cScrollPane).colspan(2);
     }
 
     protected void createNewGroupButton() {
@@ -59,6 +67,7 @@ public class GroupScreen extends ScreenLogic {
                 ScreenStore.getInstance().setScreen("New-Group");
             }
         });
+        cTable.row().expandY();
         cTable.add(cNewGroupButton);
     }
 
@@ -71,22 +80,13 @@ public class GroupScreen extends ScreenLogic {
             }
         });
         cTable.add(cJoinGroupButton);
-        cTable.row().expandY();
-    }
 
-    protected void createGroupsOverview() {
-        cInnerTable = new Table();
-        cScrollPane = new ScrollPane(cInnerTable);
-        cScrollPane.setForceScroll(false, true);
-        cTable.add(cScrollPane);
     }
 
 
     @Override
     protected void rebuildWidgetGroup() {
-        cTitle.setStyle(cGameSkin.getDefaultLabelStyle());
-        cNewGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cJoinGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override

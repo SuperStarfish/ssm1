@@ -21,8 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Screen to be displayed when pressing the "Collection" button on the home screen.
@@ -78,26 +76,6 @@ public final class CollectiblesScreen extends ScreenLogic {
     protected Comparator cSorter;
     
     protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
-
-    /**
-     * Observers additions made to the collection.
-     */
-    protected Observer cAddObserver = new Observer() {
-        @Override
-        public void update(final Observable o, final Object arg) {
-            constructContents();
-        }
-    };
-
-    /**
-     * Observers removals made to the collection.
-     */
-    protected Observer cRemoveObserver = new Observer() {
-        @Override
-        public void update(final Observable o, final Object arg) {
-            constructContents();
-        }
-    };
 
     /**
      * Creates a new CollectibleScreen.
@@ -190,8 +168,10 @@ public final class CollectiblesScreen extends ScreenLogic {
         cGroupsBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                System.out.println("Selected Collection: " + cGroupsBox.getSelected());
-                updateCollection();
+                if (cGroupsBox.getSelected() != null) {
+                    System.out.println("Selected Collection: " + cGroupsBox.getSelected());
+                    updateCollection();
+                }
             }
         });
     }
@@ -239,7 +219,6 @@ public final class CollectiblesScreen extends ScreenLogic {
     @Override
     public void display() {
         getGroups();
-        updateCollection();
     }
 
     /**
@@ -248,17 +227,20 @@ public final class CollectiblesScreen extends ScreenLogic {
      * of the screen, resize and collection changes.
      */
     protected void constructContents() {
+        Gdx.app.log(getClass().getSimpleName(), "Construction");
+
         ArrayList<Collectible> sortedList = cSelectedCollection.sort(cSorter);
         DecimalFormat format = new DecimalFormat("#.00");
 
-        boolean myCollection = cGroupsBox.getSelectedIndex() == 0;
+        boolean myCollection = cGroupsBox.getSelectedIndex() == 0
+                && StandUp.getInstance().getPlayer().getGroupId() != null;
 
         cContentTable.clear();
         for (final Collectible c : sortedList) {
             cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
             Image img = new Image(cDrawer.drawCollectible(c));
             cContentTable.add(img);
-            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
+            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity()))).colspan(2);
             cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(c.getAmount())));
 
             if (myCollection) {
@@ -277,7 +259,7 @@ public final class CollectiblesScreen extends ScreenLogic {
                         updateCollection();
                     }
                 });
-                cContentTable.add(donate);
+                cContentTable.add(donate).colspan(2);
             }
             
         }

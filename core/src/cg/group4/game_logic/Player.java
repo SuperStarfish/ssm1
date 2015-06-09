@@ -76,7 +76,11 @@ public class Player {
      * @return The username.
      */
     public String getUsername() {
-        return cPlayerData.getUsername();
+        String username = cPlayerData.getUsername();
+        if (username == null) {
+            return "Unknown";
+        }
+        return username;
     }
 
     /**

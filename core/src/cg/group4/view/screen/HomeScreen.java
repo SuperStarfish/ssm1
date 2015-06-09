@@ -77,8 +77,8 @@ public final class HomeScreen extends ScreenLogic {
 
         initStrollButton();
         initCollectionButton();
-        initSettingsButton();
         initGroupButton();
+        initSettingsButton();
 
         return cTable;
     }
@@ -107,7 +107,7 @@ public final class HomeScreen extends ScreenLogic {
     public void initHomeScreenTitle() {
         cTitle = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
-        cTable.add(cTitle);
+        cTable.add(cTitle).colspan(2);
     }
 
     /**
@@ -124,7 +124,7 @@ public final class HomeScreen extends ScreenLogic {
         } else {
             textToDisplay = Integer.toString(Timer.Global.INTERVAL.getDuration());
         }
-        cTimer = new Label(textToDisplay, cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTimer = cGameSkin.generateDefaultLabel(textToDisplay);
 
         cIntervalTickObserver = new Observer() {
             @Override
@@ -160,7 +160,7 @@ public final class HomeScreen extends ScreenLogic {
         cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
 
         cTable.row().expandY();
-        cTable.add(cTimer);
+        cTable.add(cTimer).colspan(2);
     }
 
     /**
@@ -179,7 +179,7 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.row().expandY();
-        cTable.add(cStrollButton);
+        cTable.add(cStrollButton).colspan(2);
     }
 
     /**
@@ -194,7 +194,7 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.row().expandY();
-        cTable.add(cSettingsButton);
+        cTable.add(cSettingsButton).colspan(2);
     }
 
     /**
@@ -223,7 +223,6 @@ public final class HomeScreen extends ScreenLogic {
                 ScreenStore.getInstance().setScreen("Groups");
             }
         });
-        cTable.row().expandY();
         cTable.add(cGroupButton);
     }
 

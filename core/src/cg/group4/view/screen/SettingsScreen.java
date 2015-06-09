@@ -1,7 +1,7 @@
 package cg.group4.view.screen;
 
-import cg.group4.util.audio.AudioPlayer;
 import cg.group4.client.Client;
+import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -38,7 +38,14 @@ public final class SettingsScreen extends ScreenLogic {
             cButtonStopStroll,
             cNetworkScreen,
             cButtonBack;
-
+    /**
+     * References to the STROLL Timer and INTERVAL Timer.
+     */
+    protected Timer cIntervalTimer, cStrollTimer;
+    /**
+     * Whether or not the audio should be enabled or disable
+     */
+    private String cVolumeLabelText;
     protected Observer cAudioEnabledChanged = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
@@ -50,16 +57,6 @@ public final class SettingsScreen extends ScreenLogic {
             cButtonVolume.setText(cVolumeLabelText);
         }
     };
-
-    /**
-     * References to the STROLL Timer and INTERVAL Timer.
-     */
-    protected Timer cIntervalTimer, cStrollTimer;
-
-    /**
-     * Whether or not the audio should be enabled or disable
-     */
-    private String cVolumeLabelText;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
@@ -94,19 +91,28 @@ public final class SettingsScreen extends ScreenLogic {
      * Creates the buttons of the settings menu and adds an event listener for each of them.
      */
     protected void createGUI() {
-        cButtonResetInterval = createButton("Reset Interval");
+
+        cTable.row().expandY();
+        cButtonResetInterval = cGameSkin.generateDefaultMenuButton("Reset Interval");
+        cTable.add(cButtonResetInterval);
         cButtonResetInterval.addListener(resetIntervalBehaviour());
 
-        cButtonStopInterval = createButton("Stop Interval");
+        cButtonStopInterval = cGameSkin.generateDefaultMenuButton("Stop Interval");
+        cTable.add(cButtonStopInterval);
         cButtonStopInterval.addListener(stopIntervalBehaviour());
 
-        cButtonResetStroll = createButton("Reset Stroll");
+        cTable.row().expandY();
+        cButtonResetStroll = cGameSkin.generateDefaultMenuButton("Reset Stroll");
+        cTable.add(cButtonResetStroll);
         cButtonResetStroll.addListener(resetStrollBehaviour());
 
-        cButtonStopStroll = createButton("Stop Stroll");
+        cButtonStopStroll = cGameSkin.generateDefaultMenuButton("Stop Stroll");
+        cTable.add(cButtonStopStroll);
         cButtonStopStroll.addListener(stopStrollBehaviour());
 
-        cNetworkScreen = createButton("Network");
+        cTable.row().expandY();
+        cNetworkScreen = cGameSkin.generateDefaultMenuButton("Network");
+        cTable.add(cNetworkScreen).colspan(2);
         cNetworkScreen.addListener(networkScreenBehaviour());
 
         if(AudioPlayer.getInstance().getAudioEnabled()) {
@@ -114,11 +120,17 @@ public final class SettingsScreen extends ScreenLogic {
         } else {
             cVolumeLabelText = "Enable Audio";
         }
-        cButtonVolume = createButton(cVolumeLabelText);
+
+        cTable.row().expandY();
+        cButtonVolume = cGameSkin.generateDefaultMenuButton(cVolumeLabelText);
+        cTable.add(cButtonVolume).colspan(2);
         cButtonVolume.addListener(volumeBehavior());
         AudioPlayer.getInstance().getSubject().addObserver(cAudioEnabledChanged);
 
-        cButtonBack = createButton("Back");
+
+        cTable.row().expandY();
+        cButtonBack = cGameSkin.generateDefaultMenuButton("Back");
+        cTable.add(cButtonBack).colspan(2);
         cButtonBack.addListener(backBehaviour());
 
     }
@@ -218,18 +230,6 @@ public final class SettingsScreen extends ScreenLogic {
         };
     }
 
-    /**
-     * Helper method for creating text buttons and adding them to the table container.
-     *
-     * @param label Label for the text button
-     * @return The text button just created. It is returned so an event listener can be added to the button.
-     */
-    protected TextButton createButton(final String label) {
-        TextButton button = cGameSkin.generateDefaultMenuButton(label);
-        cTable.row().expandY();
-        cTable.add(button);
-        return button;
-    }
 
     @Override
     protected String setPreviousScreenName() {
