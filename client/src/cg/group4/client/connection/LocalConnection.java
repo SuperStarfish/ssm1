@@ -42,6 +42,7 @@ public final class LocalConnection implements Connection {
     public LocalConnection(final String ip, final int port) throws IOException {
         cConnection = new Socket(ip, port);
         cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
+        cOutputStream.flush();
         cInputStream = new ObjectInputStream(cConnection.getInputStream());
     }
 
@@ -62,9 +63,9 @@ public final class LocalConnection implements Connection {
             if(responseHandler != null) {
                 responseHandler.handleResponse(response);
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         Client.getLocalInstance().enableRequests();
@@ -72,6 +73,6 @@ public final class LocalConnection implements Connection {
 
     @Override
     public boolean isConnected() {
-        return false;
+        return true;
     }
 }

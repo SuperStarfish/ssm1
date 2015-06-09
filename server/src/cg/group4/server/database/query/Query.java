@@ -1,8 +1,7 @@
 package cg.group4.server.database.query;
 
-import cg.group4.server.database.DatabaseConnection;
-
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -19,5 +18,5 @@ public abstract class Query implements Serializable {
      * @return The result of this query.
      * @throws SQLException Something went wrong with the query.
      */
-    public abstract Serializable query(DatabaseConnection databaseConnection) throws SQLException;
+    public abstract Serializable query(Connection databaseConnection) throws SQLException;
 }

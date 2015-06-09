@@ -1,4 +1,6 @@
-package cg.group4.client;
+package cg.group4.server;
+
+import cg.group4.client.UserIDResolver;
 
 /**
  * Gets the id of the desktop device.

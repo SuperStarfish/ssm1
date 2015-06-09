@@ -1,8 +1,7 @@
 package cg.group4.server.database.query;
 
-import cg.group4.server.database.DatabaseConnection;
-
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,8 +26,8 @@ public class RequestHostIp extends Query {
     }
 
     @Override
-    public Serializable query(DatabaseConnection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.query();
+    public Serializable query(Connection databaseConnection) throws SQLException {
+        Statement statement = databaseConnection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT Ip FROM Event_Hosts WHERE Code = " + cCode);
         String ip = null;
         if (resultSet.next()) {

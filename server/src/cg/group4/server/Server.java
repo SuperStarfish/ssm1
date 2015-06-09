@@ -59,17 +59,12 @@ public class Server {
      */
     protected StaticsCaller cStaticsCaller;
 
-    /**
-     * Is this server remote or not.
-     */
-    protected boolean cIsRemote;
 
-    /**
-     * Creates an instance of Server.
-     * @param isRemote Is the server remote or not.
-     */
-    public Server(boolean isRemote) {
-        cIsRemote = isRemote;
+    LocalStorageResolver cLocalStorageResolver;
+
+
+    public Server(LocalStorageResolver storageResolver) {
+        cLocalStorageResolver = storageResolver;
         cStaticsCaller = new StaticsCaller();
     }
 
@@ -81,7 +76,7 @@ public class Server {
     public final void start() {
         createLocalIP();
 
-        if(cIsRemote) {
+        if(!cLocalStorageResolver.isLocal()) {
             createServerSocket(cDefaultPort);
             createExternalIP();
             validateExternalConnection();
@@ -197,8 +192,8 @@ public class Server {
     protected final void acceptConnections() {
         try {
             cPool = Executors.newFixedThreadPool(cMaxThreads);
-            Socket connection = cServerSocket.accept();
-            Callable<Void> task = new ServerThread(connection, cIsRemote);
+            Socket client = cServerSocket.accept();
+            Callable<Void> task = new ServerThread(client, cLocalStorageResolver);
             cPool.submit(task);
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,7 +215,7 @@ public class Server {
      * @param args Not used, but default for main method.
      */
     public static void main(final String[] args) {
-        Server server = new Server(true);
+        Server server = new Server(new RemoteStorageResolver());
         LOGGER.setLevel(Level.INFO);
         server.start();
     }

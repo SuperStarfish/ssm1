@@ -3,8 +3,8 @@ package cg.group4.server.database.query;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.groups.Group;
 import cg.group4.data_structures.groups.GroupData;
-import cg.group4.server.database.DatabaseConnection;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,8 +24,8 @@ public class CreateGroup extends Query {
 
 
     @Override
-    public Group query(DatabaseConnection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.query();
+    public Group query(Connection databaseConnection) throws SQLException {
+        Statement statement = databaseConnection.createStatement();
         statement.executeUpdate("INSERT INTO 'Group' (OwnerId,Name) VALUES ('"
                 + cOwnerId + "', '" + cGroupName + "')");
         databaseConnection.commit();

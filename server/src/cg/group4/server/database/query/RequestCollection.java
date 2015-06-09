@@ -2,8 +2,8 @@ package cg.group4.server.database.query;
 
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.CollectibleFactory;
-import cg.group4.server.database.DatabaseConnection;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,9 +29,9 @@ public class RequestCollection extends Query {
     }
 
     @Override
-    public Collection query(final DatabaseConnection databaseConnection) throws SQLException {
+    public Collection query(final Connection databaseConnection) throws SQLException {
         Collection collection = new Collection(cGroupId);
-        Statement statement = databaseConnection.query();
+        Statement statement = databaseConnection.createStatement();
 
         CollectibleFactory factory = new CollectibleFactory();
 

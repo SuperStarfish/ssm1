@@ -32,7 +32,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "128.127.39.32";
+    protected final String cDefaultIp = "82.169.19.191";
     /**
      * The default port to connect to.
      */
@@ -159,7 +159,6 @@ public final class Client {
      * @param connection The connection that needs to be set.
      */
     public void setConnection(final Connection connection) {
-        LOGGER.info("Is connected: " + connection.isConnected());
         cConnection = connection;
         cChangeSubject.update(connection.isConnected());
         enableRequests();
@@ -241,9 +240,10 @@ public final class Client {
     }
 
     protected boolean tryToSend(final Query query, final ResponseHandler responseHandler) {
-        cAwaitingResponse = true;
-        cConnection.send(query, responseHandler);
-
+        if(!cAwaitingResponse) {
+            cAwaitingResponse = true;
+            cConnection.send(query, responseHandler);
+        }
         return cAwaitingResponse;
     }
 

@@ -60,7 +60,7 @@ public final class ScreenStore {
      */
     public void init() {
         addScreen("Home", new HomeScreen());
-        addScreen("Collection", new CollectiblesScreen());
+//        addScreen("Collection", new CollectiblesScreen());
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
         addScreen("Groups", new GroupScreen());

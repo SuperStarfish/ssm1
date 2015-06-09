@@ -2,8 +2,12 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
+import cg.group4.data_structures.PlayerData;
 import cg.group4.game_logic.StandUp;
+import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.notification.NotificationController;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
@@ -53,6 +57,9 @@ public class Launcher extends Game {
      */
     protected NotificationController cNotificationController;
 
+
+    protected LocalStorageResolver cLocalStorageResolver;
+
     /**
      * Tunnels the acceleration status through the launcher to the android project.
      *
@@ -62,11 +69,13 @@ public class Launcher extends Game {
      */
     public Launcher(final AccelerationStatus accelerationStatus,
                     final NotificationController notificationController,
-                    final UserIDResolver idResolver) {
+                    final UserIDResolver idResolver,
+                    final LocalStorageResolver localStorageResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;
         cIDResolver = idResolver;
+        cLocalStorageResolver = localStorageResolver;
     }
 
     /**
@@ -78,6 +87,19 @@ public class Launcher extends Game {
     public final void create() {
         debugSetup();
 
+        Server server = new Server(cLocalStorageResolver);
+        server.start();
+
+        Client.getLocalInstance().setUserIDResolver(cIDResolver);
+        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        Client.getLocalInstance().getPlayerData(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                System.out.println("I got a response!");
+                System.out.println(((PlayerData)response.getData()).getId());
+            }
+        });
+
         setScreen(new LoadingScreen(this));
     }
 
@@ -85,11 +107,6 @@ public class Launcher extends Game {
      * Once the Assets are done loading, this method is called to properly initialize the game.
      */
     public void assetsDone() {
-        Server server = new Server(false);
-        server.start();
-
-//        Client.getLocalInstance().setUserIDResolver(cIDResolver);
-//        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
         Client.getRemoteInstance().setUserIDResolver(cIDResolver);
 
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();

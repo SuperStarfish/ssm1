@@ -1,10 +1,9 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.PlayerData;
-import cg.group4.data_structures.collection.Collection;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,15 +28,15 @@ public class RequestPlayerData extends Query {
     }
 
     @Override
-    public Serializable query(final DatabaseConnection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.query();
+    public Serializable query(final Connection databaseConnection) throws SQLException {
+        Statement statement = databaseConnection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM User WHERE ID = '" + cId + "' LIMIT 1");
 
         PlayerData playerData = new PlayerData(cId);
+
         if (resultSet.isBeforeFirst()) {
             resultSet.next();
 
-            playerData.setId(resultSet.getString("ID"));
             playerData.setUsername(resultSet.getString("Username"));
             playerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
             playerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
@@ -52,7 +51,7 @@ public class RequestPlayerData extends Query {
         resultSet.close();
         statement.close();
 
-        playerData.setCollection((Collection) new RequestCollection(cId).query(databaseConnection));
+        playerData.setCollection(new RequestCollection(cId).query(databaseConnection));
 
         return playerData;
     }

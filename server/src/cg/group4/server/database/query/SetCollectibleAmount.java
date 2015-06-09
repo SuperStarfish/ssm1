@@ -1,9 +1,9 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -39,11 +39,11 @@ public class SetCollectibleAmount extends Query {
     }
 
     @Override
-    public Serializable query(DatabaseConnection databaseConnection) throws SQLException {
+    public Serializable query(Connection databaseConnection) throws SQLException {
         if (cAmount == 0) {
             new RemoveCollectible(cCollectible, cGroupId).query(databaseConnection);
         } else {
-            Statement statement = databaseConnection.query();
+            Statement statement = databaseConnection.createStatement();
             statement.executeUpdate("UPDATE Collectible SET Amount = " + cAmount
                     + " WHERE OwnerId = '" + cCollectible.getOwnerId() + "' AND " + "Type = '"
                     + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()

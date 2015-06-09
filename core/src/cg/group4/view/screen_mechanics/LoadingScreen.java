@@ -80,17 +80,16 @@ public class LoadingScreen implements Screen {
         } else {
             setScalar(cScreenWidth);
         }
-        if(Client.getRemoteInstance().isConnected()){
+        if(Client.getLocalInstance().isConnected()){
             cServerConnected = true;
+        } else {
+            Client.getLocalInstance().getChangeSubject().addObserver(new Observer() {
+                @Override
+                public void update(Observable o, Object arg) {
+                    cServerConnected = (Boolean) arg;
+                }
+            });
         }
-
-        Client.getRemoteInstance().getChangeSubject().addObserver(new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
-                cServerConnected = (Boolean) arg;
-            }
-        });
-        Client.getRemoteInstance().connectToServer();
 
         cBatch = new SpriteBatch();
         cLogo = new Sprite(new Texture(Gdx.files.internal("images/logo.png")));

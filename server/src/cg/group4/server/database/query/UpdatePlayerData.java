@@ -1,9 +1,9 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.PlayerData;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -27,7 +27,7 @@ public class UpdatePlayerData extends Query {
     }
 
     @Override
-    public Serializable query(final DatabaseConnection databaseConnection) throws SQLException {
+    public Serializable query(final Connection databaseConnection) throws SQLException {
         String update = "";
 
         if (cPlayerData.getUsername() != null) {
@@ -50,7 +50,7 @@ public class UpdatePlayerData extends Query {
             new AddCollection(cPlayerData.getCollection()).query(databaseConnection);
         }
 
-        Statement statement = databaseConnection.query();
+        Statement statement = databaseConnection.createStatement();
 
         statement.executeUpdate("UPDATE USER SET " + update.substring(2) + " WHERE ID = '"
                 + cPlayerData.getId() + "'");
