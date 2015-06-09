@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -68,6 +69,7 @@ public class JoinGroupScreen extends ScreenLogic {
                 } else {
                     cStatusLabel.setText("Unable to join group");
                 }
+                StandUp.getInstance().getPlayer().update();
             }
         });
         return tryJoin;

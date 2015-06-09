@@ -74,6 +74,7 @@ public class NewGroupScreen extends ScreenLogic {
                 } else {
                     cStatusLabel.setText("Failed to create group");
                 }
+                StandUp.getInstance().getPlayer().update();
             }
         });
 

@@ -230,9 +230,12 @@ public final class Client {
      * @param collection The collection to add to the server.
      * @return Successful or not.
      */
-    public boolean updateCollection(final Collection collection, ResponseHandler responseHandler) {
-        collection.setGroupId(cUserIDResolver.getID());
+    public boolean addCollection(final Collection collection, ResponseHandler responseHandler) {
         return tryToSend(new AddCollection(collection), responseHandler);
+    }
+
+    public boolean removeCollection(final Collection collection, ResponseHandler responseHandler) {
+        return tryToSend(new RemoveCollection(collection), responseHandler);
     }
 
     protected boolean tryToSend(final Query query, final ResponseHandler responseHandler) {

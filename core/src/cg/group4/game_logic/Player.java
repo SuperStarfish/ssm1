@@ -25,7 +25,9 @@ public class Player {
     protected Observer cAddChangeObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            Client.getLocalInstance().updateCollection((Collection) arg, null);
+            Collection collection = (Collection) arg;
+            collection.setGroupId(cPlayerData.getId());
+            Client.getLocalInstance().addCollection(collection, null);
         }
     };
 
@@ -33,7 +35,11 @@ public class Player {
      * Constructs a player object.
      */
     public Player() {
-         Client.getRemoteInstance().getPlayerData(new ResponseHandler() {
+        update();
+    }
+
+    public void update() {
+        Client.getRemoteInstance().getPlayerData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
                 PlayerData playerData;
@@ -80,6 +86,10 @@ public class Player {
      */
     public String getId() {
         return cPlayerData.getId();
+    }
+
+    public String getGroupId() {
+        return cPlayerData.getGroupId();
     }
 
     /**
