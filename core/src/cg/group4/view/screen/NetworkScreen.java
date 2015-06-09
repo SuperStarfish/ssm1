@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -109,8 +108,8 @@ public final class NetworkScreen extends ScreenLogic {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Player player = StandUp.getInstance().getPlayer();
-                player.getCollection().resetCollection();
-                Client.getRemoteInstance().resetPlayerData(player.getId(), new ResponseHandler() {
+
+                Client.getRemoteInstance().removeCollection(player.getCollection(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
                         if (response.isSuccess()) {
@@ -121,6 +120,8 @@ public final class NetworkScreen extends ScreenLogic {
 
                     }
                 });
+
+                player.getCollection().resetCollection();
             }
         };
     }
