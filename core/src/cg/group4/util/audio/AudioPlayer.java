@@ -1,7 +1,6 @@
 package cg.group4.util.audio;
 
 import cg.group4.data_structures.subscribe.Subject;
-import cg.group4.game_logic.StandUp;
 import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -48,7 +47,8 @@ public class AudioPlayer {
         cAudioChangedSubject = new Subject();
         cPreferences = Gdx.app.getPreferences("AUDIO");
         cAudioEnabled = cPreferences.getBoolean("ENABLED", true);
-        cDefaultMusic = Assets.getInstance().getMusic("music/Summer Day.mp3");
+        cDefaultMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
+//        cDefaultMusic = Assets.getInstance().getMusic("music/Summer Day.mp3");
         cDefaultMusic.setLooping(true);
         setLastPlayed(cDefaultMusic);
         playAudio(cDefaultMusic);
