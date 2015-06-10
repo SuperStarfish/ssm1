@@ -72,7 +72,7 @@ public abstract class LocalStorageResolver {
             e.printStackTrace();
         }
 
-        if(cResetDBs) {
+        if (cResetDBs) {
             dropDatabase("User", "Collectible", "Group", "Event_Hosts");
         }
 
@@ -85,9 +85,9 @@ public abstract class LocalStorageResolver {
      * Drops all the supplied databases.  !!!!! ONLY USE FOR DEVELOPMENT !!!!!
      * @param dbs Databases to drop.
      */
-    protected void dropDatabase(String ... dbs) {
-        for(String database : dbs) {
-            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS '?'")){
+    protected void dropDatabase(final String ... dbs) {
+        for (String database : dbs) {
+            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS ?")) {
                 statement.setString(1, database);
                 statement.execute();
             } catch (SQLException e) {
