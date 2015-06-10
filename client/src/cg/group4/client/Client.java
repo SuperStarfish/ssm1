@@ -35,12 +35,12 @@ public final class Client {
      * The Client connection with the internal storage server.
      * FindBugs: cg.group4.client.Client.cLocalInstance should be package protected
      */
-    static Client cLocalInstance;
+    protected static Client cLocalInstance;
     /**
      * The Client connection with the remote server.
      * FindBugs: cg.group4.client.Client.cRemoteInstance should be package protected
      */
-    static Client cRemoteInstance;
+    protected static Client cRemoteInstance;
     /**
      * The default IP to connect to.
      */
@@ -172,6 +172,7 @@ public final class Client {
         cConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
         enableRequests();
+        LOGGER.info("Managed to connect: " + connection.isConnected());
     }
 
     /**

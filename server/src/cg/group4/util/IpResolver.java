@@ -15,15 +15,18 @@ public class IpResolver {
     /**
      * String to be used for the URL to check external IP.
      */
-    protected final static String VERIFY = "http://checkip.amazonaws.com";
+    private static String cVerify = "http://checkip.amazonaws.com";
     /**
      * URL used to check the external IP address.
      */
     protected URL cWhatIsMyIP;
 
+    /**
+     * Resolves the IP for the devices.
+     */
     public IpResolver() {
         try {
-            cWhatIsMyIP = new URL(VERIFY);
+            cWhatIsMyIP = new URL(cVerify);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -39,7 +42,8 @@ public class IpResolver {
     public final String getExternalIP() throws UnknownHostException {
         String result = "";
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(cWhatIsMyIP.openStream(), Charset.forName("UTF-8")));
+            BufferedReader in = new BufferedReader(new InputStreamReader(cWhatIsMyIP.openStream(),
+                    Charset.forName("UTF-8")));
             result = in.readLine();
             in.close();
         } catch (IOException e) {

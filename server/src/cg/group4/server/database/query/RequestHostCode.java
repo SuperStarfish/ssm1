@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Random;
 
 /**
@@ -15,7 +14,7 @@ public class RequestHostCode extends Query {
     /**
      * The highest number for host keys.
      */
-    protected final static int MAXCODE = 10000;
+    private static final int MAXCODE = 10000;
     /**
      * The ip of the host.
      */

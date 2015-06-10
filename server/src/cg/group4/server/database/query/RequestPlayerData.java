@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Object that will retrieve user data from the server with the given id.
@@ -33,7 +32,7 @@ public class RequestPlayerData extends Query {
 
         String preparedQuery = "SELECT * FROM User WHERE ID = ? LIMIT 1";
 
-        try(PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)){
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
             statement.setString(1, cPlayerData.getId());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.isBeforeFirst()) {
@@ -57,6 +56,7 @@ public class RequestPlayerData extends Query {
     /**
      * Inserts the user in the database.
      * @param databaseConnection Connection with the database.
+     * @throws SQLException If something went wrong with the insertion.
      */
     protected void insertUser(final Connection databaseConnection) throws SQLException {
         String preparedStatement = "INSERT INTO User (ID,Username) VALUES (?, ?)";

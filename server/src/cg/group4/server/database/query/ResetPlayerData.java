@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Resets the data of a player on the remote server.
@@ -27,7 +26,7 @@ public class ResetPlayerData extends Query {
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
         String preparedStatement = "DELETE FROM Collectible WHERE GroupId = ?";
-        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)){
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
             statement.setString(1, cId);
             statement.executeUpdate();
         }

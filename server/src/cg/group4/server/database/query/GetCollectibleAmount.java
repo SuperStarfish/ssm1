@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Gets the amount of a collectible on the server.
@@ -40,12 +39,13 @@ public class GetCollectibleAmount extends Query {
 
         int result = 0;
 
-        try(PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
-            statement.setString(1, cCollectible.getOwnerId());
-            statement.setString(2, cCollectible.getClass().getSimpleName());
-            statement.setFloat(3, cCollectible.getHue());
-            statement.setString(4, cCollectible.getDateAsString());
-            statement.setString(5, cGroupId);
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            setValues(statement,
+                    cCollectible.getOwnerId(),
+                    cCollectible.getClass().getSimpleName(),
+                    cCollectible.getHue(),
+                    cCollectible.getDateAsString(),
+                    cGroupId);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {

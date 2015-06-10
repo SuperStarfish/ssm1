@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Removes the given collectible from the server.
@@ -40,11 +39,12 @@ public class RemoveCollectible extends Query {
                 + "Date = ? AND GroupId = ?";
 
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
-            statement.setString(1, cCollectible.getOwnerId());
-            statement.setString(2, cCollectible.getClass().getSimpleName());
-            statement.setFloat(3, cCollectible.getHue());
-            statement.setString(4, cCollectible.getDateAsString());
-            statement.setString(5, cGroupId);
+            setValues(statement,
+                    cCollectible.getOwnerId(),
+                    cCollectible.getClass().getSimpleName(),
+                    cCollectible.getHue(),
+                    cCollectible.getDateAsString(),
+                    cGroupId);
             statement.executeUpdate();
         }
 

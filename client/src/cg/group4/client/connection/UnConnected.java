@@ -74,11 +74,10 @@ public class UnConnected implements Connection {
                 try {
                     LOGGER.info("Trying to connect to the remote server");
                     final Connection connection = new RemoteConnection(ip, port);
-                    final Client client = Client.getRemoteInstance();
-                    client.addPostRunnables(new Runnable() {
+                    cClient.addPostRunnables(new Runnable() {
                         @Override
                         public void run() {
-                            client.setConnection(connection);
+                            cClient.setConnection(connection);
                         }
                     });
                 } catch (IOException e) {

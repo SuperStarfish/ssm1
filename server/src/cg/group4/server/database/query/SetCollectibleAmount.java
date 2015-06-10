@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Updates an given collectibles amount in the server.
@@ -48,12 +47,13 @@ public class SetCollectibleAmount extends Query {
                     + "Date = ? AND GroupId = ?";
 
             try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
-                statement.setInt(1, cAmount);
-                statement.setString(2, cCollectible.getOwnerId());
-                statement.setString(3, cCollectible.getClass().getSimpleName());
-                statement.setFloat(4, cCollectible.getHue());
-                statement.setString(5, cCollectible.getDateAsString());
-                statement.setString(6, cGroupId);
+                setValues(statement,
+                        cAmount,
+                        cCollectible.getOwnerId(),
+                        cCollectible.getClass().getSimpleName(),
+                        cCollectible.getHue(),
+                        cCollectible.getDateAsString(),
+                        cGroupId);
                 statement.executeUpdate();
             }
         }

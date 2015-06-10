@@ -12,7 +12,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 /**
