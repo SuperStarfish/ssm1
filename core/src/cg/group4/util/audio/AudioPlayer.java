@@ -32,6 +32,11 @@ public class AudioPlayer {
     protected boolean cAudioEnabled;
 
     /**
+     * The default music being played.
+     */
+    protected Music cDefaultMusic;
+
+    /**
      * The music that is last played.
      */
     protected Music cLastPlayed;
@@ -43,6 +48,10 @@ public class AudioPlayer {
         cAudioChangedSubject = new Subject();
         cPreferences = Gdx.app.getPreferences("AUDIO");
         cAudioEnabled = cPreferences.getBoolean("ENABLED", true);
+        cDefaultMusic = Assets.getInstance().getMusic("music/Summer Day.mp3");
+        cDefaultMusic.setLooping(true);
+        setLastPlayed(cDefaultMusic);
+        playAudio(cDefaultMusic);
     }
 
     /**
@@ -86,7 +95,7 @@ public class AudioPlayer {
     }
 
     /**
-     * Gets ran after the audio enabled gets toggled. Updates every observer, stops or plays a new track
+     * Gets run after the audio enabled gets toggled. Updates every observer, stops or plays a new track
      * according to the cAudioEnabled variable. Finally updates the value stored in the preferences.
      */
     protected final void afterChange() {
@@ -95,7 +104,7 @@ public class AudioPlayer {
         if(!cAudioEnabled){
             cLastPlayed.stop();
         } else {
-//            AudioPlayer.getInstance().playAudio(StandUp.getInstance().getBackGroundMusic());
+            AudioPlayer.getInstance().playAudio(cDefaultMusic);
         }
 
         cPreferences.putBoolean("ENABLED",cAudioEnabled);
