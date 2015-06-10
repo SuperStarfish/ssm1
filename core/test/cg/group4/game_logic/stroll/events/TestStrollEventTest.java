@@ -1,12 +1,10 @@
 package cg.group4.game_logic.stroll.events;
 
 import cg.group4.GdxTestRunner;
-import cg.group4.util.sensors.Accelerometer;
 import com.badlogic.gdx.math.Vector3;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.Observable;
@@ -57,7 +55,7 @@ public class TestStrollEventTest {
      */
     @Test
     public void taskCompletedComplete() {
-        cSpyEvent.cTasksCompleted = 20;
+        cSpyEvent.cTasksCompleted = TestStrollEvent.MAX_TASKS;
         Mockito.doNothing().when(cSpyEvent).clearEvent();
 
         cSpyEvent.taskCompleted();
@@ -80,8 +78,8 @@ public class TestStrollEventTest {
      */
     @Test
     public void getRewardTest() {
-        cSpyEvent.cTasksCompleted = 10;
-        assertEquals(10, cSpyEvent.getReward());
+        cSpyEvent.cTasksCompleted = TestStrollEvent.MAX_TASKS;
+        assertEquals(TestStrollEvent.MAX_TASKS, cSpyEvent.getReward());
     }
 
     /**
@@ -114,19 +112,11 @@ public class TestStrollEventTest {
     @Test
     public void doTaskTest() {
         Random random = new Random();
-        cTestEvent.cPrevOperationNr = random.nextInt(6);
+        cTestEvent.cPrevOperationNr = random.nextInt(cTestEvent.cDirections.length);
         cTestEvent.cOperationNr = cTestEvent.cPrevOperationNr;
 
         cTestEvent.doTask();
 
         assertNotEquals(cTestEvent.cPrevOperationNr, cTestEvent.cOperationNr);
-    }
-
-    /**
-     * Tests if it succesfully clears the event.
-     */
-    @Test
-    public void clearEventTest() {
-        cSpyEvent.clearEvent();
     }
 }

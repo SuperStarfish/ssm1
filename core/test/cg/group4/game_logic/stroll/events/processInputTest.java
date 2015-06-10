@@ -15,13 +15,34 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class processInputTest {
 
-    
+
     float x;
     float y;
     float z;
     float max;
     int calls;
     int oper;
+
+    /**
+     * Constants used for each task case.
+     */
+    protected static final int MOVE_LEFT = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_UP = 3,
+            MOVE_AWAY = 4, MOVE_TOWARDS = 5, NOT_EXISTING_TASK = 6;
+
+    /**
+     * Value used for the vectors which makes the equality statements true.
+     */
+    protected static final float DELTA = 2.5f;
+
+    /**
+     * Value used for the vectors which make the equality statements false.
+     */
+    protected static final float NOT_OVER_DELTA = 2.4f;
+
+    /**
+     * Value used for the vectors which doesn't change the result at all.
+     */
+    protected static final float BASE = 2.0f;
 
     /**
      * Constructor, creates a new test.
@@ -48,20 +69,20 @@ public class processInputTest {
     @Parameterized.Parameters
     public static Collection primeNumbers() {
         return Arrays.asList(new Object[][]{
-                {2.4f,2.4f,2.4f,2.4f,0,0},
-                {2.0f,2.5f,2.0f,2.5f,0,1},
-                {2.0f,-2.5f,2.0f,2.5f,1,1},
-                {-2.5f,2.0f,2.0f,2.5f,2,1},
-                {2.5f,2.0f,2.0f,2.5f,3,1},
-                {2.0f,2.0f,-2.5f,2.5f,4,1},
-                {2.0f,2.0f,2.5f,2.5f,5,1},
-                {2.0f,2.4f,2.0f,2.5f,0,0},
-                {2.0f,-2.4f,2.0f,2.5f,1,0},
-                {-2.4f,2.0f,2.0f,2.5f,2,0},
-                {2.4f,2.0f,2.0f,2.5f,3,0},
-                {2.0f,2.0f,-2.4f,2.5f,4,0},
-                {2.0f,2.0f,2.4f,2.5f,5,0},
-                {2.5f,2.5f,2.5f,2.5f,6,0},
+                {NOT_OVER_DELTA,NOT_OVER_DELTA,NOT_OVER_DELTA,NOT_OVER_DELTA,MOVE_LEFT,0},
+                {BASE,DELTA,BASE,DELTA,MOVE_LEFT,1},
+                {BASE,-DELTA,BASE,DELTA,MOVE_RIGHT,1},
+                {-DELTA,BASE,BASE,DELTA,MOVE_DOWN,1},
+                {DELTA,BASE,BASE,DELTA,MOVE_UP,1},
+                {BASE,BASE,-DELTA,DELTA,MOVE_AWAY,1},
+                {BASE,BASE,DELTA,DELTA,MOVE_TOWARDS,1},
+                {BASE,NOT_OVER_DELTA,BASE,DELTA,MOVE_LEFT,0},
+                {BASE,-NOT_OVER_DELTA,BASE,DELTA,MOVE_RIGHT,0},
+                {-NOT_OVER_DELTA,BASE,BASE,DELTA,MOVE_DOWN,0},
+                {NOT_OVER_DELTA,BASE,BASE,DELTA,MOVE_UP,0},
+                {BASE,BASE,-NOT_OVER_DELTA,DELTA,MOVE_AWAY,0},
+                {BASE,BASE,NOT_OVER_DELTA,DELTA,MOVE_TOWARDS,0},
+                {DELTA,DELTA,DELTA,DELTA,NOT_EXISTING_TASK,0},
         });
     }
 
