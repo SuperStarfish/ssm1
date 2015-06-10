@@ -46,6 +46,9 @@ public class TestStrollEventTest {
         cTestVector2 = new Vector3().set(3f,3f,3f);
     }
 
+    /**
+     * Task
+     */
     @Test
     public void taskCompletedNotComplete() {
         cSpyEvent.cTasksCompleted = 1;
@@ -65,6 +68,9 @@ public class TestStrollEventTest {
         Mockito.verify(cSpyEvent).clearEvent();
     }
 
+    /**
+     * You do a task when started.
+     */
     @Test
     public void startTest() {
         cSpyEvent.start();
@@ -72,12 +78,18 @@ public class TestStrollEventTest {
         Mockito.verify(cSpyEvent).doTask();
     }
 
+    /**
+     * Should return the rewards of the event.
+     */
     @Test
     public void getRewardTest() {
         cSpyEvent.cTasksCompleted = 10;
         assertEquals(10, cSpyEvent.getReward());
     }
 
+    /**
+     * You should not process input when you have done that at least a second ago.
+     */
     @Test
     public void updateNotAcceptingInputTest() {
         cSpyEvent.cDelayNewInput = true;
@@ -87,6 +99,9 @@ public class TestStrollEventTest {
         Mockito.verify(cSpyEvent,Mockito.times(0)).processInput(Mockito.any(Vector3.class));
     }
 
+    /**
+     * You should process input when you haven't done that for over 1 second.
+     */
     @Test
     public void updateAcceptingInputTest() {
         cSpyEvent.cDelayNewInput = false;
@@ -96,6 +111,9 @@ public class TestStrollEventTest {
         Mockito.verify(cSpyEvent).processInput(Mockito.any(Vector3.class));
     }
 
+    /**
+     * The next operation shouldn't be the same as the previous.
+     */
     @Test
     public void doTaskTest() {
         Random random = new Random();
@@ -105,5 +123,10 @@ public class TestStrollEventTest {
         cTestEvent.doTask();
 
         assertNotEquals(cTestEvent.cPrevOperationNr, cTestEvent.cOperationNr);
+    }
+
+    @Test
+    public void clearEventTest() {
+        cSpyEvent.clearEvent();
     }
 }
