@@ -1,9 +1,5 @@
 package cg.group4.aquarium;
 
-import cg.group4.Launcher;
-import cg.group4.client.AquariumIDResolver;
-import cg.group4.util.notification.AquariumNotificationController;
-import cg.group4.util.sensor.AquariumAccelerationStatus;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -13,83 +9,25 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
  */
 public class AquariumLauncher {
 
-    /**
-     * Uses the Aspect enum to determine what height and width to use in the aquarium.
-     */
-    public static final Aspect ASPECT = Aspect.RATIO16_9;
 
     /**
      * Starts the application.
+     * Uses a borderless fullscreen window.
      *
      * @param arg Arguments of the application.
      */
     public static void main(final String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = ASPECT.getWidth();
-        config.height = ASPECT.getHeight();
+        //config.width = 1920/2; // LwjglApplicationConfiguration.getDesktopDisplayMode().width;
+        //config.height = 1080/2; // LwjglApplicationConfiguration.getDesktopDisplayMode().height;
+        config.fullscreen = false;
 
-        new LwjglApplication(new Launcher(
-                new AquariumAccelerationStatus(),
-                new AquariumNotificationController(),
-                new AquariumIDResolver()),
-                config);
+        // set the border to undecorated (no minus/resize/close and thinner borders) to better emulate fullscreen,
+        // without actually setting fullscreen mode on.
+        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+
+        new LwjglApplication(new DisplayLauncher(), config);
 
     }
 
-    /**
-     * These enums can be used to see how the game looks on different aspect ratios.
-     */
-    public enum Aspect {
-        /**
-         * 16:9 ratio.
-         */
-        RATIO16_9(1920, 1080),
-
-        /**
-         * 16:10 ratio.
-         */
-        RATIO16_10(1152, 720);
-
-
-        /**
-         * Fields containing the width and height.
-         */
-        protected int cWidth, cHeight;
-
-        /**
-         * @param width  Width in pixels
-         * @param height Height in pixels
-         */
-        Aspect(final int width, final int height) {
-            cWidth = width;
-            cHeight = height;
-        }
-
-        /**
-         * Returns the width of the ratio.
-         *
-         * @return Width in pixels.
-         */
-        public int getWidth() {
-            return cWidth;
-        }
-
-        /**
-         * Returns the width of the ratio.
-         *
-         * @return Width in pixels.
-         */
-        public int getHeight() {
-            return cHeight;
-        }
-
-        /**
-         * Returns the ratio as float.
-         *
-         * @return Float equal to width / height of the ratio.
-         */
-        public float getRatio() {
-            return cWidth / (float) cHeight;
-        }
-    }
 }

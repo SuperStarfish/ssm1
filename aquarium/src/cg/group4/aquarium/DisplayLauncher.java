@@ -1,5 +1,6 @@
 package cg.group4.aquarium;
 
+import cg.group4.view.AquariumScreen;
 import com.badlogic.gdx.Game;
 
 /**
@@ -10,6 +11,6 @@ import com.badlogic.gdx.Game;
 public class DisplayLauncher extends Game {
     @Override
     public void create() {
-
+        setScreen(new AquariumScreen());
     }
 }
