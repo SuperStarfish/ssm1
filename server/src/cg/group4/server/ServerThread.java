@@ -1,20 +1,23 @@
 package cg.group4.server;
 
-import cg.group4.server.database.DatabaseConnection;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.query.Query;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 /**
  * The ServerThread interacts with the Client.
  */
-public final class ServerThread implements Callable<Void> {
+public final class ServerThread implements Runnable {
     /**
      * Default java logging functionality.
      */
@@ -41,29 +44,31 @@ public final class ServerThread implements Callable<Void> {
     protected boolean cKeepAlive = true;
 
     /**
-     * The connection to the database. This can be a either in a connected state or no connection.
+     * Connection with the database. Provided by the LocalStorageResolver.
      */
-    protected DatabaseConnection cDatabaseConnection;
+    protected Connection cDatabaseConnection;
 
     /**
-     * Is the server remote or local.
+     * The LocalStorageResolver containing if the server is remote or local and the connection to the database.
      */
-    protected boolean cIsRemote;
+    protected LocalStorageResolver cLocalStorageResolver;
 
     /**
      * Creates a new ServerThread for communication with the server and the client.
      *
      * @param connection The connection with the Client.
+     * @param localStorageResolver The LocalStorage resolver containing database connection and if it is remote
+     *                             or local.
      */
-    public ServerThread(final Socket connection, final boolean isRemote) {
+    public ServerThread(final Socket connection, final LocalStorageResolver localStorageResolver) {
         cConnection = connection;
-        cIsRemote = isRemote;
-        cDatabaseConnection = new DatabaseConnection();
+        cLocalStorageResolver = localStorageResolver;
+        cDatabaseConnection = cLocalStorageResolver.getConnection();
         LOGGER.info("Established a connection with: " + cConnection.getInetAddress().getHostName());
     }
 
     @Override
-    public Void call() throws Exception {
+    public void run() {
         try {
             createStreams();
             interactWithClient();
@@ -76,7 +81,6 @@ public final class ServerThread implements Callable<Void> {
                 ioe.printStackTrace();
             }
         }
-        return null;
     }
 
     /**
@@ -148,7 +152,6 @@ public final class ServerThread implements Callable<Void> {
      * @return The response to be sent back to the client.
      */
     protected Response queryDatabase(final Query query) {
-        cDatabaseConnection.connect(cIsRemote);
         Serializable serializable = null;
         boolean success = false;
 
@@ -158,7 +161,6 @@ public final class ServerThread implements Callable<Void> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        cDatabaseConnection.disconnect();
 
         return new Response(success, serializable);
     }

@@ -1,8 +1,8 @@
 package cg.group4.server.database.query;
 
-import cg.group4.server.database.DatabaseConnection;
-
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -19,5 +19,17 @@ public abstract class Query implements Serializable {
      * @return The result of this query.
      * @throws SQLException Something went wrong with the query.
      */
-    public abstract Serializable query(DatabaseConnection databaseConnection) throws SQLException;
+    public abstract Serializable query(Connection databaseConnection) throws SQLException;
+
+    /**
+     * Inserts all the objects in the prepared statement, in order.
+     * @param preparedStatement The statement on which to add the objects.
+     * @param values The Objects to add to the statement.
+     * @throws SQLException If something went wrong while preparing the statement.
+     */
+    protected void setValues(final PreparedStatement preparedStatement, final Object ... values) throws SQLException {
+        for (int i = 1; i <= values.length; i++) {
+            preparedStatement.setObject(i, values[i]);
+        }
+    }
 }

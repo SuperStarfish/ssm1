@@ -1,7 +1,7 @@
 package cg.group4.util.audio;
 
 import cg.group4.data_structures.subscribe.Subject;
-import cg.group4.game_logic.StandUp;
+import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -31,6 +31,11 @@ public class AudioPlayer {
     protected boolean cAudioEnabled;
 
     /**
+     * The default music being played.
+     */
+    protected Music cDefaultMusic;
+
+    /**
      * The music that is last played.
      */
     protected Music cLastPlayed;
@@ -42,6 +47,11 @@ public class AudioPlayer {
         cAudioChangedSubject = new Subject();
         cPreferences = Gdx.app.getPreferences("AUDIO");
         cAudioEnabled = cPreferences.getBoolean("ENABLED", true);
+        cDefaultMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
+//        cDefaultMusic = Assets.getInstance().getMusic("music/Summer Day.mp3");
+        cDefaultMusic.setLooping(true);
+        setLastPlayed(cDefaultMusic);
+        playAudio(cDefaultMusic);
     }
 
     /**
@@ -85,7 +95,7 @@ public class AudioPlayer {
     }
 
     /**
-     * Gets ran after the audio enabled gets toggled. Updates every observer, stops or plays a new track
+     * Gets run after the audio enabled gets toggled. Updates every observer, stops or plays a new track
      * according to the cAudioEnabled variable. Finally updates the value stored in the preferences.
      */
     protected final void afterChange() {
@@ -94,7 +104,7 @@ public class AudioPlayer {
         if(!cAudioEnabled){
             cLastPlayed.stop();
         } else {
-            AudioPlayer.getInstance().playAudio(StandUp.getInstance().getBackGroundMusic());
+            AudioPlayer.getInstance().playAudio(cDefaultMusic);
         }
 
         cPreferences.putBoolean("ENABLED",cAudioEnabled);

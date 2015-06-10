@@ -2,9 +2,9 @@ package cg.group4.server.database.query;
 
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -27,7 +27,7 @@ public class RemoveCollection extends Query {
     }
 
     @Override
-    public Serializable query(final DatabaseConnection databaseConnection) throws SQLException {
+    public Serializable query(final Connection databaseConnection) throws SQLException {
         for (Collectible collectible : cCollection) {
             int amount = new GetCollectibleAmount(collectible, cCollection.getId()).query(databaseConnection);
             new SetCollectibleAmount(collectible, cCollection.getId(), amount - collectible.getAmount())
