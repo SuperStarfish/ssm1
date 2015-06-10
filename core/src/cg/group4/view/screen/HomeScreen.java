@@ -25,9 +25,9 @@ public final class HomeScreen extends ScreenLogic {
     protected Table cTable;
 
     /**
-     * Buttons for the stroll, settings.
+     * Buttons for the stroll, settings, collection.
      */
-    protected TextButton cStrollButton, cSettingsButton;
+    protected TextButton cStrollButton, cSettingsButton, cCollectionButton, cGroupButton;
 
     /**
      * Labels for cTitle, timer.
@@ -76,6 +76,8 @@ public final class HomeScreen extends ScreenLogic {
         initStrollIntervalTimer();
 
         initStrollButton();
+        initCollectionButton();
+        initGroupButton();
         initSettingsButton();
 
         return cTable;
@@ -87,6 +89,7 @@ public final class HomeScreen extends ScreenLogic {
         cTimer.setStyle(cGameSkin.getDefaultLabelStyle());
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cCollectionButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     /**
@@ -104,7 +107,7 @@ public final class HomeScreen extends ScreenLogic {
     public void initHomeScreenTitle() {
         cTitle = new Label("Super StarFish Mania", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         cTable.row().expandY();
-        cTable.add(cTitle);
+        cTable.add(cTitle).colspan(2);
     }
 
     /**
@@ -121,7 +124,7 @@ public final class HomeScreen extends ScreenLogic {
         } else {
             textToDisplay = Integer.toString(Timer.Global.INTERVAL.getDuration());
         }
-        cTimer = new Label(textToDisplay, cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTimer = cGameSkin.generateDefaultLabel(textToDisplay);
 
         cIntervalTickObserver = new Observer() {
             @Override
@@ -157,7 +160,7 @@ public final class HomeScreen extends ScreenLogic {
         cIntervalTimer.getTickSubject().addObserver(cIntervalTickObserver);
 
         cTable.row().expandY();
-        cTable.add(cTimer);
+        cTable.add(cTimer).colspan(2);
     }
 
     /**
@@ -171,11 +174,12 @@ public final class HomeScreen extends ScreenLogic {
                 if (cIsClickable) {
                     StandUp.getInstance().startStroll();
                     ScreenStore.getInstance().setScreen("Stroll");
+//                    Client.getInstance().updateTimers(System.currentTimeMillis());
                 }
             }
         });
         cTable.row().expandY();
-        cTable.add(cStrollButton);
+        cTable.add(cStrollButton).colspan(2);
     }
 
     /**
@@ -190,7 +194,36 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.row().expandY();
-        cTable.add(cSettingsButton);
+        cTable.add(cSettingsButton).colspan(2);
+    }
+
+    /**
+     * Initializes the collection button on the home screen.
+     */
+    public void initCollectionButton() {
+        cCollectionButton = cGameSkin.generateDefaultMenuButton("Collection");
+        cCollectionButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Collection");
+            }
+        });
+        cTable.row().expandY();
+        cTable.add(cCollectionButton);
+    }
+
+    /**
+     * Init groups.
+     */
+    public void initGroupButton() {
+        cGroupButton = cGameSkin.generateDefaultMenuButton("Groups");
+        cGroupButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenStore.getInstance().setScreen("Groups");
+            }
+        });
+        cTable.add(cGroupButton);
     }
 
     @Override

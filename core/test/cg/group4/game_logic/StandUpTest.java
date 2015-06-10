@@ -1,6 +1,11 @@
 package cg.group4.game_logic;
 
 import cg.group4.GdxTestRunner;
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.FishA;
+import cg.group4.data_structures.subscribe.Subject;
+import cg.group4.util.sensor.AccelerationState;
+import cg.group4.util.sensor.AccelerationStatus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
@@ -13,7 +18,6 @@ import java.util.Observer;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -34,7 +38,23 @@ public class StandUpTest {
      */
     @Before
     public void setUp() {
+        cStandUp = new StandUp();
+        StandUp.cInstance = cStandUp;
+        StandUp.getInstance().setAccelerationStatus(new AccelerationStatus() {
+
+            protected Subject tempsubject = new Subject();
+            @Override
+            public AccelerationState getAccelerationState() {
+                return null;
+            }
+
+            @Override
+            public Subject getSubject() {
+                return tempsubject;
+            }
+        });
         cStandUp = StandUp.getInstance();
+        StandUp.cInstance = cStandUp;
     }
 
     /**
@@ -42,19 +62,9 @@ public class StandUpTest {
      */
     @After
     public void tearDown() {
-        StandUp.reset();
         Preferences preferences = Gdx.app.getPreferences("TIMER");
         preferences.clear();
         preferences.flush();
-    }
-
-    /**
-     * Tests the reset of the singleton..
-     */
-    @Test
-    public void testReset() {
-        StandUp.reset();
-        assertNotEquals(cStandUp, StandUp.getInstance());
     }
 
     /**
@@ -62,7 +72,7 @@ public class StandUpTest {
      */
     @Test
     public void testGetInstance() {
-        assertEquals(cStandUp, StandUp.getInstance());
+        assertEquals(cStandUp, cStandUp.getInstance());
     }
 
     /**
@@ -84,10 +94,13 @@ public class StandUpTest {
     @Test
     public void testEndStroll() {
         cStandUp.startStroll();
-
+        final int collectionSize = cStandUp.getPlayer().getCollection().size();
         assertNotNull(cStandUp.getStroll());
-        cStandUp.endStroll(0);
+        Collection collection = new Collection("");
+        collection.add(new FishA(0, ""));
+        cStandUp.endStroll(collection);
         assertNull(cStandUp.getStroll());
+        assertEquals(cStandUp.getPlayer().getCollection().size(), collectionSize + 1);
     }
 
     /**

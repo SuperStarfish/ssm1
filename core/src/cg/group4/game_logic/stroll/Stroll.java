@@ -1,14 +1,18 @@
 package cg.group4.game_logic.stroll;
 
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.RewardGenerator;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
-import cg.group4.util.subscribe.Subject;
+import cg.group4.util.sensor.AccelerationState;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -22,19 +26,18 @@ public class Stroll implements Observer {
      * The base threshold used for generating events.
      */
     protected static final double BASE_THRESHOLD = 0.002;
+
     /**
      * Tag used for debugging.
      */
     private static final String TAG = Stroll.class.getSimpleName();
 
-    /**
-     * Amount of rewards collected.
-     */
-    protected int cRewards;
-    /**
-     * The chance of an event happening this second.
-     */
+
     protected double cEventThreshold;
+    /**
+     * Score of each completed event.
+     */
+    protected ArrayList<Integer> cRewards;
     /**
      * Whether or not you're busy with an event.
      */
@@ -69,6 +72,15 @@ public class Stroll implements Observer {
             }
         }
     };
+
+    protected Observer cUpdateMovementObserver = new Observer() {
+
+        @Override
+        public void update(final Observable o, final Object arg) {
+            cEventThreshold = BASE_THRESHOLD * getAmplifier((AccelerationState) arg);
+        }
+    };
+
     /**
      * Subject for new event.
      */
@@ -84,20 +96,24 @@ public class Stroll implements Observer {
      */
     public Stroll() {
         Gdx.app.log(TAG, "Started new stroll");
-        cRewards = 0;
+        cRewards = new ArrayList<Integer>();
         cEventGoing = false;
+        cEventThreshold = getAmplifier(StandUp.getInstance().
+                getAccelerationStatus().getAccelerationState());
         cFinished = false;
-        cEventThreshold = BASE_THRESHOLD;
         cEndStrollSubject = new Subject();
         cNewEventSubject = new Subject();
         cEndEventSubject = new Subject();
 
         StandUp.getInstance().getUpdateSubject().addObserver(this);
+        StandUp.getInstance().getAccelerationStatus().
+                getSubject().addObserver(cUpdateMovementObserver);
 
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
-        cStrollTimer.reset();
 
+        cStrollTimer.reset();
+        
     }
 
 
@@ -113,14 +129,14 @@ public class Stroll implements Observer {
      */
     protected void generatePossibleEvent() {
         Random rnd = new Random();
-        if (rnd.nextFloat() < cEventThreshold) {
+        if (rnd.nextDouble() < cEventThreshold) {
             cEventGoing = true;
             int chosenEvent = rnd.nextInt(2);
-            switch(chosenEvent) {
-                case(0):
+            switch (chosenEvent) {
+                case (0):
                     cEvent = new FishingStrollEvent();
                     break;
-                case(1):
+                case (1):
                     cEvent = new TestStrollEvent();
                     break;
                 default:
@@ -140,7 +156,7 @@ public class Stroll implements Observer {
 
         cEndEventSubject.update(rewards);
 
-        cRewards += rewards;
+        cRewards.add(rewards);
         cEvent = null;
         cEventGoing = false;
 
@@ -150,6 +166,20 @@ public class Stroll implements Observer {
         }
     }
 
+    /**
+     * Method that returns the amplifier for the event chance.
+     * @param state Movement state gotten from the AccelLib library.
+     * @return Integer used to amplify the chance of getting the event.
+     */
+    protected final int getAmplifier(final AccelerationState state) {
+        for (Amplifier a : Amplifier.values()) {
+            if (a.cState == state) {
+                return a.cAmplifier;
+            }
+        }
+        return 0;
+    }
+
 
     /**
      * Method that gets called when the stroll has ended/completed.
@@ -157,15 +187,20 @@ public class Stroll implements Observer {
     public void done() {
         Gdx.app.log(TAG, "Stroll has ended. Collected " + cRewards + " rewards.");
 
+        RewardGenerator gen = new RewardGenerator(StandUp.getInstance().getPlayer().getId());
+        Collection collection = new Collection("Reward");
+        for (Integer i : cRewards) {
+            collection.add(gen.generateCollectible(i));
+        }
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
 
-        cEndStrollSubject.update(cRewards);
+        cEndStrollSubject.update(collection);
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
 
-        StandUp.getInstance().endStroll(cRewards);
+        StandUp.getInstance().endStroll(collection);
     }
 
     /**
@@ -182,16 +217,61 @@ public class Stroll implements Observer {
      *
      * @return Subject to subscribe to.
      */
-    public final Subject getNewEventSubject() {
+    public final Subject getNewEventSubject(){
         return cNewEventSubject;
     }
 
     /**
      * Getter for the subject to subscribe to to get updated for the end of the event.
-     *
      * @return Subject to subscribe to.
      */
     public final Subject getEndEventSubject() {
         return cEndEventSubject;
+    }
+
+    /**
+     * Amplifier enum.
+     */
+    public enum Amplifier {
+    	
+    	/**
+    	 * When walking, you should get normal chance of an event.
+    	 */
+        WALK(AccelerationState.WALKING, 1),
+        
+        /**
+    	 * When running, you should get double chance of an event.
+    	 */
+        RUN(AccelerationState.RUNNING, 2),
+        
+        /**
+    	 * When not moving at all, you should get no event.
+    	 */
+        STOP(AccelerationState.RESTING, 0),
+        
+        /**
+    	 * When cheating movements, you should get no events as well.
+    	 */
+        CHEAT(AccelerationState.CHEATING, 0);
+
+        /**
+         * The state of movement.
+         */
+        private AccelerationState cState;
+
+        /**
+         * Amplifier for the movement.
+         */
+        private int cAmplifier;
+
+        /**
+         * Constructor for the Enum.
+         * @param state The state of movement.
+         * @param amplifier Amplifier for the movement.
+         */
+        Amplifier(final AccelerationState state, final int amplifier) {
+            this.cAmplifier = amplifier;
+            this.cState = state;
+        }
     }
 }

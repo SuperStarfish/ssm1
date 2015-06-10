@@ -1,11 +1,15 @@
 package cg.group4.game_logic;
 
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
-import cg.group4.util.sensors.SensorReader;
-import cg.group4.util.subscribe.Subject;
+import cg.group4.util.audio.AudioPlayer;
+import cg.group4.util.sensor.SensorReader;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 /**
  * Class which handles the game logic.
@@ -24,7 +28,17 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static StandUp INSTANCE = new StandUp();
+    protected static StandUp cInstance;
+
+    /**
+     * Background music to be played.
+     */
+    protected Music cBackgroundMusic;
+
+    /**
+     * Player of the game.
+     */
+    protected Player cPlayer;
 
     /**
      * Stroll logic.
@@ -47,28 +61,35 @@ public final class StandUp {
     protected SensorReader cSensorReader;
 
     /**
+     * Keeps track of the amount of movement during the game.
+     */
+    protected AccelerationStatus cAccelerationStatus;
+
+    /**
      * Instantiate StandUp and TimeKeeper.
      */
     protected StandUp() {
         cUpdateSubject = new Subject();
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
+        cPlayer = new Player();
+
+        cBackgroundMusic =  Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
+        cBackgroundMusic.setLooping(true);
+        AudioPlayer.getInstance().setLastPlayed(cBackgroundMusic);
+        AudioPlayer.getInstance().playAudio(cBackgroundMusic);
     }
 
     /**
      * Getter for StandUp instance.
      *
-     * @return INSTANCE
+     * @return cInstance
      */
     public static StandUp getInstance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Resets the singleton, testing perposes.
-     */
-    public static void reset() {
-        INSTANCE = new StandUp();
+        if(cInstance == null) {
+            cInstance = new StandUp();
+        }
+        return cInstance;
     }
 
     /**
@@ -85,12 +106,13 @@ public final class StandUp {
 
     /**
      * Ends the current stroll.
-     *
-     * @param cRewards rewards gained by the stroll.
+     * @param rewardsCollection rewards gained by the stroll.
      */
-    public void endStroll(final int cRewards) {
+    public void endStroll(final Collection rewardsCollection) {
         Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
+
+        cPlayer.getCollection().addAll(rewardsCollection);
     }
 
     /**
@@ -100,6 +122,15 @@ public final class StandUp {
      */
     public Stroll getStroll() {
         return cStroll;
+    }
+
+    /**
+     * Getter for Player.
+     *
+     * @return The player of the game.
+     */
+    public Player getPlayer() {
+        return cPlayer;
     }
 
     /**
@@ -134,5 +165,17 @@ public final class StandUp {
      */
     public SensorReader getSensorReader() {
         return cSensorReader;
+    }
+
+    public Music getBackGroundMusic() {
+        return cBackgroundMusic;
+    }
+
+    public void setAccelerationStatus(AccelerationStatus status) {
+        cAccelerationStatus = status;
+    }
+
+    public AccelerationStatus getAccelerationStatus() {
+        return cAccelerationStatus;
     }
 }

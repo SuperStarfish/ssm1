@@ -6,7 +6,7 @@ apply plugin: 'checkstyle'
 
 checkstyleMain {
     configFile file("${rootProject.rootDir}/config/checkstyle.xml")
-    
+
     reports {
         include '**/*.java'
         exclude '**/build/**', '**/gen/**'
@@ -17,7 +17,7 @@ checkstyleMain {
 
 checkstyleTest {
     configFile file("${rootProject.rootDir}/config/checkstyle.xml")
-    
+
     reports {
         include '**/*.java'
         exclude '**/build/**', '**/gen/**'
@@ -36,8 +36,8 @@ findbugsMain {
         html { enabled = true }
         // find bugs can have only one report enabled at a time
         xml.enabled = !html.enabled
-        
-        
+
+
         html.destination "${buildDir}/reports/findbugs/report.html"
         xml.destination "${buildDir}/reports/findbugs/report.xml"
     }

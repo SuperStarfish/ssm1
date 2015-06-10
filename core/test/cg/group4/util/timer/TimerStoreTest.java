@@ -14,6 +14,10 @@ import static org.junit.Assert.*;
 @RunWith(GdxTestRunner.class)
 public class TimerStoreTest {
     /**
+     * Seconds in a minute.
+     */
+    protected final int cSecondsInAMinute = 60;
+    /**
      * The timeStore that will be tested upon.
      */
     protected TimerStore cTimerStore;
@@ -28,7 +32,7 @@ public class TimerStoreTest {
     @Before
     public final void setUp() {
         cTimerStore = new TimerStore();
-        cTimer = new Timer("TEST", 60);
+        cTimer = new Timer("TEST", cSecondsInAMinute);
     }
 
     /**
@@ -56,7 +60,7 @@ public class TimerStoreTest {
     public final void testAddDuplicateTimer() {
         cTimerStore.addTimer(cTimer);
         int size = cTimerStore.cTimers.size();
-        cTimerStore.addTimer(new Timer(cTimer.getName(), 5));
+        cTimerStore.addTimer(new Timer(cTimer.getName(), cSecondsInAMinute));
         assertEquals(size, cTimerStore.cTimers.size());
     }
 
