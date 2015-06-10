@@ -1,6 +1,7 @@
 package cg.group4.client.connection;
 
 import cg.group4.client.Client;
+import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.Query;
 
@@ -95,5 +96,8 @@ public class UnConnected implements Connection {
     @Override
     public void send(final Query data, final ResponseHandler responseHandler) {
         cClient.enableRequests();
+        if (responseHandler != null) {
+            responseHandler.handleResponse(new Response(false, null));
+        }
     }
 }
