@@ -115,7 +115,7 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Gets called when one of the individual tasks gets completed.
      */
-    public final void taskCompleted() {
+    public void taskCompleted() {
         this.cTasksCompleted++;
         Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
         cCompletedTaskSound.play(1.0f);
@@ -151,7 +151,7 @@ public class TestStrollEvent extends StrollEvent {
      *
      * @param accelData Vector containing the acceleration in the x,y and z direction.
      */
-    public final void processInput(final Vector3 accelData) {
+    public void processInput(final Vector3 accelData) {
         final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
         final float delta = 2.5f;
 
@@ -162,7 +162,7 @@ public class TestStrollEvent extends StrollEvent {
                     success = accelData.y >= delta;
                     break;
                 case MOVE_RIGHT:
-                    success = accelData.y <= delta;
+                    success = accelData.y <= -delta;
                     break;
                 case MOVE_DOWN:
                     success = accelData.x <= -delta;

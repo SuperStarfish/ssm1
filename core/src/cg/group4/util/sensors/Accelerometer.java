@@ -73,7 +73,7 @@ public class Accelerometer {
      * @param accelData Input data from which to determine the highest acceleration component.
      * @return Highest acceleration of the input.
      */
-    public final float highestAccelerationComponent(final Vector3 accelData) {
+    public float highestAccelerationComponent(final Vector3 accelData) {
         float highestComponent = Math.abs(accelData.x);
 
         float tempAccelStorage = Math.abs(accelData.y);
