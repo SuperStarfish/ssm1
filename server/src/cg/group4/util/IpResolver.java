@@ -15,7 +15,7 @@ public class IpResolver {
     /**
      * String to be used for the URL to check external IP.
      */
-    private static String cVerify = "http://checkip.amazonaws.com";
+    protected static final String VERIFY = "http://checkip.amazonaws.com";
     /**
      * URL used to check the external IP address.
      */
@@ -26,7 +26,7 @@ public class IpResolver {
      */
     public IpResolver() {
         try {
-            cWhatIsMyIP = new URL(cVerify);
+            cWhatIsMyIP = new URL(VERIFY);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

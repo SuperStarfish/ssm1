@@ -63,22 +63,9 @@ public class UpdatePlayerData extends Query {
      * @param newValue The new value.
      * @throws SQLException Throws if something went wrong while updating.
      */
-    protected void updateData(final String column, final String newValue) throws SQLException {
+    protected void updateData(final String column, final Object newValue) throws SQLException {
         try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ?")) {
-            statement.setString(1, newValue);
-            statement.executeUpdate();
-        }
-    }
-
-    /**
-     * Updates the players data.
-     * @param column The column to update.
-     * @param newValue The new value.
-     * @throws SQLException Throws if something went wrong while updating.
-     */
-    protected void updateData(final String column, final long newValue) throws SQLException {
-        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ?")) {
-            statement.setLong(1, newValue);
+            statement.setObject(1, newValue);
             statement.executeUpdate();
         }
     }

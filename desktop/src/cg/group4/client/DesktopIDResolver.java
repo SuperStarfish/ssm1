@@ -1,4 +1,4 @@
-package cg.group4.server;
+package cg.group4.client;
 
 import cg.group4.client.UserIDResolver;
 
