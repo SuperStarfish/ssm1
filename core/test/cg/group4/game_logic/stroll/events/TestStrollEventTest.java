@@ -26,13 +26,10 @@ public class TestStrollEventTest {
      */
     protected TestStrollEvent cTestEvent;
 
+    /**
+     * Spy to check for methodcalls.
+     */
     protected TestStrollEvent cSpyEvent;
-
-    protected Accelerometer cAccelMock;
-
-    protected Vector3 cTestVector;
-
-    protected Vector3 cTestVector2;
 
     /**
      * SetUp to run before each test.
@@ -41,13 +38,10 @@ public class TestStrollEventTest {
     public void setUp() {
         cTestEvent = new TestStrollEvent();
         cSpyEvent = Mockito.spy(cTestEvent);
-        cAccelMock = Mockito.mock(Accelerometer.class);
-        cTestVector = new Vector3().set(1f,1f,1f);
-        cTestVector2 = new Vector3().set(3f,3f,3f);
     }
 
     /**
-     * Task
+     * The event is not completed when we have not completed enough tasks.
      */
     @Test
     public void taskCompletedNotComplete() {
@@ -58,6 +52,9 @@ public class TestStrollEventTest {
         Mockito.verify(cSpyEvent).doTask();
     }
 
+    /**
+     * The event is completed when we have completed enough tasks.
+     */
     @Test
     public void taskCompletedComplete() {
         cSpyEvent.cTasksCompleted = 20;
@@ -125,6 +122,9 @@ public class TestStrollEventTest {
         assertNotEquals(cTestEvent.cPrevOperationNr, cTestEvent.cOperationNr);
     }
 
+    /**
+     * Tests if it succesfully clears the event.
+     */
     @Test
     public void clearEventTest() {
         cSpyEvent.clearEvent();

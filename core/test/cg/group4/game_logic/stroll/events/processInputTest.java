@@ -10,11 +10,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Created by Nick on 10-6-2015.
+ * Tests the processInput method of TestStrollEvent.
  */
 @RunWith(Parameterized.class)
 public class processInputTest {
 
+    
     float x;
     float y;
     float z;
@@ -22,6 +23,15 @@ public class processInputTest {
     int calls;
     int oper;
 
+    /**
+     * Constructor, creates a new test.
+     * @param vecx Acceleration in the x axis
+     * @param vecy Acceleration in the y axis
+     * @param vecz Acceleration in the z axis
+     * @param highaccel The highest acceleration value.
+     * @param operationnr Operation number, defines where we have to move our phone to.
+     * @param methodcalls The amount of times taskCompleted() should be called.
+     */
     public processInputTest(float vecx, float vecy, float vecz, float highaccel, int operationnr, int methodcalls){
         x = vecx;
         y = vecy;
@@ -31,6 +41,10 @@ public class processInputTest {
         oper = operationnr;
     }
 
+    /**
+     * Returns our paramters in an array.
+     * @return Parameterized array containing our parameters used for testing.
+     */
     @Parameterized.Parameters
     public static Collection primeNumbers() {
         return Arrays.asList(new Object[][]{
@@ -51,6 +65,9 @@ public class processInputTest {
         });
     }
 
+    /**
+     * Tests if the task is completed depending on the input.
+     */
     @Test
     public void processInputParamTest() {
         Vector3 vec = new Vector3().set(x,y,z);
