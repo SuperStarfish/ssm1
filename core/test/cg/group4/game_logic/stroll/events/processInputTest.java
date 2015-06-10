@@ -1,5 +1,5 @@
 package cg.group4.game_logic.stroll.events;
-import cg.group4.util.sensors.Accelerometer;
+import cg.group4.util.sensor.Accelerometer;
 import com.badlogic.gdx.math.Vector3;
 import org.junit.Test;
 import org.junit.runner.RunWith;
