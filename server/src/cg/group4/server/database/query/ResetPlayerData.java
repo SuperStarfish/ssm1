@@ -2,6 +2,7 @@ package cg.group4.server.database.query;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -25,8 +26,10 @@ public class ResetPlayerData extends Query {
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
-        try (Statement statement = databaseConnection.createStatement()){
-            statement.executeUpdate("DELETE FROM Collectible WHERE GroupId = '" + cId + "'");
+        String preparedStatement = "DELETE FROM Collectible WHERE GroupId = ?";
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)){
+            statement.setString(1, cId);
+            statement.executeUpdate();
         }
 
         return null;

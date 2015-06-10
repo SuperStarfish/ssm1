@@ -4,6 +4,7 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -43,13 +44,17 @@ public class SetCollectibleAmount extends Query {
         if (cAmount == 0) {
             new RemoveCollectible(cCollectible, cGroupId).query(databaseConnection);
         } else {
-            String query = "UPDATE Collectible SET Amount = " + cAmount
-                    + " WHERE OwnerId = '" + cCollectible.getOwnerId() + "' AND " + "Type = '"
-                    + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()
-                    + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'";
+            String preparedQuery = "UPDATE Collectible SET Amount = ? WHERE OwnerId = ? AND Type = ? AND Hue = ? AND "
+                    + "Date = ? AND GroupId = ?";
 
-            try (Statement statement = databaseConnection.createStatement()) {
-                statement.executeUpdate(query);
+            try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+                statement.setInt(1, cAmount);
+                statement.setString(2, cCollectible.getOwnerId());
+                statement.setString(3, cCollectible.getClass().getSimpleName());
+                statement.setFloat(4, cCollectible.getHue());
+                statement.setString(5, cCollectible.getDateAsString());
+                statement.setString(6, cGroupId);
+                statement.executeUpdate();
             }
         }
         return null;
