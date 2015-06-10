@@ -24,8 +24,8 @@ public interface Connection {
 
     /**
      * Sends data to the server and receives a serializable.
-     *
      * @param data Data to be sent to the server.
+     * @param responseHandler The task to execute once a reply is received completed.
      */
     void send(Query data, final ResponseHandler responseHandler);
 }

@@ -49,10 +49,10 @@ public final class NetworkScreen extends ScreenLogic {
         cTable.setFillParent(true);
 
         if (client.isConnected()) {
-            addLabel("Connected");
+            addLabel("Connected to remote!");
 
         } else {
-            addLabel("Not Connected!");
+            addLabel("Not connected to remote!");
         }
 
         addChangeUserName();
@@ -72,14 +72,14 @@ public final class NetworkScreen extends ScreenLogic {
      * If the connection state changes, this will handle the proper behaviour.
      */
     protected void addConnectionChangeListener() {
-        Client.getRemoteInstance().getChangeSubject().addObserver(new Observer() {
+        Client.getRemoteInstance().getRemoteChangeSubject().addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
                 boolean isConnected = (Boolean) arg;
                 if(isConnected) {
-                    cMessage.setText("Connected");
+                    cMessage.setText("Connected to remote!");
                 } else {
-                    cMessage.setText("Not Connected!");
+                    cMessage.setText("Not connected to remote!");
                 }
                 cChangeUsername.setDisabled(!isConnected);
             }

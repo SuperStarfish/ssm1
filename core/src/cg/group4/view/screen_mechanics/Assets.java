@@ -1,6 +1,7 @@
 package cg.group4.view.screen_mechanics;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
@@ -39,6 +40,7 @@ public class Assets extends AssetManager {
         loadTexture("images/FishD.png");
         loadTexture("images/CheckBoxOff.png");
         loadTexture("images/CheckBoxOn.png");
+        loadMusic("music/Summer Day.mp3");
     }
 
     /**
@@ -57,7 +59,27 @@ public class Assets extends AssetManager {
     public Texture getTexture(final String file) {
         if (isLoaded(file)) {
             return get(file, Texture.class);
+        } else {
+            return null;
         }
-        return null;
+    }
+
+    /**
+     * Method that loads the Music found at the given location.
+     * @param file The location where the Music can be found.
+     */
+    public void loadMusic(final String file) { load(file, Music.class); }
+
+    /**
+     * Method that returns the Music that has been loaded.
+     * @param file The location of the Music.
+     * @return A Music instance belonging to that texture.
+     */
+    public Music getMusic(final String file) {
+        if (isLoaded(file)) {
+            return get(file, Music.class);
+        } else {
+            return null;
+        }
     }
 }
