@@ -8,6 +8,7 @@ import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
@@ -74,7 +75,7 @@ public final class StandUp {
         cSensorReader = new SensorReader();
         cPlayer = new Player();
 
-        cBackgroundMusic =  Gdx.audio.newMusic(Gdx.files.internal("music/Summer Day.mp3"));
+        cBackgroundMusic =  Assets.getInstance().getMusic("music/Summer Day.mp3");
         cBackgroundMusic.setLooping(true);
         AudioPlayer.getInstance().setLastPlayed(cBackgroundMusic);
         AudioPlayer.getInstance().playAudio(cBackgroundMusic);

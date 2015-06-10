@@ -92,6 +92,8 @@ public class Launcher extends Game {
 
         Client.getLocalInstance().setUserIDResolver(cIDResolver);
         Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        Client.getRemoteInstance().setUserIDResolver(cIDResolver);
+        Client.getRemoteInstance().connectToServer();
 
         setScreen(new LoadingScreen(this));
     }
@@ -100,8 +102,6 @@ public class Launcher extends Game {
      * Once the Assets are done loading, this method is called to properly initialize the game.
      */
     public void assetsDone() {
-        Client.getRemoteInstance().setUserIDResolver(cIDResolver);
-
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();

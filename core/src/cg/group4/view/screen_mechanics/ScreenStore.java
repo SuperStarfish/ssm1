@@ -63,7 +63,7 @@ public final class ScreenStore {
 //        addScreen("Collection", new CollectiblesScreen());
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
-        addScreen("Groups", new GroupScreen());
+//        addScreen("Groups", new GroupScreen());
     }
 
     /**
