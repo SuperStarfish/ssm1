@@ -64,7 +64,7 @@ public class UpdatePlayerData extends Query {
      * @throws SQLException Throws if something went wrong while updating.
      */
     protected void updateData(final String column, final String newValue) throws SQLException {
-        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET ? = ?")) {
+        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ?")) {
             statement.setString(1, column);
             statement.setString(2, newValue);
             statement.executeUpdate();
@@ -78,7 +78,7 @@ public class UpdatePlayerData extends Query {
      * @throws SQLException Throws if something went wrong while updating.
      */
     protected void updateData(final String column, final long newValue) throws SQLException {
-        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET ? = ?")) {
+        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ?")) {
             statement.setString(1, column);
             statement.setLong(2, newValue);
             statement.executeUpdate();
