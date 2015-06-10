@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(GdxTestRunner.class)
 public class TestStrollEventTest {
 
-    
+
     /**
      * Instance of the stroll to be tested.
      */
@@ -44,7 +44,7 @@ public class TestStrollEventTest {
      */
     @Test
     public void taskCompletedNotComplete() {
-        cSpyEvent.cTasksCompleted = 1;
+        cSpyEvent.cTasksCompleted = 0;
 
         cSpyEvent.taskCompleted();
 
