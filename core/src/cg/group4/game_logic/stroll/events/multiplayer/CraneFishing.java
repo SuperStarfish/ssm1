@@ -49,17 +49,17 @@ public class CraneFishing extends StrollEvent {
 		float currentX = cCrane.getX();
 		float currentY = cCrane.getY(); 
 		
-		float newX = currentX + speed*(update.x / totalForce);
-		float newY = currentY + speed*(update.y / totalForce);
+		float newX = currentX - speed*(update.x / totalForce);
+		float newY = currentY - speed*(update.y / totalForce);
 		
 		System.out.println("OLD X: " + currentX + " OLD Y: " + currentY);
 		System.out.println("NEW X: " + (currentX + speed*(update.x / totalForce)) + " NEW Y: " + (currentY + speed*(update.y / totalForce)));
 		
 		if(Float.isNaN(newX)) {
-			newX = 0;
+			newX = currentX;
 		}
 		if(Float.isNaN(newY)) {
-			newY = 0;
+			newY = currentY;
 		}
 		cCrane.setPosition(newX, newY);
 		
