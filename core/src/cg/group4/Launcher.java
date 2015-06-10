@@ -4,6 +4,8 @@ import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.game_logic.StandUp;
+import cg.group4.game_logic.stroll.events.multiplayer.CraneFishing;
+import cg.group4.game_logic.stroll.events.multiplayer.CraneFishingScreen;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
 import cg.group4.server.database.Response;
@@ -14,7 +16,9 @@ import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.LoadingScreen;
+import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -92,9 +96,10 @@ public class Launcher extends Game {
 
         Client.getLocalInstance().setUserIDResolver(cIDResolver);
         Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        
         Client.getRemoteInstance().setUserIDResolver(cIDResolver);
         Client.getRemoteInstance().connectToServer();
-
+        
         setScreen(new LoadingScreen(this));
     }
 
@@ -110,7 +115,9 @@ public class Launcher extends Game {
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
         cScreenStore.init();
-        cScreenStore.setScreen("Home");
+        //cScreenStore.setScreen("Home");
+        cScreenStore.setScreen("multi");
+        new CraneFishing((CraneFishingScreen)cScreenStore.getScreen("multi"));
 
         notificationInitialization();
     }

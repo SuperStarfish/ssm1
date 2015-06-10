@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -30,18 +31,22 @@ public class RequestPlayerData extends Query {
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
 
-        String preparedQuery = "SELECT * FROM User WHERE ID = ? LIMIT 1";
+        String preparedQuery = "SELECT * FROM 'User' WHERE ID = ? LIMIT 1";
 
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
             statement.setString(1, cPlayerData.getId());
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.isBeforeFirst()) {
-                    resultSet.next();
+                if (resultSet.next()) {
+                    ResultSetMetaData rsmd = resultSet.getMetaData();
+                    int columns = rsmd.getColumnCount();
+                    for (int x = 1; x <= columns; x++) {
+                    	System.out.println(rsmd.getColumnName(x));
+                    }
                     cPlayerData.setUsername(resultSet.getString("Username"));
-                    cPlayerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
-                    cPlayerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
+                    cPlayerData.setIntervalTimeStamp(resultSet.getLong("Interval"));
+                    cPlayerData.setStrollTimeStamp(resultSet.getLong("Stroll"));
                     cPlayerData.setGroupId(resultSet.getString("GroupId"));
-
+                    
                 } else {
                     insertUser(databaseConnection);
                 }
@@ -62,7 +67,7 @@ public class RequestPlayerData extends Query {
         String preparedStatement = "INSERT INTO User (ID,Username) VALUES (?, ?)";
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
             statement.setString(1, cPlayerData.getId());
-            statement.setString(2, cPlayerData.getUsername());
+            statement.setString(2, "New User");
             statement.executeUpdate();
         }
     }

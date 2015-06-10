@@ -1,5 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.game_logic.stroll.events.multiplayer.CraneFishingScreen;
 import cg.group4.view.screen.*;
 
 import java.util.HashMap;
@@ -61,9 +62,10 @@ public final class ScreenStore {
     public void init() {
         addScreen("Home", new HomeScreen());
 //        addScreen("Collection", new CollectiblesScreen());
-        addScreen("Settings", new SettingsScreen());
-        addScreen("Network", new NetworkScreen());
+        //addScreen("Settings", new SettingsScreen());
+        //addScreen("Network", new NetworkScreen());
 //        addScreen("Groups", new GroupScreen());
+        addScreen("multi", new CraneFishingScreen());
     }
 
     /**
