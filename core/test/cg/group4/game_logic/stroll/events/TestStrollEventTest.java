@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(GdxTestRunner.class)
 public class TestStrollEventTest {
 
+    
     /**
      * Instance of the stroll to be tested.
      */
