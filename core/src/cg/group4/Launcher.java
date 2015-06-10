@@ -80,8 +80,7 @@ public class Launcher extends Game {
 
     /**
      * Initializes the application.
-     * Does so by creating the TimeKeeper (if non-existent) and setting the
-     * screen to the main menu.
+     * Does so by creating the TimeKeeper (if non-existent) and setting the screen to the main menu.
      */
     @Override
     public final void create() {

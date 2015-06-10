@@ -60,6 +60,7 @@ public final class LocalConnection implements Connection {
             cOutputStream.writeObject(data);
             cOutputStream.flush();
             Response response = (Response) cInputStream.readObject();
+            Client.getLocalInstance().enableRequests();
             if (responseHandler != null) {
                 responseHandler.handleResponse(response);
             }
@@ -68,7 +69,6 @@ public final class LocalConnection implements Connection {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        Client.getLocalInstance().enableRequests();
     }
 
     @Override

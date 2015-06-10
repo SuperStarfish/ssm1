@@ -35,8 +35,7 @@ public class RequestPlayerData extends Query {
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
             statement.setString(1, cPlayerData.getId());
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.isBeforeFirst()) {
-                    resultSet.next();
+                if (resultSet.next()) {
                     cPlayerData.setUsername(resultSet.getString("Username"));
                     cPlayerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
                     cPlayerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
