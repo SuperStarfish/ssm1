@@ -16,17 +16,16 @@ import cg.group4.util.sensor.Gyroscope;
 
 public class CraneFishing extends StrollEvent {
 	
-	protected Gyroscope cGyro;
+	protected Accelerometer cAccelmeter;
 	protected Image cBoat, cCrane;
 	protected CraneFishingScreen cScreen;
 	
 	private Circle craneCollisionCircle;
 	
-	protected float cPreviousAzimuth;
-	
 	public CraneFishing(CraneFishingScreen screen) {
 		super();
-		cGyro = new Gyroscope(StandUp.getInstance().getSensorReader());
+		cAccelmeter = new Accelerometer(StandUp.getInstance().getSensorReader());
+		cAccelmeter.filterGravity(false);
 		//craneCollisionCircle = new Circle();
 		//craneCollisionCircle.setRadius(5.5f);
 		//craneCollisionCircle.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
@@ -37,17 +36,33 @@ public class CraneFishing extends StrollEvent {
 		cCrane.setOrigin(cCrane.getImageWidth() / 2, cCrane.getImageHeight() / 2);
 		cScreen = screen;
 		cScreen.getWidgetGroup().addActor(cCrane);
-		cPreviousAzimuth = cGyro.update().z;
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		float azimuthRotation = cGyro.update().z;
-		if(azimuthRotation - cPreviousAzimuth > 1.5) {
-			System.out.println("AZI: " + (azimuthRotation - cPreviousAzimuth));
-			cCrane.rotateBy(azimuthRotation - cPreviousAzimuth);
+		Vector3 update = cAccelmeter.update();
+		float speed = 2;
+		
+		float totalForce = Math.abs(update.x) + Math.abs(update.y);
+		System.out.println("TOTAL FORCE: " + totalForce);
+		
+		float currentX = cCrane.getX();
+		float currentY = cCrane.getY(); 
+		
+		float newX = currentX + speed*(update.x / totalForce);
+		float newY = currentY + speed*(update.y / totalForce);
+		
+		System.out.println("OLD X: " + currentX + " OLD Y: " + currentY);
+		System.out.println("NEW X: " + (currentX + speed*(update.x / totalForce)) + " NEW Y: " + (currentY + speed*(update.y / totalForce)));
+		
+		if(Float.isNaN(newX)) {
+			newX = 0;
 		}
-		cPreviousAzimuth = azimuthRotation;
+		if(Float.isNaN(newY)) {
+			newY = 0;
+		}
+		cCrane.setPosition(newX, newY);
+		
 	}
 
 	@Override
