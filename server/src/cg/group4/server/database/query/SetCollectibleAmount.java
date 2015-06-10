@@ -32,24 +32,25 @@ public class SetCollectibleAmount extends Query {
      * @param groupId     The group it belongs to.
      * @param amount      The amount already set in teh server.
      **/
-    protected SetCollectibleAmount(Collectible collectible, String groupId, Integer amount) {
+    protected SetCollectibleAmount(final Collectible collectible, final String groupId, final Integer amount) {
         cCollectible = collectible;
         cGroupId = groupId;
         cAmount = amount;
     }
 
     @Override
-    public Serializable query(Connection databaseConnection) throws SQLException {
+    public Serializable query(final Connection databaseConnection) throws SQLException {
         if (cAmount == 0) {
             new RemoveCollectible(cCollectible, cGroupId).query(databaseConnection);
         } else {
-            Statement statement = databaseConnection.createStatement();
-            statement.executeUpdate("UPDATE Collectible SET Amount = " + cAmount
+            String query = "UPDATE Collectible SET Amount = " + cAmount
                     + " WHERE OwnerId = '" + cCollectible.getOwnerId() + "' AND " + "Type = '"
                     + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()
-                    + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'");
+                    + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'";
 
-            statement.close();
+            try (Statement statement = databaseConnection.createStatement()) {
+                statement.executeUpdate(query);
+            }
         }
         return null;
     }

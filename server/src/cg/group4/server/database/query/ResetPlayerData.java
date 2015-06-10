@@ -11,22 +11,23 @@ import java.sql.Statement;
 public class ResetPlayerData extends Query {
 
     /**
-     *
+     * The player ID to reset.
      */
     protected String cId;
 
+    /**
+     * Creates a new ResetPlayerData Query using the ID of that player.
+     * @param id The ID of the Player.
+     */
     public ResetPlayerData(final String id) {
         cId = id;
     }
 
     @Override
-    public Serializable query(Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
-        statement.executeUpdate("DELETE FROM Collectible WHERE GroupId = '" + cId + "'");
-
-        statement.executeUpdate("DELETE FROM User WHERE Id = '" + cId + "'");
-
-        statement.close();
+    public Serializable query(final Connection databaseConnection) throws SQLException {
+        try (Statement statement = databaseConnection.createStatement()){
+            statement.executeUpdate("DELETE FROM Collectible WHERE GroupId = '" + cId + "'");
+        }
 
         return null;
     }

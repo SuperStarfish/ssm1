@@ -60,7 +60,7 @@ public final class LocalConnection implements Connection {
             cOutputStream.writeObject(data);
             cOutputStream.flush();
             Response response = (Response) cInputStream.readObject();
-            if(responseHandler != null) {
+            if (responseHandler != null) {
                 responseHandler.handleResponse(response);
             }
         } catch (IOException e) {

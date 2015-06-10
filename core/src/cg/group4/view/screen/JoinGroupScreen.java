@@ -65,14 +65,8 @@ public class JoinGroupScreen extends ScreenLogic {
         return true;
     }
 
-    private boolean tryJoin() {
-        System.out.println("Event Listener works");
-
-        if (!naiveVerify()) {
-            return false;
-        }
-
-        boolean tryJoin = Client.getRemoteInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
+    private void tryJoin() {
+        Client.getRemoteInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
 
             @Override
             public void handleResponse(Response response) {
@@ -85,7 +79,6 @@ public class JoinGroupScreen extends ScreenLogic {
                 StandUp.getInstance().getPlayer().update();
             }
         });
-        return tryJoin;
     }
 
     @Override

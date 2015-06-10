@@ -50,12 +50,12 @@ public class UpdatePlayerData extends Query {
             new AddCollection(cPlayerData.getCollection()).query(databaseConnection);
         }
 
-        Statement statement = databaseConnection.createStatement();
+        String query = "UPDATE USER SET " + update.substring(2) + " WHERE ID = '"
+                + cPlayerData.getId() + "'";
 
-        statement.executeUpdate("UPDATE USER SET " + update.substring(2) + " WHERE ID = '"
-                + cPlayerData.getId() + "'");
-
-        statement.close();
+        try (Statement statement = databaseConnection.createStatement()){
+            statement.executeUpdate(query);
+        }
 
         return null;
     }

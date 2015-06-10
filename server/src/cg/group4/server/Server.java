@@ -14,7 +14,7 @@ import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.Callable;
+import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -59,11 +59,16 @@ public class Server {
      */
     protected StaticsCaller cStaticsCaller;
 
+    /**
+     * This defines the database connection and if the server is remote or local.
+     */
+    protected LocalStorageResolver cLocalStorageResolver;
 
-    LocalStorageResolver cLocalStorageResolver;
-
-
-    public Server(LocalStorageResolver storageResolver) {
+    /**
+     * Creates a server using the settings provided by the LocalStorageResolver.
+     * @param storageResolver Container of settings and database connection.
+     */
+    public Server(final LocalStorageResolver storageResolver) {
         cLocalStorageResolver = storageResolver;
         cStaticsCaller = new StaticsCaller();
     }
@@ -76,7 +81,7 @@ public class Server {
     public final void start() {
         createLocalIP();
 
-        if(!cLocalStorageResolver.isLocal()) {
+        if (!cLocalStorageResolver.isLocal()) {
             createServerSocket(cDefaultPort);
             createExternalIP();
             validateExternalConnection();
@@ -143,7 +148,7 @@ public class Server {
      */
     protected final int askForPort() {
         int port = -1;
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
         do {
             LOGGER.info("Please enter a port number:");
             try {
@@ -193,7 +198,7 @@ public class Server {
         try {
             cPool = Executors.newFixedThreadPool(cMaxThreads);
             Socket client = cServerSocket.accept();
-            Callable<Void> task = new ServerThread(client, cLocalStorageResolver);
+            Runnable task = new ServerThread(client, cLocalStorageResolver);
             cPool.submit(task);
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,6 +225,10 @@ public class Server {
         server.start();
     }
 
+    /**
+     * Returns the socket on which the server lives. This is used to create a local connection with the server.
+     * @return The port the socket lives on.
+     */
     public int getSocketPort() {
         return cServerSocket.getLocalPort();
     }

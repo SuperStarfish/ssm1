@@ -3,7 +3,11 @@ package cg.group4.server;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.query.Query;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
@@ -14,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * The ServerThread interacts with the Client.
  */
-public final class ServerThread implements Callable<Void> {
+public final class ServerThread implements Runnable {
     /**
      * Default java logging functionality.
      */
@@ -40,14 +44,22 @@ public final class ServerThread implements Callable<Void> {
      */
     protected boolean cKeepAlive = true;
 
+    /**
+     * Connection with the database. Provided by the LocalStorageResolver.
+     */
     protected Connection cDatabaseConnection;
 
+    /**
+     * The LocalStorageResolver containing if the server is remote or local and the connection to the database.
+     */
     protected LocalStorageResolver cLocalStorageResolver;
 
     /**
      * Creates a new ServerThread for communication with the server and the client.
      *
      * @param connection The connection with the Client.
+     * @param localStorageResolver The LocalStorage resolver containing database connection and if it is remote
+     *                             or local.
      */
     public ServerThread(final Socket connection, final LocalStorageResolver localStorageResolver) {
         cConnection = connection;
@@ -57,7 +69,7 @@ public final class ServerThread implements Callable<Void> {
     }
 
     @Override
-    public Void call() throws Exception {
+    public void run() {
         try {
             createStreams();
             interactWithClient();
@@ -70,7 +82,6 @@ public final class ServerThread implements Callable<Void> {
                 ioe.printStackTrace();
             }
         }
-        return null;
     }
 
     /**

@@ -2,6 +2,7 @@ package cg.group4.server.database.query;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,7 +12,10 @@ import java.util.Random;
  * Inserts a new event host into the game.
  */
 public class RequestHostCode extends Query {
-    protected final int cMaxCode = 10000;
+    /**
+     * The highest number for host keys.
+     */
+    protected final static int MAXCODE = 10000;
     /**
      * The ip of the host.
      */
@@ -27,23 +31,33 @@ public class RequestHostCode extends Query {
     }
 
     @Override
-    public Serializable query(Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
+    public Serializable query(final Connection databaseConnection) throws SQLException {
         boolean exists;
         Random rnd = new Random();
         Integer code;
 
-        do {
-            code = rnd.nextInt(cMaxCode);
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Event_Hosts WHERE Code = " + code);
-            exists = resultSet.isBeforeFirst();
-            resultSet.close();
+        String preparedQuery = "SELECT * FROM Event_Hosts WHERE Code = ?";
+
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            do {
+                code = rnd.nextInt(MAXCODE);
+                statement.setInt(1, code);
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    exists = resultSet.isBeforeFirst();
+                }
+            }
+            while (exists);
         }
-        while (exists);
 
-        statement.executeUpdate("INSERT INTO Event_Hosts (Code, Ip) VALUES (" + code + ", '" + cIp + "')");
+        preparedQuery = "INSERT INTO Event_Hosts (Code, Ip) VALUES (?, ?)";
 
-        statement.close();
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            statement.setInt(1, code);
+            statement.setString(2, cIp);
+            statement.executeUpdate();
+        }
+
         return code;
     }
 }

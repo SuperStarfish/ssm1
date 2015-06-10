@@ -61,7 +61,7 @@ public final class RemoteConnection implements Connection {
                         @Override
                         public void run() {
                             Client.getRemoteInstance().enableRequests();
-                            if(responseHandler != null) {
+                            if (responseHandler != null) {
                                 responseHandler.handleResponse(response);
                             }
                         }

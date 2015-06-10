@@ -21,20 +21,23 @@ public class RequestHostIp extends Query {
      *
      * @param code The given code.
      */
-    public RequestHostIp(Integer code) {
+    public RequestHostIp(final Integer code) {
         cCode = code;
     }
 
     @Override
-    public Serializable query(Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Ip FROM Event_Hosts WHERE Code = " + cCode);
+    public Serializable query(final Connection databaseConnection) throws SQLException {
+        String query = "SELECT Ip FROM Event_Hosts WHERE Code = " + cCode;
+
         String ip = null;
-        if (resultSet.next()) {
-            ip = resultSet.getString("Ip");
+
+        try (Statement statement = databaseConnection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            if (resultSet.next()) {
+                ip = resultSet.getString("Ip");
+            }
         }
-        resultSet.close();
-        statement.close();
+
         return ip;
     }
 }

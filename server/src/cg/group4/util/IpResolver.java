@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 
 /**
  * Class to determine your ip.
@@ -14,7 +15,7 @@ public class IpResolver {
     /**
      * String to be used for the URL to check external IP.
      */
-    protected final String cVerifyURl = "http://checkip.amazonaws.com";
+    protected final static String VERIFY = "http://checkip.amazonaws.com";
     /**
      * URL used to check the external IP address.
      */
@@ -22,7 +23,7 @@ public class IpResolver {
 
     public IpResolver() {
         try {
-            cWhatIsMyIP = new URL(cVerifyURl);
+            cWhatIsMyIP = new URL(VERIFY);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -38,7 +39,7 @@ public class IpResolver {
     public final String getExternalIP() throws UnknownHostException {
         String result = "";
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(cWhatIsMyIP.openStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(cWhatIsMyIP.openStream(), Charset.forName("UTF-8")));
             result = in.readLine();
             in.close();
         } catch (IOException e) {

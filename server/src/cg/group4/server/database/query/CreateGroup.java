@@ -5,54 +5,77 @@ import cg.group4.data_structures.groups.Group;
 import cg.group4.data_structures.groups.GroupData;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *
+ * Query used to create a new group.
  */
 public class CreateGroup extends Query {
-
+    /**
+     * The name for the group.
+     */
     protected final String cGroupName;
+    /**
+     * The ownerID for the group.
+     */
     protected final String cOwnerId;
 
-    public CreateGroup(String groupName, String ownerId) {
+    /**
+     * Creates a new CreateGroup Query using the supplied group name and ownerID.
+     * @param groupName The group name.
+     * @param ownerId The owner ID.
+     */
+    public CreateGroup(final String groupName, final String ownerId) {
         cGroupName = groupName;
         cOwnerId = ownerId;
     }
 
-
     @Override
-    public Group query(Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
-        statement.executeUpdate("INSERT INTO 'Group' (OwnerId,Name) VALUES ('"
-                + cOwnerId + "', '" + cGroupName + "')");
+    public Group query(final Connection databaseConnection) throws SQLException {
+        String preparedStatement = "INSERT INTO 'Group' (OwnerId, Name) VALUES (?, ?)";
 
-        ResultSet resultSet = statement.executeQuery(
-                "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId As OwnerId, U.Username AS Username, U.Id "
-                        + "FROM 'Group' G INNER JOIN User U ON G.OwnerId = U.Id "
-                        + "WHERE G.Name = '" + cGroupName + "' AND G.OwnerId = '" + cOwnerId + "' LIMIT 1");
+        Group group;
 
-        int groupId = resultSet.getInt("GroupId");
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
+            statement.setString(1, cOwnerId);
+            statement.setString(2, cGroupName);
+            statement.executeUpdate();
+        }
 
-        GroupData groupData = new GroupData(
-                groupId,
-                resultSet.getString("Name"),
-                resultSet.getString("OwnerId"),
-                resultSet.getString("Username")
-        );
+        String preparedQuery = "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId As OwnerId, U.Username AS Username, "
+                + "U.Id FROM 'Group' G INNER JOIN User U ON G.OwnerId = U.Id WHERE G.Name = ? AND "
+                + "G.OwnerId = ? LIMIT 1";
 
-        resultSet.close();
-        statement.close();
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            statement.setString(1, cGroupName);
+            statement.setString(2, cOwnerId);
 
-        Group group = new Group(Integer.toString(groupData.getGroupId()), groupData);
-        PlayerData playerData = new PlayerData(cOwnerId);
-        playerData.setUsername(null);
+            GroupData groupData;
 
-        playerData.setGroupId(Integer.toString(groupId));
+            int groupId;
 
-        new UpdatePlayerData(playerData).query(databaseConnection);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                groupId = resultSet.getInt("GroupId");
+
+                groupData = new GroupData(
+                        groupId,
+                        resultSet.getString("Name"),
+                        resultSet.getString("OwnerId"),
+                        resultSet.getString("Username")
+                );
+            }
+
+            group = new Group(Integer.toString(groupData.getGroupId()), groupData);
+            PlayerData playerData = new PlayerData(cOwnerId);
+            playerData.setUsername(null);
+
+            playerData.setGroupId(Integer.toString(groupId));
+
+            new UpdatePlayerData(playerData).query(databaseConnection);
+        }
 
         return group;
     }

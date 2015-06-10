@@ -4,6 +4,7 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -27,20 +28,26 @@ public class AddCollectible extends Query {
      * @param collectible The collectible to update.
      * @param groupId     Id of the group the collectible belongs to.
      */
-    protected AddCollectible(Collectible collectible, String groupId) {
+    protected AddCollectible(final Collectible collectible, final String groupId) {
         cCollectible = collectible;
         cGroupId = groupId;
     }
 
     @Override
-    public Serializable query(Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
-        statement.executeUpdate("INSERT INTO Collectible (OwnerId, Type, Hue, Amount, Date, GroupId) VALUES ('"
-                + cCollectible.getOwnerId() + "', '" + cCollectible.getClass().getSimpleName() + "', "
-                + cCollectible.getHue() + ", " + cCollectible.getAmount() + ", '" + cCollectible.getDateAsString()
-                + "', '" + cGroupId + "')");
+    public Serializable query(final Connection databaseConnection) throws SQLException {
+        String preparedQuery = "INSERT INTO Collectible (OwnerId, Type, Hue, Amount, Date, GroupId) VALUES " +
+                "(?, ?, ?, ?, ?, ?)";
 
-        statement.close();
+        try(PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            statement.setString(1, cCollectible.getOwnerId());
+            statement.setString(2, cCollectible.getClass().getSimpleName());
+            statement.setFloat(3, cCollectible.getHue());
+            statement.setInt(4, cCollectible.getAmount());
+            statement.setString(5, cCollectible.getDateAsString());
+            statement.setString(6, cGroupId);
+            statement.executeUpdate();
+        }
+
         return null;
     }
 }

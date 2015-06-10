@@ -4,6 +4,7 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -27,20 +28,26 @@ public class RemoveCollectible extends Query {
      * @param collectible The collectible to remove.
      * @param groupId     The group of the collectible.
      */
-    protected RemoveCollectible(Collectible collectible, String groupId) {
+    protected RemoveCollectible(final Collectible collectible, final String groupId) {
         cCollectible = collectible;
         cGroupId = groupId;
     }
 
     @Override
-    public Serializable query(Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
-        statement.executeUpdate("DELETE FROM Collectible"
-                + " WHERE OwnerId = '" + cCollectible.getOwnerId() + "' AND " + "Type = '"
-                + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()
-                + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'");
+    public Serializable query(final Connection databaseConnection) throws SQLException {
 
-        statement.close();
+        String preparedQuery = "DELETE FROM Collectible WHERE OwnerId = ? AND Type = ? AND Hue = ? AND "
+                + "Date = ? AND GroupId = ?";
+
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            statement.setString(1, cCollectible.getOwnerId());
+            statement.setString(2, cCollectible.getClass().getSimpleName());
+            statement.setFloat(3, cCollectible.getHue());
+            statement.setString(4, cCollectible.getDateAsString());
+            statement.setString(5, cGroupId);
+            statement.executeUpdate();
+        }
+
         return null;
     }
 }

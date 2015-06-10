@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Definition on how to properly connect to the database for a remote server. Remote servers are run as standalone
+ * Java applications and do not require LibGDX to function.
+ */
 public class RemoteStorageResolver extends LocalStorageResolver {
 
     @Override

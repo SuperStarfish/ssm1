@@ -4,6 +4,7 @@ import cg.group4.data_structures.PlayerData;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,9 +15,9 @@ import java.sql.Statement;
 public class RequestPlayerData extends Query {
 
     /**
-     * The id of the user data to be retrieved.
+     * The PlayerData constructed from given id. Will be filled and returned.
      */
-    protected String cId;
+    protected PlayerData cPlayerData;
 
     /**
      * Constructor for the request.
@@ -24,34 +25,45 @@ public class RequestPlayerData extends Query {
      * @param id The id of the player to be retrieved.
      */
     public RequestPlayerData(final String id) {
-        cId = id;
+        cPlayerData = new PlayerData(id);
     }
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM User WHERE ID = '" + cId + "' LIMIT 1");
 
-        PlayerData playerData = new PlayerData(cId);
+        String preparedQuery = "SELECT * FROM User WHERE ID = ? LIMIT 1";
 
-        if (resultSet.isBeforeFirst()) {
-            resultSet.next();
+        try(PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)){
+            statement.setString(1, cPlayerData.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.isBeforeFirst()) {
+                    resultSet.next();
+                    cPlayerData.setUsername(resultSet.getString("Username"));
+                    cPlayerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
+                    cPlayerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
+                    cPlayerData.setGroupId(resultSet.getString("GroupId"));
 
-            playerData.setUsername(resultSet.getString("Username"));
-            playerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
-            playerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
-            playerData.setGroupId(resultSet.getString("GroupId"));
-
-        } else {
-            statement.executeUpdate("INSERT INTO User (ID,Username) VALUES ('"
-                    + playerData.getId() + "', '" + playerData.getUsername() + "')");
+                } else {
+                    insertUser(databaseConnection);
+                }
+            }
         }
 
-        resultSet.close();
-        statement.close();
+        cPlayerData.setCollection(new RequestCollection(cPlayerData.getId()).query(databaseConnection));
 
-        playerData.setCollection(new RequestCollection(cId).query(databaseConnection));
+        return cPlayerData;
+    }
 
-        return playerData;
+    /**
+     * Inserts the user in the database.
+     * @param databaseConnection Connection with the database.
+     */
+    protected void insertUser(final Connection databaseConnection) throws SQLException {
+        String preparedStatement = "INSERT INTO User (ID,Username) VALUES (?, ?)";
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
+            statement.setString(1, cPlayerData.getId());
+            statement.setString(2, cPlayerData.getUsername());
+            statement.executeUpdate();
+        }
     }
 }
