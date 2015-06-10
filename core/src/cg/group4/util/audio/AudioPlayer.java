@@ -2,6 +2,7 @@ package cg.group4.util.audio;
 
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
+import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -94,7 +95,7 @@ public class AudioPlayer {
         if(!cAudioEnabled){
             cLastPlayed.stop();
         } else {
-            AudioPlayer.getInstance().playAudio(StandUp.getInstance().getBackGroundMusic());
+//            AudioPlayer.getInstance().playAudio(StandUp.getInstance().getBackGroundMusic());
         }
 
         cPreferences.putBoolean("ENABLED",cAudioEnabled);
