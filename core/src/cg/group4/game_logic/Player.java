@@ -39,16 +39,16 @@ public class Player {
     }
 
     public void update() {
-        Client localStorage = Client.getLocalInstance();
+        final Client localStorage = Client.getLocalInstance();
         if (localStorage.isConnected()) {
-            Client.getLocalInstance().getPlayerData(new ResponseHandler() {
+            localStorage.getPlayerData(new ResponseHandler() {
                 @Override
                 public void handleResponse(Response response) {
                     PlayerData playerData;
                     if (response.isSuccess()) {
                         playerData = (PlayerData) response.getData();
                     } else {
-                        playerData = new PlayerData(Client.getLocalInstance().getUserID());
+                        playerData = new PlayerData(localStorage.getUserID());
                     }
                     if (playerData.getUsername() == null) {
                         playerData.setUsername("Unknown");
@@ -57,7 +57,7 @@ public class Player {
                 }
             });
         } else {
-            cPlayerData = new PlayerData(Client.getLocalInstance().getUserID());
+            cPlayerData = new PlayerData(localStorage.getUserID());
         }
 
         cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
