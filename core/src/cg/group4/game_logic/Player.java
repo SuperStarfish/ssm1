@@ -27,7 +27,7 @@ public class Player {
         public void update(final Observable o, final Object arg) {
             Collection collection = (Collection) arg;
             collection.setGroupId(cPlayerData.getId());
-            Client.getRemoteInstance().addCollection(collection, null);
+            Client.getLocalInstance().addCollection(collection, null);
         }
     };
 
@@ -39,21 +39,27 @@ public class Player {
     }
 
     public void update() {
-        Client.getRemoteInstance().getPlayerData(new ResponseHandler() {
-            @Override
-            public void handleResponse(Response response) {
-                PlayerData playerData;
-                if (response.isSuccess()) {
-                    playerData = (PlayerData) response.getData();
-                } else {
-                    playerData = new PlayerData(Client.getRemoteInstance().getUserID());
+        final Client localStorage = Client.getLocalInstance();
+        if (localStorage.isConnected()) {
+            localStorage.getPlayerData(new ResponseHandler() {
+                @Override
+                public void handleResponse(Response response) {
+                    PlayerData playerData;
+                    if (response.isSuccess()) {
+                        playerData = (PlayerData) response.getData();
+                    } else {
+                        playerData = new PlayerData(localStorage.getUserID());
+                    }
+                    if (playerData.getUsername() == null) {
+                        playerData.setUsername("Unknown");
+                    }
+                    cPlayerData = playerData;
                 }
-                if (playerData.getUsername() == null) {
-                    playerData.setUsername("Unknown");
-                }
-                cPlayerData = playerData;
-            }
-        });
+            });
+        } else {
+            cPlayerData = new PlayerData(localStorage.getUserID());
+        }
+
         cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 

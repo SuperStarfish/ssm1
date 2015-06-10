@@ -153,6 +153,7 @@ public final class CollectiblesScreen extends ScreenLogic {
             }
         });
     }
+
     /**
      * Creates the dropdown box to select the collection to display.
      */

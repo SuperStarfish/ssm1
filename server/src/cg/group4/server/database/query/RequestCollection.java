@@ -2,11 +2,11 @@ package cg.group4.server.database.query;
 
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.CollectibleFactory;
-import cg.group4.server.database.DatabaseConnection;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -29,30 +29,30 @@ public class RequestCollection extends Query {
     }
 
     @Override
-    public Collection query(final DatabaseConnection databaseConnection) throws SQLException {
+    public Collection query(final Connection databaseConnection) throws SQLException {
         Collection collection = new Collection(cGroupId);
-        Statement statement = databaseConnection.query();
 
-        CollectibleFactory factory = new CollectibleFactory();
+        String preparedQuery = "SELECT * FROM Collectible WHERE GroupId = ?";
 
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM Collectible WHERE "
-                + "GroupId = '" + cGroupId + "'");
-
-        while (resultSet.next()) {
-            try {
-                collection.add(factory.generateCollectible(
-                        resultSet.getString("Type"),
-                        resultSet.getFloat("Hue"),
-                        resultSet.getInt("Amount"),
-                        new SimpleDateFormat("yyyy-MM-dd").parse(resultSet.getString("Date")),
-                        resultSet.getString("OwnerId")));
-            } catch (ParseException e) {
-                e.printStackTrace();
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            statement.setString(1, cGroupId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                CollectibleFactory factory = new CollectibleFactory();
+                while (resultSet.next()) {
+                    try {
+                        collection.add(factory.generateCollectible(
+                                resultSet.getString("Type"),
+                                resultSet.getFloat("Hue"),
+                                resultSet.getInt("Amount"),
+                                new SimpleDateFormat("yyyy-MM-dd").parse(resultSet.getString("Date")),
+                                resultSet.getString("OwnerId")));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 
-        resultSet.close();
-        statement.close();
         return collection;
     }
 }

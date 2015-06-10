@@ -1,11 +1,11 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.PlayerData;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Updates the player data on the server.
@@ -25,39 +25,48 @@ public class UpdatePlayerData extends Query {
     public UpdatePlayerData(final PlayerData playerData) {
         cPlayerData = playerData;
     }
+    /**
+     * Connection to the database to run the query on.
+     */
+    protected Connection cDatabaseConnection;
 
     @Override
-    public Serializable query(final DatabaseConnection databaseConnection) throws SQLException {
-        String update = "";
+    public Serializable query(final Connection databaseConnection) throws SQLException {
+        cDatabaseConnection = databaseConnection;
 
         if (cPlayerData.getUsername() != null) {
-            update += ", Username = '" + cPlayerData.getUsername() + "'";
+            updateData("Username", cPlayerData.getUsername());
         }
 
         if (cPlayerData.getIntervalTimeStamp() != 0) {
-            update += ", Interval = " + cPlayerData.getIntervalTimeStamp();
+            updateData("Interval", cPlayerData.getIntervalTimeStamp());
         }
 
         if (cPlayerData.getStrollTimeStamp() != 0) {
-            update += ", Stroll = " + cPlayerData.getStrollTimeStamp();
+            updateData("Stroll", cPlayerData.getStrollTimeStamp());
         }
 
         if (cPlayerData.getGroupId() != null) {
-            update += ", GroupId = '" + cPlayerData.getGroupId() + "'";
+            updateData("GroupId", cPlayerData.getGroupId());
         }
 
         if (cPlayerData.getCollection() != null) {
             new AddCollection(cPlayerData.getCollection()).query(databaseConnection);
         }
 
-        Statement statement = databaseConnection.query();
-
-        statement.executeUpdate("UPDATE USER SET " + update.substring(2) + " WHERE ID = '"
-                + cPlayerData.getId() + "'");
-
-        databaseConnection.commit();
-        statement.close();
-
         return null;
+    }
+
+    /**
+     * Updates the players data.
+     * @param column The column to update.
+     * @param newValue The new value.
+     * @throws SQLException Throws if something went wrong while updating.
+     */
+    protected void updateData(final String column, final Object newValue) throws SQLException {
+        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ?")) {
+            statement.setObject(1, newValue);
+            statement.executeUpdate();
+        }
     }
 }

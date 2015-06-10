@@ -1,11 +1,11 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Updates an given collectibles amount in the server.
@@ -32,25 +32,30 @@ public class SetCollectibleAmount extends Query {
      * @param groupId     The group it belongs to.
      * @param amount      The amount already set in teh server.
      **/
-    protected SetCollectibleAmount(Collectible collectible, String groupId, Integer amount) {
+    protected SetCollectibleAmount(final Collectible collectible, final String groupId, final Integer amount) {
         cCollectible = collectible;
         cGroupId = groupId;
         cAmount = amount;
     }
 
     @Override
-    public Serializable query(DatabaseConnection databaseConnection) throws SQLException {
+    public Serializable query(final Connection databaseConnection) throws SQLException {
         if (cAmount == 0) {
             new RemoveCollectible(cCollectible, cGroupId).query(databaseConnection);
         } else {
-            Statement statement = databaseConnection.query();
-            statement.executeUpdate("UPDATE Collectible SET Amount = " + cAmount
-                    + " WHERE OwnerId = '" + cCollectible.getOwnerId() + "' AND " + "Type = '"
-                    + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()
-                    + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'");
+            String preparedQuery = "UPDATE Collectible SET Amount = ? WHERE OwnerId = ? AND Type = ? AND Hue = ? AND "
+                    + "Date = ? AND GroupId = ?";
 
-            databaseConnection.commit();
-            statement.close();
+            try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+                setValues(statement,
+                        cAmount,
+                        cCollectible.getOwnerId(),
+                        cCollectible.getClass().getSimpleName(),
+                        cCollectible.getHue(),
+                        cCollectible.getDateAsString(),
+                        cGroupId);
+                statement.executeUpdate();
+            }
         }
         return null;
     }

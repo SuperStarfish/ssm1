@@ -50,46 +50,30 @@ public final class RemoteConnection implements Connection {
 
     @Override
     public void send(final Query data, final ResponseHandler responseHandler) {
-        try {
-            cOutputStream.writeObject(data);
-            cOutputStream.flush();
-            Response response = (Response) cInputStream.readObject();
-            if(responseHandler != null) {
-                responseHandler.handleResponse(response);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    cOutputStream.writeObject(data);
+                    cOutputStream.flush();
+                    final Response response = (Response) cInputStream.readObject();
+                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
+                        @Override
+                        public void run() {
+                            Client.getRemoteInstance().enableRequests();
+                            if (responseHandler != null) {
+                                responseHandler.handleResponse(response);
+                            }
+                        }
+                    });
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Client.getRemoteInstance().enableRequests();
+        }).start();
     }
-
-//    @Override
-//    public void send(final Query data, final ResponseHandler responseHandler) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    cOutputStream.writeObject(data);
-//                    cOutputStream.flush();
-//                    final Response response = (Response) cInputStream.readObject();
-//                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if(responseHandler != null) {
-//                                responseHandler.handleResponse(response);
-//                            }
-//                        }
-//                    });
-//                } catch (ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
 
     @Override
     public boolean isConnected() {

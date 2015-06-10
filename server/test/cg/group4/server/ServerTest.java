@@ -28,7 +28,7 @@ public class ServerTest {
      */
     @Before
     public void setUp() {
-        cServer = new Server();
+        cServer = new Server(new RemoteStorageResolver());
     }
 
     /**

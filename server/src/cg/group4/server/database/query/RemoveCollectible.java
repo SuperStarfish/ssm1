@@ -1,11 +1,11 @@
 package cg.group4.server.database.query;
 
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.server.database.DatabaseConnection;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Removes the given collectible from the server.
@@ -27,21 +27,27 @@ public class RemoveCollectible extends Query {
      * @param collectible The collectible to remove.
      * @param groupId     The group of the collectible.
      */
-    protected RemoveCollectible(Collectible collectible, String groupId) {
+    protected RemoveCollectible(final Collectible collectible, final String groupId) {
         cCollectible = collectible;
         cGroupId = groupId;
     }
 
     @Override
-    public Serializable query(DatabaseConnection databaseConnection) throws SQLException {
-        Statement statement = databaseConnection.query();
-        statement.executeUpdate("DELETE FROM Collectible"
-                + " WHERE OwnerId = '" + cCollectible.getOwnerId() + "' AND " + "Type = '"
-                + cCollectible.getClass().getSimpleName() + "'" + "AND Hue = '" + cCollectible.getHue()
-                + "' AND Date = '" + cCollectible.getDateAsString() + "' AND GroupId = '" + cGroupId + "'");
+    public Serializable query(final Connection databaseConnection) throws SQLException {
 
-        databaseConnection.commit();
-        statement.close();
+        String preparedQuery = "DELETE FROM Collectible WHERE OwnerId = ? AND Type = ? AND Hue = ? AND "
+                + "Date = ? AND GroupId = ?";
+
+        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
+            setValues(statement,
+                    cCollectible.getOwnerId(),
+                    cCollectible.getClass().getSimpleName(),
+                    cCollectible.getHue(),
+                    cCollectible.getDateAsString(),
+                    cGroupId);
+            statement.executeUpdate();
+        }
+
         return null;
     }
 }
