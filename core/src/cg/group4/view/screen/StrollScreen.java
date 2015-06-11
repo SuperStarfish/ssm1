@@ -113,16 +113,16 @@ public final class StrollScreen extends ScreenLogic {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 StandUp.getInstance().getStroll().joinMultiPlayerEvent(
-                        Integer.getInteger(cCode.getText()), new ResponseHandler() {
-                    @Override
-                    public void handleResponse(Response response) {
-                        String ip = (String) response.getData();
-                        if (ip == null) {
-                            ip = "Wrong code!";
-                        }
-                        cCode.setText(ip);
-                    }
-                });
+                        Integer.parseInt(cCode.getText()), new ResponseHandler() {
+                            @Override
+                            public void handleResponse(Response response) {
+                                String ip = (String) response.getData();
+                                if (ip == null) {
+                                    ip = "Wrong code!";
+                                }
+                                cCode.setText(ip);
+                            }
+                        });
             }
         });
         return fillTable();
