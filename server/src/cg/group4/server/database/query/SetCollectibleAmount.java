@@ -41,7 +41,7 @@ public class SetCollectibleAmount extends Query {
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
         if (cAmount == 0) {
-            new RemoveCollectible(cCollectible, cGroupId).query(databaseConnection);
+            new DeleteCollectible(cCollectible, cGroupId).query(databaseConnection);
         } else {
             String preparedQuery = "UPDATE Collectible SET Amount = ? WHERE OwnerId = ? AND Type = ? AND Hue = ? AND "
                     + "Date = ? AND GroupId = ?";

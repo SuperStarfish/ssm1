@@ -3,7 +3,7 @@ package cg.group4.data_structures.groups;
 import java.io.Serializable;
 
 /**
- * Created by Martijn on 2015-06-08.
+ * Contains the data of a group.
  */
 public class GroupData implements Serializable {
     /**
@@ -21,7 +21,6 @@ public class GroupData implements Serializable {
     /**
      * Defines the owner of the group.
      * The owner of the group is based on a player id, which is unique.
-     *
      */
     protected String cOwnerId;
 
@@ -44,31 +43,31 @@ public class GroupData implements Serializable {
         return cOwnerName;
     }
 
-    public void setOwnerName(final String cOwnerName) {
-        this.cOwnerName = cOwnerName;
+    public void setOwnerName(final String ownerName) {
+        this.cOwnerName = ownerName;
     }
 
     public int getGroupId() {
         return cGroupId;
     }
 
-    public void setGroupId(final int cGroupId) {
-        this.cGroupId = cGroupId;
+    public void setGroupId(final int groupId) {
+        this.cGroupId = groupId;
     }
 
     public String getName() {
         return cName;
     }
 
-    public void setName(final String cName) {
-        this.cName = cName;
+    public void setName(final String name) {
+        cName = name;
     }
 
     public String getOwnerId() {
         return cOwnerId;
     }
 
-    public void setOwnerId(final String cOwnerId) {
-        this.cOwnerId = cOwnerId;
+    public void setOwnerId(final String ownerId) {
+        cOwnerId = ownerId;
     }
 }

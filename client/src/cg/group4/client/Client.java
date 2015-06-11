@@ -4,19 +4,10 @@ import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.UnConnected;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.AddCollection;
-import cg.group4.server.database.query.CreateGroup;
-import cg.group4.server.database.query.GetGroupData;
-import cg.group4.server.database.query.Query;
-import cg.group4.server.database.query.RemoveCollection;
-import cg.group4.server.database.query.RequestCollection;
-import cg.group4.server.database.query.RequestHostCode;
-import cg.group4.server.database.query.RequestHostIp;
-import cg.group4.server.database.query.RequestPlayerData;
-import cg.group4.server.database.query.ResetPlayerData;
-import cg.group4.server.database.query.UpdatePlayerData;
+import cg.group4.server.database.query.*;
 import cg.group4.util.IpResolver;
 
 import java.net.UnknownHostException;
@@ -44,7 +35,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "82.169.19.191";
+    protected final String cDefaultIp = "128.127.39.32";
     /**
      * The default port to connect to.
      */
@@ -158,13 +149,6 @@ public final class Client {
     }
 
     /**
-     * Enables the client to take a new request.
-     */
-    public void enableRequests() {
-        cAwaitingResponse = false;
-    }
-
-    /**
      * Sets the connection to the new connection.
      * @param connection The connection that needs to be set.
      */
@@ -176,6 +160,13 @@ public final class Client {
     }
 
     /**
+     * Enables the client to take a new request.
+     */
+    public void enableRequests() {
+        cAwaitingResponse = false;
+    }
+
+    /**
      * Updates the stroll timers in the database.
      * @param timeStamp The timestamp when the timer should end.
      * @param responseHandler The task to execute once a reply is received completed.
@@ -184,6 +175,18 @@ public final class Client {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setStrollTimeStamp(timeStamp);
         tryToSend(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Sends the given query to the server, if there has not already been made a previous request.
+     * @param query The query to the server.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
+        if (!cAwaitingResponse) {
+            cAwaitingResponse = true;
+            cConnection.send(query, responseHandler);
+        }
     }
 
     /**
@@ -264,18 +267,6 @@ public final class Client {
     }
 
     /**
-     * Sends the given query to the server, if there has not already been made a previous request.
-     * @param query The query to the server.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
-            cConnection.send(query, responseHandler);
-        }
-    }
-
-    /**
      * Gets the group data from the server. Behaviour depends on the state.
      * @param responseHandler The task to execute once a reply is received completed.
      */
@@ -327,6 +318,22 @@ public final class Client {
      */
     public String getUserID() {
         return cUserIDResolver.getID();
+    }
+
+    /**
+     * Adds a collectible to the server.
+     */
+    public void addCollectible(final Collectible collectible, final String groupId,
+                               final ResponseHandler responseHandler) {
+        tryToSend(new AddCollectible(collectible, groupId), responseHandler);
+    }
+
+    /**
+     * Removes a collectible from the server.
+     */
+    public void removeCollectible(final Collectible collectible, final String groupId,
+                                  final ResponseHandler responseHandler) {
+        tryToSend(new RemoveCollectible(collectible, groupId), responseHandler);
     }
 
     /**

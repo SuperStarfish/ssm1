@@ -2,12 +2,9 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
-import cg.group4.data_structures.PlayerData;
 import cg.group4.game_logic.StandUp;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
-import cg.group4.server.database.Response;
-import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.notification.NotificationController;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
@@ -98,6 +95,18 @@ public class Launcher extends Game {
     }
 
     /**
+     * Sets up the game with the specified debug levels.
+     */
+    private void debugSetup() {
+        if (CLEAR_SETTINGS) {
+            Preferences preferences = Gdx.app.getPreferences("TIMER");
+            preferences.clear();
+            preferences.flush();
+        }
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+    }
+
+    /**
      * Once the Assets are done loading, this method is called to properly initialize the game.
      */
     public void assetsDone() {
@@ -112,18 +121,6 @@ public class Launcher extends Game {
         cScreenStore.setScreen("Home");
 
         notificationInitialization();
-    }
-
-    /**
-     * Sets up the game with the specified debug levels.
-     */
-    private void debugSetup() {
-        if (CLEAR_SETTINGS) {
-            Preferences preferences = Gdx.app.getPreferences("TIMER");
-            preferences.clear();
-            preferences.flush();
-        }
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
     /**
