@@ -43,21 +43,19 @@ allprojects {
     }
 }
 
+cobertura {
+    coberturaVersion = '2.1.1'
+    coverageFormats = ['xml', 'html']
+    coverageIgnoreTrivial = true
+    coverageReportDir = file("${buildDir}/reports/cobertura")
+
+    rootProject.subprojects.each {
+        coverageDirs << file("${it.name}/build/classes/main")
+    }
+}
+
 project(":core") {
     apply plugin: "java"
-    apply plugin: 'net.saliman.cobertura'
-    cobertura {
-        coberturaVersion = '2.1.1'
-        coverageFormats = ['xml', 'html']
-        coverageIgnoreTrivial = true
-        coverageReportDir = file("${buildDir}/reports/cobertura")
-
-        rootProject.subprojects.each {
-            coverageDirs << file("${it.name}/build/classes/main")
-        }
-    }
-
-    test.finalizedBy(project.tasks.cobertura)
 //    apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
 
     dependencies {
@@ -75,19 +73,6 @@ project(":core") {
 
 project(":desktop") {
     apply plugin: "java"
-    apply plugin: 'net.saliman.cobertura'
-    cobertura {
-        coberturaVersion = '2.1.1'
-        coverageFormats = ['xml', 'html']
-        coverageIgnoreTrivial = true
-        coverageReportDir = file("${buildDir}/reports/cobertura")
-
-        rootProject.subprojects.each {
-            coverageDirs << file("${it.name}/build/classes/main")
-        }
-    }
-
-    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         compile project(":core")
@@ -100,19 +85,6 @@ project(":desktop") {
 
 project(":server") {
     apply plugin: "java"
-    apply plugin: 'net.saliman.cobertura'
-    cobertura {
-        coberturaVersion = '2.1.1'
-        coverageFormats = ['xml', 'html']
-        coverageIgnoreTrivial = true
-        coverageReportDir = file("${buildDir}/reports/cobertura")
-
-        rootProject.subprojects.each {
-            coverageDirs << file("${it.name}/build/classes/main")
-        }
-    }
-
-    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         compile project(":data_structures")
@@ -127,19 +99,6 @@ project(":server") {
 
 project(":client") {
     apply plugin: "java"
-    apply plugin: 'net.saliman.cobertura'
-    cobertura {
-        coberturaVersion = '2.1.1'
-        coverageFormats = ['xml', 'html']
-        coverageIgnoreTrivial = true
-        coverageReportDir = file("${buildDir}/reports/cobertura")
-
-        rootProject.subprojects.each {
-            coverageDirs << file("${it.name}/build/classes/main")
-        }
-    }
-
-    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         compile project(":server")
@@ -153,19 +112,6 @@ project(":client") {
 
 project(":data_structures") {
     apply plugin: "java"
-    apply plugin: 'net.saliman.cobertura'
-    cobertura {
-        coberturaVersion = '2.1.1'
-        coverageFormats = ['xml', 'html']
-        coverageIgnoreTrivial = true
-        coverageReportDir = file("${buildDir}/reports/cobertura")
-
-        rootProject.subprojects.each {
-            coverageDirs << file("${it.name}/build/classes/main")
-        }
-    }
-
-    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
@@ -205,6 +151,8 @@ project(":android") {
 
 subprojects {
     if (!"${project}".contains("android")) {
+        apply plugin: 'net.saliman.cobertura'
+        test.finalizedBy {project.tasks.cobertura}
         apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
     }
 }
