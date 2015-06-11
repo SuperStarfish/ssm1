@@ -41,22 +41,16 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-}
 
-cobertura {
-    coberturaVersion = '2.1.1'
-    coverageFormats = ['xml', 'html']
-    coverageIgnoreTrivial = true
-    coverageReportDir = file("${buildDir}/reports/cobertura")
+    if (!"${project}".contains("android")) {
 
-    rootProject.subprojects.each {
-        coverageDirs << file("${it.name}/build/classes/main")
+        apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
+        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
     }
 }
 
 project(":core") {
     apply plugin: "java"
-//    apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
 
     dependencies {
         compile project(":client")
@@ -150,14 +144,11 @@ project(":android") {
 }
 
 subprojects {
-    if (!"${project}".contains("android")) {
-        apply plugin: 'net.saliman.cobertura'
-        test.finalizedBy {project.tasks.cobertura}
-        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
-    }
+
 }
 
 tasks.eclipse.doLast {
     delete ".project"
 }
 
+test.finalizedBy {project.tasks.cobertura}

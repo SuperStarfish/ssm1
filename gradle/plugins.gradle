@@ -7,11 +7,10 @@ cobertura {
     coverageIgnoreTrivial = true
     coverageReportDir = file("${buildDir}/reports/cobertura")
 
-    rootProject.subprojects.each {
-        coverageDirs << file("${it.name}/build/classes/main")
-    }
+//    rootProject.subprojects.each {
+//        coverageDirs << file("${it.name}/build/classes/main")
+//    }
 }
-
 
 test.finalizedBy(project.tasks.cobertura)
 
