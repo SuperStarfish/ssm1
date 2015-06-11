@@ -47,7 +47,7 @@ public class Accelerometer {
      *
      * @return Current accelerometer readings.
      */
-    public final Vector3 update() {
+    public Vector3 update() {
         Vector3 readings = cReader.readAccelerometer();
         Vector3 resultVector = readings.cpy();
 

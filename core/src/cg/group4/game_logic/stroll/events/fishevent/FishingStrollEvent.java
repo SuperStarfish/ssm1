@@ -64,7 +64,7 @@ public class FishingStrollEvent extends StrollEvent {
     }
 
     @Override
-    protected final void clearEvent() {
+    protected void clearEvent() {
         super.dispose();
     }
 
