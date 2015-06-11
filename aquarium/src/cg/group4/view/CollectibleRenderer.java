@@ -4,6 +4,7 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.display_logic.DisplaySettings;
 import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -15,161 +16,79 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  * .
  */
 public class CollectibleRenderer {
-    protected CollectibleDrawer cCollectibleDrawer;
     protected Image cCollectibleActor;
     protected Stage cStage;
-    protected int cCurrentDirection;
+
+    protected double cCurrentAngle;
 
     public CollectibleRenderer(final Collectible collectible) {
         cStage = new Stage();
-        setCollection(collectible);
+        initCollectibleEntity(collectible);
+
         cStage.addActor(cCollectibleActor);
+        cCurrentAngle = -90;
     }
 
+    /**
+     *
+     */
     public void render() {
-        move("ne");
+        move();
         cStage.act();
         cStage.draw();
     }
 
-    public void setCollection(final Collectible collectible) {
-        cCollectibleDrawer = new CollectibleDrawer();
+    /**
+     *
+     * @param collectible
+     */
+    public void initCollectibleEntity(final Collectible collectible) {
+        final CollectibleDrawer cCollectibleDrawer = new CollectibleDrawer();
         final Texture collectibleTexture = cCollectibleDrawer.drawCollectible(collectible);
         cCollectibleActor = new Image(collectibleTexture);
-        cCollectibleActor.setPosition(500f,500f);
+        cCollectibleActor.setScale(0.3f);
+
+        cCollectibleActor.setPosition(DisplaySettings.screenMaxX/2 - cCollectibleActor.getOriginX(), DisplaySettings.screenMaxY/2 - cCollectibleActor.getOriginY());
     }
 
-    public void move(String direction) {
-        switch (direction) {
-            case "west":
-                moveWest();
-                break;
-            case "north":
-                moveNorth();
-                break;
-            case "south":
-                moveSouth();
-                break;
-            case "ne":
-                moveNorthEast();
-                break;
-            case "se":
-                moveSouthEast();
-                break;
-            case "nw":
-                moveNorthWest();
-                break;
-            case "sw":
-                moveSouthWest();
-                break;
-            default:
-                moveEast();
-                break;
-        }
+    public void flipImageX() {
+        cCollectibleActor.setScaleX(-cCollectibleActor.getScaleX());
     }
 
-    private void moveNorth() {
-        setRotation(Rotation.north);
-
-        float y = cCollectibleActor.getY();
-
-        if (y + DisplaySettings.cSpeed <= DisplaySettings.screenMaxY - cCollectibleActor.getImageHeight()) {
-            y += DisplaySettings.cSpeed;
-        }
-
-        cCollectibleActor.setPosition(cCollectibleActor.getX(), y);
+    public void flipImageY() {
+        cCollectibleActor.setScaleY(-cCollectibleActor.getScaleY());
     }
 
-    private void moveSouth() {
-        setRotation(Rotation.south);
-
-        float y = cCollectibleActor.getY();
-
-        if (y - DisplaySettings.cSpeed >= DisplaySettings.screenMinY + cCollectibleActor.getImageHeight()) {
-            y -= DisplaySettings.cSpeed;
-        }
-
-        cCollectibleActor.setPosition(cCollectibleActor.getX(), y);
+    /**
+     * Moves the fish entity to the destination.
+     */
+    public void move() {
+        generateAngle();
+        moveToDestination(2);
     }
 
-    private void moveEast() {
-        setRotation(Rotation.east);
-
-        float x = cCollectibleActor.getX();
-
-        if (x + DisplaySettings.cSpeed <= DisplaySettings.screenMaxX - cCollectibleActor.getImageWidth()) {
-            x += DisplaySettings.cSpeed;
-        }
-
-        cCollectibleActor.setPosition(x, cCollectibleActor.getY());
-    }
-
-    private void moveWest() {
-        setRotation(Rotation.west);
-
-        float x = cCollectibleActor.getX();
-
-        if (x - DisplaySettings.cSpeed >= DisplaySettings.screenMinX + cCollectibleActor.getImageWidth()) {
-            x -= DisplaySettings.cSpeed;
-        }
-
-        cCollectibleActor.setPosition(x, cCollectibleActor.getY());
-    }
-
-    private void moveNorthEast() {
-        setRotation(Rotation.northEast);
-        moveNorth();
-        moveEast();
-    }
-
-    private void moveSouthEast() {
-        setRotation(Rotation.southEast);
-        moveSouth();
-        moveEast();
-    }
-
-    private void moveSouthWest() {
-        setRotation(Rotation.southWest);
-        moveSouth();
-        moveWest();
-    }
-
-    private void moveNorthWest() {
-        setRotation(Rotation.northWest);
-        moveNorth();
-        moveWest();
+    /**
+     * When the destination is reached, set a new destination;
+     *
+     */
+    public void generateAngle() {
+        cCurrentAngle += (Math.random()*2-1f)*5;
     }
 
 
-    private void setRotation(Rotation rotation) {
-        if (cCurrentDirection != rotation.degree()) {
-            cCollectibleActor.setRotation(rotation.degree());
-            cCurrentDirection = rotation.degree();
-        }
-    }
-
-    public enum Rotation {
-        north(0),
-        northEast(45),
-        east(90),
-        southEast(135),
-        south(180),
-        southWest(225),
-        west(270),
-        northWest(315);
-
-        protected int rotationLevel;
-
-        Rotation(int degree) {
-           this.rotationLevel = degree;
-        }
-
-        int degree() {
-            return rotationLevel;
-        }
-
-    }
 
 
+    public void moveToDestination(float speed) {
+        cCollectibleActor.setOrigin(
+                cCollectibleActor.getImageWidth()/2,
+                cCollectibleActor.getImageHeight()/2);
+
+        cCollectibleActor.setRotation((float) cCurrentAngle + 90);
+
+        cCollectibleActor.moveBy(
+                (float) Math.sin(Math.toRadians(cCurrentAngle)) * speed,
+                (float) Math.cos(Math.toRadians(cCurrentAngle)) * -speed);
+
+   }
 
 }

@@ -38,6 +38,10 @@ public class AquariumScreen implements Screen {
         fishTank.add(new FishA(0.5f, "SampleOwnerId"));
         fishTank.add(new FishC(0.2f, "ExampleId"));
 
+        for (int i = 0; i < 500; i++) {
+            fishTank.add(new FishA((float)Math.random(), "ExampleId" + Integer.toString(i)));
+        }
+
         setCollectibleRendererSet(fishTank);
 
     }
@@ -57,7 +61,8 @@ public class AquariumScreen implements Screen {
     @Override
     public void render(float delta) {
         cAquariumRenderer.render();
-//        System.out.println("fps " + (1/delta));
+
+        System.out.println("fps " + (1/delta));
         for (CollectibleRenderer c : cCollectibleRendererSet) {
             c.render();
         }

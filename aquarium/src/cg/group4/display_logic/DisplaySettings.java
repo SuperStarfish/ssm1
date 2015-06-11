@@ -16,10 +16,8 @@ public class DisplaySettings {
     /**
      * Movement settings
      */
-    public static int cSpeed = 3;
+    public static int cSpeed = 1;
 
-    public static int screenMinX = 0;
-    public static int screenMinY = 0;
-    public static int screenMaxX = 1920;
-    public static int screenMaxY = 1080;
+    public static int screenMaxX = 1920/2;
+    public static int screenMaxY = 1080/2;
 }

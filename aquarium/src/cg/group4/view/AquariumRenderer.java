@@ -8,29 +8,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Renderer for the Aquarium display.
+ * Displays the style of the aquarium box.
  */
 public class AquariumRenderer {
 
-    protected OrthographicCamera cCamera;
-    protected AquariumAssets cAquariumAssets;
-    protected Stage cStage;
-    protected SpriteBatch cSpriteBatch;
-
     public AquariumRenderer() {
-        cCamera = new OrthographicCamera();
-        cAquariumAssets = new AquariumAssets();
-        cStage = new Stage();
     }
 
     public void render() {
         setBackground();
-        cCamera.update();
-        cStage.draw();
     }
 
     public void dispose() {
-        cSpriteBatch.dispose();
-        cStage.dispose();
     }
 
     public void setBackground() {
