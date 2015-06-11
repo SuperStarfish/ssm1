@@ -3,9 +3,9 @@ package cg.group4.client.connection;
 import cg.group4.client.Client;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 /**
@@ -21,16 +21,15 @@ public class UnConnected implements Connection {
      */
     protected static final String LOCALHOST = "127.0.0.1";
     /**
-     * The client reference. Primarily used to make calls back to client if connection fails.
+     * Boolean whether this connection is already trying to connect.
      */
-    protected Client cClient;
+    protected boolean cConnecting;
 
     /**
      * Creates a new state where the Client is Unconnected.
-     * @param client Reference to the client.
      */
-    public UnConnected(final Client client) {
-        cClient = client;
+    public UnConnected() {
+        cConnecting = false;
     }
 
     /**
@@ -40,10 +39,12 @@ public class UnConnected implements Connection {
      */
     @Override
     public void connect(final String ip, final int port) {
-        if (ip == null) {
-            localConnect(LOCALHOST, port);
-        } else {
-            remoteConnect(ip, port);
+        if (!cConnecting) {
+            if (ip == null) {
+                localConnect(LOCALHOST, port);
+            } else {
+                remoteConnect(ip, port);
+            }
         }
     }
 
@@ -53,14 +54,15 @@ public class UnConnected implements Connection {
      * @param port Port provided.
      */
     protected void localConnect(final String ip, final int port) {
+        cConnecting = true;
         try {
             LOGGER.info("Trying to connect to the local server");
             Connection connection = new LocalConnection(ip, port);
-            Client client = Client.getLocalInstance();
-            client.setConnection(connection);
+            Client.getLocalInstance().setConnection(connection);
         } catch (IOException e) {
             LOGGER.info("Connection failed!");
         }
+        cConnecting = false;
     }
 
     /**
@@ -69,16 +71,18 @@ public class UnConnected implements Connection {
      * @param port The port to connect to.
      */
     protected void remoteConnect(final String ip, final int port) {
+        cConnecting = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     LOGGER.info("Trying to connect to the remote server");
                     final Connection connection = new RemoteConnection(ip, port);
-                    cClient.addPostRunnables(new Runnable() {
+                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
                         @Override
                         public void run() {
-                            cClient.setConnection(connection);
+                            Client.getRemoteInstance().setConnection(connection);
+                            cConnecting = false;
                         }
                     });
                 } catch (IOException e) {
@@ -94,8 +98,7 @@ public class UnConnected implements Connection {
     }
 
     @Override
-    public void send(final Query data, final ResponseHandler responseHandler) {
-        cClient.enableRequests();
+    public void send(final Serializable data, final ResponseHandler responseHandler) {
         if (responseHandler != null) {
             responseHandler.handleResponse(new Response(false, null));
         }

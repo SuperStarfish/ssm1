@@ -1,6 +1,5 @@
 package cg.group4.view.screen;
 
-import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
@@ -85,6 +84,10 @@ public final class StrollScreen extends ScreenLogic {
      */
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
+        cText = cGameSkin.generateDefaultLabel("Waiting for event");
+        cCode = cGameSkin.generateDefaultTextField("Enter code");
+        cHost = cGameSkin.generateDefaultMenuButton("Host");
+        cJoin = cGameSkin.generateDefaultMenuButton("Join");
         Stroll stroll = StandUp.getInstance().getStroll();
         stroll.getEndStrollSubject().addObserver(cEndStrollObserver);
         stroll.getNewEventSubject().addObserver(cNewEventObserver);
@@ -93,27 +96,12 @@ public final class StrollScreen extends ScreenLogic {
 
     @Override
     protected WidgetGroup createWidgetGroup() {
-        cTable = new Table();
-        cTable.setFillParent(true);
-        cTable.row().expandY();
-
         initRemainingTime();
-
-        cTable.row().expandY();
-        cText = new Label("Waiting for event", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cTable.add(cText).colspan(2);
-
-        cTable.row().expandY();
-        cCode = cGameSkin.generateDefaultTextField("Enter code");
         cCode.setAlignment(Align.center);
-        cTable.add(cCode).fillX().colspan(2);
-
-        cTable.row().expandY();
-        cHost = cGameSkin.generateDefaultMenuButton("Host");
         cHost.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Client.getRemoteInstance().hostEvent(new ResponseHandler() {
+                StandUp.getInstance().getStroll().startMultiPlayerEvent(new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
                         cCode.setText(Integer.toString((Integer) response.getData()));
@@ -121,12 +109,11 @@ public final class StrollScreen extends ScreenLogic {
                 });
             }
         });
-        cTable.add(cHost);
-        cJoin = cGameSkin.generateDefaultMenuButton("Join");
         cJoin.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Client.getRemoteInstance().getHost(Integer.parseInt(cCode.getText()), new ResponseHandler() {
+                StandUp.getInstance().getStroll().joinMultiPlayerEvent(
+                        Integer.getInteger(cCode.getText()), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
                         String ip = (String) response.getData();
@@ -138,12 +125,8 @@ public final class StrollScreen extends ScreenLogic {
                 });
             }
         });
-        cTable.add(cJoin);
-
-
-        return cTable;
+        return fillTable();
     }
-
     /**
      * Initializes the label to display the time remaining of the stroll.
      */
@@ -158,14 +141,34 @@ public final class StrollScreen extends ScreenLogic {
 
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
         cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
+    }
 
+    /**
+     * Fills the table of the screen.
+     *
+     * @return Returns the filled table.
+     */
+    public WidgetGroup fillTable() {
+        cTable = new Table();
+        cTable.setFillParent(true);
+        cTable.row().expandY();
         cTable.add(cTimeRemaining).colspan(2);
+        cTable.row().expandY();
+        cTable.add(cText).colspan(2);
+        cTable.row().expandY();
+        cTable.add(cCode).fillX().colspan(2);
+        cTable.row().expandY();
+        cTable.add(cHost);
+        cTable.add(cJoin);
+        return cTable;
     }
 
     @Override
     protected void rebuildWidgetGroup() {
-        cTimeRemaining.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        cText.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        cTimeRemaining.setStyle(cGameSkin.getDefaultLabelStyle());
+        cText.setStyle(cGameSkin.getDefaultLabelStyle());
+        cJoin.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cHost.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override
