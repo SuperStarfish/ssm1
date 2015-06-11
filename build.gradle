@@ -41,14 +41,24 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-
-
 }
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: 'net.saliman.cobertura'
+    cobertura {
+        coberturaVersion = '2.1.1'
+        coverageFormats = ['xml', 'html']
+        coverageIgnoreTrivial = true
+        coverageReportDir = file("${buildDir}/reports/cobertura")
 
-    apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
+        rootProject.subprojects.each {
+            coverageDirs << file("${it.name}/build/classes/main")
+        }
+    }
+
+    test.finalizedBy(project.tasks.cobertura)
+//    apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
 
     dependencies {
         compile project(":client")
@@ -65,6 +75,19 @@ project(":core") {
 
 project(":desktop") {
     apply plugin: "java"
+    apply plugin: 'net.saliman.cobertura'
+    cobertura {
+        coberturaVersion = '2.1.1'
+        coverageFormats = ['xml', 'html']
+        coverageIgnoreTrivial = true
+        coverageReportDir = file("${buildDir}/reports/cobertura")
+
+        rootProject.subprojects.each {
+            coverageDirs << file("${it.name}/build/classes/main")
+        }
+    }
+
+    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         compile project(":core")
@@ -77,11 +100,25 @@ project(":desktop") {
 
 project(":server") {
     apply plugin: "java"
+    apply plugin: 'net.saliman.cobertura'
+    cobertura {
+        coberturaVersion = '2.1.1'
+        coverageFormats = ['xml', 'html']
+        coverageIgnoreTrivial = true
+        coverageReportDir = file("${buildDir}/reports/cobertura")
+
+        rootProject.subprojects.each {
+            coverageDirs << file("${it.name}/build/classes/main")
+        }
+    }
+
+    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         compile project(":data_structures")
         compile "org.xerial:sqlite-jdbc:3.8.6"
         compile "org.sqldroid:sqldroid:1.0.3"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
 
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
@@ -90,6 +127,19 @@ project(":server") {
 
 project(":client") {
     apply plugin: "java"
+    apply plugin: 'net.saliman.cobertura'
+    cobertura {
+        coberturaVersion = '2.1.1'
+        coverageFormats = ['xml', 'html']
+        coverageIgnoreTrivial = true
+        coverageReportDir = file("${buildDir}/reports/cobertura")
+
+        rootProject.subprojects.each {
+            coverageDirs << file("${it.name}/build/classes/main")
+        }
+    }
+
+    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         compile project(":server")
@@ -99,12 +149,28 @@ project(":client") {
     }
 }
 
+
+
 project(":data_structures") {
     apply plugin: "java"
+    apply plugin: 'net.saliman.cobertura'
+    cobertura {
+        coberturaVersion = '2.1.1'
+        coverageFormats = ['xml', 'html']
+        coverageIgnoreTrivial = true
+        coverageReportDir = file("${buildDir}/reports/cobertura")
+
+        rootProject.subprojects.each {
+            coverageDirs << file("${it.name}/build/classes/main")
+        }
+    }
+
+    test.finalizedBy(project.tasks.cobertura)
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 }
 
