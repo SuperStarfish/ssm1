@@ -18,10 +18,6 @@ public class CollectibleDrawer {
      */
     protected final float cReplaceColourComponent = 120f / 255f;
     /**
-     * Alpha value of the new colour.
-     */
-    protected final float cAlpha = 1f;
-    /**
      * Colour in the image that needs to be replaced.
      */
     protected Color cReplacementColour = new Color(

@@ -1,6 +1,8 @@
 package cg.group4.view;
 
+import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.collection.collectibles.FishA;
 import cg.group4.data_structures.collection.collectibles.FishB;
@@ -35,11 +37,12 @@ public class AquariumScreen implements Screen {
         fishTank = new Collection("FISH_TANK_COLLECTION");
 
         fishTank.add(new FishA(1f, "SampleOwnerId")); // todo replace by collectibles from server
-        fishTank.add(new FishA(0.5f, "SampleOwnerId"));
-        fishTank.add(new FishC(0.2f, "ExampleId"));
 
-        for (int i = 0; i < 500; i++) {
-            fishTank.add(new FishA((float)Math.random(), "ExampleId" + Integer.toString(i)));
+
+        RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID());
+
+        for (int i = 0; i < 250; i++) {
+            fishTank.add(gen.generateCollectible(1));
         }
 
         setCollectibleRendererSet(fishTank);
