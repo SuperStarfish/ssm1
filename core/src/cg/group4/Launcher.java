@@ -2,19 +2,19 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
+import cg.group4.data_structures.PlayerData;
 import cg.group4.game_logic.StandUp;
-import cg.group4.rewards.Collection;
-import cg.group4.rewards.RewardGenerator;
-import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.rewards.collectibles.FishA;
-import cg.group4.rewards.collectibles.FishB;
-import cg.group4.sensor.AccelerationStatus;
+import cg.group4.server.LocalStorageResolver;
+import cg.group4.server.Server;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.notification.NotificationController;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -36,31 +36,29 @@ public class Launcher extends Game {
      * Used to clear all preferences and other data to start with a 'clean' game.
      */
     public static final boolean CLEAR_SETTINGS = false;
-
-    /**
-     * Keeps track of the game mechanics.
-     */
-    protected StandUp cStandUp;
-
-    /**
-     * Keeps track of timers throughout the game.
-     */
-    protected TimeKeeper cTimeKeeper;
-
-    /**
-     * Accelerometer status.
-     */
-    protected AccelerationStatus cAccelerationStatus;
-
     /**
      * Gets the device id as uniquer user ID.
      */
     protected final UserIDResolver cIDResolver;
-
+    /**
+     * Keeps track of the game mechanics.
+     */
+    protected StandUp cStandUp;
+    /**
+     * Keeps track of timers throughout the game.
+     */
+    protected TimeKeeper cTimeKeeper;
+    /**
+     * Accelerometer status.
+     */
+    protected AccelerationStatus cAccelerationStatus;
     /**
      * The notification controller to schedule notifications, passed with the constructor of the launcher.
      */
     protected NotificationController cNotificationController;
+
+
+    protected LocalStorageResolver cLocalStorageResolver;
 
     /**
      * Tunnels the acceleration status through the launcher to the android project.
@@ -69,49 +67,48 @@ public class Launcher extends Game {
      * @param notificationController The notification controller.
      * @param idResolver             The userID resolver for unique device id.
      */
-    public Launcher(final AccelerationStatus accelerationStatus, final NotificationController notificationController, final UserIDResolver idResolver) {
+    public Launcher(final AccelerationStatus accelerationStatus,
+                    final NotificationController notificationController,
+                    final UserIDResolver idResolver,
+                    final LocalStorageResolver localStorageResolver) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;
         cIDResolver = idResolver;
+        cLocalStorageResolver = localStorageResolver;
     }
 
     /**
      * Initializes the application.
-     * Does so by creating the TimeKeeper (if non-existent) and setting the
-     * screen to the main menu.
+     * Does so by creating the TimeKeeper (if non-existent) and setting the screen to the main menu.
      */
     @Override
     public final void create() {
         debugSetup();
 
+        Server server = new Server(cLocalStorageResolver);
+        server.start();
+
+        Client.getLocalInstance().setUserIDResolver(cIDResolver);
+        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        Client.getRemoteInstance().setUserIDResolver(cIDResolver);
+        Client.getRemoteInstance().connectToServer();
+
+        setScreen(new LoadingScreen(this));
+    }
+
+    /**
+     * Once the Assets are done loading, this method is called to properly initialize the game.
+     */
+    public void assetsDone() {
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
 
         cStandUp = StandUp.getInstance();
-        
-        int fa = 0, fb = 0, fc = 0;
-        //Needs to be moved
-        Collection c = new Collection("local");
-        RewardGenerator gen = new RewardGenerator();
-        for(int i = 0; i < 500; i++) {
-        	Collectible ca = gen.generateCollectible(1);
-        	c.add(ca);
-        	if(ca instanceof FishA) {
-        		fa++;
-        	} else if (ca instanceof FishB) {
-        		fb++;
-        	} else {
-        		fc++;
-        	}
-        }
-        
-        System.out.println("Fish A: " + fa + " Fish B: " + fb + " Fish C: " + fc);
-
-        Client.getInstance().setUserIDResolver(cIDResolver);
+        cStandUp.setAccelerationStatus(cAccelerationStatus);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init(c);
+        cScreenStore.init();
         cScreenStore.setScreen("Home");
 
         notificationInitialization();
@@ -153,8 +150,15 @@ public class Launcher extends Game {
     @Override
     public final void render() {
         super.render();
-        cStandUp.update();
-        cTimeKeeper.update();
+        if (cStandUp != null && cTimeKeeper != null) {
+            cTimeKeeper.update();
+            cStandUp.update();
+        }
+
+        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+            Gdx.app.postRunnable(toRunBeforeNextCycle);
+        }
+        Client.getRemoteInstance().resetPostRunnables();
     }
 
 }

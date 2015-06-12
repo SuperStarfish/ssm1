@@ -2,7 +2,7 @@ package cg.group4.game_logic.stroll.events.fishevent;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
-import cg.group4.util.sensors.Accelerometer;
+import cg.group4.util.sensor.Accelerometer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
@@ -17,56 +17,63 @@ public class FishingStrollEvent extends StrollEvent {
     /**
      * Amount of points that you should gain when completing this event.
      */
-	protected static final int REWARDS = 10;
+    protected static final int REWARDS = 10;
 
-	/**
-	 * Sound played when the task is completed.
-	 */
-	protected Sound cCompletedTaskSound;
+    /**
+     * Sound played when the task is completed.
+     */
+    protected Sound cCompletedTaskSound;
 
-	/**
-	 * The state where the event is in.
-	 */
-	protected FishEventState cState;
+    /**
+     * The state where the event is in.
+     */
+    protected FishEventState cState;
 
-	/**
-	 * Accelerometer used to fetch the input to complete the event.
-	 */
-	protected Accelerometer cAccelMeter;
+    /**
+     * Accelerometer used to fetch the input to complete the event.
+     */
+    protected Accelerometer cAccelMeter;
 
-	/**
-	 * Creates a new fishing event, with delay timer, text, screen and input.
-	 */
-	public FishingStrollEvent() {
-		super();
+    /**
+     * Creates a new fishing event, with delay timer, text, screen and input.
+     */
+    public FishingStrollEvent() {
+        super();
 
-		cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
-        
+        cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
+
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
-	}
-	
-	@Override
-	public final void update(final Observable o, final Object arg) {
-		Vector3 accel = cAccelMeter.update();
+    }
+
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        Vector3 accel = cAccelMeter.update();
         cState.processInput(accel);
     }
 
-	/**
-	 * Gets called when the event is completed.
-	 */
+    /**
+     * Gets called when the event is completed.
+     */
     public final void eventCompleted() {
         clearEvent();
     }
 
-	@Override
-	public final int getReward() {
-		return REWARDS;
-	}
+    @Override
+    public final int getReward() {
+        return REWARDS;
+    }
 
-	@Override
-	protected final void clearEvent() {
-		super.dispose();
-	}
+    @Override
+    protected void clearEvent() {
+        superDispose();
+    }
+
+    /**
+     * Method that calls super.dispose() to make it more testable.
+     */
+    public void superDispose() {
+        super.dispose();
+    }
 
     @Override
     public void start() {

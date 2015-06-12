@@ -1,6 +1,6 @@
 package cg.group4.util.timer;
 
-import cg.group4.util.subscribe.Subject;
+import cg.group4.data_structures.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -198,7 +198,7 @@ public class Timer implements Observer {
     /**
      * Resets the current timer.
      */
-    public final void reset() {
+    public void reset() {
         resetFinishTime();
         Gdx.app.debug(TAG, "Set " + getName()
                 + "-Timer to finish " + ((cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC)

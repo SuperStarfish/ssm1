@@ -31,12 +31,18 @@ public abstract class ScreenLogic {
     protected ScreenStore cScreenStore;
 
     /**
+     * Reference to the Assets for easy access within screens if needed.
+     */
+    protected Assets cAssets;
+
+    /**
      * A default constructor which initializes the screen logic.
      */
     public ScreenLogic() {
         cScreenStore = ScreenStore.getInstance();
         cGameSkin = cScreenStore.getGameSkin();
         cPreviousScreenName = setPreviousScreenName();
+        cAssets = Assets.getInstance();
     }
 
     /**
@@ -54,6 +60,7 @@ public abstract class ScreenLogic {
 
     /**
      * Creates a new back button including functionality when clicked.
+     *
      * @return A new button to go back to the previous screen.
      */
     protected final TextButton createBackButton() {
@@ -74,6 +81,13 @@ public abstract class ScreenLogic {
      * @return Name of the previous Screen name. Can be null.
      */
     protected abstract String setPreviousScreenName();
+
+    /**
+     * Method that gets called when it gets displayed.
+     */
+    public void display() {
+
+    }
 
     /**
      * Returns the previous Screen name. Has to be set through the setPreviousScreenName() method.

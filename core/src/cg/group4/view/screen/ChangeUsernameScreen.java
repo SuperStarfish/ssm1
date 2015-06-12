@@ -1,13 +1,12 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.game_logic.StandUp;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -40,9 +39,8 @@ public final class ChangeUsernameScreen extends ScreenLogic {
     protected WidgetGroup createWidgetGroup() {
         cTable = new Table();
         cTable.setFillParent(true);
-        cTable.debugAll();
 
-        cUsername = cGameSkin.generateDefaultTextField("Anonymous");
+        cUsername = cGameSkin.generateDefaultTextField(StandUp.getInstance().getPlayer().getUsername());
         cUsername.setAlignment(Align.center);
         cTable.row().expandY();
         cTable.add(cUsername).fillX();
@@ -65,17 +63,24 @@ public final class ChangeUsernameScreen extends ScreenLogic {
     /**
      * Tries to update the username in the server. Changes the visible message into a new message that
      * shows if it was successful or not.
+     *
      * @return New listener that is fired when clicked.
      */
     protected ChangeListener saveBehaviour() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                if (Client.getInstance().updateUsername(cUsername.getText())) {
-                    cMessage.setText("Succes!");
-                } else {
-                    cMessage.setText("Something went wrong!");
-                }
+                cMessage.setText("Waiting for server response!");
+                Client.getLocalInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+                        if(response.isSuccess()) {
+                            cMessage.setText("Success!");
+                        } else {
+                            cMessage.setText("Something went wrong!");
+                        }
+                    }
+                });
             }
         };
     }

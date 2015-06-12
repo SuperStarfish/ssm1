@@ -1,5 +1,8 @@
 package cg.group4.view.screen;
 
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -8,15 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 /**
  * Screen to display the rewards that have been gathered during an event.
  */
 public final class RewardScreen extends ScreenLogic {
 
-    /**
-     * Reward that has to be displayed of the screen.
-     */
-    protected int cReward;
     /**
      * Button to return to the HomeScreen.
      */
@@ -31,8 +33,8 @@ public final class RewardScreen extends ScreenLogic {
      *
      * @param reward The reward to be displayed on the reward screen.
      */
-    public RewardScreen(final int reward) {
-        cReward = reward;
+    public RewardScreen(final Collection reward) {
+        constructContents(reward);
     }
 
     @Override
@@ -40,7 +42,7 @@ public final class RewardScreen extends ScreenLogic {
         Table table = new Table();
         table.setFillParent(true);
 
-        cRewardLabel = new Label(Integer.toString(cReward),
+        cRewardLabel = new Label("Not yet implemented",
                 cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
         table.row().expandY();
         table.add(cRewardLabel);
@@ -67,5 +69,16 @@ public final class RewardScreen extends ScreenLogic {
     @Override
     protected String setPreviousScreenName() {
         return "Home";
+    }
+
+    /**
+     * Constructs the display of the rewards of the reward screen.
+     *
+     * @param collection the collection of the rewards collected during the stroll.
+     */
+    protected void constructContents(final Collection collection) {
+        ArrayList<Collectible> sortedList = collection.sort(new RarityComparator());
+        DecimalFormat format = new DecimalFormat("#.00");
+
     }
 }

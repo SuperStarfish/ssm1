@@ -1,5 +1,6 @@
 package cg.group4.game_logic.stroll.events.fishevent;
 
+import cg.group4.util.audio.AudioPlayer;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -19,6 +20,7 @@ public class ReelInState implements FishEventState {
 
     /**
      * Constructor, creates this state.
+     *
      * @param event The event this state belongs to.
      */
     public ReelInState(final FishingStrollEvent event) {
@@ -28,11 +30,12 @@ public class ReelInState implements FishEventState {
 
     /**
      * Method that processes the input to match the movement of pulling your fishing pole out of the water.
+     *
      * @param input Vector containing the acceleration in the x,y,z directions respectively.
      */
     public final void processInput(final Vector3 input) {
         if (input.z < DELTA) {
-            cEvent.cCompletedTaskSound.play();
+            AudioPlayer.getInstance().playAudio(cEvent.cCompletedTaskSound);
             cEvent.eventCompleted();
         }
     }

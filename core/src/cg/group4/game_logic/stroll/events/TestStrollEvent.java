@@ -1,7 +1,8 @@
 package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.sensors.Accelerometer;
+import cg.group4.util.audio.AudioPlayer;
+import cg.group4.util.sensor.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
@@ -21,19 +22,22 @@ public class TestStrollEvent extends StrollEvent {
      * Number of tasks that the player must complete before the event is considered a success.
      */
     protected static final int MAX_TASKS = 10;
+   
     /**
      * Constants used for each task case.
      */
     protected static final int MOVE_LEFT = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_UP = 3,
             MOVE_AWAY = 4, MOVE_TOWARDS = 5;
-    /**
-     * The string values belonging to each direction.
-     */
-    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
+   
     /**
      * Sound effect played when a task is completed.
      */
     protected final Sound cCompletedTaskSound;
+    
+    /**
+     * The string values belonging to each direction.
+     */
+    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
     
     /**
      * operationNr: Movement operation that must be done.
@@ -41,18 +45,22 @@ public class TestStrollEvent extends StrollEvent {
      * tasksCompleted: Number of completed movement operations.
      */
     protected int cOperationNr, cPrevOperationNr, cTasksCompleted;
+  
     /**
      * Whether or not the input is delayed.
      */
     protected boolean cDelayNewInput;
+   
     /**
      * Delays input to better determine the acceleration direction.
      */
     protected Timer cDelayInputTimer;
+   
     /**
      * Tasks which will execute when a delay is initiated.
      */
     protected Observer cDelayInputStartObserver;
+   
     /**
      * Tasks which will execute when a delay is stopped.
      */
@@ -64,6 +72,11 @@ public class TestStrollEvent extends StrollEvent {
     protected Accelerometer cAccelMeter;
 
     /**
+     * Creates random variables for the class.
+     */
+    protected Random cRandom;
+
+    /**
      * Constructor for the test event.
      */
     public TestStrollEvent() {
@@ -71,6 +84,7 @@ public class TestStrollEvent extends StrollEvent {
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;
         cPrevOperationNr = -1;
+        cRandom = new Random();
 
         cDelayInputStartObserver = new Observer() {
             @Override
@@ -99,9 +113,9 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Sets the new operation that should be done.
      */
-    public final void doTask() {
+    public void doTask() {
         do {
-            cOperationNr = new Random().nextInt(cDirections.length);
+            cOperationNr = cRandom.nextInt(cDirections.length);
         } while (cOperationNr == cPrevOperationNr);
 
     }
@@ -109,10 +123,10 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Gets called when one of the individual tasks gets completed.
      */
-    public final void taskCompleted() {
+    public void taskCompleted() {
         this.cTasksCompleted++;
         Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
-        cCompletedTaskSound.play(1.0f);
+        AudioPlayer.getInstance().playAudio(cCompletedTaskSound);
         cLabelSubject.update("Good work!");
         cDelayInputTimer.reset();
 
@@ -127,9 +141,16 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Clears the current event.
      */
-    public final void clearEvent() {
-        super.dispose();
+    public void clearEvent() {
+        superDispose();
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
+    }
+
+    /**
+     * Method that calls super.dispose() to make it more testable.
+     */
+    public void superDispose() {
+        super.dispose();
     }
 
     @Override
@@ -145,7 +166,7 @@ public class TestStrollEvent extends StrollEvent {
      *
      * @param accelData Vector containing the acceleration in the x,y and z direction.
      */
-    public final void processInput(final Vector3 accelData) {
+    public void processInput(final Vector3 accelData) {
         final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
         final float delta = 2.5f;
 
@@ -156,7 +177,7 @@ public class TestStrollEvent extends StrollEvent {
                     success = accelData.y >= delta;
                     break;
                 case MOVE_RIGHT:
-                    success = accelData.y <= delta;
+                    success = accelData.y <= -delta;
                     break;
                 case MOVE_DOWN:
                     success = accelData.x <= -delta;
@@ -189,7 +210,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final void update(final Observable o, final Object arg) {
+    public void update(final Observable o, final Object arg) {
         Vector3 readings = cAccelMeter.update();
         //Done outside of the if to keep the resulting readings relevant. Needs testing
         if (!cDelayNewInput) {

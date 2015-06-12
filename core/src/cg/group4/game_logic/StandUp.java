@@ -1,16 +1,16 @@
 package cg.group4.game_logic;
 
-import java.util.ArrayList;
-
+import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
-import cg.group4.rewards.RewardGenerator;
-import cg.group4.rewards.collectibles.Collectible;
-import cg.group4.util.sensors.SensorReader;
-import cg.group4.util.subscribe.Subject;
+import cg.group4.util.audio.AudioPlayer;
+import cg.group4.util.sensor.SensorReader;
+import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-
+import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 /**
  * Class which handles the game logic.
@@ -29,7 +29,12 @@ public final class StandUp {
     /**
      * Singleton of game logic handler.
      */
-    protected static StandUp INSTANCE = new StandUp();
+    protected static StandUp cInstance;
+
+    /**
+     * Player of the game.
+     */
+    protected Player cPlayer;
 
     /**
      * Stroll logic.
@@ -50,11 +55,11 @@ public final class StandUp {
      * Reads sensor input of the device.
      */
     protected SensorReader cSensorReader;
-    
+
     /**
-     * Generates the rewards.
+     * Keeps track of the amount of movement during the game.
      */
-    protected RewardGenerator cGenerator;
+    protected AccelerationStatus cAccelerationStatus;
 
     /**
      * Instantiate StandUp and TimeKeeper.
@@ -63,16 +68,19 @@ public final class StandUp {
         cUpdateSubject = new Subject();
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
-        cGenerator = new RewardGenerator();
+        cPlayer = new Player();
     }
 
     /**
      * Getter for StandUp instance.
      *
-     * @return INSTANCE
+     * @return cInstance
      */
     public static StandUp getInstance() {
-        return INSTANCE;
+        if(cInstance == null) {
+            cInstance = new StandUp();
+        }
+        return cInstance;
     }
 
     /**
@@ -89,17 +97,13 @@ public final class StandUp {
 
     /**
      * Ends the current stroll.
-     *
-     * @param cRewards rewards gained by the stroll.
+     * @param rewardsCollection rewards gained by the stroll.
      */
-    public void endStroll(final ArrayList<Integer> cRewards) {
+    public void endStroll(final Collection rewardsCollection) {
         Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
-        
-        for (int score : cRewards) {
-        	Collectible c = cGenerator.generateCollectible(score);
-        	//ADD COLLECTIBLE TO COLLECTION HERE
-        }
+
+        cPlayer.getCollection().addAll(rewardsCollection);
     }
 
     /**
@@ -109,6 +113,15 @@ public final class StandUp {
      */
     public Stroll getStroll() {
         return cStroll;
+    }
+
+    /**
+     * Getter for Player.
+     *
+     * @return The player of the game.
+     */
+    public Player getPlayer() {
+        return cPlayer;
     }
 
     /**
@@ -143,5 +156,13 @@ public final class StandUp {
      */
     public SensorReader getSensorReader() {
         return cSensorReader;
+    }
+
+    public void setAccelerationStatus(AccelerationStatus status) {
+        cAccelerationStatus = status;
+    }
+
+    public AccelerationStatus getAccelerationStatus() {
+        return cAccelerationStatus;
     }
 }
