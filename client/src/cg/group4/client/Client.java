@@ -6,17 +6,7 @@ import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.AddCollection;
-import cg.group4.server.database.query.CreateGroup;
-import cg.group4.server.database.query.GetGroupData;
-import cg.group4.server.database.query.Query;
-import cg.group4.server.database.query.RemoveCollection;
-import cg.group4.server.database.query.RequestCollection;
-import cg.group4.server.database.query.RequestHostCode;
-import cg.group4.server.database.query.RequestHostIp;
-import cg.group4.server.database.query.RequestPlayerData;
-import cg.group4.server.database.query.ResetPlayerData;
-import cg.group4.server.database.query.UpdatePlayerData;
+import cg.group4.server.database.query.*;
 import cg.group4.util.IpResolver;
 
 import java.net.UnknownHostException;
@@ -44,7 +34,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "82.169.19.191";
+    protected final String cDefaultIp = "128.127.39.32";
     /**
      * The default port to connect to.
      */
@@ -68,16 +58,12 @@ public final class Client {
      */
     protected ArrayList<Runnable> cPostRunnables;
 
-    /**
-     * Determines if a request to the server has been made. If so, no new requests can be made.
-     */
-    protected boolean cAwaitingResponse = false;
 
     /**
      * Constructs a new Client and sets the state to unconnected.
      */
     public Client() {
-        cConnection = new UnConnected(this);
+        cConnection = new UnConnected();
         cUserIDResolver = new DummyUserIdResolver();
         cRemoteChangeSubject = new Subject();
         cPostRunnables = new ArrayList<Runnable>();
@@ -151,18 +137,9 @@ public final class Client {
      * @param port Port to connect to.
      */
     public void connectToServer(final String ip, final int port) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
             cConnection.connect(ip, port);
-        }
     }
 
-    /**
-     * Enables the client to take a new request.
-     */
-    public void enableRequests() {
-        cAwaitingResponse = false;
-    }
 
     /**
      * Sets the connection to the new connection.
@@ -171,7 +148,6 @@ public final class Client {
     public void setConnection(final Connection connection) {
         cConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
-        enableRequests();
         LOGGER.info("Managed to connect: " + connection.isConnected());
     }
 
@@ -184,6 +160,15 @@ public final class Client {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setStrollTimeStamp(timeStamp);
         tryToSend(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Sends the given query to the server, if there has not already been made a previous request.
+     * @param query The query to the server.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
+        cConnection.send(query, responseHandler);
     }
 
     /**
@@ -261,18 +246,6 @@ public final class Client {
      */
     public void removeCollection(final Collection collection, final ResponseHandler responseHandler) {
         tryToSend(new RemoveCollection(collection), responseHandler);
-    }
-
-    /**
-     * Sends the given query to the server, if there has not already been made a previous request.
-     * @param query The query to the server.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
-            cConnection.send(query, responseHandler);
-        }
     }
 
     /**

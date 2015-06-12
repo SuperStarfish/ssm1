@@ -1,9 +1,5 @@
 package cg.group4.server;
 
-import cg.group4.server.host.ExternalHost;
-import cg.group4.server.host.Host;
-import cg.group4.server.host.LocalHost;
-import cg.group4.server.host.UnknownHost;
 import cg.group4.util.IpResolver;
 import cg.group4.util.StaticsCaller;
 
@@ -43,9 +39,9 @@ public class Server {
      */
     protected final int cMaxThreads = 50;
     /**
-     * Containers for the local and external INetAddress. Can be UnknownHost if lookup failed.
+     * Ip of the server, either local or remote.
      */
-    protected Host cLocalHost, cExternalHost;
+    protected String cIp;
     /**
      * The ServerSocket used by this Server to accept incoming connections.
      */
@@ -74,6 +70,17 @@ public class Server {
     }
 
     /**
+     * Starts a server.
+     *
+     * @param args Not used, but default for main method.
+     */
+    public static void main(final String[] args) {
+        Server server = new Server(new RemoteStorageResolver());
+        LOGGER.setLevel(Level.INFO);
+        server.start();
+    }
+
+    /**
      * Starts the Server. This can be either an internal or external server, defined by isRemote.
      * If the server is internal it will not attempt to check its external IP.
      * Uses default port if remote, otherwise uses 0 (random) port.
@@ -81,12 +88,13 @@ public class Server {
     public final void start() {
         createLocalIP();
 
-        if (!cLocalStorageResolver.isLocal()) {
+        if (cLocalStorageResolver.isLocal()) {
+            createServerSocket(0);
+            createLocalIP();
+        } else {
             createServerSocket(cDefaultPort);
             createExternalIP();
             validateExternalConnection();
-        } else {
-            createServerSocket(0);
         }
 
         new Thread(new Runnable() {
@@ -105,9 +113,8 @@ public class Server {
      */
     protected final void createLocalIP() {
         try {
-            cLocalHost = new LocalHost(cStaticsCaller.getLocalHost());
+            cIp = cStaticsCaller.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            cLocalHost = new UnknownHost();
             LOGGER.severe("Could not set up local IP!");
         }
     }
@@ -118,10 +125,9 @@ public class Server {
     protected final void createExternalIP() {
         IpResolver ipResolver = new IpResolver();
         try {
-            cExternalHost = new ExternalHost(cStaticsCaller.getByName(ipResolver.getExternalIP()));
-            LOGGER.info("External IP: " + cExternalHost.toString());
+            cIp = cStaticsCaller.getByName(ipResolver.getExternalIP()).getHostAddress();
+            LOGGER.info("External IP: " + cIp);
         } catch (UnknownHostException e) {
-            cExternalHost = new UnknownHost();
             LOGGER.severe("Could not set up local IP!");
         }
     }
@@ -179,7 +185,7 @@ public class Server {
     protected final void validateExternalConnection() {
         try {
             LOGGER.info("Checking if the port is open.");
-            Socket socket = new Socket(cExternalHost.toString(), cDefaultPort);
+            Socket socket = new Socket(cIp, cDefaultPort);
             cServerSocket.accept();
             LOGGER.info("Port " + cServerSocket.getLocalPort() + " is open. Managed to connect over external IP");
             socket.close();
@@ -209,20 +215,8 @@ public class Server {
     public final String toString() {
         String result = "";
         String lineSeparator = System.getProperty("line.separator");
-        result += "Local IP: " + cLocalHost.toString() + lineSeparator;
-        result += "External IP: " + cExternalHost.toString() + lineSeparator;
+        result += "IP: " + cIp + lineSeparator;
         return result;
-    }
-
-    /**
-     * Starts a server.
-     *
-     * @param args Not used, but default for main method.
-     */
-    public static void main(final String[] args) {
-        Server server = new Server(new RemoteStorageResolver());
-        LOGGER.setLevel(Level.INFO);
-        server.start();
     }
 
     /**
