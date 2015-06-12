@@ -150,14 +150,4 @@ public class FishingStrollEventTest {
 
         Mockito.verify(state.cFishTimer, Mockito.times(1)).reset();
     }
-
-    @Test
-    public void clearEventTest() {
-        Mockito.doNothing().when(cSpyEvent).superDispose();
-
-        cSpyEvent.clearEvent();
-
-        Mockito.verify(cSpyEvent).superDispose();
-    }
-
 }
