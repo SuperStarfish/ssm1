@@ -34,13 +34,12 @@ public class CraneFishing extends StrollEvent {
 		super();
 		cAccelmeter = new Accelerometer(StandUp.getInstance().getSensorReader());
 		cAccelmeter.filterGravity(false);
-		cAccelmeter.setNoiseThreshold(1f);
+		cAccelmeter.setNoiseThreshold(0.5f);
 		cAccelmeter.setFilterPerAxis(true);
 
 		fishList = new ArrayList<SmallFish>();
 		
 		cBoatStack = new Stack();
-		cBoatStack.add(new Image(new Texture(Gdx.files.internal("images/BoatBox.png"))));
 
 		cBoatStack.setPosition(240, 440);
 		cBoatStack.setSize(128, 128);

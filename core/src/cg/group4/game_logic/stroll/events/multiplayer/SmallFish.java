@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class SmallFish extends Image {
 	
 	protected int cDestinationX, cDestinationY;
-	protected int cSpeed = 4;
+	protected int cSpeed = 3;
 	
 	public SmallFish(Texture t) {
 		super(t);
@@ -28,14 +28,11 @@ public class SmallFish extends Image {
 	}
 	
 	public void move() {
-		int diffX = (int) (cDestinationX - this.getX());
-		int diffY = (int) (cDestinationY - this.getY());
+		int diffX = (int) (cDestinationX - this.getCenterX());
+		int diffY = (int) (cDestinationY - this.getCenterY());
 		
 		int newX = (int) (this.getX() + (cSpeed * Math.signum(diffX)));
 		int newY = (int) (this.getY() + (cSpeed * Math.signum(diffY)));
-//		System.out.println("CURRENTX: " + this.getX() + " CURRENTY: " + this.getY());
-//		System.out.println("NEWX: " + newX + " NEWY: " + newY);
-//		System.out.println("DESTINATION: X: " + cDestinationX + " Y: " + cDestinationY);
 		this.setPosition(newX, newY);
 	}
 
