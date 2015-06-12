@@ -42,13 +42,15 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 
+    if (!"${project}".contains("android")) {
 
+        apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
+        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
+    }
 }
 
 project(":core") {
     apply plugin: "java"
-
-    apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
 
     dependencies {
         compile project(":client")
@@ -82,6 +84,7 @@ project(":server") {
         compile project(":data_structures")
         compile "org.xerial:sqlite-jdbc:3.8.6"
         compile "org.sqldroid:sqldroid:1.0.3"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
 
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
@@ -99,12 +102,15 @@ project(":client") {
     }
 }
 
+
+
 project(":data_structures") {
     apply plugin: "java"
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 }
 
@@ -150,12 +156,11 @@ project(":aquarium") {
 }
 
 subprojects {
-    if (!"${project}".contains("android")) {
-        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
-    }
+
 }
 
 tasks.eclipse.doLast {
     delete ".project"
 }
 
+test.finalizedBy {project.tasks.cobertura}

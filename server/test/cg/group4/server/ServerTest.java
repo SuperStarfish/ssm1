@@ -31,30 +31,30 @@ public class ServerTest {
         cServer = new Server(new RemoteStorageResolver());
     }
 
-    /**
-     * Tears down the environment after the tests.
-     */
-    @Test
-    public void testCreateLocalIP() {
-        cServer.cStaticsCaller = mock(StaticsCaller.class);
-        cServer.createLocalIP();
-        assertThat(cServer.cLocalHost, instanceOf(LocalHost.class));
-    }
-
-    /**
-     * Makes sure an exception will be thrown createLocalIp fails.
-     */
-    @Test
-    public void testCreateLocalIPWithException() {
-        cServer.cStaticsCaller = mock(StaticsCaller.class);
-        try {
-            doThrow(new UnknownHostException()).when(cServer.cStaticsCaller).getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        cServer.createLocalIP();
-        assertThat(cServer.cLocalHost, instanceOf(UnknownHost.class));
-    }
+//    /**
+//     * Tears down the environment after the tests.
+//     */
+//    @Test
+//    public void testCreateLocalIP() {
+//        cServer.cStaticsCaller = mock(StaticsCaller.class);
+//        cServer.createLocalIP();
+//        assertThat(cServer.cLocalHost, instanceOf(LocalHost.class));
+//    }
+//
+//    /**
+//     * Makes sure an exception will be thrown createLocalIp fails.
+//     */
+//    @Test
+//    public void testCreateLocalIPWithException() {
+//        cServer.cStaticsCaller = mock(StaticsCaller.class);
+//        try {
+//            doThrow(new UnknownHostException()).when(cServer.cStaticsCaller).getLocalHost();
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
+//        cServer.createLocalIP();
+//        assertThat(cServer.cLocalHost, instanceOf(UnknownHost.class));
+//    }
 
     /**
      * Checks port validity.
