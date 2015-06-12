@@ -68,6 +68,13 @@ public class FishingStrollEvent extends StrollEvent {
         superDispose();
     }
 
+    /**
+     * Method that calls super.dispose() to make it more testable.
+     */
+    public void superDispose() {
+        super.dispose();
+    }
+
     @Override
     public void start() {
         cAccelMeter.filterGravity(true);
