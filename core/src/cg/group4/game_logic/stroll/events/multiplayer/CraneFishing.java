@@ -3,22 +3,17 @@ package cg.group4.game_logic.stroll.events.multiplayer;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import javax.swing.GroupLayout.Alignment;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.util.sensor.Accelerometer;
-import cg.group4.util.sensor.Gyroscope;
 
 public class CraneFishing extends StrollEvent {
 	
@@ -27,7 +22,7 @@ public class CraneFishing extends StrollEvent {
 	protected Boat cBoat;
 	protected Crane cCrane;
 	protected CraneFishingScreen cScreen;
-	protected Image x;
+	protected CraneHitbox cCraneHitBox;
 	protected int cSpeed = 4;
 	protected double cPrevAngle = 0;
 	protected ArrayList<SmallFish> fishList;
@@ -39,47 +34,85 @@ public class CraneFishing extends StrollEvent {
 		super();
 		cAccelmeter = new Accelerometer(StandUp.getInstance().getSensorReader());
 		cAccelmeter.filterGravity(false);
-		cAccelmeter.setNoiseThreshold(0.5f);
-		cAccelmeter.setFilterPerAxis(false); 
+		cAccelmeter.setNoiseThreshold(1f);
+		cAccelmeter.setFilterPerAxis(true);
 
 		fishList = new ArrayList<SmallFish>();
 		
 		cBoatStack = new Stack();
 		cBoatStack.add(new Image(new Texture(Gdx.files.internal("images/BoatBox.png"))));
 
-		cBoatStack.setPosition(120, 220);
-		cBoatStack.setSize(64, 64);
-		
-		x = new Image(new Texture(Gdx.files.internal("images/HitBox.png")));
-		x.setSize(8,8);
-		
-		setHitBoxPosition(cBoatStack, 0);
-		
-//		cBoat = new Boat();
-//		cCrane = new Crane();
+		cBoatStack.setPosition(240, 440);
+		cBoatStack.setSize(128, 128);
 
-//		cBoatStack.add(cBoat);
-//		cBoatStack.add(cCrane);
+        cCraneHitBox = new CraneHitbox(new Texture(Gdx.files.internal("images/HitBox.png")));
+
+        cCraneHitBox.setSize(16,16);
+
+        cPrevAngle = 1.5;
+        setHitBoxPosition(cBoatStack, 0);
 		
-		cScreen = screen;
+		cBoat = new Boat();
+		cCrane = new Crane();
+
+		cBoatStack.add(cBoat);
+		cBoatStack.add(cCrane);
+        cCrane.setOrigin(cBoatStack.getWidth() /2, cBoatStack.getHeight() / 2);
+
+        cScreen = screen;
 		cScreen.getWidgetGroup().debugAll();
 		cScreen.getWidgetGroup().addActor(cBoatStack);
-		cScreen.getWidgetGroup().addActor(x);
+		cScreen.getWidgetGroup().addActor(cCraneHitBox);
+
+        spawnFish();
 	}
 	
-	protected void setHitBoxPosition(Stack boat, float angle) {
+	protected void setHitBoxPosition(Stack boat, double angle) {
+        angle = angle % (Math.PI * 2);
+
 		float radius = boat.getHeight() / 2;
-		float hitBoxSize = x.getWidth() / 2;
+		float hitBoxRadius = cCraneHitBox.getWidth() / 2;
 		float xCoordCenter = boat.getX() + radius;
 		float yCoordCenter = boat.getY() + radius;
 
-		float xPlacement = (float)Math.cos(Math.toRadians(angle)) * -radius;
-		float yPlacement = (float)Math.sin(Math.toRadians(angle)) * radius;
-		
-		x.setPosition(xCoordCenter - hitBoxSize + xPlacement, yCoordCenter - hitBoxSize + yPlacement);
-		
-		System.out.println(radius);
+        float xPosition = (float)Math.cos(angle) * radius;
+        float yPosition = (float)Math.sin(angle) * radius;
+
+        cCraneHitBox.setPosition(xCoordCenter + xPosition - hitBoxRadius, yCoordCenter + yPosition - hitBoxRadius);
 	}
+
+    protected void spawnFish() {
+        Texture fishTexture = new Texture(Gdx.files.internal("images/SmallFish.png"));
+        for(int i = 0; i < 100; i++) {
+            SmallFish fish = new SmallFish(fishTexture);
+            fish.layout();
+
+            int x = (int) (Math.random() * (Gdx.graphics.getWidth() - fish.getImageWidth()));
+            int y = (int) (Math.random() * (Gdx.graphics.getHeight() - fish.getImageHeight()));
+
+            fish.setPosition(x, y);
+            fishList.add(fish);
+            cScreen.getWidgetGroup().addActor(fish);
+        }
+    }
+
+    protected void moveFish() {
+        for(int i = 0; i < fishList.size(); i++) {
+            SmallFish currentFish = fishList.get(i);
+
+            if(cCraneHitBox.collidesWith(currentFish)) {
+                cScreen.getWidgetGroup().removeActor(currentFish);
+                fishList.remove(currentFish);
+                System.out.println("EAT");
+            }
+
+            if(currentFish.destinationReached()) {
+                currentFish.generateDestination();
+            }
+
+            currentFish.move();
+        }
+    }
 
 	@Override
 	public int getReward() {
@@ -101,52 +134,39 @@ public class CraneFishing extends StrollEvent {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		Vector3 update = cAccelmeter.update();
-//		updateBoat(update);
-//		updateCrane(update);
+		Vector3 vector = cAccelmeter.update();
+        if(vector.x != 0 || vector.y != 0 ) {
+            double angle = Math.atan2(-vector.y, -vector.x);
+            setHitBoxPosition(cBoatStack, angle);
+            moveBoat(vector);
+            updateCrane(angle);
+        }
+        moveFish();
 	}
 	
-	protected void updateBoat(Vector3 update) {
-		float totalForce = Math.abs(update.x) + Math.abs(update.y);
-		float newX = cBoat.getX();
-		float newY = cBoat.getY();
+	protected void moveBoat(Vector3 vector) {
+		float totalForce = Math.abs(vector.x) + Math.abs(vector.y);
+		float newX = cBoatStack.getX();
+		float newY = cBoatStack.getY();
 		
 		if(totalForce != 0) {
-			newX = newX - cSpeed*(update.x / totalForce);
-			newY = newY - cSpeed*(update.y / totalForce);
+			newX = newX - cSpeed*(vector.x / totalForce);
+			newY = newY - cSpeed*(vector.y / totalForce);
 		}
 		
-		cBoat.setPosition(newX, newY);
-		cCrane.setPosition(newX + cCraneOffsetX, newY + cCraneOffsetY);
+		cBoatStack.setPosition(newX, newY);
 	}
 	
-	protected void updateCrane(Vector3 update) {
-		double angle = cPrevAngle;
-		if(update.x != 0) {
-			angle = Math.toDegrees(Math.atan(update.y / update.x));
-		}
-		
-		int extraAngle = 0;
-		if(update.x > 0 && update.y > 0) {
-			extraAngle = 90;
-		} else if(update.x < 0 && update.y > 0) {
-			extraAngle = 180;
-		} else if(update.x < 0 && update.y < 0) {
-			extraAngle = 270;
-		}
-		angle += extraAngle;
-		cCrane.setRotation((float) -cPrevAngle);
-		cCrane.setRotation((float) angle);
-		cPrevAngle = angle;
-		updateHitBox((float) angle);
-	}
+	protected void updateCrane(double angle) {
+        cCrane.setRotation((float)Math.toDegrees(angle));
+    }
 	
 	protected void updateHitBox(float angle) {
 		int newX = (int) (Math.cos(angle) * (cHitBoxBaseX - (cCrane.getX() + cCrane.getOriginX())) - Math.sin(angle) * (cHitBoxBaseY - (cCrane.getY() + cCrane.getOriginY())) + (cCrane.getX() + cCrane.getOriginX()));
 		int newY = (int) (Math.sin(angle) * (cHitBoxBaseX - (cCrane.getX() + cCrane.getOriginX())) + Math.cos(angle) * (cHitBoxBaseY - (cCrane.getY() + cCrane.getOriginY())) + (cCrane.getY() + cCrane.getOriginY()));
 		cHitBox.x = newX;
 		cHitBox.y = newY;
-		x.setPosition(newX, newY);
+        cCraneHitBox.setPosition(newX, newY);
 	}
 
 }

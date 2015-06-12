@@ -9,7 +9,6 @@ public class SmallFish extends Image {
 	
 	protected int cDestinationX, cDestinationY;
 	protected int cSpeed = 4;
-	protected Rectangle cHitBox;
 	
 	public SmallFish(Texture t) {
 		super(t);
@@ -39,8 +38,12 @@ public class SmallFish extends Image {
 //		System.out.println("DESTINATION: X: " + cDestinationX + " Y: " + cDestinationY);
 		this.setPosition(newX, newY);
 	}
-	
-	public Rectangle getHitBox() {
-		return cHitBox;
+
+	public float getCenterX() {
+		return this.getX() + this.getWidth() / 2;
+	}
+
+	public float getCenterY() {
+		return this.getY() + this.getHeight() / 2;
 	}
 }

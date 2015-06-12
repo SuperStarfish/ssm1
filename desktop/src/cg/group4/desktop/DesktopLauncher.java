@@ -35,7 +35,6 @@ public class DesktopLauncher {
                 new DesktopIDResolver(),
                 new DesktopStorageResolver()),
                 config);
-
     }
 
     /**
