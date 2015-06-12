@@ -1,6 +1,5 @@
 package cg.group4.aquarium;
 
-import cg.group4.display_logic.DisplaySettings;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -26,11 +25,9 @@ public class AquariumLauncher {
 
         // set the border to undecorated (no minus/resize/close and thinner borders) to better emulate fullscreen,
         // without actually setting fullscreen mode on.
-        //System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
 
         new LwjglApplication(new DisplayLauncher(), config);
-        System.out.println(DisplaySettings.screenMaxX);
-        System.out.println(DisplaySettings.screenMaxY);
     }
 
 }

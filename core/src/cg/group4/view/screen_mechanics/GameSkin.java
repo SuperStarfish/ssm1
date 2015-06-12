@@ -77,6 +77,11 @@ public class GameSkin extends Skin {
         addDefaults();
     }
 
+    public final void addDefaultsAquarium() {
+        this.add("default_titleFont", generateDefaultTitleFont());
+        this.add("default_labelStyle", generateDefaultLabelStyle());
+    }
+
     /**
      * Adds different fonts and their styles to the skin, to choose from.
      */

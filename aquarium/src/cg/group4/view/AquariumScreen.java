@@ -4,57 +4,154 @@ import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.data_structures.collection.collectibles.FishA;
-import cg.group4.data_structures.collection.collectibles.FishB;
-import cg.group4.data_structures.collection.collectibles.FishC;
-import cg.group4.view.screen_mechanics.ScreenLogic;
+import cg.group4.view.screen_mechanics.GameSkin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Screen which displays the collected fish in an aquarium.
  */
-public class AquariumScreen implements Screen {
+public class AquariumScreen implements Screen, Observer {
 
+    /**
+     * Tag for debug prints.
+     */
     final String tag = this.getClass().getSimpleName();
-    final AquariumRenderer cAquariumRenderer;
 
+    /**
+     *
+     */
+    final Stage cStage;
+
+    /**
+     *
+     */
     HashSet<CollectibleRenderer> cCollectibleRendererSet;
-    // test
-    // todo observer + subject
+
+    /**
+     *
+     */
     final Collection fishTank;
 
+
+    /**
+     *
+     */
+    final GameSkin cGameSkin;
+
+    /**
+     *
+     */
+    Label cOwnerLabel;
+
+    /**
+     *
+     */
+    Label cDateLabel;
+
+    /**
+     *
+     */
+    Table cLabelTable;
+
+    /**
+     *
+     */
     public AquariumScreen() {
         cCollectibleRendererSet = new HashSet<>();
-        cAquariumRenderer = new AquariumRenderer();
+        cGameSkin = new GameSkin();
+        cGameSkin.addDefaultsAquarium();
+        cStage = new Stage();
 
+
+        // temp
         fishTank = new Collection("FISH_TANK_COLLECTION");
+        //fishTank.add(new FishA(1f, "SampleOwnerId")); // todo replace by collectibles from server
+        for (int i = 0; i < 100; i++) {
+            RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID() + ":me" + i);
 
-        fishTank.add(new FishA(1f, "SampleOwnerId")); // todo replace by collectibles from server
-
-
-        RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID());
-
-        for (int i = 0; i < 250; i++) {
             fishTank.add(gen.generateCollectible(1));
         }
+        // end temp
 
-        setCollectibleRendererSet(fishTank);
-
+        initCollectibleRendererSet(fishTank);
+        initStage();
+        initLabels();
     }
 
-    public void setCollectibleRendererSet(Collection h) {
-        for (Collectible c : h) {
+    protected void initLabels() {
+        cLabelTable = new Table();
+        cLabelTable.setFillParent(true);
+
+        Label.LabelStyle style = cGameSkin.getDefaultLabelStyle();
+        style.font.setColor(new Color(1f, 0, 0, 1f));
+
+        cOwnerLabel = new Label("OWNER", style);
+        cDateLabel = new Label("DATE", style);
+
+        cOwnerLabel.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("exosy");
+            }
+        });
+
+        cLabelTable.align(Align.top);
+        cLabelTable.add(cOwnerLabel).expandX().width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 5);
+        cLabelTable.add(cDateLabel).expandX().width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 5).expandX();
+//        cLabelTable.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cLabelTable.setFillParent(true);
+
+        cLabelTable.debugAll();
+
+
+        cStage.addActor(cLabelTable);
+    }
+
+
+    /**
+     * For each collectible in the collection create a render object which handles the movement and view.
+     * @param collection
+     */
+    public void initCollectibleRendererSet(Collection collection) {
+        for (Collectible c : collection) {
             CollectibleRenderer collectibleRenderer = new CollectibleRenderer(c);
+            collectibleRenderer.once();
             cCollectibleRendererSet.add(collectibleRenderer);
         }
     }
+
+    /**
+     * For a single collectible create a render object which handles the movement and view.
+     * @param collectible
+     */
+    public void initCollectibleRendererItem(Collectible collectible) {
+            CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
+            cCollectibleRendererSet.add(collectibleRenderer);
+    }
+
+    /**
+     * To be executed only after initialization of the collectible renderer entities.
+     */
+    public void initStage() {
+        for (CollectibleRenderer cr : cCollectibleRendererSet) {
+            cStage.addActor(cr.getActor());
+        }
+        Gdx.input.setInputProcessor(cStage);
+    }
+
 
     @Override
     public void show() {
@@ -63,37 +160,43 @@ public class AquariumScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        cAquariumRenderer.render();
 
-        System.out.println("fps " + (1/delta));
+        //System.out.println("Fps -> " + (1/delta));
         for (CollectibleRenderer c : cCollectibleRendererSet) {
             c.render();
         }
+
+        cStage.act();
+        Gdx.gl.glClearColor(63/255, 67/255, 173f/255, 1f);
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        cStage.setDebugAll(true);
+        cStage.draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-        cAquariumRenderer.dispose();
+        cStage.dispose();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
     }
 
 }
