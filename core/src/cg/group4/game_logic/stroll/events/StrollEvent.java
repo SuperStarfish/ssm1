@@ -70,6 +70,10 @@ public abstract class StrollEvent implements Disposable, Observer {
      */
     public abstract void start();
 
+    public void superDispose() {
+        dispose();
+    }
+
     /**
      * Getter for the label subject. Detects label changes.
      *
