@@ -1,24 +1,18 @@
 package cg.group4.client.connection;
 
-import cg.group4.client.Client;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
-import java.util.logging.Logger;
 
 /**
  * Connection state where no connection is made with the server.
  */
 public final class LocalConnection implements Connection {
-    /**
-     * Default java logging functionality.
-     */
-    protected static final Logger LOGGER = Logger.getLogger(LocalConnection.class.getName());
     /**
      * The connection with the server.
      */
@@ -31,6 +25,10 @@ public final class LocalConnection implements Connection {
      * OutputStream for objects to the server.
      */
     protected ObjectOutputStream cOutputStream;
+    /**
+     * Boolean whether the connection is currently accepting new requests (not waiting for response).
+     */
+    protected boolean cAcceptingRequest;
 
     /**
      * Attempts to create a new connection with the server. Fails after cConnectionTimeOut milliseconds.
@@ -42,7 +40,9 @@ public final class LocalConnection implements Connection {
     public LocalConnection(final String ip, final int port) throws IOException {
         cConnection = new Socket(ip, port);
         cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
+        cOutputStream.flush();
         cInputStream = new ObjectInputStream(cConnection.getInputStream());
+        cAcceptingRequest = true;
     }
 
     /**
@@ -54,24 +54,27 @@ public final class LocalConnection implements Connection {
     public void connect(final String ip, final int port) { }
 
     @Override
-    public void send(final Query data, final ResponseHandler responseHandler) {
-        try {
-            cOutputStream.writeObject(data);
-            cOutputStream.flush();
-            Response response = (Response) cInputStream.readObject();
-            if(responseHandler != null) {
-                responseHandler.handleResponse(response);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Client.getLocalInstance().enableRequests();
+    public boolean isConnected() {
+        return true;
     }
 
     @Override
-    public boolean isConnected() {
-        return false;
+    public void send(final Serializable data, final ResponseHandler responseHandler) {
+        if (cAcceptingRequest) {
+            cAcceptingRequest = false;
+            try {
+                cOutputStream.writeObject(data);
+                cOutputStream.flush();
+                Response response = (Response) cInputStream.readObject();
+                cAcceptingRequest = true;
+                if (responseHandler != null) {
+                    responseHandler.handleResponse(response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

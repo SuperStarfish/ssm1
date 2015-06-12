@@ -2,6 +2,7 @@ package cg.group4.desktop;
 
 import cg.group4.Launcher;
 import cg.group4.client.DesktopIDResolver;
+import cg.group4.server.DesktopStorageResolver;
 import cg.group4.util.notification.DesktopNotificationController;
 import cg.group4.util.sensor.DesktopAccelerationStatus;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -17,7 +18,6 @@ public class DesktopLauncher {
      * Uses the Aspect enum to determine what height and width to use for testing the screen on desktop.
      */
     public static final Aspect ASPECT = Aspect.RATIO9_16;
-
     /**
      * Starts the application.
      *
@@ -31,7 +31,8 @@ public class DesktopLauncher {
         new LwjglApplication(new Launcher(
                 new DesktopAccelerationStatus(),
                 new DesktopNotificationController(),
-                new DesktopIDResolver()),
+                new DesktopIDResolver(),
+                new DesktopStorageResolver()),
                 config);
 
     }
