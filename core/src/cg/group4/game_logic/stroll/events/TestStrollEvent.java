@@ -72,6 +72,11 @@ public class TestStrollEvent extends StrollEvent {
     protected Accelerometer cAccelMeter;
 
     /**
+     * Creates random variables for the class.
+     */
+    protected Random cRandom;
+
+    /**
      * Constructor for the test event.
      */
     public TestStrollEvent() {
@@ -79,6 +84,7 @@ public class TestStrollEvent extends StrollEvent {
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;
         cPrevOperationNr = -1;
+        cRandom = new Random();
 
         cDelayInputStartObserver = new Observer() {
             @Override
@@ -107,9 +113,9 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Sets the new operation that should be done.
      */
-    public final void doTask() {
+    public void doTask() {
         do {
-            cOperationNr = new Random().nextInt(cDirections.length);
+            cOperationNr = cRandom.nextInt(cDirections.length);
         } while (cOperationNr == cPrevOperationNr);
 
     }
@@ -117,7 +123,7 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Gets called when one of the individual tasks gets completed.
      */
-    public final void taskCompleted() {
+    public void taskCompleted() {
         this.cTasksCompleted++;
         Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
         AudioPlayer.getInstance().playAudio(cCompletedTaskSound);
@@ -135,9 +141,16 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Clears the current event.
      */
-    public final void clearEvent() {
-        super.dispose();
+    public void clearEvent() {
+        superDispose();
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
+    }
+
+    /**
+     * Method that calls super.dispose() to make it more testable.
+     */
+    public void superDispose() {
+        super.dispose();
     }
 
     @Override
@@ -153,7 +166,7 @@ public class TestStrollEvent extends StrollEvent {
      *
      * @param accelData Vector containing the acceleration in the x,y and z direction.
      */
-    public final void processInput(final Vector3 accelData) {
+    public void processInput(final Vector3 accelData) {
         final float highestAccel = cAccelMeter.highestAccelerationComponent(accelData);
         final float delta = 2.5f;
 
@@ -164,7 +177,7 @@ public class TestStrollEvent extends StrollEvent {
                     success = accelData.y >= delta;
                     break;
                 case MOVE_RIGHT:
-                    success = accelData.y <= delta;
+                    success = accelData.y <= -delta;
                     break;
                 case MOVE_DOWN:
                     success = accelData.x <= -delta;
@@ -197,7 +210,7 @@ public class TestStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final void update(final Observable o, final Object arg) {
+    public void update(final Observable o, final Object arg) {
         Vector3 readings = cAccelMeter.update();
         //Done outside of the if to keep the resulting readings relevant. Needs testing
         if (!cDelayNewInput) {
