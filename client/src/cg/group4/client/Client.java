@@ -59,16 +59,12 @@ public final class Client {
      */
     protected ArrayList<Runnable> cPostRunnables;
 
-    /**
-     * Determines if a request to the server has been made. If so, no new requests can be made.
-     */
-    protected boolean cAwaitingResponse = false;
 
     /**
      * Constructs a new Client and sets the state to unconnected.
      */
     public Client() {
-        cConnection = new UnConnected(this);
+        cConnection = new UnConnected();
         cUserIDResolver = new DummyUserIdResolver();
         cRemoteChangeSubject = new Subject();
         cPostRunnables = new ArrayList<Runnable>();
@@ -142,11 +138,9 @@ public final class Client {
      * @param port Port to connect to.
      */
     public void connectToServer(final String ip, final int port) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
             cConnection.connect(ip, port);
-        }
     }
+
 
     /**
      * Sets the connection to the new connection.
@@ -155,15 +149,7 @@ public final class Client {
     public void setConnection(final Connection connection) {
         cConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
-        enableRequests();
         LOGGER.info("Managed to connect: " + connection.isConnected());
-    }
-
-    /**
-     * Enables the client to take a new request.
-     */
-    public void enableRequests() {
-        cAwaitingResponse = false;
     }
 
     /**
@@ -183,10 +169,7 @@ public final class Client {
      * @param responseHandler The task to execute once a reply is received completed.
      */
     protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
-            cConnection.send(query, responseHandler);
-        }
+        cConnection.send(query, responseHandler);
     }
 
     /**
