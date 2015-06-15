@@ -80,6 +80,6 @@ public class FishingStrollEvent extends StrollEvent {
      * @param text The text of the label.
      */
     public void setText(final String text) {
-        cLabelSubject.update(text);
+        cDataSubject.update(text);
     }
 }

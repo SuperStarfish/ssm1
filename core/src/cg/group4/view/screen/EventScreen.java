@@ -2,56 +2,32 @@ package cg.group4.view.screen;
 
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.view.screen_mechanics.ScreenLogic;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * Screen to be displayed during an event.
- */
-public final class EventScreen extends ScreenLogic {
-
-    /**
-     * Label with the text of this event.
-     */
-    protected Label cTaskToPerform;
-
+public abstract class EventScreen extends ScreenLogic {
     /**
      * Observes label changes.
      */
-    protected Observer cLabelObserver = new Observer() {
+    protected Observer cEventObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            cTaskToPerform.setText(arg.toString());
+            onEventChange(arg);
         }
     };
 
-    /**
-     * Creates an event screen to display the data from an event.
-     *
-     * @param event The event belonging to this screen.
-     */
-    public EventScreen(final StrollEvent event) {
-        cTaskToPerform = new Label("", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        event.getLabelSubject().addObserver(cLabelObserver);
-        event.start();
+    public EventScreen(final StrollEvent eventLogic) {
+        eventLogic.getEventChangeSubject().addObserver(cEventObserver);
+        eventLogic.start();
     }
+
+    abstract void onEventChange(Object updatedData);
 
     @Override
     protected WidgetGroup createWidgetGroup() {
-        Container<Label> cContainer = new Container<Label>();
-        cContainer.setFillParent(true);
-
-        cContainer.setActor(cTaskToPerform);
-        return cContainer;
-    }
-
-    @Override
-    protected void rebuildWidgetGroup() {
-        cTaskToPerform.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        return null;
     }
 
     @Override

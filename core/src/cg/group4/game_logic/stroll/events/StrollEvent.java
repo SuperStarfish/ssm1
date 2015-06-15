@@ -23,8 +23,6 @@ public abstract class StrollEvent implements Disposable, Observer {
      * Timer to constrain the amount of time spent on an event.
      */
     protected final Observer cEventStopObserver = new Observer() {
-
-
         @Override
         public void update(final Observable o, final Object arg) {
             clearEvent();
@@ -35,15 +33,15 @@ public abstract class StrollEvent implements Disposable, Observer {
      */
     protected Timer cEventTimer;
     /**
-     * Subject to detect label changes.
+     * Subject to detect event changes.
      */
-    protected Subject cLabelSubject;
+    protected Subject cDataSubject;
 
     /**
      * Constructor, creates a new stroll event.
      */
     public StrollEvent() {
-        cLabelSubject = new Subject();
+        cDataSubject = new Subject();
 
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
@@ -71,12 +69,12 @@ public abstract class StrollEvent implements Disposable, Observer {
     public abstract void start();
 
     /**
-     * Getter for the label subject. Detects label changes.
+     * Getter for the event subject. Detects event changes.
      *
-     * @return The label subject.
+     * @return The event data subject.
      */
-    public Subject getLabelSubject() {
-        return cLabelSubject;
+    public Subject getEventChangeSubject() {
+        return cDataSubject;
     }
 
     /**

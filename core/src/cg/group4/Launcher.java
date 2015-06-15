@@ -2,14 +2,11 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
-import cg.group4.data_structures.PlayerData;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.multiplayer.CraneFishing;
-import cg.group4.game_logic.stroll.events.multiplayer.CraneFishingScreen;
+import cg.group4.view.screen.CraneFishingScreen;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
-import cg.group4.server.database.Response;
-import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.notification.NotificationController;
 import cg.group4.util.orientation.OrientationReader;
 import cg.group4.util.sensor.AccelerationStatus;
@@ -17,7 +14,6 @@ import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.LoadingScreen;
-import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 
 import com.badlogic.gdx.Application;
@@ -126,8 +122,9 @@ public class Launcher extends Game {
         cScreenStore.init();
         cScreenStore.setScreen("Home");
         TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
-        cScreenStore.setScreen("multi");
-        new CraneFishing((CraneFishingScreen)cScreenStore.getScreen("multi"));
+//        cScreenStore.setScreen("multi");
+//
+//        new CraneFishing((CraneFishingScreen)cScreenStore.getScreen("multi"));
 
         notificationInitialization();
     }

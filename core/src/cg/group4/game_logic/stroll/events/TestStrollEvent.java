@@ -3,7 +3,6 @@ package cg.group4.game_logic.stroll.events;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.orientation.Orientation;
-import cg.group4.util.orientation.Portrait;
 import cg.group4.util.sensor.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -99,7 +98,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cLabelSubject.update("Move your phone " + cDirections[cOrientation.getTextIndex(cOperationNr)] + "!");
+                cDataSubject.update("Move your phone " + cDirections[cOrientation.getTextIndex(cOperationNr)] + "!");
                 cDelayNewInput = false;
             }
         };
@@ -131,7 +130,7 @@ public class TestStrollEvent extends StrollEvent {
         this.cTasksCompleted++;
         Gdx.app.log(getClass().getSimpleName(), "Task " + cOperationNr + " succeeded.");
         AudioPlayer.getInstance().playAudio(cCompletedTaskSound);
-        cLabelSubject.update("Good work!");
+        cDataSubject.update("Good work!");
         cDelayInputTimer.reset();
 
         if (this.cTasksCompleted < MAX_TASKS) {
@@ -196,7 +195,7 @@ public class TestStrollEvent extends StrollEvent {
                 taskCompleted();
             } else {
                 cDelayInputTimer.reset();
-                cLabelSubject.update("Wrong!");
+                cDataSubject.update("Wrong!");
             }
         }
     }

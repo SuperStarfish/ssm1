@@ -7,8 +7,8 @@ public class DesktopOrientationReader implements OrientationReader {
 	 * this method return ORIENTATION.UNDEFINED
 	 */
 	@Override
-	public int getOrientation() {
-		return 0;
+	public Orientation getOrientation() {
+		return new Portrait();
 	}
 
 }
