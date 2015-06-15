@@ -7,7 +7,9 @@ import cg.group4.Launcher;
 import cg.group4.client.AndroidIDResolver;
 import cg.group4.server.AndroidStorageResolver;
 import cg.group4.util.notification.AndroidNotificationController;
+import cg.group4.util.orientation.AndroidOrientationReader;
 import cg.group4.util.sensor.AndroidAccelerationStatus;
+
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
@@ -43,7 +45,8 @@ public class AndroidLauncher extends AndroidApplication {
                         new AndroidAccelerationStatus(cSensorManager),
                         new AndroidNotificationController(this),
                         new AndroidIDResolver(getContext()),
-                        new AndroidStorageResolver()),
+                        new AndroidStorageResolver(),
+                        new AndroidOrientationReader(this.getContext())),
                 config);
     }
 }

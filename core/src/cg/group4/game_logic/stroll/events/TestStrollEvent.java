@@ -2,6 +2,7 @@ package cg.group4.game_logic.stroll.events;
 
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.audio.AudioPlayer;
+import cg.group4.util.orientation.Orientation;
 import cg.group4.util.sensor.Accelerometer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -37,7 +38,8 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * The string values belonging to each direction.
      */
-    protected String[] cDirections = {"to the left", "to the right", "down", "up", "away from you", "towards you"};
+    protected final String[] cDirections = {"to the left", "to the right", "down", "up",
+    		"away from you", "towards you"};
     
     /**
      * operationNr: Movement operation that must be done.
@@ -70,6 +72,11 @@ public class TestStrollEvent extends StrollEvent {
      * Configurable accelerometer that reads and filters the accelerations of the device.
      */
     protected Accelerometer cAccelMeter;
+    
+    /**
+     * Integer representing the current orientation. 0 = undefined, 1 = portrait, 2 = landscape.
+     */
+    protected Orientation cOrientation;
 
     /**
      * Creates random variables for the class.
@@ -96,7 +103,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayInputStopObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                cLabelSubject.update("Move your phone " + cDirections[cOperationNr] + "!");
+                cLabelSubject.update("Move your phone " + cDirections[cOrientation.getTextIndex(cOperationNr)] + "!");
                 cDelayNewInput = false;
             }
         };
@@ -108,6 +115,7 @@ public class TestStrollEvent extends StrollEvent {
         cDelayNewInput = false;
 
         cAccelMeter = new Accelerometer(StandUp.getInstance().getSensorReader());
+        cOrientation = StandUp.getInstance().getOrientation();
     }
 
     /**
@@ -141,16 +149,9 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Clears the current event.
      */
-    public void clearEvent() {
-        superDispose();
-        TimerStore.getInstance().removeTimer(cDelayInputTimer);
-    }
-
-    /**
-     * Method that calls super.dispose() to make it more testable.
-     */
-    public void superDispose() {
+    public final void clearEvent() {
         super.dispose();
+        TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 
     @Override
@@ -173,28 +174,28 @@ public class TestStrollEvent extends StrollEvent {
         if (highestAccel >= delta) {
             Boolean success;
             switch (cOperationNr) {
-                case MOVE_LEFT:
-                    success = accelData.y >= delta;
-                    break;
-                case MOVE_RIGHT:
-                    success = accelData.y <= -delta;
-                    break;
-                case MOVE_DOWN:
-                    success = accelData.x <= -delta;
-                    break;
-                case MOVE_UP:
-                    success = accelData.x >= delta;
-                    break;
-                case MOVE_AWAY:
-                    success = accelData.z <= -delta;
-                    break;
-                case MOVE_TOWARDS:
-                    success = accelData.z >= delta;
-                    break;
-                default:
-                    success = false;
-                    break;
-            }
+			case MOVE_LEFT:
+				success = accelData.y >= delta;
+				break;
+			case MOVE_RIGHT:
+				success = accelData.y <= delta;
+				break;
+			case MOVE_DOWN:
+				success = accelData.x <= -delta;
+				break;
+			case MOVE_UP:
+				success = accelData.x >= delta;
+				break;
+			case MOVE_AWAY:
+				success = accelData.z <= -delta;
+				break;
+			case MOVE_TOWARDS:
+				success = accelData.z >= delta;
+				break;
+			default:
+				success = false;
+				break;
+			}
             if (success) {
                 taskCompleted();
             } else {
@@ -212,9 +213,21 @@ public class TestStrollEvent extends StrollEvent {
     @Override
     public void update(final Observable o, final Object arg) {
         Vector3 readings = cAccelMeter.update();
-        //Done outside of the if to keep the resulting readings relevant. Needs testing
+        determineAxes();
+        //Done outside of the if to keep the resulting readings relevant.
         if (!cDelayNewInput) {
             processInput(readings);
         }
+    }
+    
+    /**
+     * Detects if the orientation of the screen changed and updates the operationNr and texts displayed accordingly.
+     */
+    public final void determineAxes() {
+    	if (StandUp.getInstance().getOrientation().getOrientationNumber() != cOrientation.getOrientationNumber()) {
+    		cDelayInputTimer.reset();
+    		this.cOrientation = StandUp.getInstance().getOrientation();
+    		this.cOperationNr = cOrientation.transformOperation(cOperationNr);
+    	}
     }
 }

@@ -102,8 +102,6 @@ project(":client") {
     }
 }
 
-
-
 project(":data_structures") {
     apply plugin: "java"
 
@@ -121,6 +119,7 @@ project(":android") {
 
     dependencies {
         compile project(":core")
+        compile "org.sqldroid:sqldroid:1.0.3"
 
         // the libgdx platform
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
@@ -143,9 +142,6 @@ project(":android") {
     }
 }
 
-subprojects {
-
-}
 
 tasks.eclipse.doLast {
     delete ".project"

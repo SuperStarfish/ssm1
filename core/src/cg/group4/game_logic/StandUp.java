@@ -4,11 +4,14 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.util.audio.AudioPlayer;
+import cg.group4.util.orientation.Orientation;
+import cg.group4.util.orientation.OrientationReader;
 import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.Assets;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
@@ -60,6 +63,11 @@ public final class StandUp {
      * Keeps track of the amount of movement during the game.
      */
     protected AccelerationStatus cAccelerationStatus;
+    
+    /**
+     * Reads the current orientation of the device.
+     */
+    protected OrientationReader cOrientationReader;
 
     /**
      * Instantiate StandUp and TimeKeeper.
@@ -164,5 +172,22 @@ public final class StandUp {
 
     public AccelerationStatus getAccelerationStatus() {
         return cAccelerationStatus;
+    }
+    
+    /**
+     * Set the orientationReader.
+     * @param reader OrientationReader that can read the device's current orientation.
+     */
+    public void setOrientationReader(OrientationReader reader) {
+    	cOrientationReader = reader;
+    }
+    
+    /**
+     * Get the current orientation of the device.
+     * @return Orientation object representing the current orientation of the device.
+     * Either Landscape, portrait, or null if the orientation is undefined.
+     */
+    public Orientation getOrientation() {
+    	return cOrientationReader.getOrientation();
     }
 }
