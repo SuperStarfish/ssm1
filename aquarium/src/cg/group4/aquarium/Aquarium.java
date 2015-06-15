@@ -1,7 +1,11 @@
 package cg.group4.aquarium;
 
+import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.view.AquariumScreen;
 import com.badlogic.gdx.Game;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * The purpose of the Launcher is to launch the collection application.
@@ -11,6 +15,7 @@ import com.badlogic.gdx.Game;
 public class Aquarium extends Game {
     protected Connector cConnector;
     protected Configuration cAquariumConfig;
+    protected AquariumScreen cAquariumScreen;
 
     public void init() {
 
@@ -25,7 +30,9 @@ public class Aquarium extends Game {
     @Override
     public void create() {
         init();
-        setScreen(new AquariumScreen());
-        System.out.println(cConnector.updateSubject());
+        cAquariumScreen = new AquariumScreen(cConnector.getCollectionFromServer());
+        setScreen(cAquariumScreen);
+        System.out.println(cConnector.getCollectionFromServer());
     }
+
 }

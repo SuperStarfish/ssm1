@@ -2,6 +2,7 @@ package cg.group4.view;
 
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +21,7 @@ import java.util.Observer;
 /**
  * Screen which displays the collected fish in an aquarium.
  */
-public class AquariumScreen implements Screen, Observer {
+public class AquariumScreen implements Screen {
 
     /**
      * Tag for debug prints.
@@ -36,12 +37,6 @@ public class AquariumScreen implements Screen, Observer {
      *
      */
     HashSet<CollectibleRenderer> cCollectibleRendererSet;
-
-    /**
-     *
-     */
-    final Collection fishTank;
-
 
     /**
      *
@@ -66,7 +61,7 @@ public class AquariumScreen implements Screen, Observer {
     /**
      *
      */
-    public AquariumScreen() {
+    public AquariumScreen(Collection collection) {
         cCollectibleRendererSet = new HashSet<CollectibleRenderer>();
         cStyle = new Style();
         cStyle.addDefaultsAquarium();
@@ -74,7 +69,6 @@ public class AquariumScreen implements Screen, Observer {
 
 
         // temp
-        fishTank = new Collection("FISH_TANK_COLLECTION");
         //fishTank.add(new FishA(1f, "SampleOwnerId")); // todo replace by collectibles from server
 //        for (int i = 0; i < 100; i++) {
 //            RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID() + ":me" + i);
@@ -83,7 +77,7 @@ public class AquariumScreen implements Screen, Observer {
 //        }
         // end temp
 
-        initCollectibleRendererSet(fishTank);
+        initCollectibleRendererSet(collection);
         initStage();
         initLabels();
     }
@@ -101,7 +95,7 @@ public class AquariumScreen implements Screen, Observer {
         cOwnerLabel.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("exosy");
+                System.out.println("Label got pushed");
             }
         });
 
@@ -133,7 +127,7 @@ public class AquariumScreen implements Screen, Observer {
      * For a single collectible create a render object which handles the movement and view.
      * @param collectible
      */
-    public void initCollectibleRendererItem(Collectible collectible) {
+    public void addCollectibleRendererItem(Collectible collectible) {
             CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
             cCollectibleRendererSet.add(collectibleRenderer);
     }
@@ -188,11 +182,6 @@ public class AquariumScreen implements Screen, Observer {
     @Override
     public void dispose() {
         cStage.dispose();
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
     }
 
 }

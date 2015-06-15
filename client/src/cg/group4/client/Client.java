@@ -137,7 +137,11 @@ public final class Client {
      * @param port Port to connect to.
      */
     public void connectToServer(final String ip, final int port) {
-            cConnection.connect(ip, port);
+        cConnection.connect(ip, port);
+    }
+
+    public void connectFromAquarium(final String ip, final int port) {
+        ((UnConnected)cConnection).aquariumConnect(ip, port);
     }
 
 
