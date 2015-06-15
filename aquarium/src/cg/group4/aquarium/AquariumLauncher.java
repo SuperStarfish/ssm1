@@ -22,12 +22,13 @@ public class AquariumLauncher {
         config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
         config.fullscreen = false;
 
-
         // set the border to undecorated (no minus/resize/close and thinner borders) to better emulate fullscreen,
         // without actually setting fullscreen mode on.
-        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+        if (!config.fullscreen) {
+            System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+        }
 
-        new LwjglApplication(new DisplayLauncher(), config);
+        new LwjglApplication(new Aquarium(), config);
     }
 
 }

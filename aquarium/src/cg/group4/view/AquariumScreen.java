@@ -1,10 +1,7 @@
 package cg.group4.view;
 
-import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
-import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.view.screen_mechanics.GameSkin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -49,7 +46,7 @@ public class AquariumScreen implements Screen, Observer {
     /**
      *
      */
-    final GameSkin cGameSkin;
+    final Style cStyle;
 
     /**
      *
@@ -70,20 +67,20 @@ public class AquariumScreen implements Screen, Observer {
      *
      */
     public AquariumScreen() {
-        cCollectibleRendererSet = new HashSet<>();
-        cGameSkin = new GameSkin();
-        cGameSkin.addDefaultsAquarium();
+        cCollectibleRendererSet = new HashSet<CollectibleRenderer>();
+        cStyle = new Style();
+        cStyle.addDefaultsAquarium();
         cStage = new Stage();
 
 
         // temp
         fishTank = new Collection("FISH_TANK_COLLECTION");
         //fishTank.add(new FishA(1f, "SampleOwnerId")); // todo replace by collectibles from server
-        for (int i = 0; i < 100; i++) {
-            RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID() + ":me" + i);
-
-            fishTank.add(gen.generateCollectible(1));
-        }
+//        for (int i = 0; i < 100; i++) {
+//            RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID() + ":me" + i);
+//
+//            fishTank.add(gen.generateCollectible(1));
+//        }
         // end temp
 
         initCollectibleRendererSet(fishTank);
@@ -95,7 +92,7 @@ public class AquariumScreen implements Screen, Observer {
         cLabelTable = new Table();
         cLabelTable.setFillParent(true);
 
-        Label.LabelStyle style = cGameSkin.getDefaultLabelStyle();
+        Label.LabelStyle style = cStyle.getDefaultLabelStyle();
         style.font.setColor(new Color(1f, 0, 0, 1f));
 
         cOwnerLabel = new Label("OWNER", style);
@@ -115,7 +112,6 @@ public class AquariumScreen implements Screen, Observer {
         cLabelTable.setFillParent(true);
 
         cLabelTable.debugAll();
-
 
         cStage.addActor(cLabelTable);
     }
@@ -155,7 +151,6 @@ public class AquariumScreen implements Screen, Observer {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -197,6 +192,7 @@ public class AquariumScreen implements Screen, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+
     }
 
 }

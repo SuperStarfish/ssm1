@@ -1,5 +1,6 @@
-package cg.group4.view.screen_mechanics;
+package cg.group4.view;
 
+import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,11 +16,14 @@ import com.badlogic.gdx.utils.Align;
 
 /**
  * The default skin details for the application.
+ * TODO: The view should be separated.
+ *       This is the original GameSkin class with some minor changes.
+ *       Otherwise the Aquarium would be dependent on Core.
  *
  * @author Jurgen van Schagen
  * @author Martijn Gribnau
  */
-public class GameSkin extends Skin {
+public class Style extends Skin {
     /**
      * Default font size.
      */
@@ -62,7 +66,7 @@ public class GameSkin extends Skin {
     /**
      * Initializes the skin.
      */
-    public GameSkin() {
+    public Style() {
         cAssets = Assets.getInstance();
         cFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(cDefaultFont));
     }
@@ -74,21 +78,15 @@ public class GameSkin extends Skin {
      */
     public final void createUIElements(final int newSize) {
         cUiScalar = newSize / cDevSize;
-        addDefaults();
+        addDefaultsAquarium();
     }
 
     /**
-     * Adds different fonts and their styles to the skin, to choose from.
+     * Adds different fonts and their styles to the skin, to choose from, specifically for the aquarium.
      */
-    protected final void addDefaults() {
-        this.add("default_font", generateDefaultFont());
-        this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
+    public final void addDefaultsAquarium() {
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
-        this.add("default_checkboxStyle", generateDefaultCheckboxStyle());
-        this.add("default_selectboxStyle", generateDefaultSelectboxStyle());
-        this.add("default_listStyle", generateDefaultListStyle());
-        this.add("default_textFieldStyle", generateDefaultTextFieldStyle());
     }
 
     /**
@@ -161,16 +159,16 @@ public class GameSkin extends Skin {
      * @return CheckBoxStyle
      */
     protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
-    	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-    	checkboxStyle.checkboxOff = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
-    	checkboxStyle.checkboxOn = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
-    	
-    	checkboxStyle.font = this.get("default_font", BitmapFont.class);
-    	checkboxStyle.fontColor = Color.GREEN;
-        
-    	return checkboxStyle;
+        CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+        checkboxStyle.checkboxOff = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
+        checkboxStyle.checkboxOn = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
+
+        checkboxStyle.font = this.get("default_font", BitmapFont.class);
+        checkboxStyle.fontColor = Color.GREEN;
+
+        return checkboxStyle;
     }
 
     /**
@@ -193,13 +191,13 @@ public class GameSkin extends Skin {
      * @return ListStyle
      */
     protected final List.ListStyle generateDefaultListStyle() {
-    	List.ListStyle listStyle = new List.ListStyle();
-    	listStyle.font = this.get("default_font", BitmapFont.class);
-    	listStyle.fontColorSelected = Color.GREEN;
-    	listStyle.fontColorUnselected = Color.WHITE;
-    	listStyle.selection = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/FishD.png")));
-    	return listStyle;
+        List.ListStyle listStyle = new List.ListStyle();
+        listStyle.font = this.get("default_font", BitmapFont.class);
+        listStyle.fontColorSelected = Color.GREEN;
+        listStyle.fontColorUnselected = Color.WHITE;
+        listStyle.selection = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/FishD.png")));
+        return listStyle;
     }
 
     /**

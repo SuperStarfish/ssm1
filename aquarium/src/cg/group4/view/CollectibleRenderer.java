@@ -243,7 +243,7 @@ public class CollectibleRenderer {
                 String owner = cCollectible.getOwnerId();
 
 
-                Gdx.app.log("Fish tooltip", "____" + date + "___" + owner + "___.");
+                Gdx.app.log("Fish tooltip ", "(date=" + date + "___owner=" + owner + ").");
             }
         });
 
