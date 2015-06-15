@@ -15,6 +15,11 @@ import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -134,29 +139,6 @@ public class Stroll implements Observer {
         return 0;
     }
 
-    /**
-     * Starts the hosting of a multi player event.
-     *
-     * @param responseHandler A response handler that will be called with the connection code.
-     * @return Returns whether the initialisation of hosting succeeded.
-     */
-    public boolean startMultiPlayerEvent(final ResponseHandler responseHandler) {
-        if (Client.getRemoteInstance().isConnected()) {
-            Gdx.app.log(TAG, "Start hosting multi player event!");
-            cEventGoing = true;
-            Client.getRemoteInstance().hostEvent(new ResponseHandler() {
-                @Override
-                public void handleResponse(Response response) {
-                    responseHandler.handleResponse(response);
-
-                }
-            });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public final void update(final Observable o, final Object arg) {
         if (!cEventGoing) {
@@ -164,19 +146,66 @@ public class Stroll implements Observer {
         }
     }
 
-    public boolean joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
+    /**
+     * Starts the hosting of a multi player event.
+     *
+     * @param responseHandler A response handler that will be called with the connection code.
+     * @return Returns whether the initialisation of hosting succeeded.
+     */
+    public void startMultiPlayerEvent(final ResponseHandler responseHandler) {
         if (Client.getRemoteInstance().isConnected()) {
-            Gdx.app.log(TAG, "Joining multi player event!");
+            Gdx.app.log(TAG, "Start hosting multi-player event!");
+            cEventGoing = true;
+            Client.getRemoteInstance().hostEvent(new ResponseHandler() {
+                @Override
+                public void handleResponse(Response response) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Socket socket = new ServerSocket(55555).accept();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                    responseHandler.handleResponse(response);
+                }
+            });
+        }
+    }
+
+    public void joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
+        if (Client.getRemoteInstance().isConnected()) {
+            Gdx.app.log(TAG, "Joining multi-player event!");
             cEventGoing = true;
             Client.getRemoteInstance().getHost(code, new ResponseHandler() {
                 @Override
                 public void handleResponse(Response response) {
-                    responseHandler.handleResponse(response);
+                    if(response.isSuccess()) {
+                        final String ip = (String)response.getData();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Socket socket = new Socket(ip, 55555);
+                                } catch (UnknownHostException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            responseHandler.handleResponse(new Response(false, null));
+                                        }
+                                    });
+                                }
+                            }
+                        }).start();
+                    } else {
+                        responseHandler.handleResponse(response);
+                    }
                 }
             });
-            return true;
-        } else {
-            return false;
         }
     }
     /**
@@ -196,11 +225,10 @@ public class Stroll implements Observer {
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
     protected void generatePossibleEvent() {
-        Random rnd = new Random();
-        if (rnd.nextDouble() < cEventThreshold) {
+        Random rng = new Random();
+        if (rng.nextDouble() < cEventThreshold) {
             cEventGoing = true;
-            int chosenEvent = rnd.nextInt(2);
-            switch (chosenEvent) {
+            switch (rng.nextInt(2)) {
                 case (0):
                     cEvent = new FishingStrollEvent();
                     break;
@@ -212,6 +240,11 @@ public class Stroll implements Observer {
             }
             cNewEventSubject.update(cEvent);
         }
+    }
+
+    protected void generatePossibleMultiplayerEvent() {
+        Random rng = new Random();
+
     }
 
     /**

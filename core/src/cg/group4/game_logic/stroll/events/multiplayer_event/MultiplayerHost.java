@@ -13,7 +13,7 @@ public abstract class MultiplayerHost extends StrollEvent {
 
     protected Socket cSocket;
 
-    public MultiplayerHost() {
+    public MultiplayerHost(Socket connection) {
         try {
             cSocket = new ServerSocket(55555).accept();
         } catch (IOException e) {

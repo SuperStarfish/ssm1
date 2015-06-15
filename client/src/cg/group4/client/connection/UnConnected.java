@@ -86,7 +86,9 @@ public class UnConnected implements Connection {
                         }
                     });
                 } catch (IOException e) {
-                    LOGGER.info("Connection failed!");
+                    LOGGER.info("Failed to connect to remote server, retrying.");
+                    cConnecting = false;
+                    connect(ip, port);
                 }
             }
         }).start();
