@@ -29,7 +29,7 @@ public abstract class Query implements Serializable {
      */
     protected void setValues(final PreparedStatement preparedStatement, final Object ... values) throws SQLException {
         for (int i = 1; i <= values.length; i++) {
-            preparedStatement.setObject(i, values[i]);
+            preparedStatement.setObject(i, values[i - 1]);
         }
     }
 }
