@@ -37,7 +37,4 @@ public class CraneFishingScreen extends ScreenLogic {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-
 }

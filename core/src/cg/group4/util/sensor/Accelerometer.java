@@ -144,7 +144,7 @@ public class Accelerometer {
      */
     protected final boolean isGravity(final float scalar) {
         float absoluteValue = Math.abs(scalar);
-        return (absoluteValue > 9f) && (absoluteValue < 12f);
+        return (absoluteValue >= 9.5f);
     }
 
     /**

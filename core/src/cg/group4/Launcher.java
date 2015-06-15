@@ -11,6 +11,7 @@ import cg.group4.server.Server;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.notification.NotificationController;
+import cg.group4.util.orientation.OrientationReader;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
@@ -63,6 +64,11 @@ public class Launcher extends Game {
 
 
     protected LocalStorageResolver cLocalStorageResolver;
+    
+    /**
+     * Reads the device's current orientation.
+     */
+    protected OrientationReader cOrientationReader;
 
     /**
      * Tunnels the acceleration status through the launcher to the android project.
@@ -74,12 +80,14 @@ public class Launcher extends Game {
     public Launcher(final AccelerationStatus accelerationStatus,
                     final NotificationController notificationController,
                     final UserIDResolver idResolver,
-                    final LocalStorageResolver localStorageResolver) {
+                    final LocalStorageResolver localStorageResolver,
+                    final OrientationReader orientationReader) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;
         cIDResolver = idResolver;
         cLocalStorageResolver = localStorageResolver;
+        cOrientationReader = orientationReader;
     }
 
     /**
@@ -111,11 +119,13 @@ public class Launcher extends Game {
 
         cStandUp = StandUp.getInstance();
         cStandUp.setAccelerationStatus(cAccelerationStatus);
+        cStandUp.setOrientationReader(cOrientationReader);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
         cScreenStore.init();
-        //cScreenStore.setScreen("Home");
+        cScreenStore.setScreen("Home");
+        TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
         cScreenStore.setScreen("multi");
         new CraneFishing((CraneFishingScreen)cScreenStore.getScreen("multi"));
 

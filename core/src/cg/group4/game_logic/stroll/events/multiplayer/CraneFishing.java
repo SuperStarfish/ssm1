@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Orientation;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
