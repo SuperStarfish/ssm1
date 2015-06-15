@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
-import cg.group4.server.AndroidIDResolver;
+import cg.group4.client.AndroidIDResolver;
 import cg.group4.server.AndroidStorageResolver;
 import cg.group4.util.notification.AndroidNotificationController;
 import cg.group4.util.orientation.AndroidOrientationReader;
@@ -14,9 +14,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import java.io.File;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Arrays;
 
 /**
  * The AndroidLauncher class runs the application on an Android device.

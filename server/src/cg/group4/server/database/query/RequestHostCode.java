@@ -43,7 +43,7 @@ public class RequestHostCode extends Query {
                 statement.setInt(1, code);
 
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    exists = resultSet.isBeforeFirst();
+                    exists = resultSet.next();
                 }
             }
             while (exists);

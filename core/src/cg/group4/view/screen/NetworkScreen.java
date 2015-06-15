@@ -72,7 +72,7 @@ public final class NetworkScreen extends ScreenLogic {
      * If the connection state changes, this will handle the proper behaviour.
      */
     protected void addConnectionChangeListener() {
-        Client.getRemoteInstance().getRemoteChangeSubject().addObserver(new Observer() {
+        Client.getRemoteInstance().getChangeSubject().addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
                 boolean isConnected = (Boolean) arg;

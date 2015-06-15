@@ -145,13 +145,13 @@ public class GameSkin extends Skin {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.fontColor = Color.GREEN;
         buttonStyle.font = this.get("default_font", BitmapFont.class);
-
         Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
+        Sprite disabled = new Sprite(cAssets.getTexture("images/wooden_sign_gray.png"));
         final float scalar = 0.42f;
         sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
-
+        disabled.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
         buttonStyle.up = new SpriteDrawable(sprite);
-
+        buttonStyle.disabled = new SpriteDrawable(disabled);
         return buttonStyle;
     }
 

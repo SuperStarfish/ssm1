@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -37,11 +36,6 @@ public class RequestPlayerData extends Query {
             statement.setString(1, cPlayerData.getId());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    ResultSetMetaData rsmd = resultSet.getMetaData();
-                    int columns = rsmd.getColumnCount();
-                    for (int x = 1; x <= columns; x++) {
-                    	System.out.println(rsmd.getColumnName(x));
-                    }
                     cPlayerData.setUsername(resultSet.getString("Username"));
                     cPlayerData.setIntervalTimeStamp(resultSet.getLong("Interval"));
                     cPlayerData.setStrollTimeStamp(resultSet.getLong("Stroll"));

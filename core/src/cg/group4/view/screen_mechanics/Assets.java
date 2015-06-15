@@ -31,6 +31,7 @@ public class Assets extends AssetManager {
     public Assets() {
         loadTexture("images/default_landscape_background.jpg");
         loadTexture("images/default_portrait_background.jpg");
+        loadTexture("images/wooden_sign_gray.png");
         loadTexture("images/wooden_sign.png");
         loadTexture("images/debugpixel.png");
         loadTexture("images/blackpixel.jpg");

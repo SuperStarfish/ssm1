@@ -35,11 +35,6 @@ public final class StandUp {
     protected static StandUp cInstance;
 
     /**
-     * Background music to be played.
-     */
-    protected Music cBackgroundMusic;
-
-    /**
      * Player of the game.
      */
     protected Player cPlayer;
@@ -82,11 +77,6 @@ public final class StandUp {
         cNewStrollSubject = new Subject();
         cSensorReader = new SensorReader();
         cPlayer = new Player();
-
-        cBackgroundMusic =  Assets.getInstance().getMusic("music/Summer Day.mp3");
-        cBackgroundMusic.setLooping(true);
-        AudioPlayer.getInstance().setLastPlayed(cBackgroundMusic);
-        AudioPlayer.getInstance().playAudio(cBackgroundMusic);
     }
 
     /**
@@ -174,10 +164,6 @@ public final class StandUp {
      */
     public SensorReader getSensorReader() {
         return cSensorReader;
-    }
-
-    public Music getBackGroundMusic() {
-        return cBackgroundMusic;
     }
 
     public void setAccelerationStatus(AccelerationStatus status) {

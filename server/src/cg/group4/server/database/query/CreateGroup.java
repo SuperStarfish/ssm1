@@ -61,13 +61,13 @@ public class CreateGroup extends Query {
 
                 groupData = new GroupData(
                         groupId,
-                        resultSet.getString("Name"),
-                        resultSet.getString("OwnerId"),
+                        cGroupName,
+                        cOwnerId,
                         resultSet.getString("Username")
                 );
             }
 
-            group = new Group(Integer.toString(groupData.getGroupId()), groupData);
+            group = new Group(Integer.toString(groupId), groupData);
             PlayerData playerData = new PlayerData(cOwnerId);
             playerData.setUsername(null);
 

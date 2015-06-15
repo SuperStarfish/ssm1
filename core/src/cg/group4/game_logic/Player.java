@@ -39,21 +39,27 @@ public class Player {
     }
 
     public void update() {
-        Client.getLocalInstance().getPlayerData(new ResponseHandler() {
-            @Override
-            public void handleResponse(Response response) {
-                PlayerData playerData;
-                if (response.isSuccess()) {
-                    playerData = (PlayerData) response.getData();
-                } else {
-                    playerData = new PlayerData(Client.getLocalInstance().getUserID());
+        final Client localStorage = Client.getLocalInstance();
+        if (localStorage.isConnected()) {
+            localStorage.getPlayerData(new ResponseHandler() {
+                @Override
+                public void handleResponse(Response response) {
+                    PlayerData playerData;
+                    if (response.isSuccess()) {
+                        playerData = (PlayerData) response.getData();
+                    } else {
+                        playerData = new PlayerData(localStorage.getUserID());
+                    }
+                    if (playerData.getUsername() == null) {
+                        playerData.setUsername("Unknown");
+                    }
+                    cPlayerData = playerData;
                 }
-                if (playerData.getUsername() == null) {
-                    playerData.setUsername("Unknown");
-                }
-                cPlayerData = playerData;
-            }
-        });
+            });
+        } else {
+            cPlayerData = new PlayerData(localStorage.getUserID());
+        }
+
         cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
     }
 

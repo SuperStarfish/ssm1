@@ -6,19 +6,10 @@ import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.AddCollection;
-import cg.group4.server.database.query.CreateGroup;
-import cg.group4.server.database.query.GetGroupData;
-import cg.group4.server.database.query.Query;
-import cg.group4.server.database.query.RemoveCollection;
-import cg.group4.server.database.query.RequestCollection;
-import cg.group4.server.database.query.RequestHostCode;
-import cg.group4.server.database.query.RequestHostIp;
-import cg.group4.server.database.query.RequestPlayerData;
-import cg.group4.server.database.query.ResetPlayerData;
-import cg.group4.server.database.query.UpdatePlayerData;
+import cg.group4.server.database.query.*;
 import cg.group4.util.IpResolver;
 
+import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -60,7 +51,7 @@ public final class Client {
     /**
      * Notifies all listeners that the server has either connected or disconnected.
      */
-    protected Subject cRemoteChangeSubject;
+    protected Subject cChangeSubject;
 
     /**
      * A list of Runnable that have to be run at the end of a render cycle.
@@ -68,18 +59,14 @@ public final class Client {
      */
     protected ArrayList<Runnable> cPostRunnables;
 
-    /**
-     * Determines if a request to the server has been made. If so, no new requests can be made.
-     */
-    protected boolean cAwaitingResponse = false;
 
     /**
      * Constructs a new Client and sets the state to unconnected.
      */
     public Client() {
-        cConnection = new UnConnected(this);
+        cConnection = new UnConnected();
         cUserIDResolver = new DummyUserIdResolver();
-        cRemoteChangeSubject = new Subject();
+        cChangeSubject = new Subject();
         cPostRunnables = new ArrayList<Runnable>();
     }
 
@@ -108,11 +95,11 @@ public final class Client {
     }
 
     /**
-     * Returns the RemoteChangeSubject that notifies whenever a change in the remote connection status occurs.
+     * Returns the ChangeSubject that notifies whenever a change in the connection status occurs.
      * @return Subject that can be subscribed on.
      */
-    public Subject getRemoteChangeSubject() {
-        return cRemoteChangeSubject;
+    public Subject getChangeSubject() {
+        return cChangeSubject;
     }
 
     /**
@@ -151,18 +138,9 @@ public final class Client {
      * @param port Port to connect to.
      */
     public void connectToServer(final String ip, final int port) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
             cConnection.connect(ip, port);
-        }
     }
 
-    /**
-     * Enables the client to take a new request.
-     */
-    public void enableRequests() {
-        cAwaitingResponse = false;
-    }
 
     /**
      * Sets the connection to the new connection.
@@ -170,8 +148,7 @@ public final class Client {
      */
     public void setConnection(final Connection connection) {
         cConnection = connection;
-        cRemoteChangeSubject.update(connection.isConnected());
-        enableRequests();
+        cChangeSubject.update(connection.isConnected());
         LOGGER.info("Managed to connect: " + connection.isConnected());
     }
 
@@ -184,6 +161,15 @@ public final class Client {
         PlayerData playerData = new PlayerData(cUserIDResolver.getID());
         playerData.setStrollTimeStamp(timeStamp);
         tryToSend(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Sends the given query to the server, if there has not already been made a previous request.
+     * @param query The query to the server.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
+        cConnection.send(query, responseHandler);
     }
 
     /**
@@ -264,18 +250,6 @@ public final class Client {
     }
 
     /**
-     * Sends the given query to the server, if there has not already been made a previous request.
-     * @param query The query to the server.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
-        if (!cAwaitingResponse) {
-            cAwaitingResponse = true;
-            cConnection.send(query, responseHandler);
-        }
-    }
-
-    /**
      * Gets the group data from the server. Behaviour depends on the state.
      * @param responseHandler The task to execute once a reply is received completed.
      */
@@ -288,9 +262,8 @@ public final class Client {
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void hostEvent(final ResponseHandler responseHandler) {
-        IpResolver ipResolver = new IpResolver();
         try {
-            tryToSend(new RequestHostCode(ipResolver.getExternalIP()), responseHandler);
+            tryToSend(new RequestHostCode(Inet4Address.getLocalHost().getHostAddress()), responseHandler);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

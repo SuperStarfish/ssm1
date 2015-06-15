@@ -1,6 +1,7 @@
 package cg.group4.server;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
@@ -54,18 +55,44 @@ public abstract class LocalStorageResolver {
     protected boolean cIsLocal;
 
     /**
+     * Clears all the databases. !!!!! ONLY USE FOR DEVELOPMENT !!!!!
+     */
+    protected boolean cResetDBs = false;
+
+    /**
      * Creates the database connection using the child definition. Also creates the databases defined by the child.
      */
     public LocalStorageResolver() {
         cIsLocal = setLocal();
         try {
             cConnection = createDatabaseConnection();
+            cConnection.setAutoCommit(true);
             LOGGER.info("Database connection established.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        if (cResetDBs) {
+            dropDatabase("User", "Collectible", "Group", "Event_Hosts");
+        }
+
         for (String table : createDatabases()) {
             createDatabase(table);
+        }
+    }
+
+    /**
+     * Drops all the supplied databases.  !!!!! ONLY USE FOR DEVELOPMENT !!!!!
+     * @param dbs Databases to drop.
+     */
+    protected void dropDatabase(final String ... dbs) {
+        for (String database : dbs) {
+            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS ?")) {
+                statement.setString(1, database);
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

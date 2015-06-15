@@ -1,7 +1,8 @@
 package cg.group4.client.connection;
 
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.Query;
+
+import java.io.Serializable;
 
 /**
  * Connection interface for either Connected and Unconnected.
@@ -27,5 +28,5 @@ public interface Connection {
      * @param data Data to be sent to the server.
      * @param responseHandler The task to execute once a reply is received completed.
      */
-    void send(Query data, final ResponseHandler responseHandler);
+    void send(Serializable data, final ResponseHandler responseHandler);
 }
