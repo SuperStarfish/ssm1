@@ -20,7 +20,7 @@ public final class RewardUtil {
     /**
      * Hue is capped to prevent double colors with high and low rarity.
      */
-    protected static final float HUE_CAP = .8f;
+    protected static final float HUE_CAP = 5f/6f;
 
     /**
      * Int belonging to each color category.
