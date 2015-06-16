@@ -44,7 +44,7 @@ public class GroupData implements Serializable {
     }
 
     public void setOwnerName(final String ownerName) {
-        this.cOwnerName = ownerName;
+        cOwnerName = ownerName;
     }
 
     public int getGroupId() {
@@ -52,7 +52,7 @@ public class GroupData implements Serializable {
     }
 
     public void setGroupId(final int groupId) {
-        this.cGroupId = groupId;
+        cGroupId = groupId;
     }
 
     public String getName() {
