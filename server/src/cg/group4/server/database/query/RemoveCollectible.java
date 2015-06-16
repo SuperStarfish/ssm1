@@ -4,49 +4,37 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Removes the given collectible from the server.
+ * Adds a new collectible to the server.
  */
 public class RemoveCollectible extends Query {
 
     /**
-     * The group of the collectible.
+     * Id of the group the collectible belongs to.
      */
     protected final String cGroupId;
     /**
-     * The collectible to remove.
+     * The collectible to add.
      */
-    protected final Collectible cCollectible;
+    protected Collectible cCollectible;
 
     /**
-     * Removes the given collectible from the server.
+     * Adds a Collectible in the database.
      *
-     * @param collectible The collectible to remove.
-     * @param groupId     The group of the collectible.
+     * @param collectible The collectible to update.
+     * @param groupId     Id of the group the collectible belongs to.
      */
-    protected RemoveCollectible(final Collectible collectible, final String groupId) {
+    public RemoveCollectible(final Collectible collectible, final String groupId) {
         cCollectible = collectible;
         cGroupId = groupId;
     }
 
     @Override
-    public Serializable query(final Connection databaseConnection) throws SQLException {
-
-        String preparedQuery = "DELETE FROM Collectible WHERE OwnerId = ? AND Type = ? AND Hue = ? AND "
-                + "Date = ? AND GroupId = ?";
-
-        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
-            setValues(statement,
-                    cCollectible.getOwnerId(),
-                    cCollectible.getClass().getSimpleName(),
-                    cCollectible.getHue(),
-                    cCollectible.getDateAsString(),
-                    cGroupId);
-            statement.executeUpdate();
-        }
+    public Serializable query(final Connection connection) throws SQLException {
+        int amount = new GetCollectibleAmount(cCollectible, cGroupId).query(connection);
+        new SetCollectibleAmount(cCollectible, cGroupId, amount - cCollectible.getAmount()).query(connection);
 
         return null;
     }

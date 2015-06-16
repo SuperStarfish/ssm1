@@ -4,6 +4,7 @@ import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.UnConnected;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
@@ -300,6 +301,22 @@ public final class Client {
      */
     public String getUserID() {
         return cUserIDResolver.getID();
+    }
+
+    /**
+     * Adds a collectible to the server.
+     */
+    public void addCollectible(final Collectible collectible, final String groupId,
+                               final ResponseHandler responseHandler) {
+        tryToSend(new AddCollectible(collectible, groupId), responseHandler);
+    }
+
+    /**
+     * Removes a collectible from the server.
+     */
+    public void removeCollectible(final Collectible collectible, final String groupId,
+                                  final ResponseHandler responseHandler) {
+        tryToSend(new RemoveCollectible(collectible, groupId), responseHandler);
     }
 
     /**
