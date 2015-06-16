@@ -27,15 +27,9 @@ public class AddCollection extends Query {
     }
 
     @Override
-    public Serializable query(final Connection databaseConnection) throws SQLException {
+    public Serializable query(final Connection connection) throws SQLException {
         for (Collectible collectible : cCollection) {
-            int amount = new GetCollectibleAmount(collectible, cCollection.getId()).query(databaseConnection);
-            if (amount == 0) {
-                new AddCollectible(collectible, cCollection.getId()).query(databaseConnection);
-            } else {
-                amount += collectible.getAmount();
-                new SetCollectibleAmount(collectible, cCollection.getId(), amount).query(databaseConnection);
-            }
+            new AddCollectible(collectible, cCollection.getId()).query(connection);
         }
         return null;
     }
