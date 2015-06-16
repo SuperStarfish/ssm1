@@ -1,7 +1,9 @@
 package cg.group4.android;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
 import cg.group4.client.AndroidIDResolver;
@@ -36,6 +38,11 @@ public class AndroidLauncher extends AndroidApplication {
             }
             SQLiteDatabase db = getContext().openOrCreateDatabase("local.db", MODE_WORLD_WRITEABLE, null);
             db.close();
+        }
+
+        WifiManager wfm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        if(wfm.isWifiEnabled()) {
+            wfm.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "cg.group4.android");
         }
 
         cSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);

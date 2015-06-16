@@ -7,11 +7,14 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
-import cg.group4.util.IpResolver;
 
 import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -262,10 +265,65 @@ public final class Client {
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void hostEvent(final ResponseHandler responseHandler) {
+        tryToSend(new RequestHostCode(getIPAddress(true)), responseHandler);
+//        try {
+//            String ip = Inet4Address.getLocalHost().getHostName();
+//            tryToSend(new RequestHostCode(ip), responseHandler);
+//        }
+//        catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    public static String getIPAddress(boolean useIPv4) {
         try {
-            tryToSend(new RequestHostCode(Inet4Address.getLocalHost().getHostAddress()), responseHandler);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress().toUpperCase();
+                        boolean isIPv4 = validIP(sAddr);
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 port suffix
+                                return delim<0 ? sAddr : sAddr.substring(0, delim);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) { } // for now eat exceptions
+        return "";
+    }
+
+    public static boolean validIP (String ip) {
+        try {
+            if (ip == null || ip.isEmpty()) {
+                return false;
+            }
+
+            String[] parts = ip.split( "\\." );
+            if ( parts.length != 4 ) {
+                return false;
+            }
+
+            for ( String s : parts ) {
+                int i = Integer.parseInt( s );
+                if ( (i < 0) || (i > 255) ) {
+                    return false;
+                }
+            }
+            if(ip.endsWith(".")) {
+                return false;
+            }
+
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
         }
     }
 

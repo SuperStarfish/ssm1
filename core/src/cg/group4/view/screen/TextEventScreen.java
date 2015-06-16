@@ -21,6 +21,7 @@ public final class TextEventScreen extends EventScreen {
 
     public TextEventScreen(final StrollEvent event) {
         super(event);
+        cTaskToPerform = cGameSkin.generateDefaultLabel("");
     }
 
     @Override
@@ -30,7 +31,7 @@ public final class TextEventScreen extends EventScreen {
 
     @Override
     protected WidgetGroup createWidgetGroup() {
-        cTaskToPerform = new Label("", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+
         Container<Label> cContainer = new Container<Label>();
         cContainer.setFillParent(true);
 

@@ -5,6 +5,9 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.game_logic.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatHost;
+import cg.group4.game_logic.stroll.events.multiplayer.CraneFishing;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.timer.Timer;
@@ -46,11 +49,14 @@ public final class StrollScreen extends ScreenLogic {
     protected Observer cNewEventObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            System.out.println(arg.getClass());
-            System.out.println(arg.getClass());
-            System.out.println(arg.getClass());
-            System.out.println(arg.getClass());
-            cScreenStore.addScreen("Event", new TextEventScreen((StrollEvent) arg));
+            StrollEvent strollEvent = (StrollEvent) arg;
+            EventScreen eventScreen;
+            if(arg instanceof FishingBoatHost || arg instanceof FishingBoatClient) {
+                eventScreen = new CraneFishingScreen(strollEvent);
+            } else {
+                eventScreen = new TextEventScreen(strollEvent);
+            }
+            cScreenStore.addScreen("Event", eventScreen);
             cScreenStore.setScreen("Event");
         }
     };

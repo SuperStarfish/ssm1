@@ -138,7 +138,6 @@ public final class ServerThread implements Runnable {
         try {
             cOutputStream.writeObject(response);
             cOutputStream.flush();
-            System.out.println("REPLYING");
         } catch (IOException e) {
             e.printStackTrace();
         }

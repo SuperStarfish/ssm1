@@ -35,6 +35,7 @@ public class Assets extends AssetManager {
         loadTexture("images/wooden_sign.png");
         loadTexture("images/debugpixel.png");
         loadTexture("images/blackpixel.jpg");
+        loadTexture("images/SmallFish.png");
         loadTexture("images/FishA.png");
         loadTexture("images/FishB.png");
         loadTexture("images/FishC.png");
@@ -42,6 +43,7 @@ public class Assets extends AssetManager {
         loadTexture("images/CheckBoxOff.png");
         loadTexture("images/CheckBoxOn.png");
         loadMusic("music/Summer Day.mp3");
+
     }
 
     /**

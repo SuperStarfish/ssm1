@@ -1,6 +1,8 @@
 package cg.group4.data_structures.mp_fishingboat;
 
-public class Coordinate {
+import java.io.Serializable;
+
+public class Coordinate implements Serializable{
     protected float cX,cY;
 
     public Coordinate(float x, float y) {
@@ -22,5 +24,9 @@ public class Coordinate {
 
     public void setY(float y) {
         cY = y;
+    }
+
+    public String toString() {
+        return "(" + cX + ", " + cY + ")";
     }
 }

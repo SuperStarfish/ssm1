@@ -65,7 +65,6 @@ public final class ScreenStore {
         addScreen("Settings", new SettingsScreen());
         //addScreen("Network", new NetworkScreen());
 //        addScreen("Groups", new GroupScreen());
-        addScreen("multi", new CraneFishingScreen());
     }
 
     /**

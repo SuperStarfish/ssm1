@@ -5,5 +5,5 @@ import java.io.Serializable;
 public interface Host {
     boolean isHost();
     void send(Serializable object);
-    Object receive();
+    void receive(MessageHandler messageHandler, boolean continuous);
 }

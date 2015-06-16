@@ -5,7 +5,6 @@ import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.multiplayer.Boat;
 import cg.group4.game_logic.stroll.events.multiplayer.Crane;
 import cg.group4.game_logic.stroll.events.multiplayer.CraneHitbox;
-import cg.group4.game_logic.stroll.events.multiplayer.SmallFish;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 import java.util.ArrayList;

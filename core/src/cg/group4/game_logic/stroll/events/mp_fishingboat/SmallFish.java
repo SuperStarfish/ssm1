@@ -10,5 +10,8 @@ import java.util.Random;
 
 public class SmallFish extends Image {
 
+    public SmallFish(Texture texture) {
+        super(texture);
+    }
 
 }

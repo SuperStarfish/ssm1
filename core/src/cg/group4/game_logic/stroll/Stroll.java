@@ -8,6 +8,7 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
+import cg.group4.game_logic.stroll.events.multiplayer_event.MessageHandler;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
@@ -16,18 +17,11 @@ import cg.group4.game_logic.stroll.events.multiplayer.CraneFishing;
 import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
 import cg.group4.game_logic.stroll.events.multiplayer_event.MultiplayerClient;
 import cg.group4.game_logic.stroll.events.multiplayer_event.MultiplayerHost;
-import cg.group4.server.database.Response;
-import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.sensor.AccelerationState;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -77,8 +71,8 @@ public class Stroll implements Observer {
      */
     protected Timer cStrollTimer;
 
-    protected boolean cForceEvent = true;
-    protected String cForcedEvent = "multi";
+    protected boolean cForceEvent = false;
+    protected StrollEvent cForcedEvent = new CraneFishing();
 
     protected final int cNumberOfMultiPlayerEvents = 1;
 
@@ -136,12 +130,6 @@ public class Stroll implements Observer {
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
-
-        if(cForceEvent) {
-            cEvent = new CraneFishing();
-            cNewEventSubject.update(cEvent);
-        }
-
     }
 
     /**
@@ -162,7 +150,13 @@ public class Stroll implements Observer {
     @Override
     public final void update(final Observable o, final Object arg) {
         if (!cEventGoing) {
-            generatePossibleEvent();
+            if(cForceEvent) {
+                cEventGoing = true;
+                cEvent = cForcedEvent;
+                cNewEventSubject.update(cEvent);
+            } else {
+                generatePossibleEvent();
+            }
         }
     }
 
@@ -176,59 +170,83 @@ public class Stroll implements Observer {
         if (Client.getRemoteInstance().isConnected()) {
             Gdx.app.log(TAG, "Start hosting multi-player event!");
             cEventGoing = true;
-            Client.getRemoteInstance().hostEvent(new ResponseHandler() {
-                @Override
-                public void handleResponse(Response response) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            MultiplayerHost host = new MultiplayerHost();
-                            Random rng = new Random();
-                            int event = rng.nextInt(cNumberOfMultiPlayerEvents);
-                            host.send(event);
-                            generatePossibleMultiplayerEvent(event, host);
-                        }
-                    }).start();
-                    responseHandler.handleResponse(response);
-                }
-            });
+            Client.getRemoteInstance().hostEvent(whenHostCodeReceived(responseHandler));
         }
+    }
+
+    protected ResponseHandler whenHostCodeReceived(final ResponseHandler updateUI) {
+        return new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                updateUI.handleResponse(response);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        createMultiPlayerHost();
+                    }
+                }).start();
+            }
+        };
+    }
+
+    protected void createMultiPlayerHost() {
+        final MultiplayerHost host = new MultiplayerHost();
+        Random rng = new Random();
+        final int event = rng.nextInt(cNumberOfMultiPlayerEvents);
+        host.send(event);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                generatePossibleMultiplayerEvent(event, host);
+            }
+        });
     }
 
     public void joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
         if (Client.getRemoteInstance().isConnected()) {
             Gdx.app.log(TAG, "Joining multi-player event!");
             cEventGoing = true;
-            Client.getRemoteInstance().getHost(code, new ResponseHandler() {
-                @Override
-                public void handleResponse(Response response) {
-                    if(response.isSuccess()) {
-                        final String ip = (String)response.getData();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    MultiplayerClient client = new MultiplayerClient(ip);
-                                    generatePossibleMultiplayerEvent((Integer) client.receive(), client);
-                                } catch (UnknownHostException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            responseHandler.handleResponse(new Response(false, null));
-                                        }
-                                    });
-                                }
-                            }
-                        }).start();
-                    } else {
-                        responseHandler.handleResponse(response);
-                    }
-                }
-            });
+            Client.getRemoteInstance().getHost(code, whenHostIPReceived(responseHandler));
         }
     }
+
+    protected ResponseHandler whenHostIPReceived(final ResponseHandler updateUI) {
+        return new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                if(response.isSuccess()) {
+                    createMultiPlayerClient((String) response.getData());
+                } else {
+                    updateUI.handleResponse(response);
+                }
+            }
+        };
+    }
+
+    protected void createMultiPlayerClient(final String ip) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final MultiplayerClient client = new MultiplayerClient(ip);
+                    client.receive(new MessageHandler() {
+                        @Override
+                        public void handleMessage(Object message) {
+                            System.out.println("test4");
+                            generatePossibleMultiplayerEvent((Integer) message, client);
+                        }
+                    }, false);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+
     /**
      * Handles completion of an event.
      *
@@ -265,6 +283,10 @@ public class Stroll implements Observer {
     }
 
     protected void generatePossibleMultiplayerEvent(int event, Host host) {
+        cEventGoing = true;
+        System.out.println("Generating: " + event);
+        System.out.println("Generating: " + event);
+        System.out.println("Generating: " + event);
         switch (event) {
             default:
                 if (host.isHost()) {
