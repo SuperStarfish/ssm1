@@ -1,11 +1,9 @@
 package cg.group4.aquarium;
 
-import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.client.Client;
 import cg.group4.view.AquariumScreen;
 import com.badlogic.gdx.Game;
-
-import java.util.Observable;
-import java.util.Observer;
+import com.badlogic.gdx.Gdx;
 
 /**
  * The purpose of the Launcher is to launch the collection application.
@@ -18,21 +16,27 @@ public class Aquarium extends Game {
     protected AquariumScreen cAquariumScreen;
 
     public void init() {
-
         // todo
-        cConnector = new Connector("my nice group");
         cAquariumConfig = new Configuration();
+        cConnector = new Connector("7");
+        cConnector.fetchCollectionFromServer();
 
         System.out.println("Connecting to " + cAquariumConfig.getHost() + " : " + cAquariumConfig.getPort());
-
     }
 
     @Override
     public void create() {
         init();
-        cAquariumScreen = new AquariumScreen(cConnector.getCollectionFromServer());
+        cAquariumScreen = new AquariumScreen(cConnector.getCollection());
         setScreen(cAquariumScreen);
-        System.out.println(cConnector.getCollectionFromServer());
     }
 
+
+    @Override
+    public void render() {
+        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+            Gdx.app.postRunnable(toRunBeforeNextCycle);
+        }
+        Client.getRemoteInstance().resetPostRunnables();
+    }
 }

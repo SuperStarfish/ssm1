@@ -17,7 +17,7 @@ import java.util.Random;
 //
 
 /**
- * .
+ *
  */
 public class CollectibleRenderer {
 
@@ -34,7 +34,9 @@ public class CollectibleRenderer {
      */
     protected int cCurrentAngle;
 
-    protected Collectible cCollectible;
+    /**
+     * Collectible
+     */
 
     protected Label label;
 
@@ -46,7 +48,6 @@ public class CollectibleRenderer {
     public CollectibleRenderer(final Collectible collectible) {
         initCollectibleEntity(collectible);
         randomInitialization();
-        cCollectible = collectible;
 
 //        label = new Label("", GameSkin)
 
@@ -71,10 +72,10 @@ public class CollectibleRenderer {
 
 
     /**
-     * Executed once on creation.
+     * Executed addCollectibleDialog on creation.
      */
-    public void once() {
-        addClickableArea();
+    public void addCollectibleDialog(Collectible collectible) {
+        addClickableArea(collectible);
     }
 
     /**
@@ -234,13 +235,13 @@ public class CollectibleRenderer {
 
     }
 
-    public void addClickableArea() {
+    public void addClickableArea(final Collectible collectible) {
         cCollectibleActor.addListener(new ClickListener(){
             @Override
             public void clicked (InputEvent event, float x, float y) {
 
-                String date = cCollectible.getDateAsString();
-                String owner = cCollectible.getOwnerId();
+                String date = collectible.getDateAsString();
+                String owner = collectible.getOwnerId();
 
 
                 Gdx.app.log("Fish tooltip ", "(date=" + date + "___owner=" + owner + ").");

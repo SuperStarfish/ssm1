@@ -14,63 +14,66 @@ import java.util.Observer;
  * Observable connector with the database.
  */
 public class Connector {
-    Client cClient;
-    Configuration cAquariumConfig;
-    String cGroupId;
-    Collection cCollection;
-    Subject subject;
+    protected Client cClient;
+    protected Configuration cAquariumConfig;
+    protected String cGroupId;
+    protected Collection cCollection;
+//    protected Subject subject;
 
     public Connector(String groupId) {
         cAquariumConfig = new Configuration();
-        subject = new Subject();
-        subject.addObserver(getCollectionObserver());
+//        subject = new Subject();
+//        subject.addObserver(getCollectionObserver());
         connect();
+        cCollection = new Collection(groupId);
         this.cGroupId = groupId;
     }
 
-    public Observer getCollectionObserver() {
-        return new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
+//    public Observer getCollectionObserver() {
+//        return new Observer() {
+//            @Override
+//            public void update(Observable o, Object arg) {
+//
+//            }
+//        };
+//    }
 
-            }
-        };
-    }
-
+    /**
+     *
+     */
     public void connect() {
         cClient = Client.getRemoteInstance();
-        cClient.connectFromAquarium(cAquariumConfig.getHost(), cAquariumConfig.getPort());
+        cClient.connectToServer(cAquariumConfig.getHost(), cAquariumConfig.getPort());
+//        cClient.connectFromAquarium(cAquariumConfig.getHost(), cAquariumConfig.getPort());
         System.out.println("Connected?: " + cClient.isConnected());
     }
 
-    public Collection getCollectionFromServer() {
-        System.out.println("Opening collection request...");
-        cClient.getCollection(cGroupId, new ResponseHandler() {
+    /**
+     *
+     * @return
+     */
+    public void fetchCollectionFromServer() {
+
+        Client client = Client.getRemoteInstance();
+
+        Client.getRemoteInstance().getCollection(cGroupId, new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                if (response.isSuccess()) {
-                    cCollection = (Collection) response.getData();
-                    cCollection.add(new Collectible(0.3f, "fin") {
-                        @Override
-                        public String getImagePath() {
-                            return null;
-                        }
+                System.out.println("Is reached!");
+                System.out.println(response);
 
-                        @Override
-                        public float getFormRarity() {
-                            return 0;
-                        }
-                    });
-                    System.out.println(cCollection.toString());
-                } else {
-                    System.out.println("NO CONNECTION RESPONSE");
+                if (response.isSuccess()) {
+                    System.out.println("Is reached!2");
+                    cCollection = (Collection) response.getData();
                 }
             }
+
         });
 
-
-        return cCollection;
     }
 
+    public Collection getCollection() {
+        return this.cCollection;
+    }
 
 }

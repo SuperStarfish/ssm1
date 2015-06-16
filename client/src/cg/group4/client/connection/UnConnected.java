@@ -72,11 +72,11 @@ public class UnConnected implements Connection {
      */
     public void aquariumConnect(final String ip, final int port) {
         try {
-            LOGGER.info("Trying to connect to the remote server");
-            final Connection connection = new LocalConnection(ip, port);
+            LOGGER.info("Trying to connect to the remote server (aquarium)");
+            final Connection connection = new RemoteConnection(ip, port);
             Client.getRemoteInstance().setConnection(connection);
             cConnecting = false;
-            System.out.println("REMOTE INSTANCE: " + Client.getRemoteInstance());
+            System.out.println("REMOTE INSTANCE: " + Client.getRemoteInstance().toString());
         } catch (IOException e) {
             LOGGER.info("Connection failed!");
         }

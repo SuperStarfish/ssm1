@@ -2,7 +2,6 @@ package cg.group4.view;
 
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.data_structures.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -15,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Screen which displays the collected fish in an aquarium.
@@ -116,9 +113,13 @@ public class AquariumScreen implements Screen {
      * @param collection
      */
     public void initCollectibleRendererSet(Collection collection) {
+
+        System.out.println(">>>>>>>>>>>>>>>>> " + collection);
+        System.out.println(">>>>>>>>>>>>>>>>> " + collection.contains(null));
+
         for (Collectible c : collection) {
             CollectibleRenderer collectibleRenderer = new CollectibleRenderer(c);
-            collectibleRenderer.once();
+            collectibleRenderer.addCollectibleDialog(c);
             cCollectibleRendererSet.add(collectibleRenderer);
         }
     }
