@@ -34,7 +34,14 @@ public class FishingBoatHost extends FishingBoatEvent {
 
         fishingBoatData = new FishingBoatData();
 
-        cOtherClient.receive(new MessageHandler() {
+//        cOtherClient.receiveUDP(new MessageHandler() {
+//            @Override
+//            public void handleMessage(Object message) {
+//                fishingBoatData.setcCraneRotation((Double) message);
+//            }
+//        }, true);
+
+        cOtherClient.receiveUDP(new MessageHandler() {
             @Override
             public void handleMessage(Object message) {
                 fishingBoatData.setcCraneRotation((Double) message);
@@ -65,7 +72,8 @@ public class FishingBoatHost extends FishingBoatEvent {
         Vector3 vector = cAccelmeter.update();
         moveBoat(vector);
         moveFish();
-        cOtherClient.send(fishingBoatData.getcBoatCoordinate());
+//        cOtherClient.sendTCP(fishingBoatData.getcBoatCoordinate());
+        cOtherClient.sendUDP(fishingBoatData.getcBoatCoordinate());
         cDataSubject.update(fishingBoatData);
     }
 

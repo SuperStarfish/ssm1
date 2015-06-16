@@ -191,9 +191,10 @@ public class Stroll implements Observer {
 
     protected void createMultiPlayerHost() {
         final MultiplayerHost host = new MultiplayerHost();
+        host.connect();
         Random rng = new Random();
         final int event = rng.nextInt(cNumberOfMultiPlayerEvents);
-        host.send(event);
+        host.sendTCP(event);
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -229,7 +230,9 @@ public class Stroll implements Observer {
             public void run() {
                 try {
                     final MultiplayerClient client = new MultiplayerClient(ip);
-                    client.receive(new MessageHandler() {
+                    client.connect();
+
+                    client.receiveTCP(new MessageHandler() {
                         @Override
                         public void handleMessage(Object message) {
                             System.out.println("test4");
