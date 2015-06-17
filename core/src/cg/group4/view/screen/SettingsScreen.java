@@ -77,16 +77,6 @@ public final class SettingsScreen extends ScreenLogic {
         cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
     }
 
-    @Override
-    protected void rebuildWidgetGroup() {
-        cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
-    }
-
     /**
      * Creates the buttons of the settings menu and adds an event listener for each of them.
      */
@@ -135,15 +125,6 @@ public final class SettingsScreen extends ScreenLogic {
 
     }
 
-    private ChangeListener volumeBehavior() {
-        return new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                AudioPlayer.getInstance().changeAudioEnabled();
-            }
-        };
-    }
-
     /**
      * Resets the interval timer to its default time.
      *
@@ -154,6 +135,21 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 cIntervalTimer.reset();
+            }
+        };
+    }
+
+    /**
+     * Stops the interval timer.
+     * Resets the internal preferences. By doing so it won't be able to start off the time on which it stopped.
+     *
+     * @return ChangeListener
+     */
+    protected ChangeListener stopIntervalBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                cIntervalTimer.stop();
             }
         };
     }
@@ -187,21 +183,6 @@ public final class SettingsScreen extends ScreenLogic {
     }
 
     /**
-     * Stops the interval timer.
-     * Resets the internal preferences. By doing so it won't be able to start off the time on which it stopped.
-     *
-     * @return ChangeListener
-     */
-    protected ChangeListener stopIntervalBehaviour() {
-        return new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                cIntervalTimer.stop();
-            }
-        };
-    }
-
-    /**
      * Goes to the network Screen.
      *
      * @return ChangeListener
@@ -211,7 +192,16 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 ScreenStore.getInstance().setScreen("Network");
-                Client.getRemoteInstance().connectToServer();
+                Client.getInstance().connectToRemoteServer();
+            }
+        };
+    }
+
+    private ChangeListener volumeBehavior() {
+        return new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                AudioPlayer.getInstance().changeAudioEnabled();
             }
         };
     }
@@ -230,6 +220,15 @@ public final class SettingsScreen extends ScreenLogic {
         };
     }
 
+    @Override
+    protected void rebuildWidgetGroup() {
+        cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
+    }
 
     @Override
     protected String setPreviousScreenName() {

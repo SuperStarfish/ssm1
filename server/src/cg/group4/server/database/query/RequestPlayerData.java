@@ -37,17 +37,15 @@ public class RequestPlayerData extends Query {
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     cPlayerData.setUsername(resultSet.getString("Username"));
-                    cPlayerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
-                    cPlayerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
-                    cPlayerData.setGroupId(resultSet.getString("GroupId"));
+                    cPlayerData.setIntervalTimestamp(resultSet.getInt("Interval"));
+                    cPlayerData.setStrollTimestamp(resultSet.getInt("Stroll"));
 
                 } else {
                     insertUser(databaseConnection);
                 }
             }
+            statement.close();
         }
-
-        cPlayerData.setCollection(new RequestCollection(cPlayerData.getId()).query(databaseConnection));
 
         return cPlayerData;
     }
@@ -58,10 +56,9 @@ public class RequestPlayerData extends Query {
      * @throws SQLException If something went wrong with the insertion.
      */
     protected void insertUser(final Connection databaseConnection) throws SQLException {
-        String preparedStatement = "INSERT INTO User (ID,Username) VALUES (?, ?)";
+        String preparedStatement = "INSERT INTO User (ID) VALUES (?)";
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
             statement.setString(1, cPlayerData.getId());
-            statement.setString(2, cPlayerData.getUsername());
             statement.executeUpdate();
         }
     }

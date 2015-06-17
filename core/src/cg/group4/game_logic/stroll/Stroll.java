@@ -141,10 +141,10 @@ public class Stroll implements Observer {
      * @return Returns whether the initialisation of hosting succeeded.
      */
     public boolean startMultiPlayerEvent(final ResponseHandler responseHandler) {
-        if (Client.getRemoteInstance().isConnected()) {
+        if (Client.getInstance().isRemoteConnected()) {
             Gdx.app.log(TAG, "Start hosting multi player event!");
             cEventGoing = true;
-            Client.getRemoteInstance().hostEvent(new ResponseHandler() {
+            Client.getInstance().hostEvent(new ResponseHandler() {
                 @Override
                 public void handleResponse(Response response) {
                     responseHandler.handleResponse(response);
@@ -154,21 +154,14 @@ public class Stroll implements Observer {
             return true;
         } else {
             return false;
-        }
-    }
-
-    @Override
-    public final void update(final Observable o, final Object arg) {
-        if (!cEventGoing) {
-            generatePossibleEvent();
         }
     }
 
     public boolean joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
-        if (Client.getRemoteInstance().isConnected()) {
+        if (Client.getInstance().isRemoteConnected()) {
             Gdx.app.log(TAG, "Joining multi player event!");
             cEventGoing = true;
-            Client.getRemoteInstance().getHost(code, new ResponseHandler() {
+            Client.getInstance().getHost(code, new ResponseHandler() {
                 @Override
                 public void handleResponse(Response response) {
                     responseHandler.handleResponse(response);
@@ -179,6 +172,7 @@ public class Stroll implements Observer {
             return false;
         }
     }
+
     /**
      * Handles completion of an event.
      *
@@ -192,25 +186,10 @@ public class Stroll implements Observer {
         cancelEvent();
     }
 
-    /**
-     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
-     */
-    protected void generatePossibleEvent() {
-        Random rnd = new Random();
-        if (rnd.nextDouble() < cEventThreshold) {
-            cEventGoing = true;
-            int chosenEvent = rnd.nextInt(2);
-            switch (chosenEvent) {
-                case (0):
-                    cEvent = new FishingStrollEvent();
-                    break;
-                case (1):
-                    cEvent = new TestStrollEvent();
-                    break;
-                default:
-                    cEvent = new TestStrollEvent();
-            }
-            cNewEventSubject.update(cEvent);
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        if (!cEventGoing) {
+            generatePossibleEvent();
         }
     }
 
@@ -269,6 +248,28 @@ public class Stroll implements Observer {
      */
     public final Subject getNewEventSubject() {
         return cNewEventSubject;
+    }
+
+    /**
+     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
+     */
+    protected void generatePossibleEvent() {
+        Random rnd = new Random();
+        if (rnd.nextDouble() < cEventThreshold) {
+            cEventGoing = true;
+            int chosenEvent = rnd.nextInt(2);
+            switch (chosenEvent) {
+                case (0):
+                    cEvent = new FishingStrollEvent();
+                    break;
+                case (1):
+                    cEvent = new TestStrollEvent();
+                    break;
+                default:
+                    cEvent = new TestStrollEvent();
+            }
+            cNewEventSubject.update(cEvent);
+        }
     }
 
     /**

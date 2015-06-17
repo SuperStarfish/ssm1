@@ -58,7 +58,7 @@ public class UnConnected implements Connection {
         try {
             LOGGER.info("Trying to connect to the local server");
             Connection connection = new LocalConnection(ip, port);
-            Client.getLocalInstance().setConnection(connection);
+            Client.getInstance().setLocalConnection(connection);
         } catch (IOException e) {
             LOGGER.info("Connection failed!");
         }
@@ -78,10 +78,10 @@ public class UnConnected implements Connection {
                 try {
                     LOGGER.info("Trying to connect to the remote server");
                     final Connection connection = new RemoteConnection(ip, port);
-                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
+                    Client.getInstance().addPostRunnables(new Runnable() {
                         @Override
                         public void run() {
-                            Client.getRemoteInstance().setConnection(connection);
+                            Client.getInstance().setRemoteConnection(connection);
                             cConnecting = false;
                         }
                     });

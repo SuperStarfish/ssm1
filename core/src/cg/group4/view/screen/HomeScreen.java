@@ -78,7 +78,9 @@ public final class HomeScreen extends ScreenLogic {
 
         initStrollButton();
         initCollectionButton();
-        initGroupButton();
+        if (Client.getInstance().isRemoteConnected()) {
+            initGroupButton();
+        }
         initSettingsButton();
 
         return cTable;
@@ -91,6 +93,11 @@ public final class HomeScreen extends ScreenLogic {
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cCollectionButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return null;
     }
 
     /**
@@ -175,29 +182,14 @@ public final class HomeScreen extends ScreenLogic {
                 if (cIsClickable) {
                     StandUp.getInstance().startStroll();
                     ScreenStore.getInstance().setScreen("Stroll");
-                    Client localStorage = Client.getLocalInstance();
-                    localStorage.updateIntervalTimer(System.currentTimeMillis(), null);
-                    localStorage.updateStrollTimer(System.currentTimeMillis(), null);
+                    Client client = Client.getInstance();
+                    client.updateStrollTimestamp(System.currentTimeMillis(), null);
+                    client.updateIntervalTimestamp(System.currentTimeMillis(), null);
                 }
             }
         });
         cTable.row().expandY();
         cTable.add(cStrollButton).colspan(2);
-    }
-
-    /**
-     * Initializes the settings button on the home screen.
-     */
-    public void initSettingsButton() {
-        cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
-        cSettingsButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                ScreenStore.getInstance().setScreen("Settings");
-            }
-        });
-        cTable.row().expandY();
-        cTable.add(cSettingsButton).colspan(2);
     }
 
     /**
@@ -212,7 +204,12 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.row().expandY();
-        cTable.add(cCollectionButton);
+        if (Client.getInstance().isRemoteConnected()) {
+            cTable.add(cCollectionButton);
+        } else {
+            cTable.add(cCollectionButton).colspan(2);
+        }
+
     }
 
     /**
@@ -229,8 +226,18 @@ public final class HomeScreen extends ScreenLogic {
         cTable.add(cGroupButton);
     }
 
-    @Override
-    protected String setPreviousScreenName() {
-        return null;
+    /**
+     * Initializes the settings button on the home screen.
+     */
+    public void initSettingsButton() {
+        cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
+        cSettingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Settings");
+            }
+        });
+        cTable.row().expandY();
+        cTable.add(cSettingsButton).colspan(2);
     }
 }

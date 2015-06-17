@@ -20,14 +20,20 @@ public class Player {
     protected PlayerData cPlayerData;
 
     /**
+     * The collection of the player.
+     */
+    protected Collection cCollection;
+
+    /**
      * Observer additions made to the collection.
      */
     protected Observer cAddChangeObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
             Collection collection = (Collection) arg;
-            collection.setGroupId(cPlayerData.getId());
-            Client.getLocalInstance().addCollection(collection, null);
+            collection.setId(cPlayerData.getId());
+            Client.getInstance().updatePlayerCollection(collection, null);
+            updatePlayerCollection();
         }
     };
 
@@ -35,45 +41,83 @@ public class Player {
      * Constructs a player object.
      */
     public Player() {
-        update();
+        updatePlayerData();
+        updatePlayerCollection();
     }
 
-    public void update() {
-        final Client localStorage = Client.getLocalInstance();
-        if (localStorage.isConnected()) {
-            localStorage.getPlayerData(new ResponseHandler() {
-                @Override
-                public void handleResponse(Response response) {
-                    PlayerData playerData;
-                    if (response.isSuccess()) {
-                        playerData = (PlayerData) response.getData();
-                    } else {
-                        playerData = new PlayerData(localStorage.getUserID());
-                    }
-                    if (playerData.getUsername() == null) {
-                        playerData.setUsername("Unknown");
-                    }
-                    cPlayerData = playerData;
+    /**
+     * Fetches the new player data.
+     */
+    public void updatePlayerData() {
+        final Client client = Client.getInstance();
+        client.getPlayerData(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                if (response.isSuccess()) {
+                    cPlayerData = (PlayerData) response.getData();
+                } else {
+                    cPlayerData = new PlayerData(client.getUserID());
                 }
-            });
-        } else {
-            cPlayerData = new PlayerData(localStorage.getUserID());
-        }
-
-        cPlayerData.getCollection().getChangeAddSubject().addObserver(cAddChangeObserver);
+                client.updateRemoteUsername(cPlayerData.getUsername(), null);
+                if (cPlayerData.getUsername() == null) {
+                    cPlayerData.setUsername("Unknown");
+                }
+            }
+        });
+        client.getGroupId(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                if (response.isSuccess()) {
+                    cPlayerData.setGroupId((String) response.getData());
+                }
+            }
+        });
     }
 
+    /**
+     * Fetches the new player collection.
+     */
+    public void updatePlayerCollection() {
+        final Client client = Client.getInstance();
+        client.getPlayerCollection(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                if (response.isSuccess()) {
+                    cCollection = (Collection) response.getData();
+                } else {
+                    cCollection = new Collection(client.getUserID());
+                }
+                cCollection.getChangeAddSubject().addObserver(cAddChangeObserver);
+            }
+        });
+    }
+
+    /**
+     * Getter for the player data.
+     *
+     * @return The player data.
+     */
     public PlayerData getPlayerData() {
         return cPlayerData;
     }
 
     /**
-     * Retrieves the collection from the players data.
+     * Gets the players collection.
      *
-     * @return The collection.
+     * @return The players collection.
      */
     public Collection getCollection() {
-        return cPlayerData.getCollection();
+        return cCollection;
+    }
+
+
+    /**
+     * Sets the players collection.
+     *
+     * @param collection The players collection.
+     */
+    public void setCollection(final Collection collection) {
+        cCollection = collection;
     }
 
     /**
@@ -98,15 +142,20 @@ public class Player {
         return cPlayerData.getId();
     }
 
+    /**
+     * Getter for group id.
+     *
+     * @return The id of the group that the player belongs to.
+     */
     public String getGroupId() {
         return cPlayerData.getGroupId();
     }
 
     /**
-     * 
-     * @param groupId
+     * Setter for group id.
+     * @param groupId The id of the group that the player belongs to.
      */
-    public void setPlayerDataGroupId(int groupId) {
+    public void setGroupId(int groupId) {
         cPlayerData.setGroupId(Integer.toString(groupId));
     }
 }

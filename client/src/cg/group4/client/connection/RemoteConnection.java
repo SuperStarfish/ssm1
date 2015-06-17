@@ -69,7 +69,7 @@ public final class RemoteConnection implements Connection {
                         cOutputStream.flush();
                         final Response response = (Response) cInputStream.readObject();
                         cAcceptingRequest = true;
-                        Client.getRemoteInstance().addPostRunnables(new Runnable() {
+                        Client.getInstance().addPostRunnables(new Runnable() {
                             @Override
                             public void run() {
                                 if (responseHandler != null) {

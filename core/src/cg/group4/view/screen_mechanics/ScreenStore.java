@@ -64,7 +64,7 @@ public final class ScreenStore {
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
         addScreen("Collection", new CollectiblesScreen());
-        if (Client.getRemoteInstance().isConnected()) {
+        if (Client.getInstance().isRemoteConnected()) {
             addScreen("Groups", new GroupScreen());
         }
     }
@@ -95,7 +95,9 @@ public final class ScreenStore {
      * @param tag Tag of the screen to be displayed.
      */
     public void setScreen(final String tag) {
-        cWorldRenderer.setScreen(cScreens.get(tag));
+        ScreenLogic screen = cScreens.get(tag);
+        screen.display();
+        cWorldRenderer.setScreen(screen);
     }
 
     /**

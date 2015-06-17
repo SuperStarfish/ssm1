@@ -68,11 +68,9 @@ public class CreateGroup extends Query {
             }
 
             group = new Group(Integer.toString(groupId), groupData);
+
             PlayerData playerData = new PlayerData(cOwnerId);
-            playerData.setUsername(null);
-
             playerData.setGroupId(Integer.toString(groupId));
-
             new UpdatePlayerData(playerData).query(databaseConnection);
         }
 

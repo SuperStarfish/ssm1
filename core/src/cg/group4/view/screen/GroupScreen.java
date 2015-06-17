@@ -64,20 +64,6 @@ public class GroupScreen extends ScreenLogic {
         getGroups();
     }
 
-    protected void getGroups() {
-        Client.getRemoteInstance().getGroupData(new ResponseHandler() {
-            @Override
-            public void handleResponse(Response response) {
-                cInnerTable.clear();
-                ArrayList<GroupData> groups = (ArrayList<GroupData>) response.getData();
-                for (GroupData groupData : groups) {
-                    cInnerTable.row().expandY();
-                    cInnerTable.add(cGameSkin.generateDefaultLabel(groupData.getName()));
-                }
-            }
-        });
-    }
-
     protected void createNewGroupButton() {
         cNewGroupButton = cGameSkin.generateDefaultMenuButton("Create group");
         cNewGroupButton.addListener(new ChangeListener() {
@@ -102,6 +88,19 @@ public class GroupScreen extends ScreenLogic {
 
     }
 
+    protected void getGroups() {
+        Client.getInstance().getGroupData(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                cInnerTable.clear();
+                ArrayList<GroupData> groups = (ArrayList<GroupData>) response.getData();
+                for (GroupData groupData : groups) {
+                    cInnerTable.row().expandY();
+                    cInnerTable.add(cGameSkin.generateDefaultLabel(groupData.getName()));
+                }
+            }
+        });
+    }
 
     @Override
     protected void rebuildWidgetGroup() {
@@ -111,6 +110,11 @@ public class GroupScreen extends ScreenLogic {
     @Override
     protected String setPreviousScreenName() {
         return "Home";
+    }
+
+    @Override
+    public void display() {
+        getGroups();
     }
 
     protected void addDisplayedGroup(final Group group) {
@@ -124,10 +128,5 @@ public class GroupScreen extends ScreenLogic {
     // fills the scroll pane with all listed groups
     protected void fillGroupPanel() {
 
-    }
-
-    @Override
-    public void display() {
-        getGroups();
     }
 }
