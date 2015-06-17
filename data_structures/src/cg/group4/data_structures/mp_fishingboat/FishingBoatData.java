@@ -8,6 +8,17 @@ public class FishingBoatData implements Serializable{
     double cCraneRotation;
     HashMap<Integer, SmallFishData> cSmallFishCoordinates;
 
+    protected static final float developSize = 1440;
+    protected static final float boatBoundary = 256 / developSize;
+
+    public static float getDevelopSize() {
+        return developSize;
+    }
+
+    public static float getBoatSize() {
+        return boatBoundary;
+    }
+
     public FishingBoatData() {
         cBoatCoordinate = new Coordinate(0.5f, 0.5f);
         cCraneRotation = 0f;

@@ -1,11 +1,10 @@
 package cg.group4.game_logic.stroll.events.multiplayer_event;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.ServerSocket;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,6 +25,8 @@ public abstract class Host {
     protected Socket cSocket;
     protected ObjectInputStream cInputStream;
     protected ObjectOutputStream cOutputStream;
+
+    protected boolean isAlive = true;
 
     protected long previousTime = 0l;
 
@@ -50,7 +51,7 @@ public abstract class Host {
     }
 
     public void sendUDP(final Serializable object) {
-        if(System.currentTimeMillis() - previousTime > 33) {
+        if(isAlive && System.currentTimeMillis() - previousTime > 33) {
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                  ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
                 objectOutputStream.writeObject(object);
@@ -88,7 +89,7 @@ public abstract class Host {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } while (continuous);
+                } while (continuous && isAlive);
             }
         });
         thread.setName("Incoming UDP Messages Thread");
@@ -100,10 +101,13 @@ public abstract class Host {
     public abstract boolean isHost();
 
     public void sendTCP(final Serializable object) {
-        if(System.currentTimeMillis() - previousTime > 33) {
+        if(isAlive && System.currentTimeMillis() - previousTime > 33) {
             try {
                 cOutputStream.writeUnshared(object);
                 cOutputStream.flush();
+            } catch (SocketException e) {
+                e.printStackTrace();
+                isAlive = false;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -123,12 +127,15 @@ public abstract class Host {
                                 handler.handleMessage(object);
                             }
                         });
+                    } catch (EOFException e) {
+                        e.printStackTrace();
+                        isAlive = false;
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } while (continuous);
+                } while (continuous && isAlive);
             }
         });
         thread.setName("Incoming TCP Messages Thread");

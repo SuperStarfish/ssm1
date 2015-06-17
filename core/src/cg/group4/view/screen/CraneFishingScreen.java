@@ -56,7 +56,13 @@ public class CraneFishingScreen extends EventScreen {
     protected void moveFishes(HashMap<Integer, SmallFishData> fishCoordinates) {
         for(int key : fishCoordinates.keySet()) {
             Coordinate coordinate = fishCoordinates.get(key).getPosition();
-            fishList.get(key).setPosition(coordinate.getX() * maxWidth, coordinate.getY() * maxHeight);
+            SmallFish fish = fishList.get(key);
+            if(coordinate == null) {
+                cContainer.removeActor(fish);
+                fishList.remove(key);
+            } else {
+                fish.setPosition(coordinate.getX() * maxWidth, coordinate.getY() * maxHeight);
+            }
         }
     }
 
@@ -104,10 +110,10 @@ public class CraneFishingScreen extends EventScreen {
         cBoatStack.add(cCrane);
         cCrane.setOrigin(cBoatStack.getWidth() /2, cBoatStack.getHeight() / 2);
 
+        fishList = generateFishes();
+
         cContainer.addActor(cBoatStack);
         cContainer.addActor(cCraneHitBox);
-
-        fishList = generateFishes();
 
 		return cContainer;
 	}

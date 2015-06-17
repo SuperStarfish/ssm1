@@ -41,8 +41,24 @@ public class SmallFishData implements Serializable {
         cPosition.setY(newY);
     }
 
+    public boolean intersects(double xMin, double xMax, double yMin, double yMax) {
+        double fishXMin = cPosition.getX();
+        double fishYMin = cPosition.getY();
+        double fishXMax = fishXMin + fishSize;
+        double fishYMax = fishYMin + fishSize;
+
+        double x_overlap = Math.max(0, Math.min(xMax,fishXMax) - Math.max(xMin,fishXMin));
+        double y_overlap = Math.max(0, Math.min(yMax,fishYMax) - Math.max(yMin,fishYMin));
+
+        return (x_overlap * y_overlap) > 0d;
+    }
+
     public void setDestination(Coordinate destination) {
         cDestination = destination;
+    }
+
+    public void setPosition(Coordinate position) {
+        cPosition = position;
     }
 
     public float getCenterX() {
