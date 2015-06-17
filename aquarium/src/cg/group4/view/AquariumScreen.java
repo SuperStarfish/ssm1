@@ -14,71 +14,105 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Screen which displays the collected fish in an aquarium.
  */
-public class AquariumScreen implements Screen {
+public class AquariumScreen implements Screen, Observer {
 
     /**
      * Tag for debug prints.
      */
-    final String tag = this.getClass().getSimpleName();
+    protected final String tag = this.getClass().getSimpleName();
 
     /**
-     *
+     * Stage for the content.
      */
-    final Stage cStage;
+    protected final Stage cStage;
 
     /**
-     *
+     * Set containing all displayed elements.
      */
-    HashSet<CollectibleRenderer> cCollectibleRendererSet;
+    protected HashSet<CollectibleRenderer> cCollectibleRendererSet;
 
     /**
-     *
+     * Style for layout items.
      */
-    final Style cStyle;
+    protected final Style cStyle;
 
     /**
-     *
+     * Label to display owner information after having clicked on a collectible.
      */
     Label cOwnerLabel;
 
     /**
-     *
+     * Label to display catch date information after having clicked on a collectible.
      */
     Label cDateLabel;
 
     /**
-     *
+     * Table to hold layout items.
      */
     Table cLabelTable;
 
     /**
-     *
+     * Collections used to calculate the difference between the existing collectibles and the newly added collectibles.
      */
-    public AquariumScreen(Collection collection) {
+    Collection addToDisplayCollection,
+        onDisplayCollection;
+
+    /**
+     * Initializes the aquarium.
+     */
+    public AquariumScreen() {
         cCollectibleRendererSet = new HashSet<CollectibleRenderer>();
         cStyle = new Style();
         cStyle.addDefaultsAquarium();
         cStage = new Stage();
-
-
-        // temp
-        //fishTank.add(new FishA(1f, "SampleOwnerId")); // todo replace by collectibles from server
-//        for (int i = 0; i < 100; i++) {
-//            RewardGenerator gen = new RewardGenerator(Client.getLocalInstance().getUserID() + ":me" + i);
-//
-//            fishTank.add(gen.generateCollectible(1));
-//        }
-        // end temp
-
-        initCollectibleRendererSet(collection);
         initStage();
         initLabels();
+        addToDisplayCollection = new Collection("Nil");
+        onDisplayCollection = new Collection("Nil");
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        Collection collection = (Collection) arg;
+        System.out.println("Received Collection update: " + collection.toString());
+
+        for (Collectible c : collection) {
+            addCollectibleRendererItem(c);
+        }
+
+        for (CollectibleRenderer cr : cCollectibleRendererSet) {
+            cStage.addActor(cr.getActor());
+        }
+
+    }
+
+    /**
+     * TODO
+     * Calculates which of the collectibles are not existent in the currently displayed aquarium.
+     * @param cmp
+     */
+    public void isNotInAquariumCollection(Collection cmp) {
+
+    }
+
+    /**
+     * For a single collectible create a render object which handles the movement and view.
+     * @param collectible
+     */
+    public void addCollectibleRendererItem(Collectible collectible) {
+        CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
+        cCollectibleRendererSet.add(collectibleRenderer);
+    }
+
+    /**
+     * Initializes tooltip labels.
+     */
     protected void initLabels() {
         cLabelTable = new Table();
         cLabelTable.setFillParent(true);
@@ -99,38 +133,11 @@ public class AquariumScreen implements Screen {
         cLabelTable.align(Align.top);
         cLabelTable.add(cOwnerLabel).expandX().width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 5);
         cLabelTable.add(cDateLabel).expandX().width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 5).expandX();
-//        cLabelTable.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cLabelTable.setFillParent(true);
 
         cLabelTable.debugAll();
 
         cStage.addActor(cLabelTable);
-    }
-
-
-    /**
-     * For each collectible in the collection create a render object which handles the movement and view.
-     * @param collection
-     */
-    public void initCollectibleRendererSet(Collection collection) {
-
-        System.out.println(">>>>>>>>>>>>>>>>> " + collection);
-        System.out.println(">>>>>>>>>>>>>>>>> " + collection.contains(null));
-
-        for (Collectible c : collection) {
-            CollectibleRenderer collectibleRenderer = new CollectibleRenderer(c);
-            collectibleRenderer.addCollectibleDialog(c);
-            cCollectibleRendererSet.add(collectibleRenderer);
-        }
-    }
-
-    /**
-     * For a single collectible create a render object which handles the movement and view.
-     * @param collectible
-     */
-    public void addCollectibleRendererItem(Collectible collectible) {
-            CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
-            cCollectibleRendererSet.add(collectibleRenderer);
     }
 
     /**

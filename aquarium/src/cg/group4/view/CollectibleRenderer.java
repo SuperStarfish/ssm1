@@ -24,7 +24,7 @@ public class CollectibleRenderer {
     /**
      * Speed of the image.
      */
-    final int cSpeed = 10;
+    protected final int cSpeed = 10;
     /**
      * Actor used for the movements of the collectible.
      */
@@ -235,10 +235,16 @@ public class CollectibleRenderer {
 
     }
 
+    /**
+     * TODO
+     * Adds a clickable area which when clicked on will update the owner/date information labels.
+     *
+     * @param collectible Collectible
+     */
     public void addClickableArea(final Collectible collectible) {
-        cCollectibleActor.addListener(new ClickListener(){
+        cCollectibleActor.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
 
                 String date = collectible.getDateAsString();
                 String owner = collectible.getOwnerId();

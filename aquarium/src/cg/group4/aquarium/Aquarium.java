@@ -11,29 +11,41 @@ import com.badlogic.gdx.Gdx;
  * This is because it does not require several pieces such as game logic.
  */
 public class Aquarium extends Game {
+
+    /**
+     * Connects the client with the server.
+     */
     protected Connector cConnector;
+
+    /**
+     * Loads the configuration for the server.
+     */
     protected Configuration cAquariumConfig;
+
+    /**
+     * Screen which displays the aquarium.
+     */
     protected AquariumScreen cAquariumScreen;
-
-    public void init() {
-        // todo
-        cAquariumConfig = new Configuration();
-        cConnector = new Connector("7");
-        cConnector.fetchCollectionFromServer();
-
-        System.out.println("Connecting to " + cAquariumConfig.getHost() + " : " + cAquariumConfig.getPort());
-    }
 
     @Override
     public void create() {
-        init();
-        cAquariumScreen = new AquariumScreen(cConnector.getCollection());
+        cAquariumConfig = new Configuration();
+
+        // TODO: make dynamic.
+        cConnector = new Connector("7");
+
+        cAquariumScreen = new AquariumScreen();
+
+        cConnector.getSubject().addObserver(cAquariumScreen);
+
         setScreen(cAquariumScreen);
     }
 
 
     @Override
     public void render() {
+        super.render();
+
         for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }

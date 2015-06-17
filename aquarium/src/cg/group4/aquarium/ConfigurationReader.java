@@ -4,35 +4,25 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- *
+ * Reads the configuration from the given scanner object.
  */
 public class ConfigurationReader {
 
     /**
-     *
-     */
-    protected String address;
-
-    /**
-     *
-     */
-    protected int port;
-
-    /**
-     *
+     * Scanner used to read the configuration file.
      */
     protected Scanner cScanner;
 
     /**
-     *
-     * @param scanner
+     * Initializes the scanner so the configuration file can be read using {#code readSettings()}.
+     * @param scanner Used to read the configuration file
      */
-    public ConfigurationReader(Scanner scanner) {
+    public ConfigurationReader(final Scanner scanner) {
         cScanner = scanner;
     }
 
     /**
-     * Returns a tuple (actually an ArrayList with the host (ip) and the port.
+     * Returns a tuple (actually an ArrayList with the host (ip) and the cPort.
      * @return requires to have exact two elements to qualify.
      */
     public ArrayList readSettings() {
@@ -40,12 +30,12 @@ public class ConfigurationReader {
         ArrayList arrayList = new ArrayList();
 
         if (cScanner.hasNextLine()) {
-            address = cScanner.nextLine();
+            String address = cScanner.nextLine();
             arrayList.add(0, address);
         }
 
         if (cScanner.hasNextInt()) {
-            port = cScanner.nextInt();
+            int port = cScanner.nextInt();
             arrayList.add(1, port);
         }
 
@@ -53,7 +43,4 @@ public class ConfigurationReader {
 
         return arrayList;
     }
-
-
-
 }

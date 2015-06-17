@@ -12,24 +12,48 @@ import java.util.Scanner;
  */
 public class Configuration {
 
-    final protected String tag = this.getClass().getSimpleName();
-    final protected String configFile = "aquarium/server.cfg";
+    /**
+     * Tag for debugging & logging.
+     */
+    final protected String cTag = this.getClass().getSimpleName();
+
+    /**
+     * Loaction of the server configuration.
+     */
+    final protected String cConfigFile = "aquarium/server.cfg";
+
+    /**
+     * Reader of the configuration file.
+     */
     protected ConfigurationReader cAquariumSettingsReader;
+
+    /**
+     * Server Host IP cAddress.
+     */
     protected String cHost;
+
+    /**
+     * Server Host cPort.
+     */
     protected Integer cPort;
 
     /**
-     *
+     * Initializes the configuration data class.
      */
     public Configuration() {
         try {
-            readConfig(configFile);
+            readConfig(cConfigFile);
         } catch (IOException e) {
-            Gdx.app.log(tag, e.getMessage());
+            Gdx.app.log(cTag, e.getMessage());
         }
     }
 
-    public void readConfig(String file) throws IOException {
+    /**
+     * Reads the host/ip:cPort configuration using a ConfigurationReader.
+     * @param file Location of the config file.
+     * @throws IOException thrown on failure of file operations
+     */
+    public void readConfig(final String file) throws IOException {
         cAquariumSettingsReader = new ConfigurationReader(new Scanner(new File(file)));
         ArrayList a = cAquariumSettingsReader.readSettings();
         setHost((String) a.get(0));
@@ -37,36 +61,35 @@ public class Configuration {
     }
 
     /**
-     *
-     * @return
+     * Returns the host.
+     * @return cHost
      */
     public String getHost() {
         return cHost;
     }
 
     /**
-     *
-     * @param host
+     * Sets the host.
+     * @param host host to set
      */
-    public void setHost(String host) {
+    public void setHost(final String host) {
         this.cHost = host;
     }
 
     /**
-     *
-     * @return
+     * Returns the cPort.
+     * @return cPort
      */
     public int getPort() {
         return cPort;
     }
 
     /**
-     *
-     * @param port
+     * Sets the cPort.
+     * @param port cPort to set
      */
-    public void setPort(int port) {
+    public void setPort(final int port) {
         this.cPort = port;
     }
-
 
 }

@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Align;
 
 /**
  * The default skin details for the application.
- * TODO: The view should be separated.
+ * TODO: The view should be separated. Then this class can be replaced by the GameSkin.
  *       This is the original GameSkin class with some minor changes.
  *       Otherwise the Aquarium would be dependent on Core.
  *
