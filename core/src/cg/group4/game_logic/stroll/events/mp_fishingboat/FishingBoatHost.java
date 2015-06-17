@@ -66,12 +66,13 @@ public class FishingBoatHost extends FishingBoatEvent {
     @Override
     public int getReward() {
         // TODO Auto-generated method stub
-        return 0;
+        return 30;
     }
 
     @Override
     protected void clearEvent() {
-        // TODO Auto-generated method stub
+        super.dispose();
+        cOtherClient.dispose();
     }
 
     @Override
@@ -84,7 +85,6 @@ public class FishingBoatHost extends FishingBoatEvent {
         Vector3 vector = cAccelmeter.update();
         moveBoat(vector);
         moveFish();
-//        cOtherClient.sendTCP(fishingBoatData.getcBoatCoordinate());
         cOtherClient.sendUDP(fishingBoatData.getcBoatCoordinate());
         cDataSubject.update(fishingBoatData);
         if(toRemove.size() > 0) {
@@ -92,6 +92,9 @@ public class FishingBoatHost extends FishingBoatEvent {
                 fishingBoatData.getcSmallFishCoordinates().remove(key);
             }
             toRemove.clear();
+        }
+        if(fishingBoatData.getcSmallFishCoordinates().size() == 0) {
+            clearEvent();
         }
     }
 

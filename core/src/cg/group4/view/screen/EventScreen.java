@@ -20,8 +20,11 @@ public abstract class EventScreen extends ScreenLogic {
 
     public EventScreen(final StrollEvent eventLogic) {
         eventLogic.getEventChangeSubject().addObserver(cEventObserver);
+        init();
         eventLogic.start();
     }
+
+    abstract void init();
 
     abstract void onEventChange(Object updatedData);
 

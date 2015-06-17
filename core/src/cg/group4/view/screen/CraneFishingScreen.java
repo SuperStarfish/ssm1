@@ -38,10 +38,11 @@ public class CraneFishingScreen extends EventScreen {
 	
 	public CraneFishingScreen(final StrollEvent eventLogic) {
 		super(eventLogic);
+    }
+
+    @Override
+    void init() {
         cContainer = new WidgetGroup();
-        maxWidth = Gdx.graphics.getWidth();
-        maxHeight = Gdx.graphics.getHeight();
-        scalar = maxWidth > maxHeight ? maxHeight / devSize : maxWidth / devSize;
     }
 
     @Override
@@ -88,11 +89,11 @@ public class CraneFishingScreen extends EventScreen {
 
     @Override
 	protected WidgetGroup createWidgetGroup() {
-        cBoatStack = new Stack();
+        maxWidth = Gdx.graphics.getWidth();
+        maxHeight = Gdx.graphics.getHeight();
+        scalar = maxWidth > maxHeight ? maxHeight / devSize : maxWidth / devSize;
 
-        System.out.println(maxHeight);
-        System.out.println(maxWidth);
-        System.out.println(scalar);
+        cBoatStack = new Stack();
 
         cBoatStack.setPosition(0.3f * maxWidth, 0.3f * maxHeight);
         cBoatStack.setSize(boatSize * scalar, boatSize * scalar);
@@ -114,6 +115,7 @@ public class CraneFishingScreen extends EventScreen {
 
         cContainer.addActor(cBoatStack);
         cContainer.addActor(cCraneHitBox);
+
 
 		return cContainer;
 	}

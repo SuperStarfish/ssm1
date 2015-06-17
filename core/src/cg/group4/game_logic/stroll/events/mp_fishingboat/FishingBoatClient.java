@@ -61,7 +61,6 @@ public class FishingBoatClient extends FishingBoatEvent {
                 SmallFishData fish = fishingBoatData.getcSmallFishCoordinates().get(data.getcId());
                 if(data.getcNewDestination() == null) {
                     fish.setPosition(null);
-                    System.out.println("Received a delete");
                 } else {
                     fish.setDestination(data.getcNewDestination());
                 }
@@ -72,7 +71,7 @@ public class FishingBoatClient extends FishingBoatEvent {
     @Override
     public int getReward() {
         // TODO Auto-generated method stub
-        return 0;
+        return 30;
     }
 
     @Override
@@ -99,6 +98,9 @@ public class FishingBoatClient extends FishingBoatEvent {
                 fishingBoatData.getcSmallFishCoordinates().remove(key);
             }
             toRemove.clear();
+        }
+        if(fishingBoatData.getcSmallFishCoordinates().size() == 0) {
+            clearEvent();
         }
     }
 

@@ -71,9 +71,6 @@ public class Stroll implements Observer {
      */
     protected Timer cStrollTimer;
 
-    protected boolean cForceEvent = false;
-    protected StrollEvent cForcedEvent = new CraneFishing();
-
     protected final int cNumberOfMultiPlayerEvents = 1;
 
     /**
@@ -150,13 +147,7 @@ public class Stroll implements Observer {
     @Override
     public final void update(final Observable o, final Object arg) {
         if (!cEventGoing) {
-            if(cForceEvent) {
-                cEventGoing = true;
-                cEvent = cForcedEvent;
-                cNewEventSubject.update(cEvent);
-            } else {
-                generatePossibleEvent();
-            }
+            generatePossibleEvent();
         }
     }
 
@@ -235,7 +226,6 @@ public class Stroll implements Observer {
                     client.receiveTCP(new MessageHandler() {
                         @Override
                         public void handleMessage(Object message) {
-                            System.out.println("test4");
                             generatePossibleMultiplayerEvent((Integer) message, client);
                         }
                     }, false);
@@ -274,9 +264,6 @@ public class Stroll implements Observer {
                 case (0):
                     cEvent = new FishingStrollEvent();
                     break;
-                case (1):
-                    cEvent = new TestStrollEvent();
-                    break;
                 default:
                     cEvent = new TestStrollEvent();
                     break;
@@ -287,9 +274,6 @@ public class Stroll implements Observer {
 
     protected void generatePossibleMultiplayerEvent(int event, Host host) {
         cEventGoing = true;
-        System.out.println("Generating: " + event);
-        System.out.println("Generating: " + event);
-        System.out.println("Generating: " + event);
         switch (event) {
             default:
                 if (host.isHost()) {

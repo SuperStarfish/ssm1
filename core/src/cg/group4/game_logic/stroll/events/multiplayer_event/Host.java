@@ -141,4 +141,17 @@ public abstract class Host {
         thread.setName("Incoming TCP Messages Thread");
         thread.start();
     }
+
+    public void dispose() {
+        isAlive = false;
+        cDatagramSocket.close();
+        try {
+            cSocket.close();
+            cOutputStream.close();
+            cInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

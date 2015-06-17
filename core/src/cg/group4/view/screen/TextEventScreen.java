@@ -21,6 +21,10 @@ public final class TextEventScreen extends EventScreen {
 
     public TextEventScreen(final StrollEvent event) {
         super(event);
+    }
+
+    @Override
+    void init() {
         cTaskToPerform = cGameSkin.generateDefaultLabel("");
     }
 

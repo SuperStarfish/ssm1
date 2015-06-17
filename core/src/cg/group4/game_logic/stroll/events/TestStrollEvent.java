@@ -61,12 +61,23 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Tasks which will execute when a delay is initiated.
      */
-    protected Observer cDelayInputStartObserver;
+    protected Observer cDelayInputStartObserver = new Observer() {
+        @Override
+        public void update(final Observable o, final Object arg) {
+            cDelayNewInput = true;
+        }
+    };
    
     /**
      * Tasks which will execute when a delay is stopped.
      */
-    protected Observer cDelayInputStopObserver;
+    protected Observer cDelayInputStopObserver = new Observer() {
+        @Override
+        public void update(final Observable o, final Object arg) {
+            cDataSubject.update("Move your phone " + cDirections[cOrientation.getTextIndex(cOperationNr)] + "!");
+            cDelayNewInput = false;
+        }
+    };
 
     /**
      * Configurable accelerometer that reads and filters the accelerations of the device.
@@ -92,21 +103,6 @@ public class TestStrollEvent extends StrollEvent {
         cTasksCompleted = 0;
         cPrevOperationNr = -1;
         cRandom = new Random();
-
-        cDelayInputStartObserver = new Observer() {
-            @Override
-            public void update(final Observable o, final Object arg) {
-                cDelayNewInput = true;
-            }
-        };
-
-        cDelayInputStopObserver = new Observer() {
-            @Override
-            public void update(final Observable o, final Object arg) {
-                cDataSubject.update("Move your phone " + cDirections[cOrientation.getTextIndex(cOperationNr)] + "!");
-                cDelayNewInput = false;
-            }
-        };
 
         cDelayInputTimer = new Timer("DELAYEVENTINPUT", 1);
         cDelayInputTimer.getStartSubject().addObserver(cDelayInputStartObserver);
