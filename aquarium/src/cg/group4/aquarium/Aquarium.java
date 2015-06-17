@@ -1,7 +1,11 @@
 package cg.group4.aquarium;
 
 import cg.group4.client.Client;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.view.AquariumScreen;
+import cg.group4.view.StartScreen;
+import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
+import cg.group4.view.screen_mechanics.LoadingScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
@@ -10,7 +14,9 @@ import com.badlogic.gdx.Gdx;
  * This Launcher is a separate launcher from the Launcher in the core project.
  * This is because it does not require several pieces such as game logic.
  */
-public class Aquarium extends Game {
+public class Aquarium extends Game implements AssetsLoadingHandler {
+
+    protected static volatile Aquarium instance;
 
     /**
      * Connects the client with the server.
@@ -27,18 +33,34 @@ public class Aquarium extends Game {
      */
     protected AquariumScreen cAquariumScreen;
 
+    /**
+     * Screen which displays a textfield where the user can fill in the group id to show the aligned aquarium.
+     */
+    protected StartScreen cStartScreen;
+
+    /**
+     *
+     */
+    protected Subject cGroupIdSubject;
+
+
+    private Aquarium() {
+    }
+
+    public static Aquarium getInstance() {
+        if (instance == null ) {
+            synchronized (Aquarium.class) {
+                if (instance == null) {
+                    instance = new Aquarium();
+                }
+            }
+        }
+        return instance;
+    }
+
     @Override
     public void create() {
-        cAquariumConfig = new Configuration();
-
-        // TODO: make dynamic.
-        cConnector = new Connector("7");
-
-        cAquariumScreen = new AquariumScreen();
-
-        cConnector.getSubject().addObserver(cAquariumScreen);
-
-        setScreen(cAquariumScreen);
+        setScreen(new LoadingScreen(this));
     }
 
 
@@ -50,5 +72,23 @@ public class Aquarium extends Game {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getRemoteInstance().resetPostRunnables();
+    }
+
+    public void assetsDone() {
+        cAquariumConfig = new Configuration();
+
+        cStartScreen = new StartScreen();
+        setScreen(cStartScreen);
+    }
+
+    /**
+     * Initializes the aquarium (screen and server connection) with the given group id.
+     * @param groupNumber group id
+     */
+    public void initAquarium(String groupNumber) {
+        cConnector = new Connector(groupNumber);
+        cAquariumScreen = new AquariumScreen();
+        cConnector.getCollectionSubject().addObserver(cAquariumScreen.getCollectionObserver());
+        setScreen(cAquariumScreen);
     }
 }

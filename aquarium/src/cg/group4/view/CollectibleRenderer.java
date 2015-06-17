@@ -1,9 +1,12 @@
 package cg.group4.view;
 
+import cg.group4.data_structures.Pair;
 import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -12,12 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.Random;
 
-// TODO always move forward (1 move method)
-// probability to turn a random degree between min max
-//
-
 /**
- *
+ * Responsible for displaying a single collectible.
  */
 public class CollectibleRenderer {
 
@@ -35,10 +34,14 @@ public class CollectibleRenderer {
     protected int cCurrentAngle;
 
     /**
-     * Collectible
+     * Id for comparison.
      */
+    protected String id;
 
-    protected Label label;
+    /**
+     * Subject to send information of the owner and achievement date of the collectible.
+     */
+    protected Subject collectibleInformationSubject;
 
     /**
      * Initializes a collectible object.
@@ -46,10 +49,11 @@ public class CollectibleRenderer {
      * @param collectible collectible to create a render entity from
      */
     public CollectibleRenderer(final Collectible collectible) {
+        collectibleInformationSubject = new Subject();
         initCollectibleEntity(collectible);
         randomInitialization();
 
-//        label = new Label("", GameSkin)
+        addCollectibleDialog(collectible);
 
     }
 
@@ -84,6 +88,8 @@ public class CollectibleRenderer {
      * @param collectible collectible entity to initialize for display
      */
     public void initCollectibleEntity(final Collectible collectible) {
+        setId(collectible.getOwnerId(), collectible.getDateAsString(), collectible.getRarity());
+
         final CollectibleDrawer cCollectibleDrawer = new CollectibleDrawer();
         final Texture collectibleTexture = cCollectibleDrawer.drawCollectible(collectible);
         cCollectibleActor = new Image(collectibleTexture);
@@ -93,6 +99,20 @@ public class CollectibleRenderer {
         cCollectibleActor.setOrigin(
                 cCollectibleActor.getImageWidth() / 2,
                 cCollectibleActor.getImageHeight() / 2);
+    }
+
+    /**
+     * Sets the id of the collectible renderer.
+     * Used for comparison of this class' objects.
+     * @param owner Owner id of the collectible.
+     * @param date Date of the collectible.
+     * @param rarity Rarity based on  form and hue.
+     */
+    public void setId(String owner, String date, double rarity) {
+        final String sep = ",";
+        this.id = owner + sep
+                + date + sep
+                + Double.toString(rarity);
     }
 
     /**
@@ -245,16 +265,31 @@ public class CollectibleRenderer {
         cCollectibleActor.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                 String date = collectible.getDateAsString();
                 String owner = collectible.getOwnerId();
-
-
-                Gdx.app.log("Fish tooltip ", "(date=" + date + "___owner=" + owner + ").");
+                collectibleInformationSubject.update(new Pair<>(owner, date));
             }
         });
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CollectibleRenderer)) return false;
 
+        CollectibleRenderer that = (CollectibleRenderer) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    public Subject getSubject() {
+        return collectibleInformationSubject;
+    }
 }

@@ -40,12 +40,17 @@ public class Connector {
     /**
      * Subject with goal being the Observable for the Connector.
      */
-    protected Subject cSubject;
+    protected Subject cCollectionFromServerSubject;
 
     /**
      * Executor thread for fixed schedule of updating the collection.
      */
-    protected ScheduledExecutorService cExecutorService;
+    protected ScheduledExecutorService cCollectionUpdateExecutorService;
+
+    /**
+     * Refreshes the status of the connection.
+     */
+    protected ScheduledExecutorService cConnectionStatusExecutorService;
 
     /**
      * Runnable which calls the {#code fetchCollectionFromServer()} method to fetch the collection from the server.
@@ -63,9 +68,10 @@ public class Connector {
      * @param groupId id of the group to display as aquarium.
      */
     public Connector(final String groupId) {
-        cExecutorService = Executors.newSingleThreadScheduledExecutor();
+        cCollectionUpdateExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-        cSubject = new Subject();
+
+        cCollectionFromServerSubject = new Subject();
 
         cAquariumConfig = new Configuration();
         connect();
@@ -83,12 +89,11 @@ public class Connector {
             @Override
             public void update(final Observable o, final Object arg) {
                 final long initialDelay = 3;
-                final long scheduledDelay = 30;
+                final long scheduledDelay = 3;
 
-                cExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay, TimeUnit.SECONDS);
+                cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay, TimeUnit.SECONDS);
             }
         });
-        System.out.println("Connected?: " + cClient.isConnected());
     }
 
     /**
@@ -100,18 +105,18 @@ public class Connector {
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {
                     cCollection = (Collection) response.getData();
-                    cSubject.update(cCollection);
+                    cCollectionFromServerSubject.update(cCollection);
                 }
             }
         });
-
     }
+
 
     /**
      * Observable of the Connector.
-     * @return cSubject
+     * @return cCollectionFromServerSubject
      */
-    public Subject getSubject() {
-        return cSubject;
+    public Subject getCollectionSubject() {
+        return cCollectionFromServerSubject;
     }
 }

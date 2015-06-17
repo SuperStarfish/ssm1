@@ -18,8 +18,8 @@ public class AquariumLauncher {
      */
     public static void main(final String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width/2;
-        config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height/2;
+        config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
+        config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
         config.fullscreen = false;
 
         // set the border to undecorated (no minus/resize/close and thinner borders) to better emulate fullscreen,
@@ -28,7 +28,8 @@ public class AquariumLauncher {
             System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
         }
 
-        new LwjglApplication(new Aquarium(), config);
+        new LwjglApplication(Aquarium.getInstance(), config);
     }
+
 
 }
