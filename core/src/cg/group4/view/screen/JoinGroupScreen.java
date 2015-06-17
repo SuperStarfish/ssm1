@@ -65,6 +65,7 @@ public class JoinGroupScreen extends ScreenLogic {
 
                 if (response.isSuccess()) {
                     cStatusLabel.setText("Successfully joined a group");
+                    StandUp.getInstance().getPlayer().updatePlayerData();
                 } else {
                     cStatusLabel.setText("Unable to join group");
                 }

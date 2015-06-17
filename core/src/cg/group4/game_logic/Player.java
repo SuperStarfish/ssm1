@@ -64,10 +64,13 @@ public class Player {
                 }
             }
         });
+        System.out.println("Here!");
         client.getGroupId(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
+                System.out.println("Response!");
                 if (response.isSuccess()) {
+                    System.out.println(response.getData());
                     cPlayerData.setGroupId((String) response.getData());
                 }
             }

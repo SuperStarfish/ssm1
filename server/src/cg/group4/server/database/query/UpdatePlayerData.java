@@ -34,6 +34,8 @@ public class UpdatePlayerData extends Query {
     public Serializable query(final Connection databaseConnection) throws SQLException {
         cDatabaseConnection = databaseConnection;
 
+        new MakePlayerEntry(cPlayerData.getId()).query(databaseConnection);
+
         if (cPlayerData.getUsername() != null) {
             updateData("Username", cPlayerData.getUsername());
         }
@@ -65,6 +67,7 @@ public class UpdatePlayerData extends Query {
             statement.setObject(1, newValue);
             statement.setObject(2, cPlayerData.getId());
             statement.executeUpdate();
+            statement.close();
         }
     }
 }

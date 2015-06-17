@@ -165,6 +165,8 @@ public final class Client {
         cUserIDResolver = idResolver;
     }
 
+    // --------------- Only queries follow below.--------------
+
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
      * @param responseHandler The task to execute once a reply is received completed.
@@ -180,9 +182,6 @@ public final class Client {
     public void getGroupId(final ResponseHandler responseHandler) {
         cRemoteConnection.send(new RequestGroupId(cUserIDResolver.getID()), responseHandler);
     }
-
-
-    // --------------- Only queries follow below.--------------
 
     /**
      * Updates the username on both the local server.
@@ -274,8 +273,8 @@ public final class Client {
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void joinGroup(final String groupId, final ResponseHandler responseHandler) {
-        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
-        playerData.setId(groupId);
+        PlayerData playerData = new PlayerData(getUserID());
+        playerData.setGroupId(groupId);
         cRemoteConnection.send(new UpdatePlayerData(playerData), responseHandler);
     }
 
