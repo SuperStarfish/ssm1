@@ -69,7 +69,6 @@ public class JoinGroupScreen extends ScreenLogic {
                 } else {
                     cStatusLabel.setText("Unable to join group");
                 }
-                StandUp.getInstance().getPlayer().updatePlayerData();
             }
         });
     }

@@ -258,8 +258,8 @@ public final class Client {
     }
 
     /**
-     * Gets the collection belonging to the player.
-     *
+     * Updates the collection belonging to the player.
+     * @param collection The collection with which will be updated.
      * @param responseHandler The task to execute once a reply is received.
      */
     public void updatePlayerCollection(final Collection collection, final ResponseHandler responseHandler) {
@@ -283,6 +283,7 @@ public final class Client {
      *
      * @param collectible The collectible to be donated.
      * @param groupId     The group to which the collectible should be donated.
+     * @param responseHandler The task to execute once a reply is received completed.
      */
     public void donateCollectible(final Collectible collectible, final String groupId,
                                   final ResponseHandler responseHandler) {
@@ -353,24 +354,5 @@ public final class Client {
     public void getHost(final Integer code, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new RequestHostIp(code), responseHandler);
     }
-
-
-//    /**
-//     * Adds the collection to the server. Behaviour depends on the state.
-//     * @param collection The collection to add to the server.
-//     * @param responseHandler The task to execute once a reply is received completed.
-//     */
-//    public void addCollection(final Collection collection, final ResponseHandler responseHandler) {
-//        tryToSend(new AddCollection(collection), responseHandler);
-//    }
-//
-//    /**
-//     * Removes the given collection from the database.
-//     * @param collection Collection to delete.
-//     * @param responseHandler The task to execute once a reply is received completed.
-//     */
-//    public void removeCollection(final Collection collection, final ResponseHandler responseHandler) {
-//        tryToSend(new RemoveCollection(collection), responseHandler);
-//    }
 
 }

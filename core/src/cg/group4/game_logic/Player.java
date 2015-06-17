@@ -41,7 +41,9 @@ public class Player {
      * Constructs a player object.
      */
     public Player() {
+        cPlayerData = new PlayerData(Client.getInstance().getUserID());
         updatePlayerData();
+        cCollection = new Collection(Client.getInstance().getUserID());
         updatePlayerCollection();
     }
 
@@ -55,8 +57,6 @@ public class Player {
             public void handleResponse(Response response) {
                 if (response.isSuccess()) {
                     cPlayerData = (PlayerData) response.getData();
-                } else {
-                    cPlayerData = new PlayerData(client.getUserID());
                 }
                 client.updateRemoteUsername(cPlayerData.getUsername(), null);
                 if (cPlayerData.getUsername() == null) {
@@ -64,13 +64,10 @@ public class Player {
                 }
             }
         });
-        System.out.println("Here!");
         client.getGroupId(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                System.out.println("Response!");
                 if (response.isSuccess()) {
-                    System.out.println(response.getData());
                     cPlayerData.setGroupId((String) response.getData());
                 }
             }
@@ -87,8 +84,6 @@ public class Player {
             public void handleResponse(Response response) {
                 if (response.isSuccess()) {
                     cCollection = (Collection) response.getData();
-                } else {
-                    cCollection = new Collection(client.getUserID());
                 }
                 cCollection.getChangeAddSubject().addObserver(cAddChangeObserver);
             }

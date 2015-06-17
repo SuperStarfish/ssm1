@@ -3,9 +3,9 @@ package cg.group4.client.connection;
 import cg.group4.client.Client;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.logging.Logger;
 
 /**
@@ -98,7 +98,7 @@ public class UnConnected implements Connection {
     }
 
     @Override
-    public void send(final Serializable data, final ResponseHandler responseHandler) {
+    public void send(final Query query, final ResponseHandler responseHandler) {
         if (responseHandler != null) {
             responseHandler.handleResponse(new Response(false, null));
         }

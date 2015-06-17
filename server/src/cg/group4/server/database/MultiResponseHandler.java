@@ -6,10 +6,25 @@ package cg.group4.server.database;
  */
 public class MultiResponseHandler implements ResponseHandler {
 
+    /**
+     * The response handler to call with the result.
+     */
     protected final ResponseHandler cResponseHandler;
+    /**
+     * The number of responses handled so far.
+     */
     protected int cNumberOfResponses;
+    /**
+     * The number of responses to handle.
+     */
     protected int cMaxNumberOfResponses;
 
+    /**
+     * Combines multiple response handlers to a single response handler.
+     *
+     * @param responseHandler      The response handler to call with the result.
+     * @param maxNumberOfResponses The number of responses to handle.
+     */
     public MultiResponseHandler(ResponseHandler responseHandler, final int maxNumberOfResponses) {
         cResponseHandler = responseHandler;
         cNumberOfResponses = 0;
@@ -20,7 +35,9 @@ public class MultiResponseHandler implements ResponseHandler {
     public void handleResponse(Response response) {
         cNumberOfResponses++;
         if (!response.isSuccess() || cNumberOfResponses == cMaxNumberOfResponses) {
-            cResponseHandler.handleResponse(response);
+            if (cResponseHandler != null) {
+                cResponseHandler.handleResponse(response);
+            }
         }
     }
 }
