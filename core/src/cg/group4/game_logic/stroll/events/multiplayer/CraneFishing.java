@@ -69,7 +69,7 @@ public class CraneFishing extends StrollEvent{
 
 	protected void moveBoat(Vector3 vector) {
 		float totalForce = Math.abs(vector.x) + Math.abs(vector.y);
-        Coordinate boatCoordinate = fishingBoatData.getcBoatCoordinate();
+        Coordinate boatCoordinate = fishingBoatData.getcBoatData().getcLocation();
 		float oldX = boatCoordinate.getX();
 		float oldY = boatCoordinate.getY();
 		if(totalForce != 0) {

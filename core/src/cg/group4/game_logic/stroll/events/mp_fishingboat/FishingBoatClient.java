@@ -1,6 +1,6 @@
 package cg.group4.game_logic.stroll.events.mp_fishingboat;
 
-import cg.group4.data_structures.mp_fishingboat.Coordinate;
+import cg.group4.data_structures.mp_fishingboat.BoatData;
 import cg.group4.data_structures.mp_fishingboat.FishingBoatData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishDestination;
@@ -50,7 +50,7 @@ public class FishingBoatClient extends FishingBoatEvent {
         cOtherClient.receiveUDP(new MessageHandler() {
             @Override
             public void handleMessage(Object message) {
-                fishingBoatData.setcBoatCoordinate((Coordinate) message);
+                fishingBoatData.setcBoatData((BoatData) message);
             }
         }, true);
 
@@ -91,7 +91,8 @@ public class FishingBoatClient extends FishingBoatEvent {
     public void update(Observable o, Object arg) {
         Vector3 vector = cAccelmeter.update();
 
-        double newRotation = Math.atan2(-vector.y, -vector.x);
+//        double newRotation = Math.atan2(-vector.y, -vector.x);
+        double newRotation = fishingBoatData.getcCraneRotation() + 0.01d;
         fishingBoatData.setcCraneRotation(newRotation);
         cOtherClient.sendUDP(newRotation);
         moveFish();

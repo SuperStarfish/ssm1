@@ -4,33 +4,22 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 public class FishingBoatData implements Serializable{
-    Coordinate cBoatCoordinate;
+    BoatData cBoatData;
     double cCraneRotation;
     HashMap<Integer, SmallFishData> cSmallFishCoordinates;
 
-    protected static final float developSize = 1440;
-    protected static final float boatBoundary = 256 / developSize;
-
-    public static float getDevelopSize() {
-        return developSize;
-    }
-
-    public static float getBoatSize() {
-        return boatBoundary;
-    }
-
     public FishingBoatData() {
-        cBoatCoordinate = new Coordinate(0.5f, 0.5f);
+        cBoatData = new BoatData(new Coordinate(0.5f, 0.5f), 0);
         cCraneRotation = 0f;
         cSmallFishCoordinates = spawnFish();
     }
 
-    public Coordinate getcBoatCoordinate() {
-        return cBoatCoordinate;
+    public BoatData getcBoatData() {
+        return cBoatData;
     }
 
-    public void setcBoatCoordinate(Coordinate cBoatCoordinate) {
-        this.cBoatCoordinate = cBoatCoordinate;
+    public void setcBoatData(BoatData cBoatData) {
+        this.cBoatData = cBoatData;
     }
 
     public double getcCraneRotation() {

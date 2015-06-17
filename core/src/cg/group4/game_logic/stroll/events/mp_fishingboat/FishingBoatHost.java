@@ -54,15 +54,6 @@ public class FishingBoatHost extends FishingBoatEvent {
                 }, true);
             }
         }, false);
-
-//        cOtherClient.receiveUDP(new MessageHandler() {
-//            @Override
-//            public void handleMessage(Object message) {
-//                fishingBoatData.setcCraneRotation((Double) message);
-//            }
-//        }, true);
-
-
     }
 
     @Override
@@ -87,7 +78,7 @@ public class FishingBoatHost extends FishingBoatEvent {
         Vector3 vector = cAccelmeter.update();
         moveBoat(vector);
         moveFish();
-        cOtherClient.sendUDP(fishingBoatData.getcBoatCoordinate());
+        cOtherClient.sendUDP(fishingBoatData.getcBoatData());
         cDataSubject.update(fishingBoatData);
         if(toRemove.size() > 0) {
             for (int key : toRemove) {
@@ -103,7 +94,7 @@ public class FishingBoatHost extends FishingBoatEvent {
     protected void moveFish() {
         HashMap<Integer, SmallFishData> data = fishingBoatData.getcSmallFishCoordinates();
 
-        Coordinate boatLocation = fishingBoatData.getcBoatCoordinate();
+        Coordinate boatLocation = fishingBoatData.getcBoatData().getcLocation();
 
         double xCoordCenter = boatLocation.getX() + xRadius - hitboxXRadius;
         double yCoordCenter = boatLocation.getY() + yRadius - hitboxYRadius;
@@ -134,16 +125,21 @@ public class FishingBoatHost extends FishingBoatEvent {
 
     protected void moveBoat(Vector3 vector) {
         float totalForce = Math.abs(vector.x) + Math.abs(vector.y);
-        Coordinate boatCoordinate = fishingBoatData.getcBoatCoordinate();
+
+        Coordinate boatCoordinate = fishingBoatData.getcBoatData().getcLocation();
+
         double oldX = boatCoordinate.getX();
         double oldY = boatCoordinate.getY();
         if(totalForce != 0) {
+            double angle = Math.atan2(-vector.y, -vector.x);
+            fishingBoatData.getcBoatData().setcRotation(angle);
+
             float newX = (float)oldX - cSpeed * (vector.x / totalForce);
             float newY = (float)oldY - cSpeed * (vector.y / totalForce);
-            if(newX >= 0 && newX <= 1 - FishingBoatData.getBoatSize()) {
+            if(newX >= 0 && newX <= 1 - (xRadius * 2)) {
                 boatCoordinate.setX(newX);
             }
-            if(newY >= 0 && newY <= 1 - FishingBoatData.getBoatSize()) {
+            if(newY >= 0 && newY <= 1 - (yRadius * 2)) {
                 boatCoordinate.setY(newY);
             }
         }

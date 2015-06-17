@@ -1,5 +1,6 @@
 package cg.group4.view.screen;
 
+import cg.group4.data_structures.mp_fishingboat.BoatData;
 import cg.group4.data_structures.mp_fishingboat.Coordinate;
 import cg.group4.data_structures.mp_fishingboat.FishingBoatData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishData;
@@ -49,26 +50,34 @@ public class CraneFishingScreen extends EventScreen {
     void onEventChange(Object updatedData) {
         FishingBoatData boatData = (FishingBoatData) updatedData;
         updateCraneRotation(boatData.getcCraneRotation());
-        updateBoatPosition(boatData.getcBoatCoordinate());
+        updateBoatPosition(boatData.getcBoatData());
         setHitBoxPosition(boatData.getcCraneRotation());
         moveFishes(boatData.getcSmallFishCoordinates());
     }
 
     protected void moveFishes(HashMap<Integer, SmallFishData> fishCoordinates) {
         for(int key : fishCoordinates.keySet()) {
-            Coordinate coordinate = fishCoordinates.get(key).getPosition();
+            SmallFishData fishdata = fishCoordinates.get(key);
+            Coordinate coordinate = fishdata.getPosition();
+
             SmallFish fish = fishList.get(key);
             if(coordinate == null) {
                 cContainer.removeActor(fish);
                 fishList.remove(key);
             } else {
+                Coordinate destination = fishdata.getDestination();
+                double angle = Math.atan2(
+                        destination.getY() - coordinate.getY(), destination.getX() - coordinate.getX());
+                fish.setRotation((float)Math.toDegrees(angle));
                 fish.setPosition(coordinate.getX() * maxWidth, coordinate.getY() * maxHeight);
             }
         }
     }
 
-    protected void updateBoatPosition(Coordinate coordinate) {
+    protected void updateBoatPosition(BoatData boatData) {
+        Coordinate coordinate = boatData.getcLocation();
         cBoatStack.setPosition(coordinate.getX() * maxWidth, coordinate.getY() * maxHeight);
+        cBoat.setRotation((float)Math.toDegrees(boatData.getcRotation()));
     }
 
     protected void updateCraneRotation(double angle) {
@@ -109,6 +118,7 @@ public class CraneFishingScreen extends EventScreen {
         cBoatStack.add(cBoat);
         cBoatStack.add(cCrane);
         cCrane.setOrigin(cBoatStack.getWidth() /2, cBoatStack.getHeight() / 2);
+        cBoat.setOrigin(cBoatStack.getWidth() /2, cBoatStack.getHeight() / 2);
 
         fishList = generateFishes();
 
@@ -123,7 +133,7 @@ public class CraneFishingScreen extends EventScreen {
         HashMap<Integer, SmallFish> fishes = new HashMap<>();
         for(int i = 0; i < 10; i++) {
             SmallFish fish = new SmallFish(cAssets.getTexture("images/SmallFish.png"));
-            fish.setSize(32 * scalar, 32 * scalar);
+            fish.setSize(64 * scalar, 64 * scalar);
             fishes.put(i, fish);
             cContainer.addActor(fish);
         }

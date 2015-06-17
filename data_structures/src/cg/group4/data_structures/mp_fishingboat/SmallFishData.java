@@ -8,7 +8,7 @@ public class SmallFishData implements Serializable {
     protected Coordinate cPosition, cDestination;
 
     protected float cSpeed = 0.002f;
-    protected final float fishSize = 32 / 1440f;
+    protected final float fishSize = 64 / 1440f;
 
     public SmallFishData() {
         cPosition = generatePosition();
@@ -17,6 +17,10 @@ public class SmallFishData implements Serializable {
 
     public Coordinate getPosition() {
         return cPosition;
+    }
+
+    public Coordinate getDestination() {
+        return cDestination;
     }
 
     public Coordinate generatePosition() {
