@@ -25,8 +25,10 @@ public class FishingBoatHost extends FishingBoatEvent {
 
     protected Accelerometer cAccelmeter;
     protected float cSpeed = 0.0025f;
-    double hitboxSize = 16 / 1440d;
-    double radius = FishingBoatData.getBoatSize() / 2 - hitboxSize / 2;
+    double hitboxXRadius = 8 / 1440d;
+    double hitboxYRadius = 8 / 2560d;
+    double xRadius = 128d / 1440d;
+    double yRadius = 128d / 2560d;
 
     public FishingBoatHost(Host host) {
         super();
@@ -34,7 +36,7 @@ public class FishingBoatHost extends FishingBoatEvent {
 
         cAccelmeter = new Accelerometer(StandUp.getInstance().getSensorReader());
         cAccelmeter.filterGravity(false);
-        cAccelmeter.setNoiseThreshold(0.5f);
+        cAccelmeter.setNoiseThreshold(0.2f);
         cAccelmeter.setFilterPerAxis(true);
 
         fishingBoatData = new FishingBoatData();
@@ -103,18 +105,19 @@ public class FishingBoatHost extends FishingBoatEvent {
 
         Coordinate boatLocation = fishingBoatData.getcBoatCoordinate();
 
-        double xCoordCenter = boatLocation.getX() + radius;
-        double yCoordCenter = boatLocation.getY() + radius;
+        double xCoordCenter = boatLocation.getX() + xRadius - hitboxXRadius;
+        double yCoordCenter = boatLocation.getY() + yRadius - hitboxYRadius;
 
         double angle = fishingBoatData.getcCraneRotation();
 
-        double xPositionMin = Math.cos(angle) * radius + xCoordCenter;
-        double xPositionMax = xPositionMin + hitboxSize;
-        double yPositionMin = Math.sin(angle) * radius + yCoordCenter;
-        double yPositionMax = yPositionMin + hitboxSize;
+        double xPositionMin = xCoordCenter + Math.cos(angle) * (xRadius - hitboxXRadius);
+        double yPositionMin = yCoordCenter + Math.sin(angle) * (yRadius - hitboxYRadius);
+        double xPositionMax = xPositionMin + hitboxXRadius * 2;
+        double yPositionMax = yPositionMin + hitboxYRadius * 2;
 
         for(int key : fishingBoatData.getcSmallFishCoordinates().keySet()) {
             SmallFishData fish = data.get(key);
+
             fish.move();
 
             if(fish.intersects(xPositionMin, xPositionMax, yPositionMin, yPositionMax)) {
@@ -132,11 +135,11 @@ public class FishingBoatHost extends FishingBoatEvent {
     protected void moveBoat(Vector3 vector) {
         float totalForce = Math.abs(vector.x) + Math.abs(vector.y);
         Coordinate boatCoordinate = fishingBoatData.getcBoatCoordinate();
-        float oldX = boatCoordinate.getX();
-        float oldY = boatCoordinate.getY();
+        double oldX = boatCoordinate.getX();
+        double oldY = boatCoordinate.getY();
         if(totalForce != 0) {
-            float newX = oldX - cSpeed * (vector.x / totalForce);
-            float newY = oldY - cSpeed * (vector.y / totalForce);
+            float newX = (float)oldX - cSpeed * (vector.x / totalForce);
+            float newY = (float)oldY - cSpeed * (vector.y / totalForce);
             if(newX >= 0 && newX <= 1 - FishingBoatData.getBoatSize()) {
                 boatCoordinate.setX(newX);
             }

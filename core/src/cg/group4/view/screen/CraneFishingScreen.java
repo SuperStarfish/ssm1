@@ -76,22 +76,21 @@ public class CraneFishingScreen extends EventScreen {
     }
 
     protected void setHitBoxPosition(double angle) {
-        float radius = cBoatStack.getHeight() / 2 - cCraneHitBox.getHeight() / 2;
+        float radius = cBoatStack.getHeight() / 2;
+        float hitboxRadius = cCraneHitBox.getHeight() / 2;
 
         float xCoordCenter = cBoatStack.getX() + radius;
         float yCoordCenter = cBoatStack.getY() + radius;
 
-        float xPosition = (float)Math.cos(angle) * radius;
-        float yPosition = (float)Math.sin(angle) * radius;
+        float xPosition = (float)Math.cos(angle) * (radius - hitboxRadius);
+        float yPosition = (float)Math.sin(angle) * (radius - hitboxRadius);
 
-        cCraneHitBox.setPosition(xCoordCenter + xPosition, yCoordCenter + yPosition);
+        cCraneHitBox.setPosition(xCoordCenter + xPosition - hitboxRadius, yCoordCenter + yPosition - hitboxRadius);
     }
 
     @Override
 	protected WidgetGroup createWidgetGroup() {
-        maxWidth = Gdx.graphics.getWidth();
-        maxHeight = Gdx.graphics.getHeight();
-        scalar = maxWidth > maxHeight ? maxHeight / devSize : maxWidth / devSize;
+        setUISize();
 
         cBoatStack = new Stack();
 
@@ -121,9 +120,10 @@ public class CraneFishingScreen extends EventScreen {
 	}
 
     protected HashMap<Integer, SmallFish> generateFishes() {
-        HashMap<Integer, SmallFish> fishes = new HashMap<Integer, SmallFish>();
+        HashMap<Integer, SmallFish> fishes = new HashMap<>();
         for(int i = 0; i < 10; i++) {
             SmallFish fish = new SmallFish(cAssets.getTexture("images/SmallFish.png"));
+            fish.setSize(32 * scalar, 32 * scalar);
             fishes.put(i, fish);
             cContainer.addActor(fish);
         }
@@ -132,9 +132,14 @@ public class CraneFishingScreen extends EventScreen {
 
 	@Override
 	protected void rebuildWidgetGroup() {
-		// TODO Auto-generated method stub
-		
+        setUISize();
 	}
+
+    protected void setUISize() {
+        maxWidth = Gdx.graphics.getWidth();
+        maxHeight = Gdx.graphics.getHeight();
+        scalar = maxWidth > maxHeight ? maxHeight / devSize : maxWidth / devSize;
+    }
 
 	@Override
 	protected String setPreviousScreenName() {

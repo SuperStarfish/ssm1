@@ -29,7 +29,7 @@ public class FishingBoatClient extends FishingBoatEvent {
         cOtherClient = (MultiplayerClient) host;
         cAccelmeter = new Accelerometer(StandUp.getInstance().getSensorReader());
         cAccelmeter.filterGravity(false);
-        cAccelmeter.setNoiseThreshold(0.5f);
+        cAccelmeter.setNoiseThreshold(0.2f);
         cAccelmeter.setFilterPerAxis(true);
 
         fishingBoatData = new FishingBoatData();
@@ -60,6 +60,7 @@ public class FishingBoatClient extends FishingBoatEvent {
                 SmallFishDestination data = (SmallFishDestination) message;
                 SmallFishData fish = fishingBoatData.getcSmallFishCoordinates().get(data.getcId());
                 if(data.getcNewDestination() == null) {
+                    System.out.println("received delete!");
                     fish.setPosition(null);
                 } else {
                     fish.setDestination(data.getcNewDestination());
@@ -76,7 +77,8 @@ public class FishingBoatClient extends FishingBoatEvent {
 
     @Override
     protected void clearEvent() {
-        // TODO Auto-generated method stub
+        super.dispose();
+        cOtherClient.dispose();
 
     }
 
@@ -88,7 +90,8 @@ public class FishingBoatClient extends FishingBoatEvent {
     @Override
     public void update(Observable o, Object arg) {
         Vector3 vector = cAccelmeter.update();
-        double newRotation = fishingBoatData.getcCraneRotation() + 0.01d;
+
+        double newRotation = Math.atan2(-vector.y, -vector.x);
         fishingBoatData.setcCraneRotation(newRotation);
         cOtherClient.sendUDP(newRotation);
         moveFish();
