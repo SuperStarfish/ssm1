@@ -3,6 +3,7 @@ package cg.group4.game_logic.stroll.events.mp_fishingboat;
 import cg.group4.data_structures.mp_fishingboat.Coordinate;
 import cg.group4.data_structures.mp_fishingboat.FishingBoatData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishData;
+import cg.group4.data_structures.mp_fishingboat.SmallFishDestination;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
 import cg.group4.game_logic.stroll.events.multiplayer_event.MessageHandler;
@@ -10,6 +11,7 @@ import cg.group4.game_logic.stroll.events.multiplayer_event.MultiplayerHost;
 import cg.group4.util.sensor.Accelerometer;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.HashMap;
 import java.util.Observable;
 
 public class FishingBoatHost extends FishingBoatEvent {
@@ -34,6 +36,8 @@ public class FishingBoatHost extends FishingBoatEvent {
 
         fishingBoatData = new FishingBoatData();
 
+        cOtherClient.sendTCP(fishingBoatData);
+
 //        cOtherClient.receiveUDP(new MessageHandler() {
 //            @Override
 //            public void handleMessage(Object message) {
@@ -41,12 +45,7 @@ public class FishingBoatHost extends FishingBoatEvent {
 //            }
 //        }, true);
 
-        cOtherClient.receiveUDP(new MessageHandler() {
-            @Override
-            public void handleMessage(Object message) {
-                fishingBoatData.setcCraneRotation((Double) message);
-            }
-        }, true);
+
     }
 
     @Override
@@ -58,13 +57,16 @@ public class FishingBoatHost extends FishingBoatEvent {
     @Override
     protected void clearEvent() {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void start() {
-        // TODO Auto-generated method stub
-
+        cOtherClient.receiveUDP(new MessageHandler() {
+            @Override
+            public void handleMessage(Object message) {
+                fishingBoatData.setcCraneRotation((Double) message);
+            }
+        }, true);
     }
 
     @Override
@@ -78,8 +80,16 @@ public class FishingBoatHost extends FishingBoatEvent {
     }
 
     protected void moveFish() {
-        for(SmallFishData fish : fishingBoatData.getcSmallFishCoordinates().values()) {
+        HashMap<Integer, SmallFishData> data = fishingBoatData.getcSmallFishCoordinates();
+        for(int key : fishingBoatData.getcSmallFishCoordinates().keySet()) {
+            SmallFishData fish = data.get(key);
             fish.move();
+            if(fish.destinationReached()) {
+                Coordinate newDestination = fish.generatePosition();
+                fish.setDestination(newDestination);
+                cOtherClient.sendTCP(new SmallFishDestination(key, newDestination));
+                System.out.println("Sending: " + newDestination);
+            }
         }
     }
 

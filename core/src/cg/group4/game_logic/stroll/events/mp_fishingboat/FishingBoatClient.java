@@ -2,6 +2,8 @@ package cg.group4.game_logic.stroll.events.mp_fishingboat;
 
 import cg.group4.data_structures.mp_fishingboat.Coordinate;
 import cg.group4.data_structures.mp_fishingboat.FishingBoatData;
+import cg.group4.data_structures.mp_fishingboat.SmallFishData;
+import cg.group4.data_structures.mp_fishingboat.SmallFishDestination;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
 import cg.group4.game_logic.stroll.events.multiplayer_event.MessageHandler;
@@ -29,18 +31,14 @@ public class FishingBoatClient extends FishingBoatEvent {
 
         fishingBoatData = new FishingBoatData();
 
-//        cOtherClient.receiveTCP(new MessageHandler() {
-//            @Override
-//            public void handleMessage(Object message) {
-//                fishingBoatData.setcBoatCoordinate((Coordinate) message);
-//            }
-//        }, true);
-        cOtherClient.receiveUDP(new MessageHandler() {
+        cOtherClient.receiveTCP(new MessageHandler() {
             @Override
             public void handleMessage(Object message) {
-                fishingBoatData.setcBoatCoordinate((Coordinate) message);
+                if(message instanceof FishingBoatData) {
+                    fishingBoatData = (FishingBoatData) message;
+                }
             }
-        }, true);
+        }, false);
     }
 
     @Override
@@ -57,8 +55,21 @@ public class FishingBoatClient extends FishingBoatEvent {
 
     @Override
     public void start() {
-        // TODO Auto-generated method stub
+        cOtherClient.receiveUDP(new MessageHandler() {
+            @Override
+            public void handleMessage(Object message) {
+                fishingBoatData.setcBoatCoordinate((Coordinate) message);
+            }
+        }, true);
 
+        cOtherClient.receiveTCP(new MessageHandler() {
+            @Override
+            public void handleMessage(Object message) {
+                SmallFishDestination data = (SmallFishDestination) message;
+                System.out.println("Receiving: " + data.getcNewDestination());
+                fishingBoatData.getcSmallFishCoordinates().get(data.getcId()).setDestination(data.getcNewDestination());
+            }
+        }, true);
     }
 
     @Override
@@ -68,6 +79,14 @@ public class FishingBoatClient extends FishingBoatEvent {
         fishingBoatData.setcCraneRotation(newRotation);
 //        cOtherClient.sendTCP(newRotation);
         cOtherClient.sendUDP(newRotation);
+        moveFish();
         cDataSubject.update(fishingBoatData);
     }
+
+    protected void moveFish() {
+        for(SmallFishData fish : fishingBoatData.getcSmallFishCoordinates().values()) {
+            fish.move();
+        }
+    }
+
 }

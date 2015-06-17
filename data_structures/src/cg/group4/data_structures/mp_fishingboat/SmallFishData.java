@@ -37,12 +37,12 @@ public class SmallFishData implements Serializable {
         float newX = cPosition.getX() + cSpeed * Math.signum(diffX);
         float newY = cPosition.getY() + cSpeed * Math.signum(diffY);
 
-        if(destinationReached()) {
-            cDestination = generatePosition();
-        }
-
         cPosition.setX(newX);
         cPosition.setY(newY);
+    }
+
+    public void setDestination(Coordinate destination) {
+        cDestination = destination;
     }
 
     public float getCenterX() {

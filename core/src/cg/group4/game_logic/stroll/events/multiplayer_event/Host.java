@@ -1,6 +1,8 @@
 package cg.group4.game_logic.stroll.events.multiplayer_event;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.net.ServerSocket;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,7 +35,7 @@ public abstract class Host {
         cSocket = createSocket();
         cOtherClient = cSocket.getInetAddress();
         try {
-            cDatagramSocket = new DatagramSocket(55555);
+            cDatagramSocket = new DatagramSocket(cSocket.getLocalPort());
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -53,7 +55,7 @@ public abstract class Host {
                  ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
                 objectOutputStream.writeObject(object);
                 byte[] data = outputStream.toByteArray();
-                DatagramPacket sendPacket = new DatagramPacket(data, data.length, cOtherClient, 55555);
+                DatagramPacket sendPacket = new DatagramPacket(data, data.length, cOtherClient, cSocket.getPort());
                 cDatagramSocket.send(sendPacket);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,7 +64,7 @@ public abstract class Host {
     }
 
     public void receiveUDP(final MessageHandler handler, final boolean continuous) {
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 do {
@@ -88,7 +90,9 @@ public abstract class Host {
                     }
                 } while (continuous);
             }
-        }).start();
+        });
+        thread.setName("Incoming UDP Messages Thread");
+        thread.start();
     }
 
     protected abstract Socket createSocket();
@@ -98,8 +102,7 @@ public abstract class Host {
     public void sendTCP(final Serializable object) {
         if(System.currentTimeMillis() - previousTime > 33) {
             try {
-                cOutputStream.reset();
-                cOutputStream.writeObject(object);
+                cOutputStream.writeUnshared(object);
                 cOutputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,12 +111,12 @@ public abstract class Host {
     }
 
     public void receiveTCP(final MessageHandler handler, final boolean continuous) {
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 do {
                     try {
-                        final Object object = cInputStream.readObject();
+                        final Object object = cInputStream.readUnshared();
                         Gdx.app.postRunnable(new Runnable() {
                             @Override
                             public void run() {
@@ -127,8 +130,8 @@ public abstract class Host {
                     }
                 } while (continuous);
             }
-        }).start();
+        });
+        thread.setName("Incoming TCP Messages Thread");
+        thread.start();
     }
-
-
 }
