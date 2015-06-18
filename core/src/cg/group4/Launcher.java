@@ -3,8 +3,6 @@ package cg.group4;
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
 import cg.group4.game_logic.StandUp;
-import cg.group4.game_logic.stroll.events.multiplayer.CraneFishing;
-import cg.group4.view.screen.CraneFishingScreen;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
 import cg.group4.util.notification.NotificationController;
@@ -15,7 +13,6 @@ import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -57,8 +54,9 @@ public class Launcher extends Game {
      * The notification controller to schedule notifications, passed with the constructor of the launcher.
      */
     protected NotificationController cNotificationController;
-
-
+    /**
+     * Used to determine where the local server lives.
+     */
     protected LocalStorageResolver cLocalStorageResolver;
     
     /**
@@ -72,6 +70,8 @@ public class Launcher extends Game {
      * @param accelerationStatus     The movement status of the player.
      * @param notificationController The notification controller.
      * @param idResolver             The userID resolver for unique device id.
+     * @param localStorageResolver   The location where to find the local server.
+     * @param orientationReader      The orientation the game is currently in.
      */
     public Launcher(final AccelerationStatus accelerationStatus,
                     final NotificationController notificationController,
@@ -123,7 +123,7 @@ public class Launcher extends Game {
         TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
 //        cScreenStore.setScreen("multi");
 //
-//        new CraneFishing((CraneFishingScreen)cScreenStore.getScreen("multi"));
+//        new FishingBoatEvent((CraneFishingScreen)cScreenStore.getScreen("multi"));
 
         notificationInitialization();
     }
@@ -169,7 +169,7 @@ public class Launcher extends Game {
             cStandUp.update();
         }
 
-        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+        for (Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getRemoteInstance().resetPostRunnables();

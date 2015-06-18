@@ -12,11 +12,18 @@ import com.badlogic.gdx.graphics.Texture;
  * @author Jean de Leeuw
  */
 public class CollectibleDrawer {
-
+    /**
+     * The color to replace.
+     */
+    protected float cReplaceColor = 120f;
+    /**
+     * Highest value an RGB can be.
+     */
+    protected int cMaxRBGInt = 255;
     /**
      * R, G and B value of the replacement colour.
      */
-    protected final float cReplaceColourComponent = 120f / 255f;
+    protected final float cReplaceColourComponent = cReplaceColor / cMaxRBGInt;
     /**
      * Alpha value of the new colour.
      */
@@ -28,7 +35,7 @@ public class CollectibleDrawer {
             cReplaceColourComponent,
             cReplaceColourComponent,
             cReplaceColourComponent,
-            1f);
+            cAlpha);
 
     /**
      * Returns an image of the given collectible.

@@ -1,44 +1,32 @@
 package cg.group4.game_logic.stroll.events.mp_fishingboat;
 
 import cg.group4.data_structures.mp_fishingboat.BoatData;
-import cg.group4.data_structures.mp_fishingboat.FishingBoatData;
+import cg.group4.data_structures.mp_fishingboat.FishingBoatEventData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishDestination;
-import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
 import cg.group4.game_logic.stroll.events.multiplayer_event.MessageHandler;
-import cg.group4.game_logic.stroll.events.multiplayer_event.MultiplayerClient;
-import cg.group4.util.sensor.Accelerometer;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
+/**
+ * Creates a new Client for the FishingBoatEvent.
+ */
 public class FishingBoatClient extends FishingBoatEvent {
 
-    protected MultiplayerClient cOtherClient;
-
-    protected FishingBoatData fishingBoatData;
-
-    ArrayList<Integer> toRemove = new ArrayList<>();
-
-    protected Accelerometer cAccelmeter;
-
+    /**
+     * Creates a new CraneFishingEvent Client.
+     * @param host the connection with the other host.
+     */
     public FishingBoatClient(Host host) {
-        super();
-        cOtherClient = (MultiplayerClient) host;
-        cAccelmeter = new Accelerometer(StandUp.getInstance().getSensorReader());
-        cAccelmeter.filterGravity(false);
-        cAccelmeter.setNoiseThreshold(0.2f);
-        cAccelmeter.setFilterPerAxis(true);
-
-        fishingBoatData = new FishingBoatData();
+        super(host);
 
         cOtherClient.receiveTCP(new MessageHandler() {
             @Override
             public void handleMessage(Object message) {
-                if(message instanceof FishingBoatData) {
-                    fishingBoatData = (FishingBoatData) message;
+                if (message instanceof FishingBoatEventData) {
+                    cFishingBoatEventData = (FishingBoatEventData) message;
                     cOtherClient.sendTCP(true);
                     keepListening();
                 }
@@ -46,11 +34,14 @@ public class FishingBoatClient extends FishingBoatEvent {
         }, false);
     }
 
+    /**
+     * Actions to take when receiving incoming UDP or TCP messages.
+     */
     protected void keepListening() {
         cOtherClient.receiveUDP(new MessageHandler() {
             @Override
             public void handleMessage(Object message) {
-                fishingBoatData.setcBoatData((BoatData) message);
+                cFishingBoatEventData.setcBoatData((BoatData) message);
             }
         }, true);
 
@@ -58,8 +49,8 @@ public class FishingBoatClient extends FishingBoatEvent {
             @Override
             public void handleMessage(Object message) {
                 SmallFishDestination data = (SmallFishDestination) message;
-                SmallFishData fish = fishingBoatData.getcSmallFishCoordinates().get(data.getcId());
-                if(data.getcNewDestination() == null) {
+                SmallFishData fish = cFishingBoatEventData.getcSmallFishCoordinates().get(data.getcId());
+                if (data.getcNewDestination() == null) {
                     System.out.println("received delete!");
                     fish.setPosition(null);
                 } else {
@@ -70,49 +61,26 @@ public class FishingBoatClient extends FishingBoatEvent {
     }
 
     @Override
-    public int getReward() {
-        // TODO Auto-generated method stub
-        return 30;
-    }
-
-    @Override
-    protected void clearEvent() {
-        super.dispose();
-        cOtherClient.dispose();
-
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
     public void update(Observable o, Object arg) {
-        Vector3 vector = cAccelmeter.update();
+        Vector3 vector = cAccelerometer.update();
 
         double newRotation = Math.atan2(-vector.y, -vector.x);
-//        double newRotation = fishingBoatData.getcCraneRotation() + 0.01d;
-        fishingBoatData.setcCraneRotation(newRotation);
+//        double newRotation = cFishingBoatEventData.getcCraneRotation() + 0.01d;
+        cFishingBoatEventData.setcCraneRotation(newRotation);
         cOtherClient.sendUDP(newRotation);
         moveFish();
-        cDataSubject.update(fishingBoatData);
-        if(toRemove.size() > 0) {
-            for (int key : toRemove) {
-                fishingBoatData.getcSmallFishCoordinates().remove(key);
-            }
-            toRemove.clear();
-        }
-        if(fishingBoatData.getcSmallFishCoordinates().size() == 0) {
-            clearEvent();
-        }
+        cDataSubject.update(cFishingBoatEventData);
+        validateFish();
     }
 
+    /**
+     * Moves the fishes using the data received from the host.
+     */
     protected void moveFish() {
-        for (int key : fishingBoatData.getcSmallFishCoordinates().keySet()) {
-            SmallFishData fish = fishingBoatData.getcSmallFishCoordinates().get(key);
-            if(fish.getPosition() == null) {
-                toRemove.add(key);
+        for (int key : cFishingBoatEventData.getcSmallFishCoordinates().keySet()) {
+            SmallFishData fish = cFishingBoatEventData.getcSmallFishCoordinates().get(key);
+            if (fish.getPosition() == null) {
+                cToRemove.add(key);
             } else {
                 fish.move();
             }

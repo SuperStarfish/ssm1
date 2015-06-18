@@ -3,17 +3,13 @@ package cg.group4.game_logic;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
-import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.orientation.Orientation;
 import cg.group4.util.orientation.OrientationReader;
-import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.sensor.AccelerationStatus;
+import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-import cg.group4.view.screen_mechanics.Assets;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 
 /**
  * Class which handles the game logic.
@@ -85,7 +81,7 @@ public final class StandUp {
      * @return cInstance
      */
     public static StandUp getInstance() {
-        if(cInstance == null) {
+        if (cInstance == null) {
             cInstance = new StandUp();
         }
         return cInstance;

@@ -8,7 +8,8 @@ public class SmallFishData implements Serializable {
     protected Coordinate cPosition, cDestination;
 
     protected float cSpeed = 0.002f;
-    protected final float fishSize = 64 / 1440f;
+    protected final double fishSizeX = 64 / 1440d;
+    protected final double fishSizeY = 64 / 2560d;
 
     public SmallFishData() {
         cPosition = generatePosition();
@@ -29,8 +30,8 @@ public class SmallFishData implements Serializable {
     }
 
     public boolean destinationReached() {
-        boolean xCheck = cDestination.getX() <= cPosition.getX() + fishSize && cDestination.getX() >= cPosition.getX();
-        boolean yCheck = cDestination.getY() <= cPosition.getY() + fishSize && cDestination.getY() >= cPosition.getY();
+        boolean xCheck = cDestination.getX() <= cPosition.getX() + fishSizeX && cDestination.getX() >= cPosition.getX();
+        boolean yCheck = cDestination.getY() <= cPosition.getY() + fishSizeY && cDestination.getY() >= cPosition.getY();
         return xCheck && yCheck;
     }
 
@@ -48,8 +49,8 @@ public class SmallFishData implements Serializable {
     public boolean intersects(double xMin, double xMax, double yMin, double yMax) {
         double fishXMin = cPosition.getX();
         double fishYMin = cPosition.getY();
-        double fishXMax = fishXMin + fishSize;
-        double fishYMax = fishYMin + fishSize;
+        double fishXMax = fishXMin + fishSizeX;
+        double fishYMax = fishYMin + fishSizeY;
 
         double x_overlap = Math.max(0, Math.min(xMax,fishXMax) - Math.max(xMin,fishXMin));
         double y_overlap = Math.max(0, Math.min(yMax,fishYMax) - Math.max(yMin,fishYMin));
@@ -66,11 +67,11 @@ public class SmallFishData implements Serializable {
     }
 
     public float getCenterX() {
-        return cPosition.getX() + fishSize / 2;
+        return cPosition.getX() + (float)fishSizeX / 2;
     }
 
     public float getCenterY() {
-        return cPosition.getY() + fishSize / 2;
+        return cPosition.getY() + (float)fishSizeY / 2;
     }
 
 }

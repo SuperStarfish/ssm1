@@ -1,13 +1,9 @@
 package cg.group4.view.screen;
 
 import cg.group4.game_logic.stroll.events.StrollEvent;
-import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Screen to be displayed during an event.
@@ -19,17 +15,21 @@ public final class TextEventScreen extends EventScreen {
      */
     protected Label cTaskToPerform;
 
+    /**
+     * Creates a new Text Event.
+     * @param event The event logic.
+     */
     public TextEventScreen(final StrollEvent event) {
         super(event);
     }
 
     @Override
-    void init() {
+    protected void init() {
         cTaskToPerform = cGameSkin.generateDefaultLabel("");
     }
 
     @Override
-    void onEventChange(Object updatedData) {
+    protected void onEventChange(Object updatedData) {
         cTaskToPerform.setText((String) updatedData);
     }
 

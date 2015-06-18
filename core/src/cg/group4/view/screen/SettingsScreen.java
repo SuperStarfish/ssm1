@@ -43,9 +43,13 @@ public final class SettingsScreen extends ScreenLogic {
      */
     protected Timer cIntervalTimer, cStrollTimer;
     /**
-     * Whether or not the audio should be enabled or disable
+     * Whether or not the audio should be enabled or disable.
      */
     private String cVolumeLabelText;
+
+    /**
+     * Listens to changes in the AudioPlayer.
+     */
     protected Observer cAudioEnabledChanged = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
@@ -115,7 +119,7 @@ public final class SettingsScreen extends ScreenLogic {
         cTable.add(cNetworkScreen).colspan(2);
         cNetworkScreen.addListener(networkScreenBehaviour());
 
-        if(AudioPlayer.getInstance().getAudioEnabled()) {
+        if (AudioPlayer.getInstance().getAudioEnabled()) {
             cVolumeLabelText = "Disable Audio";
         } else {
             cVolumeLabelText = "Enable Audio";
@@ -135,7 +139,11 @@ public final class SettingsScreen extends ScreenLogic {
 
     }
 
-    private ChangeListener volumeBehavior() {
+    /**
+     * When volume button is clicked behaviour.
+     * @return Clickedyclickedyclick Listener.
+     */
+    protected ChangeListener volumeBehavior() {
         return new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {

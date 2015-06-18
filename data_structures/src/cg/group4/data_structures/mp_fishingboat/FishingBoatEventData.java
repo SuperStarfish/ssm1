@@ -3,12 +3,12 @@ package cg.group4.data_structures.mp_fishingboat;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class FishingBoatData implements Serializable{
+public class FishingBoatEventData implements Serializable{
     BoatData cBoatData;
     double cCraneRotation;
     HashMap<Integer, SmallFishData> cSmallFishCoordinates;
 
-    public FishingBoatData() {
+    public FishingBoatEventData() {
         cBoatData = new BoatData(new Coordinate(0.5f, 0.5f), 0);
         cCraneRotation = 0f;
         cSmallFishCoordinates = spawnFish();

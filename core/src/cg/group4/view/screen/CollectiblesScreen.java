@@ -15,7 +15,12 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.text.DecimalFormat;
@@ -49,7 +54,10 @@ public final class CollectiblesScreen extends ScreenLogic {
      * Object that creates images for the collectibles.
      */
     protected CollectibleDrawer cDrawer;
-
+    /**
+     * The number of columns to display on the collectiblescreen.
+     */
+    protected float cColspan = 6f;
     /**
      * SelectBox that contains the groups that the user is currently in.
      */
@@ -74,7 +82,9 @@ public final class CollectiblesScreen extends ScreenLogic {
      * Currently used sorter.
      */
     protected Comparator cSorter;
-    
+    /**
+     * List of groups that exist.
+     */
     protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
 
     /**
@@ -238,7 +248,7 @@ public final class CollectiblesScreen extends ScreenLogic {
 
         cContentTable.clear();
         for (final Collectible c : sortedList) {
-            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
+            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColspan);
             Image img = new Image(cDrawer.drawCollectible(c));
             cContentTable.add(img);
             cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));

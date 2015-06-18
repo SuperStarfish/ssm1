@@ -1,9 +1,14 @@
 package cg.group4.util.orientation;
 
-import com.badlogic.gdx.Input;
-
+/**
+ * Interface used to define the orientation for the device.
+ */
 public interface OrientationReader {
-	
-	public Orientation getOrientation();
+
+    /**
+     * Current device orientation.
+     * @return Orientation of the device.
+     */
+	Orientation getOrientation();
 
 }

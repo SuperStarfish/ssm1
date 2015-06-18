@@ -76,7 +76,7 @@ public final class NetworkScreen extends ScreenLogic {
             @Override
             public void update(Observable o, Object arg) {
                 boolean isConnected = (Boolean) arg;
-                if(isConnected) {
+                if (isConnected) {
                     cMessage.setText("Connected to remote!");
                 } else {
                     cMessage.setText("Not connected to remote!");
@@ -96,6 +96,9 @@ public final class NetworkScreen extends ScreenLogic {
         cTable.add(cChangeUsername);
     }
 
+    /**
+     * Adds a reset Collection button.
+     */
     protected void addResetCollection() {
         cResetUser = cGameSkin.generateDefaultMenuButton("Reset Stats");
         cResetUser.addListener(resetPlayerDataBehaviour());
@@ -103,6 +106,10 @@ public final class NetworkScreen extends ScreenLogic {
         cTable.add(cResetUser);
     }
 
+    /**
+     * When the reset collection button is clicked.
+     * @return The behaviour to execute.
+     */
     protected ChangeListener resetPlayerDataBehaviour() {
         return new ChangeListener() {
             @Override

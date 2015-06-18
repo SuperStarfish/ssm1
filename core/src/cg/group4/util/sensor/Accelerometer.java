@@ -35,6 +35,16 @@ public class Accelerometer {
     protected boolean cFilterPerAxis;
 
     /**
+     * The default filter to use for the accelerometer.
+     */
+    protected float cDefaultNoiseFilter = 1.5f;
+
+    /**
+     * Gravity filter used in the accelerometer.
+     */
+    protected float cGravity = 9.5f;
+
+    /**
      * Constructs an accelerometer which is used to read the accelerometer data
      * from the device.
      *
@@ -42,7 +52,7 @@ public class Accelerometer {
      */
     public Accelerometer(final SensorReader reader) {
         cFilterGravity = false;
-        cNoiseThreshold = 1.5f;
+        cNoiseThreshold = cDefaultNoiseFilter;
         cReader = reader;
         cBaseVector = cReader.readAccelerometer();
         cFilterPerAxis = true;
@@ -144,7 +154,7 @@ public class Accelerometer {
      */
     protected final boolean isGravity(final float scalar) {
         float absoluteValue = Math.abs(scalar);
-        return (absoluteValue >= 9.5f);
+        return (absoluteValue >= cGravity);
     }
 
     /**

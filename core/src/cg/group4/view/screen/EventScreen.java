@@ -7,6 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Event Screens extend the default ScreenLogic to add an observer where Objects are received that change the state
+ * of the screen.
+ */
 public abstract class EventScreen extends ScreenLogic {
     /**
      * Observes label changes.
@@ -18,15 +22,26 @@ public abstract class EventScreen extends ScreenLogic {
         }
     };
 
+    /**
+     * Creates a new event and adds an observer to the event logic.
+     * @param eventLogic The event logic.
+     */
     public EventScreen(final StrollEvent eventLogic) {
         eventLogic.getEventChangeSubject().addObserver(cEventObserver);
         init();
         eventLogic.start();
     }
 
-    abstract void init();
+    /**
+     * This code is run before the start. Initialize anything needed for the event here.
+     */
+    protected abstract void init();
 
-    abstract void onEventChange(Object updatedData);
+    /**
+     * Is called every time there is a change in the event logic.
+     * @param updatedData Object containing all the updated data.
+     */
+    protected abstract void onEventChange(Object updatedData);
 
     @Override
     protected WidgetGroup createWidgetGroup() {
