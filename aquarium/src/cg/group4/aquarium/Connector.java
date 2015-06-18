@@ -48,11 +48,6 @@ public class Connector {
     protected ScheduledExecutorService cCollectionUpdateExecutorService;
 
     /**
-     * Refreshes the status of the connection.
-     */
-    protected ScheduledExecutorService cConnectionStatusExecutorService;
-
-    /**
      * Runnable which calls the {#code fetchCollectionFromServer()} method to fetch the collection from the server.
      * This happens at a fixed interval.
      */

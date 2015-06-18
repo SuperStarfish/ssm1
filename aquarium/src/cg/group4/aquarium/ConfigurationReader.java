@@ -22,10 +22,12 @@ public class ConfigurationReader {
     }
 
     /**
-     * Returns a tuple (actually an ArrayList with the host (ip) and the cPort.
+     * Returns a tuple (actually an ArrayList) with the host (ip) and the cPort.
      * @return requires to have exact two elements to qualify.
      */
     public ArrayList readSettings() {
+
+        assert(cScanner != null);
 
         ArrayList arrayList = new ArrayList();
 
