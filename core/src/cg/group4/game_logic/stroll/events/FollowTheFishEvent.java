@@ -145,7 +145,7 @@ public class FollowTheFishEvent extends StrollEvent {
     /**
      * Clears the current event.
      */
-    public final void clearEvent() {
+    public void clearEvent() {
         super.dispose();
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
@@ -174,7 +174,7 @@ public class FollowTheFishEvent extends StrollEvent {
 				success = accelData.y >= delta;
 				break;
 			case MOVE_RIGHT:
-				success = accelData.y <= delta;
+				success = accelData.y <= -delta;
 				break;
 			case MOVE_DOWN:
 				success = accelData.x <= -delta;
