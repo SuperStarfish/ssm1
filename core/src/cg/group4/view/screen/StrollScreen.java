@@ -192,15 +192,19 @@ public final class StrollScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getStroll().joinMultiPlayerEvent(
-                        Integer.parseInt(cCode.getText()), new ResponseHandler() {
-                            @Override
-                            public void handleResponse(Response response) {
-                                if (!response.isSuccess()) {
-                                    cCode.setText("Wrong code!");
-                                }
+                try {
+                    int code = Integer.parseInt(cCode.getText());
+                    StandUp.getInstance().getStroll().joinMultiPlayerEvent(code, new ResponseHandler() {
+                        @Override
+                        public void handleResponse(Response response) {
+                            if (!response.isSuccess()) {
+                                cCode.setText("Wrong code!");
                             }
-                        });
+                        }
+                    });
+                } catch (NumberFormatException e) {
+                    cCode.setText("Not a valid code.");
+                }
             }
         };
     }
