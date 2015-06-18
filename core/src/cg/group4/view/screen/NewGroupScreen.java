@@ -64,7 +64,7 @@ public class NewGroupScreen extends ScreenLogic {
             @Override
             public void handleResponse(Response response) {
                 final Group group = (Group) response.getData();
-                final int groupId = group.getGroupData().getGroupId();
+                final String groupId = group.getGroupData().getGroupId();
 
                 final Player player = StandUp.getInstance().getPlayer();
                 player.setGroupId(groupId);

@@ -333,6 +333,15 @@ public final class Client {
     }
 
     /**
+     * Retrieves the usernames of all the members of the given group.
+     * @param groupId         The group to fetch the members from.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getMembers(final String groupId, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetMembers(groupId), responseHandler);
+    }
+
+    /**
      * Stores the host ip on the server with a generated code that it will return to let the client connect.
      *
      * @param responseHandler The task to execute once a reply is received completed.
@@ -354,5 +363,6 @@ public final class Client {
     public void getHost(final Integer code, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new RequestHostIp(code), responseHandler);
     }
+
 
 }

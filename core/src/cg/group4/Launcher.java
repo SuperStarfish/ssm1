@@ -53,8 +53,9 @@ public class Launcher extends Game {
      * The notification controller to schedule notifications, passed with the constructor of the launcher.
      */
     protected NotificationController cNotificationController;
-
-
+    /**
+     * Makes sure that there is a local storage.
+     */
     protected LocalStorageResolver cLocalStorageResolver;
 
     /**
@@ -63,6 +64,7 @@ public class Launcher extends Game {
      * @param accelerationStatus     The movement status of the player.
      * @param notificationController The notification controller.
      * @param idResolver             The userID resolver for unique device id.
+     * @param localStorageResolver   The local storage resolver for the game.
      */
     public Launcher(final AccelerationStatus accelerationStatus,
                     final NotificationController notificationController,

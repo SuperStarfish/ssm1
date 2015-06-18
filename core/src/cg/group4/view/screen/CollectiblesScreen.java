@@ -124,8 +124,9 @@ public class CollectiblesScreen extends ScreenLogic {
 
     /**
      * Fills the dropdown box to select the collection to display.
+     * @param groups The groups with which the box should be filled.
      */
-    protected void fillGroupBox(ArrayList<GroupData> groups) {
+    protected void fillGroupBox(final ArrayList<GroupData> groups) {
         Selection[] list = new Selection[groups.size() + 1];
         list[0] = new Selection(StandUp.getInstance().getPlayer().getPlayerData());
         for (int i = 1; i < list.length; i++) {
@@ -201,7 +202,7 @@ public class CollectiblesScreen extends ScreenLogic {
         cContainer.add(cSortBox).fill();
         cContainer.add(cGroupsBox).fill();
         cContainer.row();
-        cContainer.add(cScrollPane).colspan(cNumberOfTopBarItems).fill();
+        cContainer.add(cScrollPane).colspan(cNumberOfTopBarItems).fill().expandY();
     }
 
     /**

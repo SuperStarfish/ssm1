@@ -226,6 +226,7 @@ public final class SettingsScreen extends ScreenLogic {
         cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cButtonVolume.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }

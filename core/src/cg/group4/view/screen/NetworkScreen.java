@@ -155,6 +155,8 @@ public final class NetworkScreen extends ScreenLogic {
     @Override
     protected void rebuildWidgetGroup() {
         cBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cChangeUsername.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cResetUser.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override

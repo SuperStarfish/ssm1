@@ -153,7 +153,7 @@ public class Player {
      * Setter for group id.
      * @param groupId The id of the group that the player belongs to.
      */
-    public void setGroupId(int groupId) {
-        cPlayerData.setGroupId(Integer.toString(groupId));
+    public void setGroupId(String groupId) {
+        cPlayerData.setGroupId(groupId);
     }
 }

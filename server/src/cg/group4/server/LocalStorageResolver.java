@@ -20,7 +20,7 @@ public abstract class LocalStorageResolver {
      * Query that creates a 'User' table, if it does not exist.
      */
     protected String cUserTable = "CREATE TABLE IF NOT EXISTS 'User' (Key INTEGER PRIMARY KEY NOT NULL UNIQUE, "
-            + "Id TEXT NOT NULL UNIQUE, Username TEXT, Interval INTEGER, Stroll INTEGER, GroupId TEXT NULL);";
+            + "Id TEXT NOT NULL UNIQUE, Username TEXT DEFAULT 'Unknown', Interval INTEGER, Stroll INTEGER, GroupId TEXT NULL);";
 
     /**
      * Query that creates a 'Collectible' table, if it does not exist.
@@ -101,8 +101,7 @@ public abstract class LocalStorageResolver {
      */
     protected void dropDatabase(final String ... dbs) {
         for (String database : dbs) {
-            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS ?")) {
-                statement.setString(1, database);
+            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS " + database)) {
                 statement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();

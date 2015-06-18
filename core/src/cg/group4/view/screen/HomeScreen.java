@@ -93,6 +93,7 @@ public final class HomeScreen extends ScreenLogic {
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cCollectionButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override
