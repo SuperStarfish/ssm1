@@ -84,8 +84,7 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
     public void assetsDone() {
         cAquariumConfig = new Configuration();
 
-        cStartScreen = new StartScreen();
-        setScreen(cStartScreen);
+        setScreen(new StartScreen());
     }
 
     /**
@@ -93,7 +92,7 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
      * @param groupNumber group cId
      */
     public void initAquarium(String groupNumber) {
-        cConnector = new Connector(groupNumber);
+        cConnector = new Connector(groupNumber, cAquariumConfig);
         cAquariumScreen = new AquariumScreen();
         cConnector.getCollectionSubject().addObserver(cAquariumScreen.getCollectionObserver());
         setScreen(cAquariumScreen);

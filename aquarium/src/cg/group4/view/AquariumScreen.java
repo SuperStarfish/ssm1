@@ -103,16 +103,17 @@ public class AquariumScreen implements Screen {
 
                 if (collection.isEmpty()) {
                     notifyUserEmptyContainerReceived();
-                }
+                } else {
 
-                for (Collectible c : collection) {
-                    addCollectibleRendererItem(c);
-                }
+                    for (Collectible c : collection) {
+                        addCollectibleRendererItem(c);
+                    }
 
-                for (CollectibleRenderer cr : cInitialSet) {
-                    if (!isInDisplaySet(cr)) {
-                        cDisplayRendererSet.add(cr);
-                        cStage.addActor(cr.getActor());
+                    for (CollectibleRenderer cr : cInitialSet) {
+                        if (!isInDisplaySet(cr)) {
+                            cDisplayRendererSet.add(cr);
+                            cStage.addActor(cr.getActor());
+                        }
                     }
                 }
             }

@@ -62,13 +62,12 @@ public class Connector {
      * Initializes the connection.
      * @param groupId cId of the group to display as aquarium.
      */
-    public Connector(final String groupId) {
+    public Connector(final String groupId, Configuration config) {
         cCollectionUpdateExecutorService = Executors.newSingleThreadScheduledExecutor();
-
+        cAquariumConfig = config;
 
         cCollectionFromServerSubject = new Subject();
 
-        cAquariumConfig = new Configuration();
         connect();
         cCollection = new Collection(groupId);
         this.cGroupId = groupId;
