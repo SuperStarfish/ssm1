@@ -73,7 +73,7 @@ public class StandUpTest {
      */
     @Test
     public void testGetInstance() {
-        assertEquals(cStandUp, cStandUp.getInstance());
+        assertEquals(cStandUp, StandUp.getInstance());
     }
 
     /**

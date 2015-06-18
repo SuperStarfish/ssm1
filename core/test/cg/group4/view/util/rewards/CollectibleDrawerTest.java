@@ -4,20 +4,12 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import cg.group4.data_structures.collection.collectibles.Collectible;
-import cg.group4.data_structures.collection.collectibles.FishA;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.GdxNativesLoader;
 import cg.group4.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
@@ -27,7 +19,7 @@ public class CollectibleDrawerTest {
 	public void fieldsTest() {
 		final float errorMargin = 0.00001f;
 		
-		final float replaceColourComponent = 0.49019608f;
+		final float replaceColourComponent = 0.49019607843f;
 		assertEquals(replaceColourComponent, CollectibleDrawer.cReplaceColourComponent, errorMargin);
 		
 		final Color replacementColour = new Color(

@@ -1,2 +1,2 @@
-include 'core', 'desktop', 'android', 'server', 'data_structures', 'client'
+include 'core', 'desktop', 'android', 'server', 'data_structures', 'client', ':aquarium'
 

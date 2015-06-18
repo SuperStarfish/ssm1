@@ -4,10 +4,7 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Collection which can hold collectibles.
@@ -108,4 +105,5 @@ public class Collection extends HashSet<Collectible> implements Serializable {
     public void setGroupId(final String groupId) {
         cId = groupId;
     }
+
 }

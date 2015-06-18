@@ -21,7 +21,7 @@ public class LoadingScreen implements Screen {
     /**
      * The launcher, used to tell the assets are done.
      */
-    protected Launcher cLauncher;
+    protected AssetsLoadingHandler cLauncher;
 
     /**
      * The SpriteBatch used to draw the logo.
@@ -57,7 +57,7 @@ public class LoadingScreen implements Screen {
      * Creates a new LoadingScreen with a reference back to the launcher.
      * @param launcher Reference back to the launcher.
      */
-    public LoadingScreen(final Launcher launcher) {
+    public LoadingScreen(final AssetsLoadingHandler launcher) {
         cLauncher = launcher;
         cAssets = Assets.getInstance();
     }

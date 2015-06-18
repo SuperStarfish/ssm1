@@ -244,12 +244,15 @@ public class CollectiblesScreen extends ScreenLogic {
         boolean myCollection = cGroupsBox.getSelectedIndex() == 0
                 && player.getGroupId() != null
                 && Client.getRemoteInstance().isConnected();
+
         cContentTable.clear();
         for (final Collectible collectible : cSelectedCollection.sort(cSorter)) {
+
             cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
             cContentTable.add(new Image(CollectibleDrawer.drawCollectible(collectible)));
             cContentTable.add(cGameSkin.generateDefaultLabel(format.format(collectible.getRarity())));
             cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(collectible.getAmount())));
+
             if (myCollection) {
                 TextButton donate = cGameSkin.generateDefaultMenuButton("Donate");
                 donate.addListener(new ChangeListener() {

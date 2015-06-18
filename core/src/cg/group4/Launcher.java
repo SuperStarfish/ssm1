@@ -11,6 +11,7 @@ import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Application;
@@ -29,7 +30,7 @@ import java.util.Observer;
  * The Launcher creates and initializes the StandUp, which serves as the
  * main game logic backbone.
  */
-public class Launcher extends Game {
+public class Launcher extends Game implements AssetsLoadingHandler {
     /**
      * Used to clear all preferences and other data to start with a 'clean' game.
      */

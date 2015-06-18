@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
  * @author Jean de Leeuw
  */
 public class CollectibleDrawer {
+
     /**
      * The color to replace.
      */
