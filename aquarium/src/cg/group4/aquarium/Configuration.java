@@ -18,7 +18,7 @@ public class Configuration {
     final protected String cTag = this.getClass().getSimpleName();
 
     /**
-     * Loaction of the server configuration.
+     * Location of the server configuration.
      */
     final protected String cConfigFile = "aquarium/server.cfg";
 

@@ -6,11 +6,9 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.Random;
@@ -23,7 +21,7 @@ public class CollectibleRenderer {
     /**
      * Speed of the image.
      */
-    protected final int cSpeed = 10;
+    protected final int cSpeed = 2;
     /**
      * Actor used for the movements of the collectible.
      */
@@ -36,12 +34,12 @@ public class CollectibleRenderer {
     /**
      * Id for comparison.
      */
-    protected String id;
+    protected String cId;
 
     /**
      * Subject to send information of the owner and achievement date of the collectible.
      */
-    protected Subject collectibleInformationSubject;
+    protected Subject cCollectibleInformationSubject;
 
     /**
      * Initializes a collectible object.
@@ -49,7 +47,7 @@ public class CollectibleRenderer {
      * @param collectible collectible to create a render entity from
      */
     public CollectibleRenderer(final Collectible collectible) {
-        collectibleInformationSubject = new Subject();
+        cCollectibleInformationSubject = new Subject();
         initCollectibleEntity(collectible);
         randomInitialization();
 
@@ -77,6 +75,7 @@ public class CollectibleRenderer {
 
     /**
      * Executed addCollectibleDialog on creation.
+     * @param collectible Adds tooltip to collectible.
      */
     public void addCollectibleDialog(Collectible collectible) {
         addClickableArea(collectible);
@@ -90,10 +89,10 @@ public class CollectibleRenderer {
     public void initCollectibleEntity(final Collectible collectible) {
         setId(collectible.getOwnerId(), collectible.getDateAsString(), collectible.getRarity());
 
-        final CollectibleDrawer cCollectibleDrawer = new CollectibleDrawer();
-        final Texture collectibleTexture = cCollectibleDrawer.drawCollectible(collectible);
+        final Texture collectibleTexture = CollectibleDrawer.drawCollectible(collectible);
         cCollectibleActor = new Image(collectibleTexture);
-        cCollectibleActor.setScale(0.3f);
+        final float scale = 0.3f;
+        cCollectibleActor.setScale(scale);
         cCollectibleActor.layout();
 
         cCollectibleActor.setOrigin(
@@ -102,15 +101,15 @@ public class CollectibleRenderer {
     }
 
     /**
-     * Sets the id of the collectible renderer.
+     * Sets the cId of the collectible renderer.
      * Used for comparison of this class' objects.
-     * @param owner Owner id of the collectible.
+     * @param owner Owner cId of the collectible.
      * @param date Date of the collectible.
      * @param rarity Rarity based on  form and hue.
      */
     public void setId(String owner, String date, double rarity) {
         final String sep = ",";
-        this.id = owner + sep
+        this.cId = owner + sep
                 + date + sep
                 + Double.toString(rarity);
     }
@@ -120,9 +119,10 @@ public class CollectibleRenderer {
      * Flips the image if required (if upside down).
      */
     protected void randomInitialization() {
+        final int circleAngle = 360;
         Random rnd = new Random();
         do {
-            cCurrentAngle = normalizeAngle(rnd.nextInt(360));
+            cCurrentAngle = normalizeAngle(rnd.nextInt(circleAngle));
         } while (!validateAngle(cCurrentAngle));
         if (cCurrentAngle > 0) {
             flipImageY();
@@ -142,6 +142,8 @@ public class CollectibleRenderer {
      * Verifies whether the actor to be inside the boundary box, which is the window frame.
      */
     public void boundaryCheck() {
+        final int halfCircle = 180;
+
         // horizontal check
         if (getOriginX() < 0) {
             flipImageY();
@@ -153,9 +155,9 @@ public class CollectibleRenderer {
 
         // vertical check
         if (getOriginY() > Gdx.graphics.getHeight()) {
-            cCurrentAngle = normalizeAngle(180 - cCurrentAngle);
+            cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
         } else if (getOriginY() < 0) {
-            cCurrentAngle = normalizeAngle(180 - cCurrentAngle);
+            cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
         }
     }
 
@@ -181,24 +183,25 @@ public class CollectibleRenderer {
      * Moves the fish entity to the destination.
      */
     public void move() {
-        generateAngle(4);
-        moveToDestination(2);
+        final int angle = 4;
+        generateAngle(angle);
+        moveToDestination(cSpeed);
     }
 
     /**
      * Generates a new angle.
      * The new degree of the angle is based on the old angle plus a value -1..1 times the  movement speed.
      *
-     * @param movement pixels movement per render cycle
+     * @param angle angle of rotation per render cycle
      */
-    public void generateAngle(int movement) {
+    public void generateAngle(int angle) {
         int newAngle;
         do {
             // create a new angle based on the old angle + a few additional degree of rotation
             // Math.random() * 2 - 1f
             //   :: Math.random() -> generates a double between 0 and 1
             //   :: 2 - 1f -> makes sure the angle will be between -1 and 1 instead of just 0 and 1
-            newAngle = cCurrentAngle + (int) ((Math.random() * 2 - 1f) * movement);
+            newAngle = cCurrentAngle + (int) ((Math.random() * 2 - 1f) * angle);
 
             // keep angles which make the fish turn out of the new generated angles
         } while (!validateAngle(newAngle));
@@ -267,7 +270,7 @@ public class CollectibleRenderer {
             public void clicked(InputEvent event, float x, float y) {
                 String date = collectible.getDateAsString();
                 String owner = collectible.getOwnerId();
-                collectibleInformationSubject.update(new Pair<>(owner, date));
+                cCollectibleInformationSubject.update(new Pair<>(owner, date));
             }
         });
 
@@ -275,21 +278,29 @@ public class CollectibleRenderer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CollectibleRenderer)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CollectibleRenderer)) {
+            return false;
+        }
 
         CollectibleRenderer that = (CollectibleRenderer) o;
 
-        return id.equals(that.id);
+        return cId.equals(that.cId);
 
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return cId.hashCode();
     }
 
+    /**
+     * Returns the subject on collectible information.
+     * @return collectible information.
+     */
     public Subject getSubject() {
-        return collectibleInformationSubject;
+        return cCollectibleInformationSubject;
     }
 }

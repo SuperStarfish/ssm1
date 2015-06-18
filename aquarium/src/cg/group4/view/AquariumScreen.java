@@ -6,12 +6,12 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.view.screen_mechanics.GameSkin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.HashSet;
 import java.util.Observable;
@@ -32,8 +32,6 @@ public class AquariumScreen implements Screen {
      */
     protected HashSet<CollectibleRenderer> cDisplayRendererSet,
         cInitialSet;
-
-    protected Collection cDisplaySet;
 
     /**
      * Style for layout items.
@@ -79,13 +77,13 @@ public class AquariumScreen implements Screen {
         createCollectionObserver();
         createLabelObserver();
 
-        cInitialSet = new HashSet<CollectibleRenderer>();
-        cDisplayRendererSet = new HashSet<CollectibleRenderer>();
-
-        cDisplaySet = new Collection("$$Nil");
+        cInitialSet = new HashSet<>();
+        cDisplayRendererSet = new HashSet<>();
+        cDisplayRendererSet = new HashSet<>();
 
         cStyle = new GameSkin();
-        cStyle.createUIElements(720);
+        final int fontSize = 720;
+        cStyle.createUIElements(fontSize);
         cStage = new Stage();
 
         initStage();
@@ -130,7 +128,7 @@ public class AquariumScreen implements Screen {
             public void update(final Observable o, final Object arg) {
                 Pair<String> pair = (Pair<String>) arg;
 
-                cOwnerLabel.setText("owner id: " + pair.getElement1());
+                cOwnerLabel.setText("owner cId: " + pair.getElement1());
                 cDateLabel.setText("date of achievement: " + pair.getElement2());
             }
         };
@@ -142,16 +140,13 @@ public class AquariumScreen implements Screen {
      * @return true if in the set, false if not.
      */
     public boolean isInDisplaySet(final CollectibleRenderer collectibleRenderer) {
-        if (cDisplayRendererSet.contains(collectibleRenderer)) {
-            return true;
-        }
-        return false;
+        return cDisplayRendererSet.contains(collectibleRenderer);
     }
 
 
     /**
      * For a single collectible renderer, add an object to the set which will be used to render.
-     * @param collectible
+     * @param collectible Collectible to render
      */
     public void addCollectibleRendererItem(Collectible collectible) {
         CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
@@ -159,6 +154,10 @@ public class AquariumScreen implements Screen {
         cInitialSet.add(collectibleRenderer);
     }
 
+    /**
+     * Notifies the user an empty collection has been received from the server.
+     * Does this by setting the status label.
+     */
     public void notifyUserEmptyContainerReceived() {
         cStatusLabel.setText("Received an empty collection from the server!");
     }
@@ -183,6 +182,9 @@ public class AquariumScreen implements Screen {
         cStage.addActor(cLabelTable);
     }
 
+    /**
+     * Initializes the status label.
+     */
     protected void initStatusLabel() {
         cStatusLabel = cStyle.generateDefaultLabel("");
         cLabelTable.add(cStatusLabel).expandX();
@@ -212,9 +214,26 @@ public class AquariumScreen implements Screen {
         }
 
         cStage.act();
-        Gdx.gl.glClearColor(63/255, 67/255, 173f/255, 1f);
+
+        final float alpha = 1f;
+        final Vector3f background = backgroundColour();
+
+        Gdx.gl.glClearColor(background.getX(), background.getY(), background.getZ(), alpha);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         cStage.draw();
+    }
+
+    /**
+     * Returns the background colour.
+     * @return Blue background colour.
+     */
+    private Vector3f backgroundColour() {
+        final float maxColour = 255f;
+        final float x = 63 / maxColour;
+        final float y = 67 / maxColour;
+        final float z = 173f / maxColour;
+
+        return new Vector3f(x, y, z);
     }
 
     @Override

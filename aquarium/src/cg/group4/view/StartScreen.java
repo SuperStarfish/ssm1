@@ -20,11 +20,11 @@ import java.util.Observer;
 
 /**
  * Screen which is shown at startup of the aquarium application.
- * Gives the possibility to fill in a group id so your aquarium will be shown.
+ * Gives the possibility to fill in a group cId so your aquarium will be shown.
  *
  * Layout overview:
  *
- * Your group id:                label
+ * Your group cId:                label
  *  (   ...   )                  textfield
  *  [Show aquarium]              button
  *
@@ -57,7 +57,7 @@ public class StartScreen implements Screen, Observer {
     protected Label cStatusLabel;
 
     /**
-     * Input text field for the group id.
+     * Input text field for the group cId.
      */
     protected TextField cGroupIdTextField;
 
@@ -85,7 +85,7 @@ public class StartScreen implements Screen, Observer {
     }
 
     /**
-     * Creates the group id info label.
+     * Creates the group cId info label.
      */
     public void createGroupIdLabel() {
         final String welcomeText = "Fill in your Group Id to show your group aquarium: ";
@@ -105,7 +105,7 @@ public class StartScreen implements Screen, Observer {
     }
 
     /**
-     * Creates the group id input text field.
+     * Creates the group cId input text field.
      */
     public void createGroupIdTextField() {
         final String defaultText = "7";
@@ -138,9 +138,9 @@ public class StartScreen implements Screen, Observer {
                 String input =  cGroupIdTextField.getText();
 
                 if (input.length() <= 0) {
-                    cStatusLabel.setText("Input insufficient (group id can not be empty)");
+                    cStatusLabel.setText("Input insufficient (group cId can not be empty)");
                 } else if (!input.matches("\\d+")) {
-                    cStatusLabel.setText("Input insufficient (group id has to be a natural number)");
+                    cStatusLabel.setText("Input insufficient (group cId has to be a natural number)");
                 } else if (cServerConnectionFailure) {
                     cStatusLabel.setText("Connection with the server failed!");
                 } else {

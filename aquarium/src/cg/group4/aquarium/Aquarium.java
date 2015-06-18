@@ -16,6 +16,9 @@ import com.badlogic.gdx.Gdx;
  */
 public class Aquarium extends Game implements AssetsLoadingHandler {
 
+    /**
+     * Instance of aquarium.
+     */
     protected static volatile Aquarium instance;
 
     /**
@@ -34,19 +37,20 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
     protected AquariumScreen cAquariumScreen;
 
     /**
-     * Screen which displays a textfield where the user can fill in the group id to show the aligned aquarium.
+     * Screen which displays a textfield where the user can fill in the group cId to show the aligned aquarium.
      */
     protected StartScreen cStartScreen;
 
     /**
-     *
+     * Private aquarium constructor.
      */
-    protected Subject cGroupIdSubject;
-
-
     private Aquarium() {
     }
 
+    /**
+     * Returns the singleton instance of the aquarium.
+     * @return Aquarium singleton.
+     */
     public static Aquarium getInstance() {
         if (instance == null ) {
             synchronized (Aquarium.class) {
@@ -68,12 +72,15 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
     public void render() {
         super.render();
 
-        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+        for (Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getRemoteInstance().resetPostRunnables();
     }
 
+    /**
+     * Called by the loading screen when the asset loading is finished.
+     */
     public void assetsDone() {
         cAquariumConfig = new Configuration();
 
@@ -82,8 +89,8 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
     }
 
     /**
-     * Initializes the aquarium (screen and server connection) with the given group id.
-     * @param groupNumber group id
+     * Initializes the aquarium (screen and server connection) with the given group cId.
+     * @param groupNumber group cId
      */
     public void initAquarium(String groupNumber) {
         cConnector = new Connector(groupNumber);
@@ -91,4 +98,6 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
         cConnector.getCollectionSubject().addObserver(cAquariumScreen.getCollectionObserver());
         setScreen(cAquariumScreen);
     }
+
+
 }

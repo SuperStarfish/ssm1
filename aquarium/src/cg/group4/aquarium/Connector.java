@@ -28,7 +28,7 @@ public class Connector {
     protected Configuration cAquariumConfig;
 
     /**
-     * Group id of which the collection has to be displayed.
+     * Group cId of which the collection has to be displayed.
      */
     protected String cGroupId;
 
@@ -60,7 +60,7 @@ public class Connector {
 
     /**
      * Initializes the connection.
-     * @param groupId id of the group to display as aquarium.
+     * @param groupId cId of the group to display as aquarium.
      */
     public Connector(final String groupId) {
         cCollectionUpdateExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -86,7 +86,8 @@ public class Connector {
                 final long initialDelay = 3;
                 final long scheduledDelay = 3;
 
-                cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay, TimeUnit.SECONDS);
+                cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay,
+                        TimeUnit.SECONDS);
             }
         });
     }

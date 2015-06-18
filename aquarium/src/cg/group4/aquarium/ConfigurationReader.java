@@ -27,7 +27,7 @@ public class ConfigurationReader {
      */
     public ArrayList readSettings() {
 
-        assert(cScanner != null);
+        assert (cScanner != null);
 
         ArrayList arrayList = new ArrayList();
 
