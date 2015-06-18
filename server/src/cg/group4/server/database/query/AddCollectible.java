@@ -4,7 +4,6 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -22,30 +21,24 @@ public class AddCollectible extends Query {
     protected Collectible cCollectible;
 
     /**
-     * Inserts a new Collectible in the database.
+     * Adds a Collectible in the database.
      *
      * @param collectible The collectible to update.
      * @param groupId     Id of the group the collectible belongs to.
      */
-    protected AddCollectible(final Collectible collectible, final String groupId) {
+    public AddCollectible(final Collectible collectible, final String groupId) {
         cCollectible = collectible;
         cGroupId = groupId;
     }
 
     @Override
-    public Serializable query(final Connection databaseConnection) throws SQLException {
-        String preparedQuery = "INSERT INTO Collectible (OwnerId, Type, Hue, Amount, Date, GroupId) VALUES "
-                + "(?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
-            setValues(statement,
-                    cCollectible.getOwnerId(),
-                    cCollectible.getClass().getSimpleName(),
-                    cCollectible.getHue(),
-                    cCollectible.getAmount(),
-                    cCollectible.getDateAsString(),
-                    cGroupId);
-            statement.executeUpdate();
+    public Serializable query(final Connection connection) throws SQLException {
+        int amount = new GetCollectibleAmount(cCollectible, cGroupId).query(connection);
+        if (amount == 0) {
+            new InsertCollectible(cCollectible, cGroupId).query(connection);
+        } else {
+            amount += cCollectible.getAmount();
+            new SetCollectibleAmount(cCollectible, cGroupId, amount).query(connection);
         }
 
         return null;

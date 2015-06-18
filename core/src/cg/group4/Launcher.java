@@ -107,6 +107,18 @@ public class Launcher extends Game {
     }
 
     /**
+     * Sets up the game with the specified debug levels.
+     */
+    private void debugSetup() {
+        if (CLEAR_SETTINGS) {
+            Preferences preferences = Gdx.app.getPreferences("TIMER");
+            preferences.clear();
+            preferences.flush();
+        }
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+    }
+
+    /**
      * Once the Assets are done loading, this method is called to properly initialize the game.
      */
     public void assetsDone() {
@@ -123,18 +135,6 @@ public class Launcher extends Game {
         TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
 
         notificationInitialization();
-    }
-
-    /**
-     * Sets up the game with the specified debug levels.
-     */
-    private void debugSetup() {
-        if (CLEAR_SETTINGS) {
-            Preferences preferences = Gdx.app.getPreferences("TIMER");
-            preferences.clear();
-            preferences.flush();
-        }
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
     /**

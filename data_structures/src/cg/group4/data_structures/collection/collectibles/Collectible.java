@@ -153,4 +153,32 @@ public abstract class Collectible implements Serializable {
                 + ", " + "form rarity = " + getFormRarity() + ">";
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(cHue);
+		result = prime * result
+				+ ((cOwnerId == null) ? 0 : cOwnerId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Collectible other = (Collectible) obj;
+		if (Float.floatToIntBits(cHue) != Float.floatToIntBits(other.cHue))
+			return false;
+		if (cOwnerId == null) {
+			if (other.cOwnerId != null)
+				return false;
+		} else if (!cOwnerId.equals(other.cOwnerId))
+			return false;
+		return true;
+	}
 }

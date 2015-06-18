@@ -7,6 +7,7 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.HueComparator;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.data_structures.groups.GroupData;
+import cg.group4.game_logic.Player;
 import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
@@ -30,7 +31,7 @@ import java.util.Comparator;
 /**
  * Screen to be displayed when pressing the "Collection" button on the home screen.
  */
-public final class CollectiblesScreen extends ScreenLogic {
+public class CollectiblesScreen extends ScreenLogic {
 
     /**
      * Numbers of collectibles displayed without scrolling, and the amount of
@@ -62,37 +63,23 @@ public final class CollectiblesScreen extends ScreenLogic {
      * SelectBox that contains the groups that the user is currently in.
      */
     protected SelectBox<Selection> cGroupsBox;
-
     /**
      * SelectBox that contains all the possible sorting options.
      */
-    protected SelectBox<Comparator> cSortBox;
-
+    protected SelectBox<Comparator<Collectible>> cSortBox;
     /**
      * Width and height of the screen.
      */
     protected int cScreenWidth, cScreenHeight;
-    
     /**
      * Currently displayed collection.
      */
     protected Collection cSelectedCollection;
-
     /**
      * Currently used sorter.
      */
-    protected Comparator cSorter;
-    /**
-     * List of groups that exist.
-     */
-    protected ArrayList<GroupData> cGroups = new ArrayList<GroupData>();
+    protected Comparator<Collectible> cSorter;
 
-    /**
-     * Creates a new CollectibleScreen.
-     */
-    public CollectiblesScreen() {
-        cDrawer = new CollectibleDrawer();
-    }
 
     @Override
     protected WidgetGroup createWidgetGroup() {
@@ -104,16 +91,36 @@ public final class CollectiblesScreen extends ScreenLogic {
         setBackButton();
         createSortBox();
         getGroups();
+
         fillContainer();
-        updateCollection();
+
         return cContainer;
+    }
+
+    @Override
+    protected void rebuildWidgetGroup() {
+        cScreenWidth = Gdx.graphics.getWidth();
+        cScreenHeight = Gdx.graphics.getHeight();
+        cContentTable.setWidth(cScreenWidth);
+
+        cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        constructContents();
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return "Home";
+    }
+
+    @Override
+    public void display() {
+        getGroups();
     }
 
     /**
      * Fills the drawer and table of the screen.
      */
     protected void fillDrawer() {
-        cDrawer = new CollectibleDrawer();
         cContentTable = new Table();
         cContentTable.setWidth(cScreenWidth);
         cScrollPane = new ScrollPane(cContentTable);
@@ -121,7 +128,7 @@ public final class CollectiblesScreen extends ScreenLogic {
     }
 
     /**
-     * Sets up the backbutton of the screen.
+     * Sets up the back button of the screen.
      */
     protected void setBackButton() {
         cBackButton = cGameSkin.generateDefaultMenuButton("Back");
@@ -138,12 +145,9 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void createSortBox() {
         cSortBox = cGameSkin.generateDefaultSelectbox();
-        cSorter = new RarityComparator();
-        Comparator[] list = new Comparator[2];
-        list[0] = cSorter;
-        list[1] = new HueComparator();
 
-        cSortBox.setItems(list);
+        cSorter = new RarityComparator();
+        cSortBox.setItems(cSorter, new HueComparator());
         cSortBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
@@ -154,25 +158,32 @@ public final class CollectiblesScreen extends ScreenLogic {
         });
     }
 
+    /**
+     * gets the groups to be displayed in the group box.
+     */
     protected void getGroups() {
-        Client.getRemoteInstance().getGroupData(new ResponseHandler() {
-            @Override
-            public void handleResponse(Response response) {
-                cGroups = (ArrayList<GroupData>) response.getData();
-                fillGroupBox();
-            }
-        });
+        if (Client.getRemoteInstance().isConnected()) {
+            Client.getRemoteInstance().getGroupData(new ResponseHandler() {
+                @Override
+                public void handleResponse(Response response) {
+                    fillGroupBox((ArrayList<GroupData>) response.getData());
+                }
+            });
+        } else {
+            fillGroupBox(new ArrayList<GroupData>());
+        }
     }
 
     /**
      * Creates the dropdown box to select the collection to display.
      */
-    protected void fillGroupBox() {
-        Selection[] list = new Selection[cGroups.size() + 1];
+    protected void fillGroupBox(ArrayList<GroupData> groups) {
+
+        Selection[] list = new Selection[groups.size() + 1];
         list[0] = new Selection(StandUp.getInstance().getPlayer().getPlayerData());
 
         for (int i = 1; i < list.length; i++) {
-            list[i] = new Selection(cGroups.get(i - 1));
+            list[i] = new Selection(groups.get(i - 1));
         }
 
         cGroupsBox.setItems(list);
@@ -201,35 +212,23 @@ public final class CollectiblesScreen extends ScreenLogic {
         cContainer.add(cScrollPane).colspan(cNumberOfTopBarItems).fill();
     }
 
+    /**
+     * Updates the collection to the latest version.
+     */
     protected void updateCollection() {
-        String groupId = cGroupsBox.getSelected().getValue();
-        Client.getRemoteInstance().getCollection(groupId, new ResponseHandler() {
+        Client client = Client.getLocalInstance();
+        if (cGroupsBox.getSelectedIndex() != 0) {
+            client = Client.getRemoteInstance();
+        }
+        client.getCollection(cGroupsBox.getSelected().getValue(), new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                cSelectedCollection = (Collection) response.getData();
-                constructContents();
+                if (response.isSuccess()) {
+                    cSelectedCollection = (Collection) response.getData();
+                    constructContents();
+                }
             }
         });
-    }
-
-    @Override
-    protected void rebuildWidgetGroup() {
-        cScreenWidth = Gdx.graphics.getWidth();
-        cScreenHeight = Gdx.graphics.getHeight();
-        cContentTable.setWidth(cScreenWidth);
-
-        cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        constructContents();
-    }
-
-    @Override
-    protected String setPreviousScreenName() {
-        return "Home";
-    }
-
-    @Override
-    public void display() {
-        getGroups();
     }
 
     /**
@@ -239,33 +238,25 @@ public final class CollectiblesScreen extends ScreenLogic {
      */
     protected void constructContents() {
         Gdx.app.log(getClass().getSimpleName(), "Construction");
-
-        ArrayList<Collectible> sortedList = cSelectedCollection.sort(cSorter);
-        DecimalFormat format = new DecimalFormat("#.00");
+        final Player player = StandUp.getInstance().getPlayer();
+        DecimalFormat format = new DecimalFormat("0.##");
 
         boolean myCollection = cGroupsBox.getSelectedIndex() == 0
-                && StandUp.getInstance().getPlayer().getGroupId() != null;
-
+                && player.getGroupId() != null
+                && Client.getRemoteInstance().isConnected();
         cContentTable.clear();
-        for (final Collectible c : sortedList) {
-            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColspan);
-            Image img = new Image(cDrawer.drawCollectible(c));
-            cContentTable.add(img);
-            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(c.getRarity())));
-            cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(c.getAmount())));
-
+        for (final Collectible collectible : cSelectedCollection.sort(cSorter)) {
+            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
+            cContentTable.add(new Image(CollectibleDrawer.drawCollectible(collectible)));
+            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(collectible.getRarity())));
+            cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(collectible.getAmount())));
             if (myCollection) {
                 TextButton donate = cGameSkin.generateDefaultMenuButton("Donate");
                 donate.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        Collection addCollection = new Collection(StandUp.getInstance().getPlayer().getGroupId());
-                        addCollection.add(c);
-                        Collection removeCollection = new Collection(StandUp.getInstance().getPlayer().getId());
-                        removeCollection.add(c);
-
-                        Client.getRemoteInstance().addCollection(addCollection, null);
-                        Client.getRemoteInstance().removeCollection(removeCollection, null);
+                        Client.getRemoteInstance().addCollectible(collectible, player.getGroupId(), null);
+                        Client.getLocalInstance().removeCollectible(collectible, player.getId(), null);
 
                         updateCollection();
                     }
