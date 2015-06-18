@@ -17,9 +17,7 @@ import static org.junit.Assert.assertNotEquals;
  * Class that tests the basic stroll event.
  */
 @RunWith(GdxTestRunner.class)
-public class TestStrollEventTest {
-
-
+public class FollowTheFishEventTest {
     /**
      * Instance of the stroll to be tested.
      */
