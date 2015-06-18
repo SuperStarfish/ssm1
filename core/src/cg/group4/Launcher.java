@@ -121,9 +121,6 @@ public class Launcher extends Game {
         cScreenStore.init();
         cScreenStore.setScreen("Home");
         TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
-//        cScreenStore.setScreen("multi");
-//
-//        new FishingBoatEvent((CraneFishingScreen)cScreenStore.getScreen("multi"));
 
         notificationInitialization();
     }

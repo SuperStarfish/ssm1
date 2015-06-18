@@ -17,7 +17,7 @@ import java.util.Random;
 /**
  * Stroll event used for testing.
  */
-public class TestStrollEvent extends StrollEvent {
+public class FollowTheFishEvent extends StrollEvent {
 
     /**
      * Number of tasks that the player must complete before the event is considered a success.
@@ -97,7 +97,7 @@ public class TestStrollEvent extends StrollEvent {
     /**
      * Constructor for the test event.
      */
-    public TestStrollEvent() {
+    public FollowTheFishEvent() {
         super();
         cCompletedTaskSound = Gdx.audio.newSound(Gdx.files.internal("sounds/completedTask.wav"));
         cTasksCompleted = 0;

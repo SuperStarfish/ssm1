@@ -5,6 +5,7 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.util.orientation.Orientation;
 import cg.group4.util.orientation.OrientationReader;
+import cg.group4.util.orientation.Portrait;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.timer.Timer;
@@ -184,6 +185,10 @@ public final class StandUp {
      * Either Landscape, portrait, or null if the orientation is undefined.
      */
     public Orientation getOrientation() {
-    	return cOrientationReader.getOrientation();
+        if (cOrientationReader == null) {
+            return new Portrait();
+        } else {
+            return cOrientationReader.getOrientation();
+        }
     }
 }

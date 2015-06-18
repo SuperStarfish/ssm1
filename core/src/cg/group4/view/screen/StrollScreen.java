@@ -158,6 +158,8 @@ public final class StrollScreen extends ScreenLogic {
                     public void handleResponse(Response response) {
                         cCode.setText(Integer.toString((Integer) response.getData()));
                         cText.setText("Waiting for other player...");
+                        cHost.setDisabled(true);
+                        cJoin.setDisabled(true);
                     }
                 });
             }

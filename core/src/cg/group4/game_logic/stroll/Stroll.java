@@ -5,8 +5,8 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
+import cg.group4.game_logic.stroll.events.FollowTheFishEvent;
 import cg.group4.game_logic.stroll.events.StrollEvent;
-import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
 import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
 import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatHost;
@@ -297,7 +297,7 @@ public class Stroll implements Observer {
                     cEvent = new FishingStrollEvent();
                     break;
                 default:
-                    cEvent = new TestStrollEvent();
+                    cEvent = new FollowTheFishEvent();
                     break;
             }
             cNewEventSubject.update(cEvent);
