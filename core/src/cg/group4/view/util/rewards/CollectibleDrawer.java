@@ -15,23 +15,23 @@ public class CollectibleDrawer {
     /**
      * The color to replace.
      */
-    protected final float cReplaceColor = 125f;
+    protected static final float cReplaceColor = 125f;
     /**
      * Highest value an RGB can be.
      */
-    protected final int cMaxRBGInt = 255;
+    protected static final int cMaxRBGInt = 255;
     /**
      * R, G and B value of the replacement colour.
      */
-    protected final float cReplaceColourComponent = cReplaceColor / cMaxRBGInt;
+    protected static final float cReplaceColourComponent = cReplaceColor / cMaxRBGInt;
     /**
      * Alpha value of the new colour.
      */
-    protected final float cAlpha = 1f;
+    protected static final float cAlpha = 1f;
     /**
      * Colour in the image that needs to be replaced.
      */
-    protected Color cReplacementColour = new Color(
+    protected static Color cReplacementColour = new Color(
             cReplaceColourComponent,
             cReplaceColourComponent,
             cReplaceColourComponent,
@@ -43,7 +43,7 @@ public class CollectibleDrawer {
      * @param c Collectible that needs to be drawn.
      * @return Texture image with the collectible.
      */
-    public Texture drawCollectible(final Collectible c) {
+    public static Texture drawCollectible(final Collectible c) {
         Pixmap pixImage = new Pixmap(Gdx.files.internal(c.getImagePath()));
         pixImage.setColor(RewardUtil.generateColor(c.getHue()));
         replaceColours(pixImage);
@@ -57,7 +57,7 @@ public class CollectibleDrawer {
      *
      * @param pix Pixmap containing the image that needs colour replacement.
      */
-    protected void replaceColours(final Pixmap pix) {
+    protected static void replaceColours(final Pixmap pix) {
     	
         for (int y = 0; y < pix.getHeight(); y++) {
             for (int x = 0; x < pix.getWidth(); x++) {

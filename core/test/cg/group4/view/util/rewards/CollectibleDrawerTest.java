@@ -27,7 +27,7 @@ public class CollectibleDrawerTest {
 	public void fieldsTest() {
 		final float errorMargin = 0.00001f;
 		
-		final float replaceColourComponent = 0.4705882353f;
+		final float replaceColourComponent = 0.49019608f;
 		assertEquals(replaceColourComponent, CollectibleDrawer.cReplaceColourComponent, errorMargin);
 		
 		final Color replacementColour = new Color(

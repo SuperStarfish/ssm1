@@ -121,11 +121,15 @@ public final class StrollScreen extends ScreenLogic {
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
         cRemoteHost = Client.getRemoteInstance();
-        cRemoteHost.getChangeSubject().addObserver(cRemoteConnectObserver);
         cText = cGameSkin.generateDefaultLabel("Waiting for event");
         cCode = cGameSkin.generateDefaultTextField("Enter code");
         cHost = cGameSkin.generateDefaultMenuButton("Host");
         cJoin = cGameSkin.generateDefaultMenuButton("Join");
+        if (!cRemoteHost.isConnected()) {
+            cRemoteHost.getChangeSubject().addObserver(cRemoteConnectObserver);
+            cHost.setDisabled(true);
+            cJoin.setDisabled(true);
+        }
         Stroll stroll = StandUp.getInstance().getStroll();
         stroll.getEndStrollSubject().addObserver(cEndStrollObserver);
         stroll.getNewEventSubject().addObserver(cNewEventObserver);
