@@ -32,7 +32,7 @@ public class Selection {
      * @param playerData The player data the selection is representing.
      */
     public Selection(PlayerData playerData) {
-        cName = playerData.getUsername();
+        cName = playerData.toString();
         cValue = playerData.getId();
     }
 

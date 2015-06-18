@@ -15,17 +15,6 @@ public class Assets extends AssetManager {
     protected static Assets instance;
 
     /**
-     * Getter for the Singleton instance.
-     * @return The Assets instance.
-     */
-    public static Assets getInstance() {
-        if (instance == null) {
-            instance = new Assets();
-        }
-        return instance;
-    }
-
-    /**
      * Forces the load of all the textures.
      */
     public Assets() {
@@ -57,6 +46,26 @@ public class Assets extends AssetManager {
     }
 
     /**
+     * Method that loads the Music found at the given location.
+     * @param file The location where the Music can be found.
+     */
+    public void loadMusic(final String file) {
+        load(file, Music.class);
+    }
+
+    /**
+     * Getter for the Singleton instance.
+     *
+     * @return The Assets instance.
+     */
+    public static Assets getInstance() {
+        if (instance == null) {
+            instance = new Assets();
+        }
+        return instance;
+    }
+
+    /**
      * Method that returns the Texture that has been loaded.
      * @param file The location of the Texture.
      * @return A Texture instance belonging to that texture.
@@ -68,12 +77,6 @@ public class Assets extends AssetManager {
             return null;
         }
     }
-
-    /**
-     * Method that loads the Music found at the given location.
-     * @param file The location where the Music can be found.
-     */
-    public void loadMusic(final String file) { load(file, Music.class); }
 
     /**
      * Method that returns the Music that has been loaded.

@@ -2,7 +2,7 @@ package cg.group4.data_structures.mp_fishingboat;
 
 import java.io.Serializable;
 
-public class SmallFishDestination implements Serializable{
+public class SmallFishDestination implements Serializable {
     protected int cId;
     protected Coordinate cNewDestination;
 

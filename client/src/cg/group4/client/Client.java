@@ -11,10 +11,8 @@ import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +34,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "82.169.19.191";
+    protected final String cDefaultIp = "128.127.39.32";
     /**
      * The default port to connect to.
      */
@@ -87,8 +85,10 @@ public final class Client {
         }
         return cInstance;
     }
+
     /**
      * Returns if connected to the local server or not.
+     *
      * @return Is connected or not.
      */
     public boolean isLocalConnected() {
@@ -168,8 +168,6 @@ public final class Client {
         cUserIDResolver = idResolver;
     }
 
-    // --------------- Only queries follow below.--------------
-
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
      * @param responseHandler The task to execute once a reply is received completed.
@@ -177,6 +175,8 @@ public final class Client {
     public void getPlayerData(final ResponseHandler responseHandler) {
         cLocalConnection.send(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
     }
+
+    // --------------- Only queries follow below.--------------
 
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
@@ -353,15 +353,6 @@ public final class Client {
     }
 
     /**
-     * Retrieves the ip of the host.
-     * @param code code of the connection.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void getHost(final Integer code, final ResponseHandler responseHandler) {
-        cRemoteConnection.send(new RequestHostIp(code), responseHandler);
-    }
-
-    /**
      * Android returns 127.0.0.1 for Inet4Address.getLocalHost().getHostName(), so using a method found at:
      * http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device
      *
@@ -383,39 +374,41 @@ public final class Client {
                         } else {
                             if (!isIPv4) {
                                 int delim = sAddr.indexOf('%'); // drop ip6 port suffix
-                                return delim<0 ? sAddr : sAddr.substring(0, delim);
+                                return delim < 0 ? sAddr : sAddr.substring(0, delim);
                             }
                         }
                     }
                 }
             }
-        } catch (Exception ex) { } // for now eat exceptions
+        } catch (Exception ex) {
+        } // for now eat exceptions
         return "";
     }
 
     /**
      * http://stackoverflow.com/questions/4581877/validating-ipv4-string-in-java
+     *
      * @param ip
      * @return
      */
-    public static boolean validIP (String ip) {
+    public static boolean validIP(String ip) {
         try {
             if (ip == null || ip.isEmpty()) {
                 return false;
             }
 
-            String[] parts = ip.split( "\\." );
-            if ( parts.length != 4 ) {
+            String[] parts = ip.split("\\.");
+            if (parts.length != 4) {
                 return false;
             }
 
-            for ( String s : parts ) {
-                int i = Integer.parseInt( s );
-                if ( (i < 0) || (i > 255) ) {
+            for (String s : parts) {
+                int i = Integer.parseInt(s);
+                if ((i < 0) || (i > 255)) {
                     return false;
                 }
             }
-            if(ip.endsWith(".")) {
+            if (ip.endsWith(".")) {
                 return false;
             }
 
@@ -423,5 +416,15 @@ public final class Client {
         } catch (NumberFormatException nfe) {
             return false;
         }
+    }
+
+    /**
+     * Retrieves the ip of the host.
+     *
+     * @param code            code of the connection.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getHost(final Integer code, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestHostIp(code), responseHandler);
     }
 }

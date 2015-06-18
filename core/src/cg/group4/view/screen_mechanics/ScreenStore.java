@@ -3,9 +3,6 @@ package cg.group4.view.screen_mechanics;
 import cg.group4.client.Client;
 import cg.group4.view.screen.*;
 
-import cg.group4.view.screen.HomeScreen;
-import cg.group4.view.screen.SettingsScreen;
-
 import java.util.HashMap;
 import java.util.Map;
 

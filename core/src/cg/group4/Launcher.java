@@ -59,7 +59,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
      * Used to determine where the local server lives.
      */
     protected LocalStorageResolver cLocalStorageResolver;
-    
+
     /**
      * Reads the device's current orientation.
      */

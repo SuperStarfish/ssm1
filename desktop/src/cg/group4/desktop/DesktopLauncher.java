@@ -6,7 +6,6 @@ import cg.group4.server.DesktopStorageResolver;
 import cg.group4.util.notification.DesktopNotificationController;
 import cg.group4.util.orientation.DesktopOrientationReader;
 import cg.group4.util.sensor.DesktopAccelerationStatus;
-
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 

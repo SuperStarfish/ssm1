@@ -13,6 +13,14 @@ import java.util.ArrayList;
  */
 public abstract class FishingBoatEvent extends StrollEvent {
     /**
+     * Lowers the noise threshold to make it less 'snappy' to the X and Y axis.
+     */
+    protected final float cNoiseThreshold = 0.5f;
+    /**
+     * The reward received when completing the event.
+     */
+    protected final int cReward = 30;
+    /**
      * Connection with the other client.
      */
     protected Host cOtherClient;
@@ -27,18 +35,11 @@ public abstract class FishingBoatEvent extends StrollEvent {
     /**
      * ArrayList to avoid concurrent modification exception when deleting fish (when caught).
      */
-    protected ArrayList<Integer> cToRemove = new ArrayList<>();
-    /**
-     * Lowers the noise threshold to make it less 'snappy' to the X and Y axis.
-     */
-    protected final float cNoiseThreshold = 0.5f;
-    /**
-     * The reward received when completing the event.
-     */
-    protected final int cReward = 30;
+    protected ArrayList<Integer> cToRemove = new ArrayList<Integer>();
 
     /**
      * Construct a new CraneFishingEvent.
+     *
      * @param otherClient Connection with the other client.
      */
     public FishingBoatEvent(Host otherClient) {
@@ -50,17 +51,6 @@ public abstract class FishingBoatEvent extends StrollEvent {
         cAccelerometer.setFilterPerAxis(true);
 
         cFishingBoatEventData = new FishingBoatEventData();
-    }
-
-    @Override
-    public int getReward() {
-        return cReward;
-    }
-
-    @Override
-    protected void clearEvent() {
-        super.dispose();
-        cOtherClient.dispose();
     }
 
     /**
@@ -76,6 +66,17 @@ public abstract class FishingBoatEvent extends StrollEvent {
         if (cFishingBoatEventData.getcSmallFishCoordinates().size() == 0) {
             clearEvent();
         }
+    }
+
+    @Override
+    protected void clearEvent() {
+        super.dispose();
+        cOtherClient.dispose();
+    }
+
+    @Override
+    public int getReward() {
+        return cReward;
     }
 
 }

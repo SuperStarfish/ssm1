@@ -58,8 +58,8 @@ public class Player {
                 if (response.isSuccess()) {
                     cPlayerData = (PlayerData) response.getData();
                 }
-                client.updateRemoteUsername(cPlayerData.getUsername(), null);
-                if (cPlayerData.getUsername() == null) {
+                client.updateRemoteUsername(cPlayerData.toString(), null);
+                if (cPlayerData.toString() == null) {
                     cPlayerData.setUsername("Unknown");
                 }
             }
@@ -124,7 +124,7 @@ public class Player {
      * @return The username.
      */
     public String getUsername() {
-        String username = cPlayerData.getUsername();
+        String username = cPlayerData.toString();
         if (username == null) {
             return "Unknown";
         }

@@ -50,6 +50,7 @@ public class Configuration {
 
     /**
      * Reads the host/ip:cPort configuration using a ConfigurationReader.
+     *
      * @param file Location of the config file.
      * @throws IOException thrown on failure of file operations
      */
@@ -62,6 +63,7 @@ public class Configuration {
 
     /**
      * Returns the host.
+     *
      * @return cHost
      */
     public String getHost() {
@@ -70,6 +72,7 @@ public class Configuration {
 
     /**
      * Sets the host.
+     *
      * @param host host to set
      */
     public void setHost(final String host) {
@@ -78,6 +81,7 @@ public class Configuration {
 
     /**
      * Returns the cPort.
+     *
      * @return cPort
      */
     public int getPort() {
@@ -86,6 +90,7 @@ public class Configuration {
 
     /**
      * Sets the cPort.
+     *
      * @param port cPort to set
      */
     public void setPort(final int port) {

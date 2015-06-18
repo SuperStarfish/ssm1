@@ -48,6 +48,18 @@ public class UnConnected implements Connection {
         }
     }
 
+    @Override
+    public boolean isConnected() {
+        return false;
+    }
+
+    @Override
+    public void send(final Query query, final ResponseHandler responseHandler) {
+        if (responseHandler != null) {
+            responseHandler.handleResponse(new Response(false, null));
+        }
+    }
+
     /**
      * Attempts to connect to the local server.
      * @param ip Localhost.
@@ -92,17 +104,5 @@ public class UnConnected implements Connection {
                 }
             }
         }).start();
-    }
-
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
-
-    @Override
-    public void send(final Query query, final ResponseHandler responseHandler) {
-        if (responseHandler != null) {
-            responseHandler.handleResponse(new Response(false, null));
-        }
     }
 }

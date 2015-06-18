@@ -16,16 +16,12 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
@@ -52,13 +48,9 @@ public class CollectiblesScreen extends ScreenLogic {
      */
     protected TextButton cBackButton;
     /**
-     * Object that creates images for the collectibles.
-     */
-    protected CollectibleDrawer cDrawer;
-    /**
      * The number of columns to display on the collectiblescreen.
      */
-    protected float cColspan = 6f;
+    protected float cColSpan = 6f;
     /**
      * SelectBox that contains the groups that the user is currently in.
      */
@@ -105,7 +97,7 @@ public class CollectiblesScreen extends ScreenLogic {
         cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cGroupsBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
         cSortBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
-        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColspan);
+        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColSpan);
         constructContents();
     }
 
@@ -127,9 +119,9 @@ public class CollectiblesScreen extends ScreenLogic {
             @Override
             public void handleResponse(Response response) {
                 if (response.isSuccess()) {
-                    fillGroupBox((GroupData[]) response.getData());
+                    fillGroupBox((ArrayList<GroupData>) response.getData());
                 } else {
-                    fillGroupBox(new GroupData[0]);
+                    fillGroupBox(new ArrayList<GroupData>());
                 }
             }
         });
@@ -140,11 +132,11 @@ public class CollectiblesScreen extends ScreenLogic {
      * Fills the dropdown box to select the collection to display.
      * @param groups The groups with which the box should be filled.
      */
-    protected void fillGroupBox(final GroupData[] groups) {
-        Selection[] list = new Selection[groups.length + 1];
+    protected void fillGroupBox(final ArrayList<GroupData> groups) {
+        Selection[] list = new Selection[groups.size() + 1];
         list[0] = new Selection(StandUp.getInstance().getPlayer().getPlayerData());
         for (int i = 1; i < list.length; i++) {
-            list[i] = new Selection(groups[i - 1]);
+            list[i] = new Selection(groups.get(i - 1));
         }
         cGroupsBox.setItems(list);
     }
@@ -154,7 +146,7 @@ public class CollectiblesScreen extends ScreenLogic {
      */
     protected void fillDrawer() {
         cContentTable = new Table();
-        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColspan);
+        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColSpan);
         cScrollPane = new ScrollPane(cContentTable);
     }
 

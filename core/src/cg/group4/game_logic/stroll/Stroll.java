@@ -42,7 +42,14 @@ public class Stroll implements Observer {
      * Tag used for debugging.
      */
     private static final String TAG = Stroll.class.getSimpleName();
-
+    /**
+     * The number of MultiPlayer events.
+     */
+    protected final int cNumberOfSinglePlayerEvents = 2;
+    /**
+     * The number of MultiPlayer events.
+     */
+    protected final int cNumberOfMultiPlayerEvents = 1;
     /**
      * The chance an event occurs.
      */
@@ -71,15 +78,6 @@ public class Stroll implements Observer {
      * The stroll timer.
      */
     protected Timer cStrollTimer;
-    /**
-     * The number of MultiPlayer events.
-     */
-    protected final int cNumberOfSinglePlayerEvents = 2;
-    /**
-     * The number of MultiPlayer events.
-     */
-    protected final int cNumberOfMultiPlayerEvents = 1;
-
     /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
@@ -155,13 +153,6 @@ public class Stroll implements Observer {
         return 0;
     }
 
-    @Override
-    public final void update(final Observable o, final Object arg) {
-        if (!cEventGoing) {
-            generatePossibleEvent();
-        }
-    }
-
     /**
      * Starts the hosting of a multi player event.
      *
@@ -177,6 +168,7 @@ public class Stroll implements Observer {
 
     /**
      * Defines behaviour that is executed when a Code is received from the server.
+     *
      * @param updateUI ResponseHandler that updates the UI.
      * @return A ResponseHandler with extra behaviour.
      */
@@ -212,21 +204,37 @@ public class Stroll implements Observer {
         });
     }
 
+    protected void generatePossibleMultiplayerEvent(int event, Host host) {
+        cEventGoing = true;
+        switch (event) {
+            default:
+                if (host.isHost()) {
+                    cEvent = new FishingBoatHost(host);
+                } else {
+                    cEvent = new FishingBoatClient(host);
+                }
+                break;
+        }
+        cNewEventSubject.update(cEvent);
+    }
+
     /**
      * Joins a MultiPlayer game.
-     * @param code The code to find the host.
+     *
+     * @param code            The code to find the host.
      * @param responseHandler Behaviour to execute when reply is received.
      */
     public void joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
-        if (Client.getRemoteInstance().isConnected()) {
+        if (Client.getInstance().isRemoteConnected()) {
             Gdx.app.log(TAG, "Joining multi-player event!");
             cEventGoing = true;
-            Client.getRemoteInstance().getHost(code, whenHostIPReceived(responseHandler));
+            Client.getInstance().getHost(code, whenHostIPReceived(responseHandler));
         }
     }
 
     /**
      * Adds extra behaviour when Host IP is received.
+     *
      * @param updateUI Updates the UI accordingly.
      * @return Extra behaviour in the provided ResponseHandler.
      */
@@ -243,8 +251,16 @@ public class Stroll implements Observer {
         };
     }
 
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        if (!cEventGoing) {
+            generatePossibleEvent();
+        }
+    }
+
     /**
      * Creates a MultiPlayer Client.
+     *
      * @param ip The IP to connect to.
      */
     protected void createMultiPlayerClient(final String ip) {
@@ -270,8 +286,6 @@ public class Stroll implements Observer {
         }).start();
     }
 
-
-
     /**
      * Handles completion of an event.
      *
@@ -283,39 +297,6 @@ public class Stroll implements Observer {
         cRewards.add(rewards);
 
         cancelEvent();
-    }
-
-    /**
-     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
-     */
-    protected void generatePossibleEvent() {
-        Random rng = new Random();
-        if (rng.nextDouble() < cEventThreshold) {
-            cEventGoing = true;
-            switch (rng.nextInt(cNumberOfSinglePlayerEvents)) {
-                case (0):
-                    cEvent = new FishingStrollEvent();
-                    break;
-                default:
-                    cEvent = new FollowTheFishEvent();
-                    break;
-            }
-            cNewEventSubject.update(cEvent);
-        }
-    }
-
-    protected void generatePossibleMultiplayerEvent(int event, Host host) {
-        cEventGoing = true;
-        switch (event) {
-            default:
-                if (host.isHost()) {
-                    cEvent = new FishingBoatHost(host);
-                } else {
-                    cEvent = new FishingBoatClient(host);
-                }
-                break;
-        }
-        cNewEventSubject.update(cEvent);
     }
 
     /**
@@ -426,6 +407,26 @@ public class Stroll implements Observer {
         Amplifier(final AccelerationState state, final int amplifier) {
             this.cAmplifier = amplifier;
             this.cState = state;
+        }
+    }
+
+
+    /**
+     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
+     */
+    protected void generatePossibleEvent() {
+        Random rng = new Random();
+        if (rng.nextDouble() < cEventThreshold) {
+            cEventGoing = true;
+            switch (rng.nextInt(cNumberOfSinglePlayerEvents)) {
+                case (0):
+                    cEvent = new FishingStrollEvent();
+                    break;
+                default:
+                    cEvent = new FollowTheFishEvent();
+                    break;
+            }
+            cNewEventSubject.update(cEvent);
         }
     }
 

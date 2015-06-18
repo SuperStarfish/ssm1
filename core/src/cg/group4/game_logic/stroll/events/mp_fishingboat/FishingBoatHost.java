@@ -15,10 +15,6 @@ import java.util.Observable;
  */
 public class FishingBoatHost extends FishingBoatEvent {
     /**
-     * Coordinate used to debug hitbox.
-     */
-    protected Coordinate cHitboxLocation = new Coordinate(0, 0);
-    /**
      * Speed of the boat.
      */
     protected final float cSpeed = 0.003f;
@@ -54,9 +50,14 @@ public class FishingBoatHost extends FishingBoatEvent {
      * Boat radius for 9:16 on the Y axis.
      */
     protected final double cYRadius = cBoatRadius / cDevHeight;
+    /**
+     * Coordinate used to debug hitbox.
+     */
+    protected Coordinate cHitboxLocation = new Coordinate(0, 0);
 
     /**
      * Creates a new CraneFishingEvent Host.
+     *
      * @param host the connection with the other client.
      */
     public FishingBoatHost(Host host) {
@@ -83,6 +84,33 @@ public class FishingBoatHost extends FishingBoatEvent {
         cDataSubject.update(cFishingBoatEventData);
 //        cDataSubject.update(cHitboxLocation);
         validateFish();
+    }
+
+    /**
+     * Moves the boat given the accelerometer values. Also updates the other client.
+     *
+     * @param vector The accelerometer values.
+     */
+    protected void moveBoat(Vector3 vector) {
+        float totalForce = Math.abs(vector.x) + Math.abs(vector.y);
+
+        Coordinate boatCoordinate = cFishingBoatEventData.getcBoatData().getcLocation();
+
+        double oldX = boatCoordinate.getX();
+        double oldY = boatCoordinate.getY();
+        if (totalForce != 0) {
+            double angle = Math.atan2(-vector.y, -vector.x);
+            cFishingBoatEventData.getcBoatData().setcRotation(angle);
+
+            float newX = (float) oldX - cSpeed * (vector.x / totalForce);
+            float newY = (float) oldY - cSpeed * (vector.y / totalForce);
+            if (newX >= 0 && newX <= 1 - (cXRadius * 2)) {
+                boatCoordinate.setX(newX);
+            }
+            if (newY >= 0 && newY <= 1 - (cYRadius * 2)) {
+                boatCoordinate.setY(newY);
+            }
+        }
     }
 
     /**
@@ -121,32 +149,6 @@ public class FishingBoatHost extends FishingBoatEvent {
                 Coordinate newDestination = fish.generatePosition();
                 fish.setDestination(newDestination);
                 cOtherClient.sendTCP(new SmallFishDestination(key, newDestination));
-            }
-        }
-    }
-
-    /**
-     * Moves the boat given the accelerometer values. Also updates the other client.
-     * @param vector The accelerometer values.
-     */
-    protected void moveBoat(Vector3 vector) {
-        float totalForce = Math.abs(vector.x) + Math.abs(vector.y);
-
-        Coordinate boatCoordinate = cFishingBoatEventData.getcBoatData().getcLocation();
-
-        double oldX = boatCoordinate.getX();
-        double oldY = boatCoordinate.getY();
-        if (totalForce != 0) {
-            double angle = Math.atan2(-vector.y, -vector.x);
-            cFishingBoatEventData.getcBoatData().setcRotation(angle);
-
-            float newX = (float) oldX - cSpeed * (vector.x / totalForce);
-            float newY = (float) oldY - cSpeed * (vector.y / totalForce);
-            if (newX >= 0 && newX <= 1 - (cXRadius * 2)) {
-                boatCoordinate.setX(newX);
-            }
-            if (newY >= 0 && newY <= 1 - (cYRadius * 2)) {
-                boatCoordinate.setY(newY);
             }
         }
     }

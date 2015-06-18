@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for pair class.
@@ -18,17 +18,19 @@ public class PairTest {
 
     /**
      * Sets up the pair with two words.
+     *
      * @throws Exception e
      */
     @Before
     public void setUp() throws Exception {
         final String word1 = "1";
         final String word2 = "2";
-        pair = new Pair(word1, word2);
+        pair = new Pair<String>(word1, word2);
     }
 
     /**
      * Tears down the test.
+     *
      * @throws Exception e
      */
     @After
@@ -38,6 +40,7 @@ public class PairTest {
 
     /**
      * Tests getting the first element of the pair.
+     *
      * @throws Exception e
      */
     @Test
@@ -48,6 +51,7 @@ public class PairTest {
 
     /**
      * Tests setting the first element of the pair.
+     *
      * @throws Exception e
      */
     @Test
@@ -61,6 +65,7 @@ public class PairTest {
 
     /**
      * Tests getting the second element of the pair.
+     *
      * @throws Exception e
      */
     @Test
@@ -71,6 +76,7 @@ public class PairTest {
 
     /**
      * Tests setting the second element of the pair.
+     *
      * @throws Exception e
      */
     @Test

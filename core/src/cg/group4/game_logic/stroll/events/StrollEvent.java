@@ -52,13 +52,6 @@ public abstract class StrollEvent implements Disposable, Observer {
     }
 
     /**
-     * Returns the reward accumulated by completing the event.
-     *
-     * @return the reward.
-     */
-    public abstract int getReward();
-
-    /**
      * Cleanup after the event.
      */
     protected abstract void clearEvent();
@@ -87,4 +80,11 @@ public abstract class StrollEvent implements Disposable, Observer {
         cEventTimer.dispose();
         StandUp.getInstance().getStroll().eventFinished(getReward());
     }
+
+    /**
+     * Returns the reward accumulated by completing the event.
+     *
+     * @return the reward.
+     */
+    public abstract int getReward();
 }

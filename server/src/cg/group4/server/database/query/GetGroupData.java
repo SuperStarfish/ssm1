@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GetGroupData extends Query {
 
     @Override
-    public GroupData[] query(final Connection databaseConnection) throws SQLException {
+    public ArrayList<GroupData> query(final Connection databaseConnection) throws SQLException {
         ArrayList<GroupData> list = new ArrayList<GroupData>();
 
         String query = "SELECT G.Key AS GroupId, G.Name AS Name, G.OwnerId AS OwnerId, U.Username AS Username, U.Id "
@@ -31,6 +31,6 @@ public class GetGroupData extends Query {
                 ));
             }
         }
-        return list.toArray(new GroupData[list.size()]);
+        return list;
     }
 }

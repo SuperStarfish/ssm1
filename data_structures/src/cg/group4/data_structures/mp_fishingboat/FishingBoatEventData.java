@@ -3,7 +3,7 @@ package cg.group4.data_structures.mp_fishingboat;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class FishingBoatEventData implements Serializable{
+public class FishingBoatEventData implements Serializable {
     BoatData cBoatData;
     double cCraneRotation;
     HashMap<Integer, SmallFishData> cSmallFishCoordinates;
@@ -12,6 +12,14 @@ public class FishingBoatEventData implements Serializable{
         cBoatData = new BoatData(new Coordinate(0.5f, 0.5f), 0);
         cCraneRotation = 0f;
         cSmallFishCoordinates = spawnFish();
+    }
+
+    protected HashMap<Integer, SmallFishData> spawnFish() {
+        HashMap<Integer, SmallFishData> fishes = new HashMap<Integer, SmallFishData>();
+        for (int i = 0; i < 10; i++) {
+            fishes.put(i, new SmallFishData());
+        }
+        return fishes;
     }
 
     public BoatData getcBoatData() {
@@ -36,13 +44,5 @@ public class FishingBoatEventData implements Serializable{
 
     public void setcSmallFishCoordinates(HashMap<Integer, SmallFishData> cSmallFishCoordinates) {
         this.cSmallFishCoordinates = cSmallFishCoordinates;
-    }
-
-    protected HashMap<Integer, SmallFishData> spawnFish() {
-        HashMap<Integer, SmallFishData> fishes = new HashMap<>();
-        for(int i = 0; i < 10; i++) {
-            fishes.put(i, new SmallFishData());
-        }
-        return fishes;
     }
 }

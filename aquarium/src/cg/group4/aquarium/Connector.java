@@ -1,11 +1,14 @@
 package cg.group4.aquarium;
 
 import cg.group4.client.Client;
+import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Executors;
@@ -38,15 +41,13 @@ public class Connector {
     protected Collection cCollection;
 
     /**
-     * Subject with goal being the Observable for the Connector.
+     * Subject with goal being the Observable for the Connector for the collection.
      */
     protected Subject cCollectionFromServerSubject;
-
     /**
-     * Executor thread for fixed schedule of updating the collection.
+     * Subject with goal being the Observable for the Connector for the members.
      */
-    protected ScheduledExecutorService cCollectionUpdateExecutorService;
-
+    protected Subject cMembersFromServerSubject;
     /**
      * Runnable which calls the {#code fetchCollectionFromServer()} method to fetch the collection from the server.
      * This happens at a fixed interval.
@@ -57,9 +58,14 @@ public class Connector {
             fetchCollectionFromServer();
         }
     };
+    /**
+     * Executor thread for fixed schedule of updating the collection.
+     */
+    protected ScheduledExecutorService cCollectionUpdateExecutorService;
 
     /**
      * Initializes the connection.
+     *
      * @param groupId cId of the group to display as aquarium.
      */
     public Connector(final String groupId, Configuration config) {
@@ -67,19 +73,19 @@ public class Connector {
         cAquariumConfig = config;
 
         cCollectionFromServerSubject = new Subject();
+        cMembersFromServerSubject = new Subject();
 
-        connect();
         cCollection = new Collection(groupId);
-        this.cGroupId = groupId;
+        cGroupId = groupId;
     }
 
     /**
      * Connects the client to the server and adds an observer to it which schedules an collection fetch each interval.
      */
     public void connect() {
-        cClient = Client.getRemoteInstance();
-        cClient.connectToServer(cAquariumConfig.getHost(), cAquariumConfig.getPort());
-        cClient.getChangeSubject().addObserver(new Observer() {
+        cClient = Client.getInstance();
+        cClient.connectToRemoteServer();
+        cClient.getRemoteChangeSubject().addObserver(new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
                 final long initialDelay = 3;
@@ -95,7 +101,19 @@ public class Connector {
      * Fetches the collection from the server.
      */
     public void fetchCollectionFromServer() {
-        cClient.getCollection(cGroupId, new ResponseHandler() {
+        cClient.getMembers(cGroupId, new ResponseHandler() {
+            @Override
+            public void handleResponse(final Response response) {
+                if (response.isSuccess()) {
+                    HashMap<String, String> idToUsername = new HashMap<String, String>();
+                    for (PlayerData playerData : (ArrayList<PlayerData>) response.getData()) {
+                        idToUsername.put(playerData.getId(), playerData.toString());
+                    }
+                    cMembersFromServerSubject.update(idToUsername);
+                }
+            }
+        });
+        cClient.getGroupCollection(cGroupId, new ResponseHandler() {
             @Override
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {
@@ -108,10 +126,20 @@ public class Connector {
 
 
     /**
-     * Observable of the Connector.
+     * Observable of the collection.
+     *
      * @return cCollectionFromServerSubject
      */
     public Subject getCollectionSubject() {
         return cCollectionFromServerSubject;
+    }
+
+    /**
+     * Observable of the memebers.
+     *
+     * @return cMembersFromServerSubject.
+     */
+    public Subject getMembersSubject() {
+        return cMembersFromServerSubject;
     }
 }

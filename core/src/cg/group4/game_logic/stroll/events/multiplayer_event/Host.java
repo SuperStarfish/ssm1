@@ -2,23 +2,17 @@ package cg.group4.game_logic.stroll.events.multiplayer_event;
 
 import com.badlogic.gdx.Gdx;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
+import java.io.*;
+import java.net.*;
 
 /**
  * A host can either be a Client or Host.
  */
 public abstract class Host {
+    /**
+     * The default Byte Array size used for UDP.
+     */
+    protected final int cIJustTookThisAsDefaultBufferSize = 1024;
     /**
      * DatagramSocket used for UDP messaging.
      */
@@ -27,10 +21,6 @@ public abstract class Host {
      * The address of the other person.
      */
     protected InetAddress cOtherClient;
-    /**
-     * The default Byte Array size used for UDP.
-     */
-    protected final int cIJustTookThisAsDefaultBufferSize = 1024;
     /**
      * A buffer for the UDP data.
      */
@@ -63,7 +53,8 @@ public abstract class Host {
     /**
      * Creates a new Host.
      */
-    public Host() { }
+    public Host() {
+    }
 
     /**
      * Connects the host to the other party.
@@ -87,7 +78,15 @@ public abstract class Host {
     }
 
     /**
+     * Returns the socket connection with the other client.
+     *
+     * @return The socket connection.
+     */
+    protected abstract Socket createSocket();
+
+    /**
      * Sends an Object using UDP.
+     *
      * @param object object to send.
      */
     public void sendUDP(final Serializable object) {
@@ -106,7 +105,8 @@ public abstract class Host {
 
     /**
      * Receives an Object using UDP.
-     * @param handler Action to perform with the message.
+     *
+     * @param handler    Action to perform with the message.
      * @param continuous Determines if this action will be performed all the time until cancelled.
      */
     public void receiveUDP(final MessageHandler handler, final boolean continuous) {
@@ -142,19 +142,15 @@ public abstract class Host {
     }
 
     /**
-     * Returns the socket connection with the other client.
-     * @return The socket connection.
-     */
-    protected abstract Socket createSocket();
-
-    /**
      * If the current client is either a host or not.
+     *
      * @return Host or not.
      */
     public abstract boolean isHost();
 
     /**
      * Sends an Object using TCP.
+     *
      * @param object Object to send.
      */
     public void sendTCP(final Serializable object) {
@@ -173,7 +169,8 @@ public abstract class Host {
 
     /**
      * Receives an Object using TCP.
-     * @param handler Action to perform with the message.
+     *
+     * @param handler    Action to perform with the message.
      * @param continuous Determines if this action will be performed all the time until cancelled.
      */
     public void receiveTCP(final MessageHandler handler, final boolean continuous) {
@@ -192,7 +189,7 @@ public abstract class Host {
                     } catch (EOFException e) {
                         e.printStackTrace();
                         cIsAlive = false;
-                    } catch(SocketException e) {
+                    } catch (SocketException e) {
                         e.printStackTrace();
                         cIsAlive = false;
                     } catch (ClassNotFoundException e) {

@@ -15,6 +15,7 @@ public class ConfigurationReader {
 
     /**
      * Initializes the scanner so the configuration file can be read using {#code readSettings()}.
+     *
      * @param scanner Used to read the configuration file
      */
     public ConfigurationReader(final Scanner scanner) {
@@ -23,6 +24,7 @@ public class ConfigurationReader {
 
     /**
      * Returns a tuple (actually an ArrayList) with the host (ip) and the cPort.
+     *
      * @return requires to have exact two elements to qualify.
      */
     public ArrayList readSettings() {

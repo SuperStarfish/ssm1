@@ -1,6 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
+import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.groups.GroupData;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
@@ -9,11 +10,7 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -29,7 +26,7 @@ public class GroupScreen extends ScreenLogic {
     protected TextButton cNewGroupButton, cJoinGroupButton, cBackButton;
     protected Table cTable;
     protected List<GroupData> cGroups;
-    protected List<String> cMembers;
+    protected List<PlayerData> cMembers;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
@@ -105,8 +102,8 @@ public class GroupScreen extends ScreenLogic {
                     @Override
                     public void handleResponse(Response response) {
                         if (response.isSuccess()) {
-                            ArrayList<String> list = (ArrayList<String>) response.getData();
-                            cMembers.setItems(list.toArray(new String[list.size()]));
+                            ArrayList<PlayerData> list = (ArrayList<PlayerData>) response.getData();
+                            cMembers.setItems(list.toArray(new PlayerData[list.size()]));
                         }
                     }
                 });
@@ -120,7 +117,8 @@ public class GroupScreen extends ScreenLogic {
         Client.getInstance().getGroupData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                cGroups.setItems((GroupData[]) response.getData());
+                ArrayList<GroupData> list = (ArrayList<GroupData>) response.getData();
+                cGroups.setItems(list.toArray(new GroupData[list.size()]));
             }
         });
     }

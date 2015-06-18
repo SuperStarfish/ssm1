@@ -2,7 +2,7 @@ package cg.group4.data_structures.mp_fishingboat;
 
 import java.io.Serializable;
 
-public class BoatData implements Serializable{
+public class BoatData implements Serializable {
     public Coordinate cLocation;
     public double cRotation;
 

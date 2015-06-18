@@ -1,16 +1,16 @@
 package cg.group4.view.util.rewards;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import cg.group4.GdxTestRunner;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import cg.group4.GdxTestRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(GdxTestRunner.class)
 public class CollectibleDrawerTest {
@@ -18,7 +18,7 @@ public class CollectibleDrawerTest {
 	@Test
 	public void fieldsTest() {
 		final float errorMargin = 0.00001f;
-		
+
 		final float replaceColourComponent = 0.49019607843f;
 		assertEquals(replaceColourComponent, CollectibleDrawer.cReplaceColourComponent, errorMargin);
 		

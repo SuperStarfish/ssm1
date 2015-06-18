@@ -60,7 +60,7 @@ public final class StandUp {
      * Keeps track of the amount of movement during the game.
      */
     protected AccelerationStatus cAccelerationStatus;
-    
+
     /**
      * Reads the current orientation of the device.
      */
@@ -163,24 +163,26 @@ public final class StandUp {
         return cSensorReader;
     }
 
+    public AccelerationStatus getAccelerationStatus() {
+        return cAccelerationStatus;
+    }
+
     public void setAccelerationStatus(AccelerationStatus status) {
         cAccelerationStatus = status;
     }
 
-    public AccelerationStatus getAccelerationStatus() {
-        return cAccelerationStatus;
-    }
-    
     /**
      * Set the orientationReader.
+     *
      * @param reader OrientationReader that can read the device's current orientation.
      */
     public void setOrientationReader(OrientationReader reader) {
-    	cOrientationReader = reader;
+        cOrientationReader = reader;
     }
-    
+
     /**
      * Get the current orientation of the device.
+     *
      * @return Orientation object representing the current orientation of the device.
      * Either Landscape, portrait, or null if the orientation is undefined.
      */

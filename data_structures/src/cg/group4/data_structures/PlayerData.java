@@ -64,7 +64,8 @@ public class PlayerData implements Serializable {
      *
      * @return The username that belongs to the user.
      */
-    public String getUsername() {
+    @Override
+    public String toString() {
         return cUsername;
     }
 

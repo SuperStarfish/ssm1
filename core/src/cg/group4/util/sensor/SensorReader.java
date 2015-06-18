@@ -22,17 +22,17 @@ public class SensorReader {
                 Gdx.input.getAccelerometerY(),
                 Gdx.input.getAccelerometerZ());
     }
-    
+
     /**
      * Reads the gyroscope sensor values.
-     * 
+     *
      * @return Gyroscope sensor values.
      */
     public Vector3 readGyroscope() {
-    	return new Vector3(
-    			Gdx.input.getPitch(),
-    			Gdx.input.getRoll(),
-    			Gdx.input.getAzimuth());
+        return new Vector3(
+                Gdx.input.getPitch(),
+                Gdx.input.getRoll(),
+                Gdx.input.getAzimuth());
     }
 
 }

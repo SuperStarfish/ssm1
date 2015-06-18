@@ -15,11 +15,7 @@ import cg.group4.view.screen.mp_fishingboat.CraneFishingScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -103,7 +99,7 @@ public final class StrollScreen extends ScreenLogic {
     /**
      * Connection to the remote server.
      */
-    protected Client cRemoteHost;
+    protected Client cClient;
 
     /**
      * The stroll timer of the game.
@@ -120,13 +116,13 @@ public final class StrollScreen extends ScreenLogic {
      */
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
-        cRemoteHost = Client.getRemoteInstance();
+        cClient = Client.getInstance();
         cText = cGameSkin.generateDefaultLabel("Waiting for event");
         cCode = cGameSkin.generateDefaultTextField("Enter code");
         cHost = cGameSkin.generateDefaultMenuButton("Host");
         cJoin = cGameSkin.generateDefaultMenuButton("Join");
-        if (!cRemoteHost.isConnected()) {
-            cRemoteHost.getChangeSubject().addObserver(cRemoteConnectObserver);
+        if (!cClient.isRemoteConnected()) {
+            cClient.getRemoteChangeSubject().addObserver(cRemoteConnectObserver);
             cHost.setDisabled(true);
             cJoin.setDisabled(true);
         }
@@ -141,8 +137,8 @@ public final class StrollScreen extends ScreenLogic {
         initRemainingTime();
         cCode.setAlignment(Align.center);
 
-        cHost.setDisabled(!cRemoteHost.isConnected());
-        cJoin.setDisabled(!cRemoteHost.isConnected());
+        cHost.setDisabled(!cClient.isRemoteConnected());
+        cJoin.setDisabled(!cClient.isRemoteConnected());
 
         cHost.addListener(hostButtonClicked());
         cJoin.addListener(joinButtonClicked());
@@ -150,7 +146,24 @@ public final class StrollScreen extends ScreenLogic {
     }
 
     /**
+     * Initializes the label to display the time remaining of the stroll.
+     */
+    protected void initRemainingTime() {
+        cTimeRemaining = cGameSkin.generateDefaultLabel(Integer.toString(Timer.Global.STROLL.getDuration()));
+        cStrollTickObserver = new Observer() {
+            @Override
+            public void update(final Observable o, final Object arg) {
+                cTimeRemaining.setText(arg.toString());
+            }
+        };
+
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
+    }
+
+    /**
      * Fires when the host button is clicked.
+     *
      * @return The behaviour to execute when clicked.
      */
     protected ChangeListener hostButtonClicked() {
@@ -172,7 +185,8 @@ public final class StrollScreen extends ScreenLogic {
 
     /**
      * Adds behaviour when the join button is clicked.
-     * @return
+     *
+     * @return The change listener.
      */
     protected ChangeListener joinButtonClicked() {
         return new ChangeListener() {
@@ -189,22 +203,6 @@ public final class StrollScreen extends ScreenLogic {
                         });
             }
         };
-    }
-
-    /**
-     * Initializes the label to display the time remaining of the stroll.
-     */
-    protected void initRemainingTime() {
-        cTimeRemaining = cGameSkin.generateDefaultLabel(Integer.toString(Timer.Global.STROLL.getDuration()));
-        cStrollTickObserver = new Observer() {
-            @Override
-            public void update(final Observable o, final Object arg) {
-                cTimeRemaining.setText(arg.toString());
-            }
-        };
-
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
-        cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
     }
 
     /**

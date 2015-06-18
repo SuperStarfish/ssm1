@@ -133,6 +133,7 @@ public final class NetworkScreen extends ScreenLogic {
 
     /**
      * When the reset collection button is clicked.
+     *
      * @return The behaviour to execute.
      */
     protected ChangeListener resetPlayerDataBehaviour() {

@@ -19,6 +19,30 @@ import java.util.HashMap;
  */
 public class CraneFishingScreen extends EventScreen {
     /**
+     * The development size to scale against.
+     */
+    protected final float cDevSize = 1440f;
+    /**
+     * The size of the BoatSprite in development.
+     */
+    protected final int cBoatSize = 256;
+    /**
+     * The size of the HitBox in development.
+     */
+    protected final int cHitBoxSize = 16;
+    /**
+     * Where the boat starts.
+     */
+    protected final float cStartLocation = 0.3f;
+    /**
+     * The size of a fish on the screen.
+     */
+    protected final int cSmallFishSize = 64;
+    /**
+     * The number of fish being spawned.
+     */
+    protected final int cNumberOfFish = 10;
+    /**
      * The Boat and Crane wrapper that also determines the location.
      */
     protected Stack cBoatStack;
@@ -39,33 +63,9 @@ public class CraneFishingScreen extends EventScreen {
      */
     protected HashMap<Integer, SmallFish> cFishList;
     /**
-     * The development size to scale against.
-     */
-    protected final float cDevSize = 1440f;
-    /**
-     * The size of the BoatSprite in development.
-     */
-    protected final int cBoatSize = 256;
-    /**
-     * The size of the HitBox in development.
-     */
-    protected final int cHitBoxSize = 16;
-    /**
-     * Where the boat starts.
-     */
-    protected final float cStartLocation = 0.3f;
-    /**
      * Scalar used to scale the size of the UI against the defaults.
      */
     protected float cScalar = 1f;
-    /**
-     * The size of a fish on the screen.
-     */
-    protected final int cSmallFishSize = 64;
-    /**
-     * The number of fish being spawned.
-     */
-    protected final int cNumberOfFish = 10;
     /**
      * The width and height used to map the 0-1 coordinate of the event logic to actual pixels.
      */
@@ -73,14 +73,15 @@ public class CraneFishingScreen extends EventScreen {
     /**
      * Container for all the actors.
      */
-	protected WidgetGroup cContainer;
+    protected WidgetGroup cContainer;
 
     /**
      * Creates a new CraneFishingScreen.
+     *
      * @param eventLogic The FishingBoatEvent Event.
      */
-	public CraneFishingScreen(final StrollEvent eventLogic) {
-		super(eventLogic);
+    public CraneFishingScreen(final StrollEvent eventLogic) {
+        super(eventLogic);
     }
 
     @Override
@@ -102,7 +103,56 @@ public class CraneFishingScreen extends EventScreen {
     }
 
     /**
+     * Sets the hitbox according to the 0-1 mapping (if this is given by the host).
+     *
+     * @param coordinate The location of the HitBox.
+     */
+    protected void setHitBoxPosition(Coordinate coordinate) {
+        System.out.println(coordinate);
+        cCraneHitBox.setPosition(coordinate.getX() * cMaxWidth, coordinate.getY() * cMaxHeight);
+    }
+
+    /**
+     * Sets the rotation for the crane to the provided rotation.
+     *
+     * @param angle The rotation to use.
+     */
+    protected void updateCraneRotation(double angle) {
+        cCrane.setRotation((float) Math.toDegrees(angle));
+    }
+
+    /**
+     * Moves the boat to the new location and sets its rotation.
+     *
+     * @param boatData The new location and rotation to draw at.
+     */
+    protected void updateBoatPosition(BoatData boatData) {
+        Coordinate coordinate = boatData.getcLocation();
+        cBoatStack.setPosition(coordinate.getX() * cMaxWidth, coordinate.getY() * cMaxHeight);
+        cBoat.setRotation((float) Math.toDegrees(boatData.getcRotation()));
+    }
+
+    /**
+     * Sets the hitbox in proper position using the knowledge of the position and rotation.
+     *
+     * @param angle The angle of the crane.
+     */
+    protected void setHitBoxPosition(double angle) {
+        float radius = cBoatStack.getHeight() / 2;
+        float hitboxRadius = cCraneHitBox.getHeight() / 2;
+
+        float xCoordCenter = cBoatStack.getX() + radius;
+        float yCoordCenter = cBoatStack.getY() + radius;
+
+        float xPosition = (float) Math.cos(angle) * (radius - hitboxRadius);
+        float yPosition = (float) Math.sin(angle) * (radius - hitboxRadius);
+
+        cCraneHitBox.setPosition(xCoordCenter + xPosition - hitboxRadius, yCoordCenter + yPosition - hitboxRadius);
+    }
+
+    /**
      * Moves the fishes a step towards their destination.
+     *
      * @param fishCoordinates The data containing current position.
      */
     protected void moveFishes(HashMap<Integer, SmallFishData> fishCoordinates) {
@@ -124,52 +174,8 @@ public class CraneFishingScreen extends EventScreen {
         }
     }
 
-    /**
-     * Moves the boat to the new location and sets its rotation.
-     * @param boatData The new location and rotation to draw at.
-     */
-    protected void updateBoatPosition(BoatData boatData) {
-        Coordinate coordinate = boatData.getcLocation();
-        cBoatStack.setPosition(coordinate.getX() * cMaxWidth, coordinate.getY() * cMaxHeight);
-        cBoat.setRotation((float) Math.toDegrees(boatData.getcRotation()));
-    }
-
-    /**
-     * Sets the rotation for the crane to the provided rotation.
-     * @param angle The rotation to use.
-     */
-    protected void updateCraneRotation(double angle) {
-        cCrane.setRotation((float) Math.toDegrees(angle));
-    }
-
-    /**
-     * Sets the hitbox in proper position using the knowledge of the position and rotation.
-     * @param angle The angle of the crane.
-     */
-    protected void setHitBoxPosition(double angle) {
-        float radius = cBoatStack.getHeight() / 2;
-        float hitboxRadius = cCraneHitBox.getHeight() / 2;
-
-        float xCoordCenter = cBoatStack.getX() + radius;
-        float yCoordCenter = cBoatStack.getY() + radius;
-
-        float xPosition = (float) Math.cos(angle) * (radius - hitboxRadius);
-        float yPosition = (float) Math.sin(angle) * (radius - hitboxRadius);
-
-        cCraneHitBox.setPosition(xCoordCenter + xPosition - hitboxRadius, yCoordCenter + yPosition - hitboxRadius);
-    }
-
-    /**
-     * Sets the hitbox according to the 0-1 mapping (if this is given by the host).
-     * @param coordinate The location of the HitBox.
-     */
-    protected void setHitBoxPosition(Coordinate coordinate) {
-        System.out.println(coordinate);
-        cCraneHitBox.setPosition(coordinate.getX() * cMaxWidth, coordinate.getY() * cMaxHeight);
-    }
-
     @Override
-	protected WidgetGroup createWidgetGroup() {
+    protected WidgetGroup createWidgetGroup() {
         setUISize();
 
         cBoatStack = new Stack();
@@ -195,28 +201,8 @@ public class CraneFishingScreen extends EventScreen {
 
         cContainer.addActor(cCraneHitBox);
 
-		return cContainer;
-	}
-
-    /**
-     * Generates a set of fishes that are used to draw the location of the fishes in the event.
-     * @return The set of fishes that are drawn.
-     */
-    protected HashMap<Integer, SmallFish> generateFishes() {
-        HashMap<Integer, SmallFish> fishes = new HashMap<>();
-        for (int i = 0; i < cNumberOfFish; i++) {
-            SmallFish fish = new SmallFish(cAssets.getTexture("images/SmallFish.png"));
-            fish.setSize(cSmallFishSize * cScalar, cSmallFishSize * cScalar);
-            fishes.put(i, fish);
-            cContainer.addActor(fish);
-        }
-        return fishes;
+        return cContainer;
     }
-
-	@Override
-	protected void rebuildWidgetGroup() {
-        setUISize();
-	}
 
     /**
      * Used to properly map the 0-1 scale to the screen size.
@@ -229,5 +215,26 @@ public class CraneFishingScreen extends EventScreen {
         } else {
             cScalar = cMaxWidth / cDevSize;
         }
+    }
+
+    /**
+     * Generates a set of fishes that are used to draw the location of the fishes in the event.
+     *
+     * @return The set of fishes that are drawn.
+     */
+    protected HashMap<Integer, SmallFish> generateFishes() {
+        HashMap<Integer, SmallFish> fishes = new HashMap<Integer, SmallFish>();
+        for (int i = 0; i < cNumberOfFish; i++) {
+            SmallFish fish = new SmallFish(cAssets.getTexture("images/SmallFish.png"));
+            fish.setSize(cSmallFishSize * cScalar, cSmallFishSize * cScalar);
+            fishes.put(i, fish);
+            cContainer.addActor(fish);
+        }
+        return fishes;
+    }
+
+    @Override
+    protected void rebuildWidgetGroup() {
+        setUISize();
     }
 }

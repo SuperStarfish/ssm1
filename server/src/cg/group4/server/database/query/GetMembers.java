@@ -1,5 +1,7 @@
 package cg.group4.server.database.query;
 
+import cg.group4.data_structures.PlayerData;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,18 +28,16 @@ public class GetMembers extends Query {
     }
 
     @Override
-    public ArrayList<String> query(final Connection databaseConnection) throws SQLException {
-        ArrayList<String> list = new ArrayList<String>();
-        String query = "SELECT Username FROM User WHERE GroupId = ?";
+    public ArrayList<PlayerData> query(final Connection databaseConnection) throws SQLException {
+        ArrayList<PlayerData> list = new ArrayList<PlayerData>();
+        String query = "SELECT Id,Username FROM User WHERE GroupId = ?";
         try (PreparedStatement statement = databaseConnection.prepareStatement(query)) {
             statement.setString(1, cGroupId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String username = resultSet.getString("Username");
-                    if (username == null) {
-                        username = "null";
-                    }
-                    list.add(username);
+                    PlayerData playerData = new PlayerData(resultSet.getString("Id"));
+                    playerData.setUsername(resultSet.getString("Username"));
+                    list.add(playerData);
                 }
                 resultSet.close();
             }

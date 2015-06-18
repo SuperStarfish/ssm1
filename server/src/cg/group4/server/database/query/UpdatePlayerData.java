@@ -36,8 +36,8 @@ public class UpdatePlayerData extends Query {
 
         new MakePlayerEntry(cPlayerData.getId()).query(databaseConnection);
 
-        if (cPlayerData.getUsername() != null) {
-            updateData("Username", cPlayerData.getUsername());
+        if (cPlayerData.toString() != null) {
+            updateData("Username", cPlayerData.toString());
         }
 
         if (cPlayerData.getIntervalTimestamp() != 0) {

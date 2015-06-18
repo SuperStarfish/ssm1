@@ -48,7 +48,7 @@ public final class RemoteConnection implements Connection {
         cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
         cInputStream = new ObjectInputStream(cConnection.getInputStream());
         cWaiting = true;
-        cBuffer = new ConcurrentLinkedQueue<>();
+        cBuffer = new ConcurrentLinkedQueue<ConnectionPacket>();
     }
 
     /**
@@ -99,7 +99,9 @@ public final class RemoteConnection implements Connection {
                     }
                 }
             });
-        } catch (ClassNotFoundException | IOException e) {
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
