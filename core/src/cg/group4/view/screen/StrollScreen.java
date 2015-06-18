@@ -241,4 +241,12 @@ public final class StrollScreen extends ScreenLogic {
     protected String setPreviousScreenName() {
         return "Home";
     }
+
+    @Override
+    public void display() {
+        if (!cClient.isRemoteConnected()) {
+            cHost.setDisabled(true);
+            cJoin.setDisabled(true);
+        }
+    }
 }
