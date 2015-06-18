@@ -112,6 +112,7 @@ public class AquariumScreen implements Screen {
                     for (CollectibleRenderer cr : cInitialSet) {
                         if (!isInDisplaySet(cr)) {
                             cDisplayRendererSet.add(cr);
+
                             cStage.addActor(cr.getActor());
                         }
                     }
