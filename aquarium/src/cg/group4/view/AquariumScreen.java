@@ -157,12 +157,9 @@ public class AquariumScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-        //System.out.println("Fps -> " + (1/delta));
         for (CollectibleRenderer c : cDisplayRendererSet) {
             c.render();
         }
-
         cStage.act();
 
         final float alpha = 1f;
@@ -183,7 +180,6 @@ public class AquariumScreen implements Screen {
         final float x = 63 / maxColour;
         final float y = 67 / maxColour;
         final float z = 173f / maxColour;
-
         return new Vector3f(x, y, z);
     }
 

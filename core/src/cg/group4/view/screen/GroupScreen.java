@@ -3,6 +3,7 @@ package cg.group4.view.screen;
 import cg.group4.client.Client;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.groups.GroupData;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  */
 public class GroupScreen extends ScreenLogic {
 
-    protected Label cTitle;
+    protected Label cTitle, cGroupLabel;
     protected TextButton cNewGroupButton, cJoinGroupButton, cBackButton;
     protected Table cTable;
     protected List<GroupData> cGroups;
@@ -38,6 +39,7 @@ public class GroupScreen extends ScreenLogic {
         cTable.setFillParent(true);
 
         createTitle();
+        createGroupLabel();
         createMemberOverview();
         createNewGroupButton();
         createJoinGroupButton();
@@ -50,12 +52,28 @@ public class GroupScreen extends ScreenLogic {
 
     }
 
+    /**
+     * Creates the title of the screen.
+     */
     protected void createTitle() {
         cTitle = cGameSkin.generateDefaultLabel("Groups");
         cTable.row().expandY();
         cTable.add(cTitle).colspan(2);
     }
 
+    /**
+     * Label that displays the players group.
+     */
+    protected void createGroupLabel() {
+        cGroupLabel = cGameSkin.generateDefaultLabel("You are not yet a member of a group.");
+        cTable.row().expandY();
+        cTable.add(cGroupLabel).colspan(2);
+        setGroupLabel();
+    }
+
+    /**
+     * Displays the members of the selected group.
+     */
     protected void createMemberOverview() {
         cMembers = cGameSkin.generateDefaultList();
         Drawable selection = new TextureRegionDrawable(
@@ -69,6 +87,9 @@ public class GroupScreen extends ScreenLogic {
         cTable.add(new ScrollPane(cMembers)).fill();
     }
 
+    /**
+     * Displays al the groups.
+     */
     protected void createNewGroupButton() {
         cNewGroupButton = cGameSkin.generateDefaultMenuButton("Create group");
         cNewGroupButton.addListener(new ChangeListener() {
@@ -81,6 +102,9 @@ public class GroupScreen extends ScreenLogic {
         cTable.add(cNewGroupButton);
     }
 
+    /**
+     * Button to join a group.
+     */
     protected void createJoinGroupButton() {
         cJoinGroupButton = cGameSkin.generateDefaultMenuButton("Join group");
         cJoinGroupButton.addListener(new ChangeListener() {
@@ -93,6 +117,30 @@ public class GroupScreen extends ScreenLogic {
 
     }
 
+    /**
+     * Sets the text of the group label.
+     */
+    protected void setGroupLabel() {
+        String groupId = StandUp.getInstance().getPlayer().getGroupId();
+        if (groupId != null) {
+            cGroupLabel.setText("Retrieving group data..");
+            Client.getInstance().getGroup(groupId, new ResponseHandler() {
+                @Override
+                public void handleResponse(Response response) {
+                    if (response.isSuccess()) {
+                        GroupData groupData = (GroupData) response.getData();
+                        cGroupLabel.setText("Group: " + groupData.toString() + " (" + groupData.getGroupId() + ")");
+                    } else {
+                        cGroupLabel.setText("Could not retrieve group data.");
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Button to create a new group.
+     */
     protected void createGroupsOverview() {
         cGroups = cGameSkin.generateDefaultList();
         cGroups.addListener(new ChangeListener() {
@@ -113,12 +161,17 @@ public class GroupScreen extends ScreenLogic {
         fillGroups();
     }
 
+    /**
+     * Fill group display.
+     */
     protected void fillGroups() {
         Client.getInstance().getGroupData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                ArrayList<GroupData> list = (ArrayList<GroupData>) response.getData();
-                cGroups.setItems(list.toArray(new GroupData[list.size()]));
+                if (response.isSuccess()) {
+                    ArrayList<GroupData> list = (ArrayList<GroupData>) response.getData();
+                    cGroups.setItems(list.toArray(new GroupData[list.size()]));
+                }
             }
         });
     }
@@ -138,5 +191,6 @@ public class GroupScreen extends ScreenLogic {
     @Override
     public void display() {
         fillGroups();
+        setGroupLabel();
     }
 }

@@ -102,7 +102,6 @@ public class CollectibleRenderer {
                 cCollectibleInformationSubject.update(new Pair<String>(owner, date));
             }
         });
-
     }
 
     /**

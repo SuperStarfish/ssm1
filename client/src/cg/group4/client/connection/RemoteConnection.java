@@ -75,6 +75,7 @@ public final class RemoteConnection implements Connection {
                     while (!cBuffer.isEmpty()) {
                         sendPacket(cBuffer.poll());
                     }
+                    cWaiting = true;
                 }
             }).start();
         }
@@ -90,7 +91,6 @@ public final class RemoteConnection implements Connection {
             cOutputStream.writeObject(connectionPacket.getQuery());
             cOutputStream.flush();
             final Response response = (Response) cInputStream.readObject();
-            cWaiting = true;
             Client.getInstance().addPostRunnables(new Runnable() {
                 @Override
                 public void run() {

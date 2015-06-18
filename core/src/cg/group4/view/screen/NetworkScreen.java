@@ -106,13 +106,11 @@ public final class NetworkScreen extends ScreenLogic {
         Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
-                boolean isConnected = (Boolean) arg;
-                if (isConnected) {
+                if ((boolean) arg) {
                     cMessage.setText("Connected to remote!");
                 } else {
                     cMessage.setText("Not connected to remote!");
                 }
-                cChangeUsername.setDisabled(!isConnected);
             }
         });
     }

@@ -78,9 +78,7 @@ public final class HomeScreen extends ScreenLogic {
 
         initStrollButton();
         initCollectionButton();
-        if (Client.getInstance().isRemoteConnected()) {
-            initGroupButton();
-        }
+        initGroupButton();
         initSettingsButton();
 
         return cTable;
@@ -152,6 +150,7 @@ public final class HomeScreen extends ScreenLogic {
             public void update(final Observable o, final Object arg) {
                 if (!cStrollTimer.isRunning()) {
                     cIsClickable = true;
+                    cStrollButton.setDisabled(false);
                     cTimer.setText("Ready!");
                 }
             }
@@ -162,6 +161,7 @@ public final class HomeScreen extends ScreenLogic {
             public void update(final Observable o, final Object arg) {
                 if (!cStrollTimer.isRunning()) {
                     cIsClickable = false;
+                    cStrollButton.setDisabled(true);
                     cTimer.setText(Integer.toString(Timer.Global.INTERVAL.getDuration()));
                 }
             }
@@ -208,12 +208,7 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.row().expandY();
-        if (Client.getInstance().isRemoteConnected()) {
-            cTable.add(cCollectionButton);
-        } else {
-            cTable.add(cCollectionButton).colspan(2);
-        }
-
+        cTable.add(cCollectionButton);
     }
 
     /**
@@ -228,6 +223,25 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.add(cGroupButton);
+        checkGroupButton();
+    }
+
+    /**
+     * Checks whether the groupButton should be enabled or disabled.
+     */
+    protected void checkGroupButton() {
+        if (Client.getInstance().isRemoteConnected()) {
+            cGroupButton.setDisabled(false);
+        } else {
+            cGroupButton.setDisabled(true);
+            Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
+                @Override
+                public void update(Observable o, Object arg) {
+                    Client.getInstance().getRemoteChangeSubject().deleteObserver(this);
+                    checkGroupButton();
+                }
+            });
+        }
     }
 
     /**

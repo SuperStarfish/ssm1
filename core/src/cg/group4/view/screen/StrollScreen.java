@@ -90,7 +90,7 @@ public final class StrollScreen extends ScreenLogic {
     protected Observer cRemoteConnectObserver = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            boolean isConnected = (Boolean) arg;
+            boolean isConnected = (boolean) arg;
             cHost.setDisabled(!isConnected);
             cJoin.setDisabled(!isConnected);
         }

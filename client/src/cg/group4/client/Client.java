@@ -55,7 +55,6 @@ public final class Client {
      * Notifies all listeners that the server has either connected or disconnected.
      */
     protected Subject cRemoteChangeSubject;
-
     /**
      * A list of Runnable that have to be run at the end of a render cycle.
      * These are added to the Gdx.app.postRunnable().
@@ -156,7 +155,7 @@ public final class Client {
      */
     public void setRemoteConnection(final Connection connection) {
         cRemoteConnection = connection;
-        cRemoteChangeSubject.update();
+        cRemoteChangeSubject.update(connection.isConnected());
         LOGGER.info("Managed to remotely connect: " + connection.isConnected());
     }
 
@@ -322,6 +321,16 @@ public final class Client {
      */
     public void getGroupData(final ResponseHandler responseHandler) {
         cRemoteConnection.send(new GetGroupData(), responseHandler);
+    }
+
+    /**
+     * Retrieves the data of the given group id.
+     *
+     * @param groupId         The group id.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getGroup(final String groupId, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetGroup(groupId), responseHandler);
     }
 
 

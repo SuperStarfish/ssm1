@@ -125,7 +125,6 @@ public class GameSkin extends Skin {
         sprite = new Sprite(sprite);
         sprite.setColor(.6f, .6f, .6f, 1);
         buttonStyle.down = new SpriteDrawable(sprite);
-
         buttonStyle.disabled = new SpriteDrawable(disabled);
         return buttonStyle;
     }

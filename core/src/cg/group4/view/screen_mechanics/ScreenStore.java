@@ -1,6 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.client.Client;
 import cg.group4.view.screen.*;
 
 import java.util.HashMap;
@@ -62,13 +61,9 @@ public final class ScreenStore {
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
-        //addScreen("Network", new NetworkScreen());
-//        addScreen("Groups", new GroupScreen());
         addScreen("Network", new NetworkScreen());
         addScreen("Collection", new CollectiblesScreen());
-        if (Client.getInstance().isRemoteConnected()) {
-            addScreen("Groups", new GroupScreen());
-        }
+        addScreen("Groups", new GroupScreen());
     }
 
     /**

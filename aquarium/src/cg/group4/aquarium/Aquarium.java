@@ -26,11 +26,6 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
     protected Connector cConnector;
 
     /**
-     * Loads the configuration for the server.
-     */
-    protected Configuration cAquariumConfig;
-
-    /**
      * Screen which displays the aquarium.
      */
     protected AquariumScreen cAquariumScreen;
@@ -77,7 +72,6 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
      * Called by the loading screen when the asset loading is finished.
      */
     public void assetsDone() {
-        cAquariumConfig = new Configuration();
 
         setScreen(new StartScreen());
     }
@@ -88,7 +82,7 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
      * @param groupNumber group cId
      */
     public void initAquarium(String groupNumber) {
-        cConnector = new Connector(groupNumber, cAquariumConfig);
+        cConnector = new Connector(groupNumber);
         cAquariumScreen = new AquariumScreen();
         cConnector.getMembersSubject().addObserver(cAquariumScreen.getMembersObserver());
         cConnector.getCollectionSubject().addObserver(cAquariumScreen.getCollectionObserver());

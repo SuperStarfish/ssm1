@@ -24,22 +24,14 @@ public class Connector {
      * Client used to connect with the server.
      */
     protected Client cClient;
-
-    /**
-     * Configuration used to connect to the server.
-     */
-    protected Configuration cAquariumConfig;
-
     /**
      * Group cId of which the collection has to be displayed.
      */
     protected String cGroupId;
-
     /**
      * Collection used to store the fetched collection from the anonymous ResponseHandler.
      */
     protected Collection cCollection;
-
     /**
      * Subject with goal being the Observable for the Connector for the collection.
      */
@@ -68,9 +60,8 @@ public class Connector {
      *
      * @param groupId cId of the group to display as aquarium.
      */
-    public Connector(final String groupId, Configuration config) {
+    public Connector(final String groupId) {
         cCollectionUpdateExecutorService = Executors.newSingleThreadScheduledExecutor();
-        cAquariumConfig = config;
 
         cCollectionFromServerSubject = new Subject();
         cMembersFromServerSubject = new Subject();
@@ -83,16 +74,27 @@ public class Connector {
      * Connects the client to the server and adds an observer to it which schedules an collection fetch each interval.
      */
     public void connect() {
-        cClient = Client.getInstance();
-        cClient.connectToRemoteServer();
-        cClient.getRemoteChangeSubject().addObserver(new Observer() {
+        Client.getInstance().connectToRemoteServer();
+        checkConnected();
+    }
+
+    /**
+     * Checks whether connection is already made with remote.
+     */
+    protected void checkConnected() {
+        Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
-                final long initialDelay = 3;
-                final long scheduledDelay = 3;
+                if ((boolean) arg) {
+                    final long initialDelay = 3;
+                    final long scheduledDelay = 3;
 
-                cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay,
-                        TimeUnit.SECONDS);
+                    cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay,
+                            TimeUnit.SECONDS);
+                } else {
+                    Client.getInstance().getRemoteChangeSubject().deleteObserver(this);
+                    checkConnected();
+                }
             }
         });
     }
