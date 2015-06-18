@@ -1,16 +1,12 @@
 package cg.group4.view.screen_mechanics;
 
 import cg.group4.Launcher;
-import cg.group4.client.Client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Loading screen that is displayed while Assets are being loaded.
@@ -25,7 +21,7 @@ public class LoadingScreen implements Screen {
     /**
      * The launcher, used to tell the assets are done.
      */
-    protected Launcher cLauncher;
+    protected AssetsLoadingHandler cLauncher;
 
     /**
      * The SpriteBatch used to draw the logo.
@@ -61,7 +57,7 @@ public class LoadingScreen implements Screen {
      * Creates a new LoadingScreen with a reference back to the launcher.
      * @param launcher Reference back to the launcher.
      */
-    public LoadingScreen(final Launcher launcher) {
+    public LoadingScreen(final AssetsLoadingHandler launcher) {
         cLauncher = launcher;
         cAssets = Assets.getInstance();
     }

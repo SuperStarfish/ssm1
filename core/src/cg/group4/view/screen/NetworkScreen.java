@@ -89,6 +89,9 @@ public final class NetworkScreen extends ScreenLogic {
         cTable.add(cChangeUsername);
     }
 
+    /**
+     * Adds a reset Collection button.
+     */
     protected void addResetCollection() {
         cResetUser = cGameSkin.generateDefaultMenuButton("Reset Stats");
         cResetUser.addListener(resetPlayerDataBehaviour());
@@ -128,6 +131,10 @@ public final class NetworkScreen extends ScreenLogic {
         };
     }
 
+    /**
+     * When the reset collection button is clicked.
+     * @return The behaviour to execute.
+     */
     protected ChangeListener resetPlayerDataBehaviour() {
         return new ChangeListener() {
             @Override

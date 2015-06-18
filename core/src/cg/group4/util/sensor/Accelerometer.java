@@ -28,6 +28,21 @@ public class Accelerometer {
      * Reader that reads the sensor values from the device.
      */
     protected SensorReader cReader;
+    
+    /**
+     * Whether to filter the noise per axis or on all three.
+     */
+    protected boolean cFilterPerAxis;
+
+    /**
+     * The default filter to use for the accelerometer.
+     */
+    protected float cDefaultNoiseFilter = 1.5f;
+
+    /**
+     * Gravity filter used in the accelerometer.
+     */
+    protected float cGravity = 9.5f;
 
     /**
      * Constructs an accelerometer which is used to read the accelerometer data
@@ -37,9 +52,10 @@ public class Accelerometer {
      */
     public Accelerometer(final SensorReader reader) {
         cFilterGravity = false;
-        cNoiseThreshold = 1.5f;
+        cNoiseThreshold = cDefaultNoiseFilter;
         cReader = reader;
         cBaseVector = cReader.readAccelerometer();
+        cFilterPerAxis = true;
     }
 
     /**
@@ -58,10 +74,14 @@ public class Accelerometer {
                     resultVector.z - cBaseVector.z);
         }
 
-        resultVector.set(
-                filterNoise(resultVector.x),
-                filterNoise(resultVector.y),
-                filterNoise(resultVector.z));
+        if (cFilterPerAxis) {
+        	resultVector.set(
+                    filterNoise(resultVector.x),
+                    filterNoise(resultVector.y),
+                    filterNoise(resultVector.z));
+        } else  {
+        	resultVector = filterNoise(resultVector);
+        }
 
         cBaseVector = readings;
         return resultVector;
@@ -102,6 +122,18 @@ public class Accelerometer {
         }
         return result;
     }
+    
+    /**
+     * 
+     * @param vector
+     * @return
+     */
+    protected Vector3  filterNoise(final Vector3 vector) {
+        if (vector.epsilonEquals(cBaseVector, cNoiseThreshold)) {
+        	return cBaseVector;
+        }
+        return vector;
+    }
 
     /**
      * Sets the filtering of the gravity from the accelerometer on/off.
@@ -122,7 +154,7 @@ public class Accelerometer {
      */
     protected final boolean isGravity(final float scalar) {
         float absoluteValue = Math.abs(scalar);
-        return (absoluteValue > 9f) && (absoluteValue < 12f);
+        return (absoluteValue >= cGravity);
     }
 
     /**
@@ -133,5 +165,9 @@ public class Accelerometer {
      */
     public final void setNoiseThreshold(final float threshold) {
         this.cNoiseThreshold = threshold;
+    }
+    
+    public void setFilterPerAxis(boolean filterPerAxis) {
+    	cFilterPerAxis = filterPerAxis;
     }
 }

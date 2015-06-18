@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Tests the processInput method of TestStrollEvent.
+ * Tests the processInput method of FollowTheFishEvent.
  */
 @RunWith(Parameterized.class)
 public class processInputTest {
@@ -95,7 +95,7 @@ public class processInputTest {
         Accelerometer mock = Mockito.mock(Accelerometer.class);
         Mockito.when(mock.highestAccelerationComponent(vec)).thenReturn(max);
 
-        TestStrollEvent test = Mockito.spy(new TestStrollEvent());
+        FollowTheFishEvent test = Mockito.spy(new FollowTheFishEvent());
         test.cAccelMeter = mock;
         test.cOperationNr = oper;
 

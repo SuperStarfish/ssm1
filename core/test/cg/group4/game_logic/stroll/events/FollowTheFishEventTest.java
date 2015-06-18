@@ -17,25 +17,23 @@ import static org.junit.Assert.assertNotEquals;
  * Class that tests the basic stroll event.
  */
 @RunWith(GdxTestRunner.class)
-public class TestStrollEventTest {
-
-
+public class FollowTheFishEventTest {
     /**
      * Instance of the stroll to be tested.
      */
-    protected TestStrollEvent cTestEvent;
+    protected FollowTheFishEvent cTestEvent;
 
     /**
      * Spy to check for methodcalls.
      */
-    protected TestStrollEvent cSpyEvent;
+    protected FollowTheFishEvent cSpyEvent;
 
     /**
      * SetUp to run before each test.
      */
     @Before
     public void setUp() {
-        cTestEvent = new TestStrollEvent();
+        cTestEvent = new FollowTheFishEvent();
         cSpyEvent = Mockito.spy(cTestEvent);
     }
 
@@ -56,7 +54,7 @@ public class TestStrollEventTest {
      */
     @Test
     public void taskCompletedComplete() {
-        cSpyEvent.cTasksCompleted = TestStrollEvent.MAX_TASKS;
+        cSpyEvent.cTasksCompleted = FollowTheFishEvent.MAX_TASKS;
         Mockito.doNothing().when(cSpyEvent).clearEvent();
 
         cSpyEvent.taskCompleted();
@@ -79,8 +77,8 @@ public class TestStrollEventTest {
      */
     @Test
     public void getRewardTest() {
-        cSpyEvent.cTasksCompleted = TestStrollEvent.MAX_TASKS;
-        assertEquals(TestStrollEvent.MAX_TASKS, cSpyEvent.getReward());
+        cSpyEvent.cTasksCompleted = FollowTheFishEvent.MAX_TASKS;
+        assertEquals(FollowTheFishEvent.MAX_TASKS, cSpyEvent.getReward());
     }
 
     /**

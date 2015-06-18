@@ -10,10 +10,14 @@ import cg.group4.server.database.MultiResponseHandler;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
-import cg.group4.util.IpResolver;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -32,7 +36,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "128.127.39.32";
+    protected final String cDefaultIp = "82.169.19.191";
     /**
      * The default port to connect to.
      */
@@ -116,7 +120,6 @@ public final class Client {
 
     /**
      * Adds another Runnable to the PostRunnable list.
-     *
      * @param runnable The task to run.
      */
     public void addPostRunnables(final Runnable runnable) {
@@ -343,16 +346,10 @@ public final class Client {
 
     /**
      * Stores the host ip on the server with a generated code that it will return to let the client connect.
-     *
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void hostEvent(final ResponseHandler responseHandler) {
-        IpResolver ipResolver = new IpResolver();
-        try {
-            cRemoteConnection.send(new RequestHostCode(ipResolver.getExternalIP()), responseHandler);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        cRemoteConnection.send(new RequestHostCode(getIPAddress(true)), responseHandler);
     }
 
     /**
@@ -364,5 +361,67 @@ public final class Client {
         cRemoteConnection.send(new RequestHostIp(code), responseHandler);
     }
 
+    /**
+     * Android returns 127.0.0.1 for Inet4Address.getLocalHost().getHostName(), so using a method found at:
+     * http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device
+     *
+     * @param useIPv4
+     * @return
+     */
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress().toUpperCase();
+                        boolean isIPv4 = validIP(sAddr);
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 port suffix
+                                return delim<0 ? sAddr : sAddr.substring(0, delim);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) { } // for now eat exceptions
+        return "";
+    }
 
+    /**
+     * http://stackoverflow.com/questions/4581877/validating-ipv4-string-in-java
+     * @param ip
+     * @return
+     */
+    public static boolean validIP (String ip) {
+        try {
+            if (ip == null || ip.isEmpty()) {
+                return false;
+            }
+
+            String[] parts = ip.split( "\\." );
+            if ( parts.length != 4 ) {
+                return false;
+            }
+
+            for ( String s : parts ) {
+                int i = Integer.parseInt( s );
+                if ( (i < 0) || (i > 255) ) {
+                    return false;
+                }
+            }
+            if(ip.endsWith(".")) {
+                return false;
+            }
+
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
 }

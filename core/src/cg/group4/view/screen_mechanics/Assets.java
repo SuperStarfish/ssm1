@@ -31,16 +31,21 @@ public class Assets extends AssetManager {
     public Assets() {
         loadTexture("images/default_landscape_background.jpg");
         loadTexture("images/default_portrait_background.jpg");
+        loadTexture("images/wooden_sign_gray.png");
         loadTexture("images/wooden_sign.png");
         loadTexture("images/debugpixel.png");
         loadTexture("images/blackpixel.jpg");
+        loadTexture("images/SmallFish.png");
         loadTexture("images/FishA.png");
         loadTexture("images/FishB.png");
         loadTexture("images/FishC.png");
         loadTexture("images/FishD.png");
+        loadTexture("images/Boat.png");
+        loadTexture("images/Crane.png");
         loadTexture("images/CheckBoxOff.png");
         loadTexture("images/CheckBoxOn.png");
         loadMusic("music/Summer Day.mp3");
+
     }
 
     /**

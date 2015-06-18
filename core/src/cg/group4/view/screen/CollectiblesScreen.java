@@ -16,7 +16,12 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import cg.group4.view.util.rewards.CollectibleDrawer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -46,6 +51,14 @@ public class CollectiblesScreen extends ScreenLogic {
      * Button that takes the player back to the home screen.
      */
     protected TextButton cBackButton;
+    /**
+     * Object that creates images for the collectibles.
+     */
+    protected CollectibleDrawer cDrawer;
+    /**
+     * The number of columns to display on the collectiblescreen.
+     */
+    protected float cColspan = 6f;
     /**
      * SelectBox that contains the groups that the user is currently in.
      */
@@ -92,7 +105,7 @@ public class CollectiblesScreen extends ScreenLogic {
         cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cGroupsBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
         cSortBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
-        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
+        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColspan);
         constructContents();
     }
 
@@ -141,7 +154,7 @@ public class CollectiblesScreen extends ScreenLogic {
      */
     protected void fillDrawer() {
         cContentTable = new Table();
-        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
+        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColspan);
         cScrollPane = new ScrollPane(cContentTable);
     }
 
@@ -206,7 +219,7 @@ public class CollectiblesScreen extends ScreenLogic {
     }
 
     /**
-     * Updates teh collection to the latest version.
+     * Updates the collection to the latest version.
      */
     protected void updateCollection() {
         ResponseHandler responseHandler = new ResponseHandler() {

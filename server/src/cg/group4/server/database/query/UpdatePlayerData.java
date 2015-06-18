@@ -70,4 +70,5 @@ public class UpdatePlayerData extends Query {
             statement.close();
         }
     }
+
 }

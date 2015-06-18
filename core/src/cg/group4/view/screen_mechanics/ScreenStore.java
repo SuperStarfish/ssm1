@@ -3,6 +3,9 @@ package cg.group4.view.screen_mechanics;
 import cg.group4.client.Client;
 import cg.group4.view.screen.*;
 
+import cg.group4.view.screen.HomeScreen;
+import cg.group4.view.screen.SettingsScreen;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +19,7 @@ public final class ScreenStore {
     /**
      * Singleton of screen handler.
      */
-    protected static ScreenStore INSTANCE;
+    protected static ScreenStore cInstance;
 
     /**
      * HashMap that contains all the screens.
@@ -49,10 +52,10 @@ public final class ScreenStore {
      * @return The instance.
      */
     public static ScreenStore getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ScreenStore();
+        if (cInstance == null) {
+            cInstance = new ScreenStore();
         }
-        return INSTANCE;
+        return cInstance;
     }
 
     /**
@@ -62,6 +65,8 @@ public final class ScreenStore {
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
+        //addScreen("Network", new NetworkScreen());
+//        addScreen("Groups", new GroupScreen());
         addScreen("Network", new NetworkScreen());
         addScreen("Collection", new CollectiblesScreen());
         if (Client.getInstance().isRemoteConnected()) {
