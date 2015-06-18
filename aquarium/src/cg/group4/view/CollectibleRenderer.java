@@ -193,18 +193,13 @@ public class CollectibleRenderer {
         final int halfCircle = 180;
 
         // horizontal check
-        if (getOriginX() < 0) {
-            flipImageY();
-            cCurrentAngle *= -1;
-        } else if (getOriginX() > Gdx.graphics.getWidth()) {
+        if (getOriginX() < 0 || Gdx.graphics.getWidth() < getOriginX()) {
             flipImageY();
             cCurrentAngle *= -1;
         }
 
         // vertical check
-        if (getOriginY() > Gdx.graphics.getHeight()) {
-            cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
-        } else if (getOriginY() < 0) {
+        if (getOriginY() < 0 || getOriginY() > Gdx.graphics.getHeight()) {
             cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
         }
     }

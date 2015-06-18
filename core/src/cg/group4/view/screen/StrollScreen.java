@@ -61,18 +61,6 @@ public final class StrollScreen extends ScreenLogic {
             cScreenStore.setScreen("Event");
         }
     };
-
-    /**
-     * Observer that gets called when the stroll ends.
-     */
-    protected Observer cEndEventObserver = new Observer() {
-        @Override
-        public void update(final Observable o, final Object arg) {
-            cScreenStore.setScreen("Stroll");
-            cScreenStore.removeScreen("Event");
-        }
-    };
-
     /**
      * Observer that gets called when the stroll ends.
      */
@@ -83,7 +71,6 @@ public final class StrollScreen extends ScreenLogic {
             cScreenStore.setScreen("Reward");
         }
     };
-
     /**
      * Listener to when the connection state with the remote server changes.
      */
@@ -95,12 +82,24 @@ public final class StrollScreen extends ScreenLogic {
             cJoin.setDisabled(!isConnected);
         }
     };
-
     /**
      * Connection to the remote server.
      */
     protected Client cClient;
-
+    /**
+     * Observer that gets called when the stroll ends.
+     */
+    protected Observer cEndEventObserver = new Observer() {
+        @Override
+        public void update(final Observable o, final Object arg) {
+            cScreenStore.setScreen("Stroll");
+            cScreenStore.removeScreen("Event");
+            if (!cClient.isRemoteConnected()) {
+                cHost.setDisabled(true);
+                cJoin.setDisabled(true);
+            }
+        }
+    };
     /**
      * The stroll timer of the game.
      */
@@ -242,11 +241,4 @@ public final class StrollScreen extends ScreenLogic {
         return "Home";
     }
 
-    @Override
-    public void display() {
-        if (!cClient.isRemoteConnected()) {
-            cHost.setDisabled(true);
-            cJoin.setDisabled(true);
-        }
-    }
 }
