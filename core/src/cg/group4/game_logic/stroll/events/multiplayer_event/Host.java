@@ -36,7 +36,7 @@ public abstract class Host {
      */
     protected byte[] cIncomingData = new byte[cIJustTookThisAsDefaultBufferSize];
     /**
-     * TCP connetion with the other client.
+     * TCP connection with the other client.
      */
     protected Socket cSocket;
     /**
@@ -190,6 +190,9 @@ public abstract class Host {
                             }
                         });
                     } catch (EOFException e) {
+                        e.printStackTrace();
+                        cIsAlive = false;
+                    } catch(SocketException e) {
                         e.printStackTrace();
                         cIsAlive = false;
                     } catch (ClassNotFoundException e) {

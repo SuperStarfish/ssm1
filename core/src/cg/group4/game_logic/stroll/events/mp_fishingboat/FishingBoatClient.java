@@ -61,6 +61,11 @@ public class FishingBoatClient extends FishingBoatEvent {
     }
 
     @Override
+    public void start() {
+
+    }
+
+    @Override
     public void update(Observable o, Object arg) {
         Vector3 vector = cAccelerometer.update();
 

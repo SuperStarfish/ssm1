@@ -230,10 +230,4 @@ public class CraneFishingScreen extends EventScreen {
             cScalar = cMaxWidth / cDevSize;
         }
     }
-
-	@Override
-	protected String setPreviousScreenName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

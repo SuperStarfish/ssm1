@@ -63,11 +63,6 @@ public abstract class FishingBoatEvent extends StrollEvent {
         cOtherClient.dispose();
     }
 
-    @Override
-    public void start() {
-
-    }
-
     /**
      * Checks to see if there are any fish to delete and if the event is finished.
      */

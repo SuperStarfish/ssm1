@@ -79,7 +79,7 @@ public class Connector {
     public void connect() {
         cClient = Client.getRemoteInstance();
         cClient.connectToServer(cAquariumConfig.getHost(), cAquariumConfig.getPort());
-        cClient.getRemoteChangeSubject().addObserver(new Observer() {
+        cClient.getChangeSubject().addObserver(new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
                 final long initialDelay = 3;

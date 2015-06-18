@@ -4,6 +4,7 @@ import cg.group4.data_structures.mp_fishingboat.Coordinate;
 import cg.group4.data_structures.mp_fishingboat.SmallFishData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishDestination;
 import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
+import cg.group4.game_logic.stroll.events.multiplayer_event.MessageHandler;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.HashMap;
@@ -61,6 +62,16 @@ public class FishingBoatHost extends FishingBoatEvent {
     public FishingBoatHost(Host host) {
         super(host);
         cOtherClient.sendTCP(cFishingBoatEventData);
+    }
+
+    @Override
+    public void start() {
+        cOtherClient.receiveUDP(new MessageHandler() {
+            @Override
+            public void handleMessage(Object message) {
+                cFishingBoatEventData.setcCraneRotation((double) message);
+            }
+        }, true);
     }
 
     @Override
