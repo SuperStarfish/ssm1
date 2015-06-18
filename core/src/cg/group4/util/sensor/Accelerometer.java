@@ -108,7 +108,7 @@ public class Accelerometer {
      *
      * @param mode Default is off.
      */
-    public final void filterGravity(final boolean mode) {
+    public void filterGravity(final boolean mode) {
         cFilterGravity = mode;
     }
 
