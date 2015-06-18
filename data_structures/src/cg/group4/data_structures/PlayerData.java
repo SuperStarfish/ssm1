@@ -46,6 +46,7 @@ public class PlayerData implements Serializable {
      */
     public PlayerData(final String id) {
         cId = id;
+        cUsername = "";
         cCollection = new Collection(cId);
     }
 
