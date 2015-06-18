@@ -16,14 +16,14 @@ public class CollectibleDrawer {
     /**
      * R, G and B value of the replacement colour.
      */
-    protected final static float cReplaceColourComponent = 120f / 255f;
+    protected final static float REPLACE_COLOR_COMPONENT = 125f / 255f;
     /**
      * Colour in the image that needs to be replaced.
      */
-    protected final static Color cReplacementColour = new Color(
-            cReplaceColourComponent,
-            cReplaceColourComponent,
-            cReplaceColourComponent,
+    protected final static Color REPLACEMENT_COLOR = new Color(
+            REPLACE_COLOR_COMPONENT,
+            REPLACE_COLOR_COMPONENT,
+            REPLACE_COLOR_COMPONENT,
             1f);
 
     /**
@@ -53,7 +53,7 @@ public class CollectibleDrawer {
             	
                 Color currentColour = new Color(pix.getPixel(x, y));
 
-                if (currentColour.equals(cReplacementColour)) {
+                if (currentColour.equals(REPLACEMENT_COLOR)) {
                     pix.drawPixel(x, y);
                 }
             }
