@@ -44,7 +44,7 @@ public abstract class StrollEvent implements Disposable, Observer {
      */
     public StrollEvent() {
         cLabelSubject = new Subject();
-
+        
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 

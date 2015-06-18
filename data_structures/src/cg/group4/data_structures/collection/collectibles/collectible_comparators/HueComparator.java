@@ -10,7 +10,7 @@ import java.util.Comparator;
 public class HueComparator implements Comparator<Collectible> {
 
     @Override
-    public int compare(Collectible o1, Collectible o2) {
+    public int compare(final Collectible o1, final Collectible o2) {
         if (o1.getHue() < o2.getHue()) {
             return 1;
         }

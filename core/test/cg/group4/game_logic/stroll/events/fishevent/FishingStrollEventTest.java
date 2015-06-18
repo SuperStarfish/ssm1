@@ -1,14 +1,19 @@
 package cg.group4.game_logic.stroll.events.fishevent;
 
-import cg.group4.util.timer.Timer;
-import com.badlogic.gdx.math.Vector3;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import cg.group4.data_structures.subscribe.Subject;
+import cg.group4.util.sensor.Accelerometer;
+import cg.group4.util.timer.Timer;
+
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.GdxNativesLoader;
 
 /**
  * Tests the FishingStrollEvent.java class and all its state classes.
@@ -16,22 +21,22 @@ import static org.junit.Assert.assertTrue;
 public class FishingStrollEventTest {
 
     /**
-     * Value for the z axis to get out of the castForward state
+     * Value for the z axis to get out of the castForward state.
      */
     protected static final float CAST_FORWARD_SUCCESS = 4f;
 
     /**
-     * Value for the z axis to stay in the castForward state
+     * Value for the z axis to stay in the castForward state.
      */
     protected static final float CAST_FORWARD_FAIL = 3f;
 
     /**
-     * Value for the z axis to get out of the reelIn state
+     * Value for the z axis to get out of the reelIn state.
      */
     protected static final float REEL_IN_SUCCESS = -3f;
 
     /**
-     * Value for the z axis to stay in the reelIn state
+     * Value for the z axis to stay in the reelIn state.
      */
     protected static final float REEL_IN_FAIL = -2f;
 
@@ -64,7 +69,7 @@ public class FishingStrollEventTest {
     }
 
     /**
-     * The event should be disposed/cleared when you complete it
+     * The event should be disposed/cleared when you complete it.
      */
     @Test
     public void eventCompletedTest() {
@@ -149,5 +154,36 @@ public class FishingStrollEventTest {
         state.processInput(new Vector3(2f, 2f, 2f));
 
         Mockito.verify(state.cFishTimer, Mockito.times(1)).reset();
+    }
+    
+    /**
+     * Every game cycle the FishEventState should be updated with the new
+     * input from the acccelerometer.
+     */
+    @Test
+    public void updateTest() {
+    	Accelerometer accelMock = Mockito.mock(Accelerometer.class);
+    	Mockito.when(accelMock.update()).thenReturn(new Vector3(1f, 1f, 1f));
+    	FishEventState stateMock = Mockito.mock(FishEventState.class);
+    	cTestEvent.cState = stateMock;
+    	cTestEvent.cAccelMeter = accelMock;
+    	
+       	cTestEvent.update(null, null);
+    	Mockito.verify(accelMock, Mockito.times(1)).update();
+    	Mockito.verify(stateMock, Mockito.timeout(1)).processInput(new Vector3(1f, 1f, 1f));
+    }
+    
+    /**
+     * The accelerometer settings must be done and the event should 
+     * switch to the CastForwardState.
+     */
+    @Test
+    public void startTest() {
+    	Accelerometer accelMock = Mockito.mock(Accelerometer.class);
+    	cTestEvent.cAccelMeter = accelMock;
+    	
+    	cTestEvent.start();
+    	Mockito.verify(accelMock, Mockito.times(1)).filterGravity(Mockito.eq(true));
+    	assertTrue(cTestEvent.cState instanceof CastForwardState);
     }
 }

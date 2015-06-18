@@ -142,15 +142,7 @@ public class TestStrollEvent extends StrollEvent {
      * Clears the current event.
      */
     public void clearEvent() {
-        superDispose();
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
-    }
-
-    /**
-     * Method that calls super.dispose() to make it more testable.
-     */
-    public void superDispose() {
-        super.dispose();
     }
 
     @Override
