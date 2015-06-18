@@ -91,8 +91,8 @@ public class FishingBoatClient extends FishingBoatEvent {
     public void update(Observable o, Object arg) {
         Vector3 vector = cAccelmeter.update();
 
-//        double newRotation = Math.atan2(-vector.y, -vector.x);
-        double newRotation = fishingBoatData.getcCraneRotation() + 0.01d;
+        double newRotation = Math.atan2(-vector.y, -vector.x);
+//        double newRotation = fishingBoatData.getcCraneRotation() + 0.01d;
         fishingBoatData.setcCraneRotation(newRotation);
         cOtherClient.sendUDP(newRotation);
         moveFish();
