@@ -134,8 +134,15 @@ public final class ScreenStore {
      */
     public void rebuild(final int uiSize) {
         cGameSkin.createUIElements(uiSize);
-        for (ScreenLogic screen : cScreens.values()) {
-            screen.rebuildWidgetGroup();
-        }
+        rebuild();
+    }
+    
+    /**
+     * Updates all the UI Elements.
+     */
+    public void rebuild() {
+    	for (ScreenLogic screen : cScreens.values()) {
+    		screen.rebuildWidgetGroup();
+    	}
     }
 }
