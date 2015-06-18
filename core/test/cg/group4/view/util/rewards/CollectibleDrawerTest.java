@@ -20,14 +20,14 @@ public class CollectibleDrawerTest {
 		final float errorMargin = 0.00001f;
 		
 		final float replaceColourComponent = 0.49019607843f;
-		assertEquals(replaceColourComponent, CollectibleDrawer.REPLACE_COLOR_COMPONENT, errorMargin);
+		assertEquals(replaceColourComponent, CollectibleDrawer.cReplaceColourComponent, errorMargin);
 		
 		final Color replacementColour = new Color(
 				replaceColourComponent,
 				replaceColourComponent,
 				replaceColourComponent,
 				1f);
-		assertEquals(replacementColour, CollectibleDrawer.REPLACEMENT_COLOR);
+		assertEquals(replacementColour, CollectibleDrawer.cReplacementColour);
 	}
 	
 	@Test

@@ -3,6 +3,7 @@ package cg.group4.server;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class AndroidStorageResolver extends LocalStorageResolver {
 
@@ -22,7 +23,8 @@ public class AndroidStorageResolver extends LocalStorageResolver {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return DriverManager.getConnection("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db");
+//        return DriverManager.getConnection("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db");
+        return new org.sqldroid.SQLDroidDriver().connect("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db", new Properties());
     }
 
     @Override

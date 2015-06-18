@@ -52,7 +52,6 @@ public class RequestCollection extends Query {
                 }
             }
         }
-
         return collection;
     }
 }

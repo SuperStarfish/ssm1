@@ -6,7 +6,11 @@ import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -74,7 +78,7 @@ public final class ChangeUsernameScreen extends ScreenLogic {
                 Client.getLocalInstance().updatePlayer(cUsername.getText(), new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
-                        if(response.isSuccess()) {
+                        if (response.isSuccess()) {
                             cMessage.setText("Success!");
                         } else {
                             cMessage.setText("Something went wrong!");

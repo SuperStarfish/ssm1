@@ -1,17 +1,25 @@
 package cg.group4.view.screen;
 
+import cg.group4.client.Client;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.game_logic.StandUp;
 import cg.group4.game_logic.stroll.Stroll;
 import cg.group4.game_logic.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatHost;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen.mp_fishingboat.CraneFishingScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -31,9 +39,13 @@ public final class StrollScreen extends ScreenLogic {
      * Table that all the elements are added to.
      */
     protected Table cTable;
-
+    /**
+     * TextField where a player can enter the code to join a friend.
+     */
     protected TextField cCode;
-
+    /**
+     * Buttons to interact with in order to host or join multiplayer games.
+     */
     protected TextButton cHost, cJoin;
 
     /**
@@ -42,7 +54,14 @@ public final class StrollScreen extends ScreenLogic {
     protected Observer cNewEventObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            cScreenStore.addScreen("Event", new EventScreen((StrollEvent) arg));
+            StrollEvent strollEvent = (StrollEvent) arg;
+            EventScreen eventScreen;
+            if (arg instanceof FishingBoatHost || arg instanceof FishingBoatClient) {
+                eventScreen = new CraneFishingScreen(strollEvent);
+            } else {
+                eventScreen = new TextEventScreen(strollEvent);
+            }
+            cScreenStore.addScreen("Event", eventScreen);
             cScreenStore.setScreen("Event");
         }
     };
@@ -70,6 +89,23 @@ public final class StrollScreen extends ScreenLogic {
     };
 
     /**
+     * Listener to when the connection state with the remote server changes.
+     */
+    protected Observer cRemoteConnectObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            boolean isConnected = (Boolean) arg;
+            cHost.setDisabled(!isConnected);
+            cJoin.setDisabled(!isConnected);
+        }
+    };
+
+    /**
+     * Connection to the remote server.
+     */
+    protected Client cRemoteHost;
+
+    /**
      * The stroll timer of the game.
      */
     protected Timer cStrollTimer;
@@ -84,10 +120,16 @@ public final class StrollScreen extends ScreenLogic {
      */
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
+        cRemoteHost = Client.getRemoteInstance();
         cText = cGameSkin.generateDefaultLabel("Waiting for event");
         cCode = cGameSkin.generateDefaultTextField("Enter code");
         cHost = cGameSkin.generateDefaultMenuButton("Host");
         cJoin = cGameSkin.generateDefaultMenuButton("Join");
+        if (!cRemoteHost.isConnected()) {
+            cRemoteHost.getChangeSubject().addObserver(cRemoteConnectObserver);
+            cHost.setDisabled(true);
+            cJoin.setDisabled(true);
+        }
         Stroll stroll = StandUp.getInstance().getStroll();
         stroll.getEndStrollSubject().addObserver(cEndStrollObserver);
         stroll.getNewEventSubject().addObserver(cNewEventObserver);
@@ -98,35 +140,57 @@ public final class StrollScreen extends ScreenLogic {
     protected WidgetGroup createWidgetGroup() {
         initRemainingTime();
         cCode.setAlignment(Align.center);
-        cHost.addListener(new ChangeListener() {
+
+        cHost.setDisabled(!cRemoteHost.isConnected());
+        cJoin.setDisabled(!cRemoteHost.isConnected());
+
+        cHost.addListener(hostButtonClicked());
+        cJoin.addListener(joinButtonClicked());
+        return fillTable();
+    }
+
+    /**
+     * Fires when the host button is clicked.
+     * @return The behaviour to execute when clicked.
+     */
+    protected ChangeListener hostButtonClicked() {
+        return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 StandUp.getInstance().getStroll().startMultiPlayerEvent(new ResponseHandler() {
                     @Override
                     public void handleResponse(Response response) {
                         cCode.setText(Integer.toString((Integer) response.getData()));
+                        cText.setText("Waiting for other player...");
+                        cHost.setDisabled(true);
+                        cJoin.setDisabled(true);
                     }
                 });
             }
-        });
-        cJoin.addListener(new ChangeListener() {
+        };
+    }
+
+    /**
+     * Adds behaviour when the join button is clicked.
+     * @return
+     */
+    protected ChangeListener joinButtonClicked() {
+        return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 StandUp.getInstance().getStroll().joinMultiPlayerEvent(
                         Integer.parseInt(cCode.getText()), new ResponseHandler() {
                             @Override
                             public void handleResponse(Response response) {
-                                String ip = (String) response.getData();
-                                if (ip == null) {
-                                    ip = "Wrong code!";
+                                if (!response.isSuccess()) {
+                                    cCode.setText("Wrong code!");
                                 }
-                                cCode.setText(ip);
                             }
                         });
             }
-        });
-        return fillTable();
+        };
     }
+
     /**
      * Initializes the label to display the time remaining of the stroll.
      */

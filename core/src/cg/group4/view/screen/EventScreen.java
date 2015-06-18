@@ -2,56 +2,50 @@ package cg.group4.view.screen;
 
 import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.view.screen_mechanics.ScreenLogic;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Screen to be displayed during an event.
+ * Event Screens extend the default ScreenLogic to add an observer where Objects are received that change the state
+ * of the screen.
  */
-public final class EventScreen extends ScreenLogic {
-
-    /**
-     * Label with the text of this event.
-     */
-    protected Label cTaskToPerform;
-
+public abstract class EventScreen extends ScreenLogic {
     /**
      * Observes label changes.
      */
-    protected Observer cLabelObserver = new Observer() {
+    protected Observer cEventObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            cTaskToPerform.setText(arg.toString());
+            onEventChange(arg);
         }
     };
 
     /**
-     * Creates an event screen to display the data from an event.
-     *
-     * @param event The event belonging to this screen.
+     * Creates a new event and adds an observer to the event logic.
+     * @param eventLogic The event logic.
      */
-    public EventScreen(final StrollEvent event) {
-        cTaskToPerform = new Label("", cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
-        event.getLabelSubject().addObserver(cLabelObserver);
-        event.start();
+    public EventScreen(final StrollEvent eventLogic) {
+        eventLogic.getEventChangeSubject().addObserver(cEventObserver);
+        init();
+        eventLogic.start();
     }
+
+    /**
+     * This code is run before the start. Initialize anything needed for the event here.
+     */
+    protected abstract void init();
+
+    /**
+     * Is called every time there is a change in the event logic.
+     * @param updatedData Object containing all the updated data.
+     */
+    protected abstract void onEventChange(Object updatedData);
 
     @Override
     protected WidgetGroup createWidgetGroup() {
-        Container<Label> cContainer = new Container<Label>();
-        cContainer.setFillParent(true);
-
-        cContainer.setActor(cTaskToPerform);
-        return cContainer;
-    }
-
-    @Override
-    protected void rebuildWidgetGroup() {
-        cTaskToPerform.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+        return null;
     }
 
     @Override

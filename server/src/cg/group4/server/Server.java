@@ -114,6 +114,7 @@ public class Server {
     protected final void createLocalIP() {
         try {
             cIp = cStaticsCaller.getLocalHost().getHostAddress();
+            LOGGER.info("Local IP: " + cIp);
         } catch (UnknownHostException e) {
             LOGGER.severe("Could not set up local IP!");
         }

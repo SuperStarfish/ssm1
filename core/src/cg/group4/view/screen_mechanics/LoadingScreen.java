@@ -1,16 +1,12 @@
 package cg.group4.view.screen_mechanics;
 
 import cg.group4.Launcher;
-import cg.group4.client.Client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Loading screen that is displayed while Assets are being loaded.

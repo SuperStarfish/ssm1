@@ -5,9 +5,15 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
+import cg.group4.game_logic.stroll.events.FollowTheFishEvent;
 import cg.group4.game_logic.stroll.events.StrollEvent;
-import cg.group4.game_logic.stroll.events.TestStrollEvent;
 import cg.group4.game_logic.stroll.events.fishevent.FishingStrollEvent;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatHost;
+import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
+import cg.group4.game_logic.stroll.events.multiplayer_event.MessageHandler;
+import cg.group4.game_logic.stroll.events.multiplayer_event.MultiplayerClient;
+import cg.group4.game_logic.stroll.events.multiplayer_event.MultiplayerHost;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.sensor.AccelerationState;
@@ -15,6 +21,8 @@ import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
 import com.badlogic.gdx.Gdx;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,7 +43,9 @@ public class Stroll implements Observer {
      */
     private static final String TAG = Stroll.class.getSimpleName();
 
-
+    /**
+     * The chance an event occurs.
+     */
     protected double cEventThreshold;
     /**
      * Score of each completed event.
@@ -61,6 +71,14 @@ public class Stroll implements Observer {
      * The stroll timer.
      */
     protected Timer cStrollTimer;
+    /**
+     * The number of MultiPlayer events.
+     */
+    protected final int cNumberOfSinglePlayerEvents = 2;
+    /**
+     * The number of MultiPlayer events.
+     */
+    protected final int cNumberOfMultiPlayerEvents = 1;
 
     /**
      * The observer to subscribe to the stop subject of stroll timer.
@@ -76,6 +94,10 @@ public class Stroll implements Observer {
         }
     };
 
+    /**
+     * Listens to the movements made by the player during the stroll. Changes the event spawn threshold according
+     * to what is defined for that state.
+     */
     protected Observer cUpdateMovementObserver = new Observer() {
 
         @Override
@@ -116,7 +138,6 @@ public class Stroll implements Observer {
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
-        
     }
 
     /**
@@ -134,29 +155,6 @@ public class Stroll implements Observer {
         return 0;
     }
 
-    /**
-     * Starts the hosting of a multi player event.
-     *
-     * @param responseHandler A response handler that will be called with the connection code.
-     * @return Returns whether the initialisation of hosting succeeded.
-     */
-    public boolean startMultiPlayerEvent(final ResponseHandler responseHandler) {
-        if (Client.getRemoteInstance().isConnected()) {
-            Gdx.app.log(TAG, "Start hosting multi player event!");
-            cEventGoing = true;
-            Client.getRemoteInstance().hostEvent(new ResponseHandler() {
-                @Override
-                public void handleResponse(Response response) {
-                    responseHandler.handleResponse(response);
-
-                }
-            });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public final void update(final Observable o, final Object arg) {
         if (!cEventGoing) {
@@ -164,21 +162,116 @@ public class Stroll implements Observer {
         }
     }
 
-    public boolean joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
+    /**
+     * Starts the hosting of a multi player event.
+     *
+     * @param responseHandler A response handler that will be called with the connection code.
+     */
+    public void startMultiPlayerEvent(final ResponseHandler responseHandler) {
         if (Client.getRemoteInstance().isConnected()) {
-            Gdx.app.log(TAG, "Joining multi player event!");
+            Gdx.app.log(TAG, "Start hosting multi-player event!");
             cEventGoing = true;
-            Client.getRemoteInstance().getHost(code, new ResponseHandler() {
-                @Override
-                public void handleResponse(Response response) {
-                    responseHandler.handleResponse(response);
-                }
-            });
-            return true;
-        } else {
-            return false;
+            Client.getRemoteInstance().hostEvent(whenHostCodeReceived(responseHandler));
         }
     }
+
+    /**
+     * Defines behaviour that is executed when a Code is received from the server.
+     * @param updateUI ResponseHandler that updates the UI.
+     * @return A ResponseHandler with extra behaviour.
+     */
+    protected ResponseHandler whenHostCodeReceived(final ResponseHandler updateUI) {
+        return new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                updateUI.handleResponse(response);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        createMultiPlayerHost();
+                    }
+                }).start();
+            }
+        };
+    }
+
+    /**
+     * Creates a MultiPlayer host.
+     */
+    protected void createMultiPlayerHost() {
+        final MultiplayerHost host = new MultiplayerHost();
+        host.connect();
+        Random rng = new Random();
+        final int event = rng.nextInt(cNumberOfMultiPlayerEvents);
+        host.sendTCP(event);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                generatePossibleMultiplayerEvent(event, host);
+            }
+        });
+    }
+
+    /**
+     * Joins a MultiPlayer game.
+     * @param code The code to find the host.
+     * @param responseHandler Behaviour to execute when reply is received.
+     */
+    public void joinMultiPlayerEvent(final Integer code, final ResponseHandler responseHandler) {
+        if (Client.getRemoteInstance().isConnected()) {
+            Gdx.app.log(TAG, "Joining multi-player event!");
+            cEventGoing = true;
+            Client.getRemoteInstance().getHost(code, whenHostIPReceived(responseHandler));
+        }
+    }
+
+    /**
+     * Adds extra behaviour when Host IP is received.
+     * @param updateUI Updates the UI accordingly.
+     * @return Extra behaviour in the provided ResponseHandler.
+     */
+    protected ResponseHandler whenHostIPReceived(final ResponseHandler updateUI) {
+        return new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                if (response.isSuccess()) {
+                    createMultiPlayerClient((String) response.getData());
+                } else {
+                    updateUI.handleResponse(response);
+                }
+            }
+        };
+    }
+
+    /**
+     * Creates a MultiPlayer Client.
+     * @param ip The IP to connect to.
+     */
+    protected void createMultiPlayerClient(final String ip) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final MultiplayerClient client = new MultiplayerClient(ip);
+                    client.connect();
+
+                    client.receiveTCP(new MessageHandler() {
+                        @Override
+                        public void handleMessage(Object message) {
+                            generatePossibleMultiplayerEvent((Integer) message, client);
+                        }
+                    }, false);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+
     /**
      * Handles completion of an event.
      *
@@ -196,22 +289,33 @@ public class Stroll implements Observer {
      * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
      */
     protected void generatePossibleEvent() {
-        Random rnd = new Random();
-        if (rnd.nextDouble() < cEventThreshold) {
+        Random rng = new Random();
+        if (rng.nextDouble() < cEventThreshold) {
             cEventGoing = true;
-            int chosenEvent = rnd.nextInt(2);
-            switch (chosenEvent) {
+            switch (rng.nextInt(cNumberOfSinglePlayerEvents)) {
                 case (0):
                     cEvent = new FishingStrollEvent();
                     break;
-                case (1):
-                    cEvent = new TestStrollEvent();
-                    break;
                 default:
-                    cEvent = new TestStrollEvent();
+                    cEvent = new FollowTheFishEvent();
+                    break;
             }
             cNewEventSubject.update(cEvent);
         }
+    }
+
+    protected void generatePossibleMultiplayerEvent(int event, Host host) {
+        cEventGoing = true;
+        switch (event) {
+            default:
+                if (host.isHost()) {
+                    cEvent = new FishingBoatHost(host);
+                } else {
+                    cEvent = new FishingBoatClient(host);
+                }
+                break;
+        }
+        cNewEventSubject.update(cEvent);
     }
 
     /**

@@ -1,6 +1,10 @@
 package cg.group4.view.screen_mechanics;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -236,7 +240,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cScreen = screen;
         cStage.dispose();
         cStage = new Stage();
-        cStage.setDebugAll(false);
+        cStage.setDebugAll(true);
         cStage.addActor(cScreen.getWidgetGroup());
         cScreen.display();
         cInputMultiplexer.addProcessor(cStage);

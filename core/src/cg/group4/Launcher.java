@@ -6,6 +6,7 @@ import cg.group4.game_logic.StandUp;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
 import cg.group4.util.notification.NotificationController;
+import cg.group4.util.orientation.OrientationReader;
 import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
@@ -54,9 +55,15 @@ public class Launcher extends Game implements AssetsLoadingHandler {
      * The notification controller to schedule notifications, passed with the constructor of the launcher.
      */
     protected NotificationController cNotificationController;
-
-
+    /**
+     * Used to determine where the local server lives.
+     */
     protected LocalStorageResolver cLocalStorageResolver;
+    
+    /**
+     * Reads the device's current orientation.
+     */
+    protected OrientationReader cOrientationReader;
 
     /**
      * Tunnels the acceleration status through the launcher to the android project.
@@ -64,16 +71,20 @@ public class Launcher extends Game implements AssetsLoadingHandler {
      * @param accelerationStatus     The movement status of the player.
      * @param notificationController The notification controller.
      * @param idResolver             The userID resolver for unique device id.
+     * @param localStorageResolver   The location where to find the local server.
+     * @param orientationReader      The orientation the game is currently in.
      */
     public Launcher(final AccelerationStatus accelerationStatus,
                     final NotificationController notificationController,
                     final UserIDResolver idResolver,
-                    final LocalStorageResolver localStorageResolver) {
+                    final LocalStorageResolver localStorageResolver,
+                    final OrientationReader orientationReader) {
         super();
         cAccelerationStatus = accelerationStatus;
         cNotificationController = notificationController;
         cIDResolver = idResolver;
         cLocalStorageResolver = localStorageResolver;
+        cOrientationReader = orientationReader;
     }
 
     /**
@@ -89,9 +100,10 @@ public class Launcher extends Game implements AssetsLoadingHandler {
 
         Client.getLocalInstance().setUserIDResolver(cIDResolver);
         Client.getLocalInstance().connectToServer(null, server.getSocketPort());
+        
         Client.getRemoteInstance().setUserIDResolver(cIDResolver);
         Client.getRemoteInstance().connectToServer();
-
+        
         setScreen(new LoadingScreen(this));
     }
 
@@ -115,11 +127,13 @@ public class Launcher extends Game implements AssetsLoadingHandler {
 
         cStandUp = StandUp.getInstance();
         cStandUp.setAccelerationStatus(cAccelerationStatus);
+        cStandUp.setOrientationReader(cOrientationReader);
 
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
         cScreenStore.init();
         cScreenStore.setScreen("Home");
+        TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
 
         notificationInitialization();
     }
@@ -153,7 +167,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
             cStandUp.update();
         }
 
-        for(Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+        for (Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getRemoteInstance().resetPostRunnables();

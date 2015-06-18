@@ -8,10 +8,14 @@ import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
-import cg.group4.util.IpResolver;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -35,7 +39,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "128.127.39.32";
+    protected final String cDefaultIp = "82.169.19.191";
     /**
      * The default port to connect to.
      */
@@ -51,7 +55,7 @@ public final class Client {
     /**
      * Notifies all listeners that the server has either connected or disconnected.
      */
-    protected Subject cRemoteChangeSubject;
+    protected Subject cChangeSubject;
 
     /**
      * A list of Runnable that have to be run at the end of a render cycle.
@@ -66,7 +70,7 @@ public final class Client {
     public Client() {
         cConnection = new UnConnected();
         cUserIDResolver = new DummyUserIdResolver();
-        cRemoteChangeSubject = new Subject();
+        cChangeSubject = new Subject();
         cPostRunnables = new ArrayList<Runnable>();
     }
 
@@ -95,11 +99,11 @@ public final class Client {
     }
 
     /**
-     * Returns the RemoteChangeSubject that notifies whenever a change in the remote connection status occurs.
+     * Returns the ChangeSubject that notifies whenever a change in the connection status occurs.
      * @return Subject that can be subscribed on.
      */
-    public Subject getRemoteChangeSubject() {
-        return cRemoteChangeSubject;
+    public Subject getChangeSubject() {
+        return cChangeSubject;
     }
 
     /**
@@ -152,7 +156,7 @@ public final class Client {
      */
     public void setConnection(final Connection connection) {
         cConnection = connection;
-        cRemoteChangeSubject.update(connection.isConnected());
+        cChangeSubject.update(connection.isConnected());
         LOGGER.info("Managed to connect: " + connection.isConnected());
     }
 
@@ -266,11 +270,77 @@ public final class Client {
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void hostEvent(final ResponseHandler responseHandler) {
-        IpResolver ipResolver = new IpResolver();
+        tryToSend(new RequestHostCode(getIPAddress(true)), responseHandler);
+//        try {
+//            String ip = Inet4Address.getLocalHost().getHostName();
+//            tryToSend(new RequestHostCode(ip), responseHandler);
+//        }
+//        catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    /**
+     * Android returns 127.0.0.1 for Inet4Address.getLocalHost().getHostName(), so using a method found at:
+     * http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device
+     *
+     * @param useIPv4
+     * @return
+     */
+    public static String getIPAddress(boolean useIPv4) {
         try {
-            tryToSend(new RequestHostCode(ipResolver.getExternalIP()), responseHandler);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress().toUpperCase();
+                        boolean isIPv4 = validIP(sAddr);
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 port suffix
+                                return delim<0 ? sAddr : sAddr.substring(0, delim);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) { } // for now eat exceptions
+        return "";
+    }
+
+    /**
+     * http://stackoverflow.com/questions/4581877/validating-ipv4-string-in-java
+     * @param ip
+     * @return
+     */
+    public static boolean validIP (String ip) {
+        try {
+            if (ip == null || ip.isEmpty()) {
+                return false;
+            }
+
+            String[] parts = ip.split( "\\." );
+            if ( parts.length != 4 ) {
+                return false;
+            }
+
+            for ( String s : parts ) {
+                int i = Integer.parseInt( s );
+                if ( (i < 0) || (i > 255) ) {
+                    return false;
+                }
+            }
+            if(ip.endsWith(".")) {
+                return false;
+            }
+
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
         }
     }
 
