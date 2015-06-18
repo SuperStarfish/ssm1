@@ -116,8 +116,7 @@ public class GroupScreen extends ScreenLogic {
         Client.getInstance().getGroupData(new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                ArrayList<GroupData> groups = (ArrayList<GroupData>) response.getData();
-                cGroups.setItems(groups.toArray(new GroupData[groups.size()]));
+                cGroups.setItems((GroupData[]) response.getData());
             }
         });
     }

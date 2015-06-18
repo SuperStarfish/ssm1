@@ -116,7 +116,6 @@ public class Stroll implements Observer {
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
-        
     }
 
     /**
@@ -186,13 +185,6 @@ public class Stroll implements Observer {
         cancelEvent();
     }
 
-    @Override
-    public final void update(final Observable o, final Object arg) {
-        if (!cEventGoing) {
-            generatePossibleEvent();
-        }
-    }
-
     /**
      * handles cancellation of an event.
      */
@@ -232,6 +224,13 @@ public class Stroll implements Observer {
         StandUp.getInstance().endStroll(collection);
     }
 
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        if (!cEventGoing) {
+            generatePossibleEvent();
+        }
+    }
+
     /**
      * Getter for the subject to subscribe to to get updated for the end of the stroll.
      *
@@ -248,28 +247,6 @@ public class Stroll implements Observer {
      */
     public final Subject getNewEventSubject() {
         return cNewEventSubject;
-    }
-
-    /**
-     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
-     */
-    protected void generatePossibleEvent() {
-        Random rnd = new Random();
-        if (rnd.nextDouble() < cEventThreshold) {
-            cEventGoing = true;
-            int chosenEvent = rnd.nextInt(2);
-            switch (chosenEvent) {
-                case (0):
-                    cEvent = new FishingStrollEvent();
-                    break;
-                case (1):
-                    cEvent = new TestStrollEvent();
-                    break;
-                default:
-                    cEvent = new TestStrollEvent();
-            }
-            cNewEventSubject.update(cEvent);
-        }
     }
 
     /**
@@ -323,6 +300,29 @@ public class Stroll implements Observer {
         Amplifier(final AccelerationState state, final int amplifier) {
             this.cAmplifier = amplifier;
             this.cState = state;
+        }
+    }
+
+
+    /**
+     * Generate an event on a certain requirement (e.g. a random r: float < 0.1).
+     */
+    protected void generatePossibleEvent() {
+        Random rnd = new Random();
+        if (rnd.nextDouble() < cEventThreshold) {
+            cEventGoing = true;
+            int chosenEvent = rnd.nextInt(2);
+            switch (chosenEvent) {
+                case (0):
+                    cEvent = new FishingStrollEvent();
+                    break;
+                case (1):
+                    cEvent = new TestStrollEvent();
+                    break;
+                default:
+                    cEvent = new TestStrollEvent();
+            }
+            cNewEventSubject.update(cEvent);
         }
     }
 

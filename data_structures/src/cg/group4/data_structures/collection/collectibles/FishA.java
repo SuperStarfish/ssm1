@@ -14,7 +14,7 @@ public class FishA extends Collectible implements Serializable {
 	/**
 	 * The rarity of this collectible.
 	 */
-	protected final float cFormRarity = 0.1f;
+	protected final float cFormRarity = 0.5f;
 
 	/**
 	 * Constructs a FishA collectible.

@@ -1,13 +1,13 @@
 package cg.group4.data_structures;
 
-import static org.junit.Assert.*;
-
+import cg.group4.data_structures.groups.GroupData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import cg.group4.data_structures.groups.GroupData;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SelectionTest {
 	
@@ -24,8 +24,8 @@ public class SelectionTest {
 	@Before
 	public void setUp() {
 		cDataMock = Mockito.mock(GroupData.class);
-		Mockito.when(cDataMock.getName()).thenReturn("Group4");
-		Mockito.when(cDataMock.getGroupId()).thenReturn(1);
+		Mockito.when(cDataMock.toString()).thenReturn("Group4");
+		Mockito.when(cDataMock.getGroupId()).thenReturn("1");
 		cSelection = new Selection(cDataMock);
 	}
 
@@ -49,7 +49,7 @@ public class SelectionTest {
 		PlayerData playerData = new PlayerData(playerName);
 		
 		cSelection = new Selection(playerData);
-		assertEquals("", cSelection.cName);
+		assertNull(cSelection.cName);
 		assertEquals(playerName, cSelection.cValue);
 	}
 	

@@ -18,9 +18,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Scaling;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
@@ -89,9 +89,10 @@ public class CollectiblesScreen extends ScreenLogic {
     protected void rebuildWidgetGroup() {
         cScreenWidth = Gdx.graphics.getWidth();
         cScreenHeight = Gdx.graphics.getHeight();
-        cContentTable.setWidth(cScreenWidth);
-
         cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cGroupsBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
+        cSortBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
+        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
         constructContents();
     }
 
@@ -113,9 +114,9 @@ public class CollectiblesScreen extends ScreenLogic {
             @Override
             public void handleResponse(Response response) {
                 if (response.isSuccess()) {
-                    fillGroupBox((ArrayList<GroupData>) response.getData());
+                    fillGroupBox((GroupData[]) response.getData());
                 } else {
-                    fillGroupBox(new ArrayList<GroupData>());
+                    fillGroupBox(new GroupData[0]);
                 }
             }
         });
@@ -126,11 +127,11 @@ public class CollectiblesScreen extends ScreenLogic {
      * Fills the dropdown box to select the collection to display.
      * @param groups The groups with which the box should be filled.
      */
-    protected void fillGroupBox(final ArrayList<GroupData> groups) {
-        Selection[] list = new Selection[groups.size() + 1];
+    protected void fillGroupBox(final GroupData[] groups) {
+        Selection[] list = new Selection[groups.length + 1];
         list[0] = new Selection(StandUp.getInstance().getPlayer().getPlayerData());
         for (int i = 1; i < list.length; i++) {
-            list[i] = new Selection(groups.get(i - 1));
+            list[i] = new Selection(groups[i - 1]);
         }
         cGroupsBox.setItems(list);
     }
@@ -140,9 +141,8 @@ public class CollectiblesScreen extends ScreenLogic {
      */
     protected void fillDrawer() {
         cContentTable = new Table();
-        cContentTable.setWidth(cScreenWidth);
+        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
         cScrollPane = new ScrollPane(cContentTable);
-        cScrollPane.setForceScroll(false, true);
     }
 
     /**
@@ -240,10 +240,12 @@ public class CollectiblesScreen extends ScreenLogic {
                 && Client.getInstance().isRemoteConnected();
         cContentTable.clear();
         for (final Collectible collectible : cSelectedCollection.sort(cSorter)) {
-            cContentTable.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / 6);
-            cContentTable.add(new Image(CollectibleDrawer.drawCollectible(collectible)));
-            cContentTable.add(cGameSkin.generateDefaultLabel(format.format(collectible.getRarity())));
-            cContentTable.add(cGameSkin.generateDefaultLabel(Integer.toString(collectible.getAmount())));
+            cContentTable.row();
+            Image image = new Image(CollectibleDrawer.drawCollectible(collectible));
+            image.setScaling(Scaling.fit);
+            cContentTable.add(image,
+                    cGameSkin.generateDefaultLabel(format.format(collectible.getRarity())),
+                    cGameSkin.generateDefaultLabel(Integer.toString(collectible.getAmount())));
             if (myCollection) {
                 TextButton donate = cGameSkin.generateDefaultMenuButton("Donate");
                 donate.addListener(new ChangeListener() {
@@ -256,7 +258,6 @@ public class CollectiblesScreen extends ScreenLogic {
                 });
                 cContentTable.add(donate);
             }
-            
         }
     }
 }

@@ -36,7 +36,6 @@ public class CollectibleDrawer {
         Pixmap pixImage = new Pixmap(Gdx.files.internal(c.getImagePath()));
         pixImage.setColor(RewardUtil.generateColor(c.getHue()));
         replaceColours(pixImage);
-        
         return new Texture(pixImage);
     }
 

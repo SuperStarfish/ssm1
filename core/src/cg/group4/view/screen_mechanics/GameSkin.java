@@ -119,6 +119,12 @@ public class GameSkin extends Skin {
         sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
 
         buttonStyle.up = new SpriteDrawable(sprite);
+        sprite = new Sprite(sprite);
+        sprite.setColor(.8f, .8f, .8f, 1);
+        buttonStyle.over = new SpriteDrawable(sprite);
+        sprite = new Sprite(sprite);
+        sprite.setColor(.6f, .6f, .6f, 1);
+        buttonStyle.down = new SpriteDrawable(sprite);
 
         return buttonStyle;
     }
