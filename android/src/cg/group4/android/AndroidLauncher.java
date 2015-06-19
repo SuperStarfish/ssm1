@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import cg.group4.Launcher;
 import cg.group4.client.AndroidIDResolver;
-import cg.group4.server.AndroidStorageResolver;
+import cg.group4.client.AndroidStorageResolver;
 import cg.group4.util.notification.AndroidNotificationController;
 import cg.group4.util.orientation.AndroidOrientationReader;
 import cg.group4.util.sensor.AndroidAccelerationStatus;
@@ -31,7 +31,7 @@ public class AndroidLauncher extends AndroidApplication {
         super.onCreate(savedInstanceState);
 
         File dbFile = getContext().getDatabasePath("local.db");
-        if(!dbFile.exists()) {
+        if (!dbFile.exists()) {
             if (!dbFile.getParentFile().exists()) {
                 dbFile.getParentFile().mkdirs();
             }

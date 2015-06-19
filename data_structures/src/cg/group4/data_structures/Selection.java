@@ -38,6 +38,7 @@ public class Selection {
 
     /**
      * Getter for the value of the slection.
+     *
      * @return The value.
      */
     public String getValue() {
@@ -46,6 +47,7 @@ public class Selection {
 
     /**
      * To string method for the selection.
+     *
      * @return The name.
      */
     public String toString() {

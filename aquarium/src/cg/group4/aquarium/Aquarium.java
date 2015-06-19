@@ -1,8 +1,8 @@
 package cg.group4.aquarium;
 
 import cg.group4.client.Client;
-import cg.group4.view.AquariumScreen;
-import cg.group4.view.StartScreen;
+import cg.group4.view.aquarium.AquariumScreen;
+import cg.group4.view.aquarium.StartScreen;
 import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import com.badlogic.gdx.Game;
@@ -72,7 +72,6 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
      * Called by the loading screen when the asset loading is finished.
      */
     public void assetsDone() {
-
         setScreen(new StartScreen());
     }
 

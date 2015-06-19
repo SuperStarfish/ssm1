@@ -9,7 +9,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
  */
 public class AquariumLauncher {
 
-
     /**
      * Starts the application.
      * Uses a borderless fullscreen window.
@@ -21,12 +20,6 @@ public class AquariumLauncher {
         config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
         config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
         config.fullscreen = true;
-
-        // set the border to undecorated (no minus/resize/close and thinner borders) to better emulate fullscreen,
-        // without actually setting fullscreen mode on.
-        if (!config.fullscreen) {
-            System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
-        }
 
         new LwjglApplication(Aquarium.getInstance(), config);
     }

@@ -1,14 +1,10 @@
 package cg.group4.aquarium;
 
 import cg.group4.client.Client;
-import cg.group4.data_structures.PlayerData;
-import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Executors;
@@ -25,10 +21,6 @@ public class Connector {
      */
     protected String cGroupId;
     /**
-     * Collection used to store the fetched collection from the anonymous ResponseHandler.
-     */
-    protected Collection cCollection;
-    /**
      * Subject with goal being the Observable for the Connector for the collection.
      */
     protected Subject cCollectionFromServerSubject;
@@ -37,13 +29,14 @@ public class Connector {
      */
     protected Subject cMembersFromServerSubject;
     /**
-     * Runnable which calls the {#code fetchCollectionFromServer()} method to fetch the collection from the server.
+     * Runnable which calls the {#code fetchCollection()} method to fetch the collection from the server.
      * This happens at a fixed interval.
      */
     protected final Runnable cFetcher = new Runnable() {
         @Override
         public void run() {
-            fetchCollectionFromServer();
+            fetchMembers();
+            fetchCollection();
         }
     };
     /**
@@ -62,7 +55,6 @@ public class Connector {
         cCollectionFromServerSubject = new Subject();
         cMembersFromServerSubject = new Subject();
 
-        cCollection = new Collection(groupId);
         cGroupId = groupId;
     }
 
@@ -82,11 +74,9 @@ public class Connector {
             @Override
             public void update(final Observable o, final Object arg) {
                 if ((boolean) arg) {
-                    final long initialDelay = 3;
-                    final long scheduledDelay = 3;
+                    final long delay = 3;
 
-                    cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, initialDelay, scheduledDelay,
-                            TimeUnit.SECONDS);
+                    cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, delay, delay, TimeUnit.SECONDS);
                 } else {
                     Client.getInstance().getRemoteChangeSubject().deleteObserver(this);
                     checkConnected();
@@ -96,27 +86,28 @@ public class Connector {
     }
 
     /**
-     * Fetches the collection from the server.
+     * Fetches the members from the server.
      */
-    public void fetchCollectionFromServer() {
+    public void fetchMembers() {
         Client.getInstance().getMembers(cGroupId, new ResponseHandler() {
             @Override
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {
-                    HashMap<String, String> idToUsername = new HashMap<String, String>();
-                    for (PlayerData playerData : (ArrayList<PlayerData>) response.getData()) {
-                        idToUsername.put(playerData.getId(), playerData.toString());
-                    }
-                    cMembersFromServerSubject.update(idToUsername);
+                    cMembersFromServerSubject.update(response.getData());
                 }
             }
         });
+    }
+
+    /**
+     * Fetches the collection from the server.
+     */
+    public void fetchCollection() {
         Client.getInstance().getGroupCollection(cGroupId, new ResponseHandler() {
             @Override
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {
-                    cCollection = (Collection) response.getData();
-                    cCollectionFromServerSubject.update(cCollection);
+                    cCollectionFromServerSubject.update(response.getData());
                 }
             }
         });

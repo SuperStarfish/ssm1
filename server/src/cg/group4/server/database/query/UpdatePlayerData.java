@@ -57,7 +57,8 @@ public class UpdatePlayerData extends Query {
 
     /**
      * Updates the players data.
-     * @param column The column to update.
+     *
+     * @param column   The column to update.
      * @param newValue The new value.
      * @throws SQLException Throws if something went wrong while updating.
      */

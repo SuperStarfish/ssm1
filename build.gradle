@@ -49,76 +49,13 @@ allprojects {
     }
 }
 
-project(":core") {
-    apply plugin: "java"
-
-    dependencies {
-        compile project(":client")
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "org.slf4j:slf4j-simple:$slf4jVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-core:$mockitoVersion"
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    }
-}
-
-project(":desktop") {
-    apply plugin: "java"
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-
-    }
-}
-
-project(":server") {
-    apply plugin: "java"
-
-    dependencies {
-        compile project(":data_structures")
-        compile "org.xerial:sqlite-jdbc:3.8.6"
-        compile "org.sqldroid:sqldroid:1.0.3"
-        compile "org.slf4j:slf4j-simple:$slf4jVersion"
-
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-core:$mockitoVersion"
-    }
-}
-
-project(":client") {
-    apply plugin: "java"
-
-    dependencies {
-        compile project(":server")
-
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-core:$mockitoVersion"
-    }
-}
-
-project(":data_structures") {
-    apply plugin: "java"
-
-    dependencies {
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-core:$mockitoVersion"
-        compile "org.slf4j:slf4j-simple:$slf4jVersion"
-    }
-}
-
 project(":android") {
     apply plugin: "android"
 
     configurations { natives }
 
     dependencies {
-        compile project(":core")
+        compile project(":launcher")
         compile "org.sqldroid:sqldroid:1.0.3"
 
         // the libgdx platform
@@ -142,15 +79,99 @@ project(":android") {
     }
 }
 
-project(":aquarium") {
+project(":desktop") {
     apply plugin: "java"
 
     dependencies {
-        compile project(":core")
+        compile project(":launcher")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
+    }
+}
+
+project(":launcher") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":view")
+    }
+}
+
+project(":aquarium") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":view")
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
+    }
+}
+
+project(":view") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":game_logic")
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+    }
+}
+
+project(":game_logic") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":client")
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    }
+}
+
+project(":client") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":server")
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+    }
+}
+
+project(":server") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":data_structures")
+        compile "org.xerial:sqlite-jdbc:3.8.6"
+        compile "org.sqldroid:sqldroid:1.0.3"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+    }
+}
+
+project(":data_structures") {
+    apply plugin: "java"
+
+    dependencies {
+
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
+
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
     }
 }
 

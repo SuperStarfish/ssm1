@@ -7,8 +7,6 @@ import java.util.Date;
 
 /**
  * Forces collectible objects to implement the following methods.
- *
- * @author Jean de Leeuw
  */
 public abstract class Collectible implements Serializable {
 
@@ -100,23 +98,6 @@ public abstract class Collectible implements Serializable {
     }
 
     /**
-     * Multiple instances of the same collectible is possible, so every collectible
-     * has a counter of how many of this collectible you have.
-     *
-     * @return Int representing the amount of collectibles of this type that you have.
-     */
-    public int getAmount() {
-        return cAmount;
-    }
-
-    /**
-     * Increments the amount of this collectible.
-     */
-    public void incrementAmount() {
-        cAmount++;
-    }
-
-    /**
      * Returns the multiplier that represents the rarity of this form of collectible.
      * (The higher multiplier, the more rare this form becomes and thus the more rare
      * this collectible becomes)
@@ -124,6 +105,13 @@ public abstract class Collectible implements Serializable {
      * @return double representing the form multiplier.
      */
     public abstract float getFormRarity();
+
+    /**
+     * Increments the amount of this collectible.
+     */
+    public void incrementAmount() {
+        cAmount++;
+    }
 
     /**
      * Returns the Hue of this collectible.
@@ -143,6 +131,46 @@ public abstract class Collectible implements Serializable {
         return cOwnerId;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Float.floatToIntBits(cHue);
+        int res;
+        if (cOwnerId == null) {
+            res = 0;
+        } else {
+            res = cOwnerId.hashCode();
+        }
+        result = prime * result + res;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Collectible other = (Collectible) obj;
+        if (Float.floatToIntBits(cHue) != Float.floatToIntBits(other.cHue)) {
+            return false;
+        }
+        if (cOwnerId == null) {
+            if (other.cOwnerId != null) {
+                return false;
+            }
+        } else if (!cOwnerId.equals(other.cOwnerId)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Returns a string representation of a collectible, including some of it's values.
      *
@@ -153,32 +181,13 @@ public abstract class Collectible implements Serializable {
                 + ", " + "form rarity = " + getFormRarity() + ">";
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Float.floatToIntBits(cHue);
-		result = prime * result
-				+ ((cOwnerId == null) ? 0 : cOwnerId.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Collectible other = (Collectible) obj;
-		if (Float.floatToIntBits(cHue) != Float.floatToIntBits(other.cHue))
-			return false;
-		if (cOwnerId == null) {
-			if (other.cOwnerId != null)
-				return false;
-		} else if (!cOwnerId.equals(other.cOwnerId))
-			return false;
-		return true;
-	}
+    /**
+     * Multiple instances of the same collectible is possible, so every collectible
+     * has a counter of how many of this collectible you have.
+     *
+     * @return Int representing the amount of collectibles of this type that you have.
+     */
+    public int getAmount() {
+        return cAmount;
+    }
 }

@@ -2,10 +2,9 @@ package cg.group4.client;
 
 import android.content.Context;
 import android.provider.Settings;
-import cg.group4.client.UserIDResolver;
 
 /**
- * Gets the user is from the android application.
+ * Gets the user id's from the android application.
  */
 public class AndroidIDResolver implements UserIDResolver {
 
