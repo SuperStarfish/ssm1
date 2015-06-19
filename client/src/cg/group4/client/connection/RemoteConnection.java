@@ -1,5 +1,10 @@
 package cg.group4.client.connection;
 
+import cg.group4.client.Client;
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * A state in which the Client is connected to the server.
  */
-public final class RemoteConnection extends Connection {
+public final class RemoteConnection implements Connection {
     /**
      * The connection with the server.
      */
@@ -48,13 +53,11 @@ public final class RemoteConnection extends Connection {
 
     /**
      * Has an empty body because the server connection has already been made.
-     *
      * @param ip   The IP to connect to.
      * @param port The port to connect to.
      */
     @Override
-    public void connect(final String ip, final int port) {
-    }
+    public void connect(final String ip, final int port) { }
 
     @Override
     public boolean isConnected() {
@@ -62,19 +65,44 @@ public final class RemoteConnection extends Connection {
     }
 
     @Override
-    public void send(final ConnectionPacket connectionPacket) {
-        cBuffer.add(connectionPacket);
+    public void send(final Query query, final ResponseHandler responseHandler) {
+        cBuffer.add(new ConnectionPacket(query, responseHandler));
         if (cWaiting) {
             cWaiting = false;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (!cBuffer.isEmpty()) {
-                        sendPacket(cBuffer.poll(), cOutputStream, cInputStream);
+                        sendPacket(cBuffer.poll());
                     }
                     cWaiting = true;
                 }
             }).start();
+        }
+    }
+
+    /**
+     * Handles the transfer of a single connection packet.
+     *
+     * @param connectionPacket the connection packet to be handled.
+     */
+    protected void sendPacket(final ConnectionPacket connectionPacket) {
+        try {
+            cOutputStream.writeObject(connectionPacket.getQuery());
+            cOutputStream.flush();
+            final Response response = (Response) cInputStream.readObject();
+            Client.getInstance().addPostRunnables(new Runnable() {
+                @Override
+                public void run() {
+                    if (connectionPacket.getResponseHandler() != null) {
+                        connectionPacket.getResponseHandler().handleResponse(response);
+                    }
+                }
+            });
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

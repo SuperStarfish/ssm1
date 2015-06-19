@@ -1,5 +1,9 @@
 package cg.group4.client.connection;
 
+import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,7 +12,7 @@ import java.net.Socket;
 /**
  * Connection state where no connection is made with the server.
  */
-public final class LocalConnection extends Connection {
+public final class LocalConnection implements Connection {
     /**
      * The connection with the server.
      */
@@ -43,13 +47,11 @@ public final class LocalConnection extends Connection {
 
     /**
      * Has an empty body because the server connection has already been made.
-     *
      * @param ip   The IP to connect to.
      * @param port The port to connect to.
      */
     @Override
-    public void connect(final String ip, final int port) {
-    }
+    public void connect(final String ip, final int port) { }
 
     @Override
     public boolean isConnected() {
@@ -57,11 +59,20 @@ public final class LocalConnection extends Connection {
     }
 
     @Override
-    public void send(ConnectionPacket connectionPacket) {
+    public void send(final Query query, final ResponseHandler responseHandler) {
         if (cAcceptingRequest) {
             cAcceptingRequest = false;
-            sendPacket(connectionPacket, cOutputStream, cInputStream);
-            cAcceptingRequest = true;
+            try {
+                cOutputStream.writeObject(query);
+                cOutputStream.flush();
+                Response response = (Response) cInputStream.readObject();
+                cAcceptingRequest = true;
+                if (responseHandler != null) {
+                    responseHandler.handleResponse(response);
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -2,6 +2,8 @@ package cg.group4.client.connection;
 
 import cg.group4.client.Client;
 import cg.group4.server.database.Response;
+import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -9,7 +11,7 @@ import java.util.logging.Logger;
 /**
  * A state where the client is not connected to a server.
  */
-public class UnConnected extends Connection {
+public class UnConnected implements Connection {
     /**
      * Default java logging functionality.
      */
@@ -32,7 +34,6 @@ public class UnConnected extends Connection {
 
     /**
      * Connects to either a local or a remote server. Connects to localhost if ip is 'null'.
-     *
      * @param ip   The IP to connect to.
      * @param port The port to connect to.
      */
@@ -53,16 +54,15 @@ public class UnConnected extends Connection {
     }
 
     @Override
-    public void send(ConnectionPacket connectionPacket) {
-        if (connectionPacket.getResponseHandler() != null) {
-            connectionPacket.getResponseHandler().handleResponse(new Response(false, null));
+    public void send(final Query query, final ResponseHandler responseHandler) {
+        if (responseHandler != null) {
+            responseHandler.handleResponse(new Response(false, null));
         }
     }
 
     /**
      * Attempts to connect to the local server.
-     *
-     * @param ip   Localhost.
+     * @param ip Localhost.
      * @param port Port provided.
      */
     protected void localConnect(final String ip, final int port) {
@@ -79,8 +79,7 @@ public class UnConnected extends Connection {
 
     /**
      * Connects to a remote server. Connection is done in a separate Thread as not to block the game.
-     *
-     * @param ip   The IP to connect to.
+     * @param ip The IP to connect to.
      * @param port The port to connect to.
      */
     protected void remoteConnect(final String ip, final int port) {
