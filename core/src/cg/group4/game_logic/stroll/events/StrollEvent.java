@@ -4,7 +4,13 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen.EventScreen;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.util.Observable;
@@ -17,7 +23,7 @@ import java.util.Observer;
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
-public abstract class StrollEvent implements Disposable, Observer {
+public abstract class StrollEvent extends InputAdapter implements Disposable, Observer, InputProcessor {
 
     /**
      * Timer to constrain the amount of time spent on an event.
@@ -37,6 +43,8 @@ public abstract class StrollEvent implements Disposable, Observer {
      */
     protected Subject cDataSubject;
 
+    protected InputProcessor cProcessor;
+
     /**
      * Constructor, creates a new stroll event.
      */
@@ -49,6 +57,11 @@ public abstract class StrollEvent implements Disposable, Observer {
         cEventTimer = TimerStore.getInstance().getTimer(Timer.Global.EVENT.name());
         cEventTimer.getStopSubject().addObserver(cEventStopObserver);
         cEventTimer.reset();
+
+        cProcessor = Gdx.input.getInputProcessor();
+        if(cProcessor instanceof InputMultiplexer) {
+            ((InputMultiplexer)cProcessor).addProcessor(this);
+        }
     }
 
     /**
@@ -71,14 +84,26 @@ public abstract class StrollEvent implements Disposable, Observer {
     }
 
     /**
-     * Method that gets called to dispose of the event.
+     * Calls dispose using true, helper method for clearing events.
      */
     public final void dispose() {
+        dispose(true);
+    }
+
+    /**
+     * Method that gets called to dispose of the event.
+     * @param eventCompleted If the event is completed or not.
+     */
+    public final void dispose(boolean eventCompleted) {
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         cEventTimer.getStopSubject().deleteObserver(cEventStopObserver);
         cEventTimer.dispose();
-        StandUp.getInstance().getStroll().eventFinished(getReward());
+        int reward = 0;
+        if (eventCompleted) {
+            reward = getReward();
+        }
+        StandUp.getInstance().getStroll().eventFinished(reward);
     }
 
     /**
@@ -87,4 +112,22 @@ public abstract class StrollEvent implements Disposable, Observer {
      * @return the reward.
      */
     public abstract int getReward();
+
+    @Override
+    public final boolean keyDown(final int keycode) {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
+            final InputAdapter myself = this;
+            if(cProcessor instanceof InputMultiplexer) {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((InputMultiplexer)cProcessor).removeProcessor(myself);
+                    }
+                });
+            }
+            dispose(false);
+        }
+        return false;
+    }
+
 }

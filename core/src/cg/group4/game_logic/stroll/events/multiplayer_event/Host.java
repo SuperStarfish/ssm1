@@ -1,5 +1,6 @@
 package cg.group4.game_logic.stroll.events.multiplayer_event;
 
+import cg.group4.data_structures.subscribe.Subject;
 import com.badlogic.gdx.Gdx;
 
 import java.io.*;
@@ -51,10 +52,14 @@ public abstract class Host {
     protected int cMessagePerSecond = 33;
 
     /**
+     * Notifies listeners when disconnected from the other party.
+     */
+    protected Subject cDisconnectSubject = new Subject();
+
+    /**
      * Creates a new Host.
      */
-    public Host() {
-    }
+    public Host() { }
 
     /**
      * Connects the host to the other party.
@@ -97,6 +102,10 @@ public abstract class Host {
                 byte[] data = outputStream.toByteArray();
                 DatagramPacket sendPacket = new DatagramPacket(data, data.length, cOtherClient, cSocket.getPort());
                 cDatagramSocket.send(sendPacket);
+            } catch (SocketException e) {
+                disconnect();
+            } catch (StreamCorruptedException e) {
+                Gdx.app.error("UDP Send", e.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -120,6 +129,8 @@ public abstract class Host {
                         DatagramPacket incomingPacket = new DatagramPacket(cIncomingData, cIncomingData.length);
                         cDatagramSocket.receive(incomingPacket);
                         data = incomingPacket.getData();
+                    } catch (SocketException e) {
+                        disconnect();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -129,9 +140,9 @@ public abstract class Host {
 
                         final Object object = objectInputStream.readObject();
                         handler.handleMessage(object);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (StreamCorruptedException e) {
+                        Gdx.app.error("UDP Receive", e.toString());
+                    } catch (ClassNotFoundException | IOException e) {
                         e.printStackTrace();
                     }
                 } while (continuous && cIsAlive);
@@ -159,8 +170,7 @@ public abstract class Host {
                 cOutputStream.writeUnshared(object);
                 cOutputStream.flush();
             } catch (SocketException e) {
-                e.printStackTrace();
-                cIsAlive = false;
+                disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -186,15 +196,9 @@ public abstract class Host {
                                 handler.handleMessage(object);
                             }
                         });
-                    } catch (EOFException e) {
-                        e.printStackTrace();
-                        cIsAlive = false;
-                    } catch (SocketException e) {
-                        e.printStackTrace();
-                        cIsAlive = false;
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (EOFException | SocketException e) {
+                        disconnect();
+                    } catch (ClassNotFoundException | IOException e) {
                         e.printStackTrace();
                     }
                 } while (continuous && cIsAlive);
@@ -205,15 +209,33 @@ public abstract class Host {
     }
 
     /**
+     * Gets the disconnect subject that notifies when the client is disconnected.
+     * @return The Subject.
+     */
+    public Subject getcDisconnectSubject() {
+        return cDisconnectSubject;
+    }
+
+    protected void disconnect() {
+        cIsAlive = false;
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                cDisconnectSubject.update();
+            }
+        });
+    }
+
+    /**
      * Disposes the host connection.
      */
     public void dispose() {
         cIsAlive = false;
         cDatagramSocket.close();
         try {
-            cSocket.close();
             cOutputStream.close();
             cInputStream.close();
+            cSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

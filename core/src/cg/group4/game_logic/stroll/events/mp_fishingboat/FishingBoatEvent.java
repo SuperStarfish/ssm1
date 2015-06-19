@@ -7,6 +7,8 @@ import cg.group4.game_logic.stroll.events.multiplayer_event.Host;
 import cg.group4.util.sensor.Accelerometer;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Defaults for both the client and the host part of the CraneFishing MultiPlayer Event.
@@ -37,6 +39,13 @@ public abstract class FishingBoatEvent extends StrollEvent {
      */
     protected ArrayList<Integer> cToRemove = new ArrayList<Integer>();
 
+    protected Observer cDisconnectObserver = new Observer(){
+        @Override
+        public void update(Observable o, Object arg) {
+            disconnectFromEvent();
+        }
+    };
+
     /**
      * Construct a new CraneFishingEvent.
      *
@@ -45,6 +54,7 @@ public abstract class FishingBoatEvent extends StrollEvent {
     public FishingBoatEvent(Host otherClient) {
         super();
         cOtherClient = otherClient;
+        cOtherClient.getcDisconnectSubject().addObserver(cDisconnectObserver);
         cAccelerometer = new Accelerometer(StandUp.getInstance().getSensorReader());
         cAccelerometer.filterGravity(false);
         cAccelerometer.setNoiseThreshold(cNoiseThreshold);
@@ -71,6 +81,14 @@ public abstract class FishingBoatEvent extends StrollEvent {
     @Override
     protected void clearEvent() {
         super.dispose();
+        cOtherClient.dispose();
+    }
+
+    /**
+     * Called when disconnected from the other player. Clears the event without giving rewards.
+     */
+    protected void disconnectFromEvent() {
+        super.dispose(false);
         cOtherClient.dispose();
     }
 
