@@ -61,8 +61,7 @@ public class CollectibleRenderer {
     public void initCollectibleEntity(final Collectible collectible) {
         setId(collectible.getOwnerId(), collectible.getDateAsString(), collectible.getRarity());
 
-        final Texture collectibleTexture = CollectibleDrawer.drawCollectible(collectible);
-        cCollectibleActor = new Image(collectibleTexture);
+        cCollectibleActor = new Image(CollectibleDrawer.drawCollectible(collectible));
         final float scale = 0.3f;
         cCollectibleActor.setScale(scale);
         cCollectibleActor.layout();

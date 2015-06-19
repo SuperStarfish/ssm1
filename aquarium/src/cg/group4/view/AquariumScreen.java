@@ -177,9 +177,9 @@ public class AquariumScreen implements Screen {
      */
     private Vector3f backgroundColour() {
         final float maxColour = 255f;
-        final float x = 63 / maxColour;
-        final float y = 67 / maxColour;
-        final float z = 173f / maxColour;
+        final float x = 149f / maxColour;
+        final float y = 221f / maxColour;
+        final float z = 226f / maxColour;
         return new Vector3f(x, y, z);
     }
 
