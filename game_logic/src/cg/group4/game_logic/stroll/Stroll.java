@@ -363,53 +363,6 @@ public class Stroll implements Observer {
     }
 
     /**
-     * Amplifier enum.
-     */
-    public enum Amplifier {
-
-        /**
-         * When walking, you should get normal chance of an event.
-         */
-        WALK(AccelerationState.WALKING, 1),
-
-        /**
-         * When running, you should get double chance of an event.
-         */
-        RUN(AccelerationState.RUNNING, 2),
-
-        /**
-         * When not moving at all, you should get no event.
-         */
-        STOP(AccelerationState.RESTING, 0),
-
-        /**
-         * When cheating movements, you should get no events as well.
-         */
-        CHEAT(AccelerationState.CHEATING, 0);
-
-        /**
-         * The state of movement.
-         */
-        private AccelerationState cState;
-
-        /**
-         * Amplifier for the movement.
-         */
-        private int cAmplifier;
-
-        /**
-         * Constructor for the Enum.
-         *
-         * @param state     The state of movement.
-         * @param amplifier Amplifier for the movement.
-         */
-        Amplifier(final AccelerationState state, final int amplifier) {
-            this.cAmplifier = amplifier;
-            this.cState = state;
-        }
-    }
-
-    /**
      * Getter for the subject to subscribe to to get updated for the end of the event.
      *
      * @return Subject to subscribe to.
