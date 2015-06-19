@@ -116,8 +116,14 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
     @Override
     public final boolean keyDown(final int keycode) {
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
+            final InputAdapter myself = this;
             if(cProcessor instanceof InputMultiplexer) {
-                ((InputMultiplexer)cProcessor).removeProcessor(this);
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((InputMultiplexer)cProcessor).removeProcessor(myself);
+                    }
+                });
             }
             dispose(false);
         }
