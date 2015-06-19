@@ -19,11 +19,6 @@ import java.util.concurrent.TimeUnit;
  * Observable connector with the database.
  */
 public class Connector {
-
-    /**
-     * Client used to connect with the server.
-     */
-    protected Client cClient;
     /**
      * Group cId of which the collection has to be displayed.
      */
@@ -103,7 +98,7 @@ public class Connector {
      * Fetches the collection from the server.
      */
     public void fetchCollectionFromServer() {
-        cClient.getMembers(cGroupId, new ResponseHandler() {
+        Client.getInstance().getMembers(cGroupId, new ResponseHandler() {
             @Override
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {
@@ -115,7 +110,7 @@ public class Connector {
                 }
             }
         });
-        cClient.getGroupCollection(cGroupId, new ResponseHandler() {
+        Client.getInstance().getGroupCollection(cGroupId, new ResponseHandler() {
             @Override
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {

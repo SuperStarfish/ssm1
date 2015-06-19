@@ -12,6 +12,10 @@ public class RarityComparator implements Comparator<Collectible> {
 
     @Override
     public int compare(final Collectible o1, final Collectible o2) {
+        if(o1 == null || o2 == null) {
+            return 0;
+        }
+
         if (o1.getRarity() < o2.getRarity()) {
             return 1;
         }
