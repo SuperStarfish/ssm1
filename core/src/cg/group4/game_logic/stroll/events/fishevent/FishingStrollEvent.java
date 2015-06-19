@@ -17,7 +17,7 @@ public class FishingStrollEvent extends StrollEvent {
     /**
      * Amount of points that you should gain when completing this event.
      */
-    protected static final int REWARDS = 10;
+    protected static final int REWARDS = 2;
 
     /**
      * Sound played when the task is completed.

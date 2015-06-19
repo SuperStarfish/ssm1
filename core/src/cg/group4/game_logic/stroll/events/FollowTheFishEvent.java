@@ -31,6 +31,10 @@ public class FollowTheFishEvent extends StrollEvent {
             MOVE_AWAY = 4, MOVE_TOWARDS = 5;
    
     /**
+     * Amount of points gained when completing this event.
+     */
+    protected static final int REWARDS = 2;
+    /**
      * Sound effect played when a task is completed.
      */
     protected final Sound cCompletedTaskSound;
@@ -199,7 +203,7 @@ public class FollowTheFishEvent extends StrollEvent {
 
     @Override
     public final int getReward() {
-        return cTasksCompleted;
+        return REWARDS;
     }
 
     @Override

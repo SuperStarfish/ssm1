@@ -21,7 +21,7 @@ public abstract class FishingBoatEvent extends StrollEvent {
     /**
      * The reward received when completing the event.
      */
-    protected final int cReward = 30;
+    protected final int cReward = 3;
     /**
      * Connection with the other client.
      */
