@@ -7,8 +7,6 @@ import java.util.Map;
 
 /**
  * Keeps track of all the screens throughout the game.
- *
- * @author Benjamin Los
  */
 public final class ScreenStore {
 

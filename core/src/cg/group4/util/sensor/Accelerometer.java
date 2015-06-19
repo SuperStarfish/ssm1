@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector3;
 
 /**
  * Configurable object that reads and returns input from the accelerometer the device.
- *
- * @author Jean de Leeuw
  */
 public class Accelerometer {
 

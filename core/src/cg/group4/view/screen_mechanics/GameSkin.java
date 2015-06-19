@@ -15,9 +15,6 @@ import com.badlogic.gdx.utils.Align;
 
 /**
  * The default skin details for the application.
- *
- * @author Jurgen van Schagen
- * @author Martijn Gribnau
  */
 public class GameSkin extends Skin {
     /**

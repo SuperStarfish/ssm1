@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 /**
  * Asynchronously loads all the assets that are needed and contains helper method to quickly load and get these assets.
- * @author Jurgen van Schagen
  */
 public class Assets extends AssetManager {
     /**

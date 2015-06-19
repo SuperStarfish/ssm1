@@ -18,9 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-/**
- * @author Jurgen van Schagen
- */
 public final class Client {
     /**
      * Default Logger in Java used for the purpose of logging changes in the Server.

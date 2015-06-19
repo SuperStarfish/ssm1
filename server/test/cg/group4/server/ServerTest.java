@@ -13,7 +13,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 /**
- * @author Jurgen van Schagen
+ * Tests basic functionality of the server.
  */
 public class ServerTest {
     /**

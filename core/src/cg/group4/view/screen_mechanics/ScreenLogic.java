@@ -8,8 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 /**
  * Abstract class which defines the base screen logic.
  * Should be extended by all other screens in the application.
- *
- * @author Jurgen van Schagen
  */
 public abstract class ScreenLogic {
     /**

@@ -6,10 +6,6 @@ import com.badlogic.gdx.Gdx;
 
 /**
  * Singleton TimeKeeper which keeps track of every individual timer.
- *
- * @author Jurgen van Schagen
- * @author Benjamin Los
- * @author Martijn Gribnau
  */
 public final class TimeKeeper {
 

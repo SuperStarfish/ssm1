@@ -13,8 +13,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Tests to ensure the proper behaviour of the Accelerometer class.
- *
- * @author Jean de Leeuw
  */
 @RunWith(GdxTestRunner.class)
 public class AccelerometerTest {

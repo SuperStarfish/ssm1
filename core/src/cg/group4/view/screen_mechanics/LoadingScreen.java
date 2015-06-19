@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * Loading screen that is displayed while Assets are being loaded.
- * @author Jurgen van Schagen
  */
 public class LoadingScreen implements Screen {
     /**

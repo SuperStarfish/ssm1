@@ -7,8 +7,6 @@ import java.util.Date;
 
 /**
  * Forces collectible objects to implement the following methods.
- *
- * @author Jean de Leeuw
  */
 public abstract class Collectible implements Serializable {
 

@@ -6,8 +6,6 @@ import java.util.Date;
 
 /**
  * A collectible with variable colour that can be generated.
- *
- * @author Jean de Leeuw
  */
 public class FishB extends Collectible implements Serializable {
 

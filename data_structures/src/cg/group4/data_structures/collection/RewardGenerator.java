@@ -7,8 +7,6 @@ import java.util.Random;
 
 /**
  * Objects that generates the rewards.
- *
- * @author Jean de Leeuw
  */
 public class RewardGenerator {
     /**

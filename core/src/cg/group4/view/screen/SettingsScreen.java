@@ -17,9 +17,6 @@ import java.util.Observer;
 
 /**
  * Screen from which the settings of the application can be configured by a user.
- *
- * @author Jurgen van Schagen
- * @author Martijn Gribnau
  */
 public final class SettingsScreen extends ScreenLogic {
 

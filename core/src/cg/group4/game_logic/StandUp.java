@@ -15,8 +15,6 @@ import com.badlogic.gdx.Gdx;
 /**
  * Class which handles the game logic.
  *
- * @author Martijn Gribnau
- * @author Benjamin Los
  */
 public final class StandUp {
 

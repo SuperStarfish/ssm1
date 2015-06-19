@@ -4,8 +4,6 @@ import java.util.Date;
 
 /**
  * Creates and returns collectible objects.
- *
- * @author Jean de Leeuw
  */
 public class CollectibleFactory {
 

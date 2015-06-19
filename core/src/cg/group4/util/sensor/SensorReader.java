@@ -6,8 +6,6 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Objects that reads out the sensor values of the device.
  * Allows testing of objects that rely on these inputs.
- *
- * @author Jean de Leeuw
  */
 public class SensorReader {
 

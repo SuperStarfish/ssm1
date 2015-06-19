@@ -18,10 +18,6 @@ import java.util.Observer;
 
 /**
  * Interface that gets implemented by every event.
- *
- * @author Nick Cleintuar
- * @author Benjamin Los
- * @author Martijn Gribnau
  */
 public abstract class StrollEvent extends InputAdapter implements Disposable, Observer, InputProcessor {
 

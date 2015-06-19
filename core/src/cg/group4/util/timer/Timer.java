@@ -11,9 +11,6 @@ import java.util.Observer;
  * Implementation of the Timer class. Contains a list of subscribers.
  * The Timer class can only be accessed from the TimeKeeper.
  * This is to enforce the Timer to run in the lifecycle of the game.
- *
- * @author Benjamin Los
- * @author Jurgen van Schagen
  */
 public class Timer implements Observer {
 
