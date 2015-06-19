@@ -91,6 +91,15 @@ public final class HomeScreen extends ScreenLogic {
         cStrollButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cSettingsButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cCollectionButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        if (Client.getInstance().isRemoteConnected()) {
+            cGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        }
+
+    }
+
+    @Override
+    protected String setPreviousScreenName() {
+        return null;
     }
 
     /**
@@ -141,6 +150,7 @@ public final class HomeScreen extends ScreenLogic {
             public void update(final Observable o, final Object arg) {
                 if (!cStrollTimer.isRunning()) {
                     cIsClickable = true;
+                    cStrollButton.setDisabled(false);
                     cTimer.setText("Ready!");
                 }
             }
@@ -151,6 +161,7 @@ public final class HomeScreen extends ScreenLogic {
             public void update(final Observable o, final Object arg) {
                 if (!cStrollTimer.isRunning()) {
                     cIsClickable = false;
+                    cStrollButton.setDisabled(true);
                     cTimer.setText(Integer.toString(Timer.Global.INTERVAL.getDuration()));
                 }
             }
@@ -175,29 +186,14 @@ public final class HomeScreen extends ScreenLogic {
                 if (cIsClickable) {
                     StandUp.getInstance().startStroll();
                     ScreenStore.getInstance().setScreen("Stroll");
-                    Client localStorage = Client.getLocalInstance();
-                    localStorage.updateIntervalTimer(System.currentTimeMillis(), null);
-                    localStorage.updateStrollTimer(System.currentTimeMillis(), null);
+                    Client client = Client.getInstance();
+                    client.updateStrollTimestamp(System.currentTimeMillis(), null);
+                    client.updateIntervalTimestamp(System.currentTimeMillis(), null);
                 }
             }
         });
         cTable.row().expandY();
         cTable.add(cStrollButton).colspan(2);
-    }
-
-    /**
-     * Initializes the settings button on the home screen.
-     */
-    public void initSettingsButton() {
-        cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
-        cSettingsButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                ScreenStore.getInstance().setScreen("Settings");
-            }
-        });
-        cTable.row().expandY();
-        cTable.add(cSettingsButton).colspan(2);
     }
 
     /**
@@ -227,10 +223,39 @@ public final class HomeScreen extends ScreenLogic {
             }
         });
         cTable.add(cGroupButton);
+        checkGroupButton();
     }
 
-    @Override
-    protected String setPreviousScreenName() {
-        return null;
+    /**
+     * Checks whether the groupButton should be enabled or disabled.
+     */
+    protected void checkGroupButton() {
+        if (Client.getInstance().isRemoteConnected()) {
+            cGroupButton.setDisabled(false);
+        } else {
+            cGroupButton.setDisabled(true);
+            Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
+                @Override
+                public void update(Observable o, Object arg) {
+                    Client.getInstance().getRemoteChangeSubject().deleteObserver(this);
+                    checkGroupButton();
+                }
+            });
+        }
+    }
+
+    /**
+     * Initializes the settings button on the home screen.
+     */
+    public void initSettingsButton() {
+        cSettingsButton = cGameSkin.generateDefaultMenuButton("Settings");
+        cSettingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                ScreenStore.getInstance().setScreen("Settings");
+            }
+        });
+        cTable.row().expandY();
+        cTable.add(cSettingsButton).colspan(2);
     }
 }

@@ -2,11 +2,11 @@ package cg.group4.client.connection;
 
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 
 /**
@@ -59,20 +59,18 @@ public final class LocalConnection implements Connection {
     }
 
     @Override
-    public void send(final Serializable data, final ResponseHandler responseHandler) {
+    public void send(final Query query, final ResponseHandler responseHandler) {
         if (cAcceptingRequest) {
             cAcceptingRequest = false;
             try {
-                cOutputStream.writeObject(data);
+                cOutputStream.writeObject(query);
                 cOutputStream.flush();
                 Response response = (Response) cInputStream.readObject();
                 cAcceptingRequest = true;
                 if (responseHandler != null) {
                     responseHandler.handleResponse(response);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

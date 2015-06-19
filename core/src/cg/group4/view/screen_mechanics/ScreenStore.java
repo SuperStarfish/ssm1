@@ -15,7 +15,7 @@ public final class ScreenStore {
     /**
      * Singleton of screen handler.
      */
-    protected static ScreenStore INSTANCE;
+    protected static ScreenStore cInstance;
 
     /**
      * HashMap that contains all the screens.
@@ -48,10 +48,10 @@ public final class ScreenStore {
      * @return The instance.
      */
     public static ScreenStore getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ScreenStore();
+        if (cInstance == null) {
+            cInstance = new ScreenStore();
         }
-        return INSTANCE;
+        return cInstance;
     }
 
     /**
@@ -60,10 +60,10 @@ public final class ScreenStore {
      */
     public void init() {
         addScreen("Home", new HomeScreen());
-//        addScreen("Collection", new CollectiblesScreen());
         addScreen("Settings", new SettingsScreen());
         addScreen("Network", new NetworkScreen());
-//        addScreen("Groups", new GroupScreen());
+        addScreen("Collection", new CollectiblesScreen());
+        addScreen("Groups", new GroupScreen());
     }
 
     /**
@@ -92,7 +92,9 @@ public final class ScreenStore {
      * @param tag Tag of the screen to be displayed.
      */
     public void setScreen(final String tag) {
-        cWorldRenderer.setScreen(cScreens.get(tag));
+        ScreenLogic screen = cScreens.get(tag);
+        screen.display();
+        cWorldRenderer.setScreen(screen);
     }
 
     /**
@@ -132,8 +134,15 @@ public final class ScreenStore {
      */
     public void rebuild(final int uiSize) {
         cGameSkin.createUIElements(uiSize);
-        for (ScreenLogic screen : cScreens.values()) {
-            screen.rebuildWidgetGroup();
-        }
+        rebuild();
+    }
+    
+    /**
+     * Updates all the UI Elements.
+     */
+    public void rebuild() {
+    	for (ScreenLogic screen : cScreens.values()) {
+    		screen.rebuildWidgetGroup();
+    	}
     }
 }

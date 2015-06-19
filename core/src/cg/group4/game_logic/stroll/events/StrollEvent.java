@@ -4,7 +4,13 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.StandUp;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen.EventScreen;
+import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.util.Observable;
@@ -17,14 +23,12 @@ import java.util.Observer;
  * @author Benjamin Los
  * @author Martijn Gribnau
  */
-public abstract class StrollEvent implements Disposable, Observer {
+public abstract class StrollEvent extends InputAdapter implements Disposable, Observer, InputProcessor {
 
     /**
      * Timer to constrain the amount of time spent on an event.
      */
     protected final Observer cEventStopObserver = new Observer() {
-
-
         @Override
         public void update(final Observable o, final Object arg) {
             clearEvent();
@@ -35,15 +39,17 @@ public abstract class StrollEvent implements Disposable, Observer {
      */
     protected Timer cEventTimer;
     /**
-     * Subject to detect label changes.
+     * Subject to detect event changes.
      */
-    protected Subject cLabelSubject;
+    protected Subject cDataSubject;
+
+    protected InputProcessor cProcessor;
 
     /**
      * Constructor, creates a new stroll event.
      */
     public StrollEvent() {
-        cLabelSubject = new Subject();
+        cDataSubject = new Subject();
 
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
@@ -51,14 +57,12 @@ public abstract class StrollEvent implements Disposable, Observer {
         cEventTimer = TimerStore.getInstance().getTimer(Timer.Global.EVENT.name());
         cEventTimer.getStopSubject().addObserver(cEventStopObserver);
         cEventTimer.reset();
-    }
 
-    /**
-     * Returns the reward accumulated by completing the event.
-     *
-     * @return the reward.
-     */
-    public abstract int getReward();
+        cProcessor = Gdx.input.getInputProcessor();
+        if(cProcessor instanceof InputMultiplexer) {
+            ((InputMultiplexer)cProcessor).addProcessor(this);
+        }
+    }
 
     /**
      * Cleanup after the event.
@@ -71,22 +75,59 @@ public abstract class StrollEvent implements Disposable, Observer {
     public abstract void start();
 
     /**
-     * Getter for the label subject. Detects label changes.
+     * Getter for the event subject. Detects event changes.
      *
-     * @return The label subject.
+     * @return The event data subject.
      */
-    public Subject getLabelSubject() {
-        return cLabelSubject;
+    public Subject getEventChangeSubject() {
+        return cDataSubject;
+    }
+
+    /**
+     * Calls dispose using true, helper method for clearing events.
+     */
+    public final void dispose() {
+        dispose(true);
     }
 
     /**
      * Method that gets called to dispose of the event.
+     * @param eventCompleted If the event is completed or not.
      */
-    public final void dispose() {
+    public final void dispose(boolean eventCompleted) {
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         cEventTimer.getStopSubject().deleteObserver(cEventStopObserver);
         cEventTimer.dispose();
-        StandUp.getInstance().getStroll().eventFinished(getReward());
+        int reward = 0;
+        if (eventCompleted) {
+            reward = getReward();
+        }
+        StandUp.getInstance().getStroll().eventFinished(reward);
     }
+
+    /**
+     * Returns the reward accumulated by completing the event.
+     *
+     * @return the reward.
+     */
+    public abstract int getReward();
+
+    @Override
+    public final boolean keyDown(final int keycode) {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
+            final InputAdapter myself = this;
+            if(cProcessor instanceof InputMultiplexer) {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((InputMultiplexer)cProcessor).removeProcessor(myself);
+                    }
+                });
+            }
+            dispose(false);
+        }
+        return false;
+    }
+
 }

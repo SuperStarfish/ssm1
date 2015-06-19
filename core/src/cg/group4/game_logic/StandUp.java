@@ -3,14 +3,14 @@ package cg.group4.game_logic;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.game_logic.stroll.Stroll;
-import cg.group4.util.audio.AudioPlayer;
-import cg.group4.util.sensor.SensorReader;
+import cg.group4.util.orientation.Orientation;
+import cg.group4.util.orientation.OrientationReader;
+import cg.group4.util.orientation.Portrait;
 import cg.group4.util.sensor.AccelerationStatus;
+import cg.group4.util.sensor.SensorReader;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
-import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 
 /**
  * Class which handles the game logic.
@@ -62,6 +62,11 @@ public final class StandUp {
     protected AccelerationStatus cAccelerationStatus;
 
     /**
+     * Reads the current orientation of the device.
+     */
+    protected OrientationReader cOrientationReader;
+
+    /**
      * Instantiate StandUp and TimeKeeper.
      */
     protected StandUp() {
@@ -77,7 +82,7 @@ public final class StandUp {
      * @return cInstance
      */
     public static StandUp getInstance() {
-        if(cInstance == null) {
+        if (cInstance == null) {
             cInstance = new StandUp();
         }
         return cInstance;
@@ -158,11 +163,34 @@ public final class StandUp {
         return cSensorReader;
     }
 
+    public AccelerationStatus getAccelerationStatus() {
+        return cAccelerationStatus;
+    }
+
     public void setAccelerationStatus(AccelerationStatus status) {
         cAccelerationStatus = status;
     }
 
-    public AccelerationStatus getAccelerationStatus() {
-        return cAccelerationStatus;
+    /**
+     * Set the orientationReader.
+     *
+     * @param reader OrientationReader that can read the device's current orientation.
+     */
+    public void setOrientationReader(OrientationReader reader) {
+        cOrientationReader = reader;
+    }
+
+    /**
+     * Get the current orientation of the device.
+     *
+     * @return Orientation object representing the current orientation of the device.
+     * Either Landscape, portrait, or null if the orientation is undefined.
+     */
+    public Orientation getOrientation() {
+        if (cOrientationReader == null) {
+            return new Portrait();
+        } else {
+            return cOrientationReader.getOrientation();
+        }
     }
 }

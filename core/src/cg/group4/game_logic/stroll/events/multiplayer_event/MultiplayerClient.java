@@ -1,18 +1,47 @@
 package cg.group4.game_logic.stroll.events.multiplayer_event;
 
-import cg.group4.client.connection.Connection;
-import cg.group4.client.connection.UnConnected;
-import cg.group4.game_logic.stroll.events.StrollEvent;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * Client of a multi-player stroll.
  */
-public abstract class MultiplayerClient extends StrollEvent {
+public class MultiplayerClient extends Host {
+    /**
+     * The port to connect to.
+     */
+    protected final int cPortToUse = 56151;
+    /**
+     * The IP to connect to.
+     */
+    protected String cIP;
 
-    protected Connection cConnection;
+    /**
+     * Creates a new Client that connects to the given port.
+     *
+     * @param ip The port to connect to.
+     * @throws IOException When connection couldn't be established.
+     */
+    public MultiplayerClient(String ip) throws IOException {
+        super();
+        cIP = ip;
+    }
 
-    public MultiplayerClient(String ip) {
-        cConnection = new UnConnected();
-        cConnection.connect(ip, 55555);
+    @Override
+    protected Socket createSocket() {
+        try {
+            return new Socket(cIP, cPortToUse);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isHost() {
+        return false;
     }
 }

@@ -30,6 +30,21 @@ public class Accelerometer {
     protected SensorReader cReader;
 
     /**
+     * Whether to filter the noise per axis or on all three.
+     */
+    protected boolean cFilterPerAxis;
+
+    /**
+     * The default filter to use for the accelerometer.
+     */
+    protected float cDefaultNoiseFilter = 1.5f;
+
+    /**
+     * Gravity filter used in the accelerometer.
+     */
+    protected float cGravity = 9.5f;
+
+    /**
      * Constructs an accelerometer which is used to read the accelerometer data
      * from the device.
      *
@@ -37,9 +52,10 @@ public class Accelerometer {
      */
     public Accelerometer(final SensorReader reader) {
         cFilterGravity = false;
-        cNoiseThreshold = 1.5f;
+        cNoiseThreshold = cDefaultNoiseFilter;
         cReader = reader;
         cBaseVector = cReader.readAccelerometer();
+        cFilterPerAxis = true;
     }
 
     /**
@@ -58,13 +74,44 @@ public class Accelerometer {
                     resultVector.z - cBaseVector.z);
         }
 
-        resultVector.set(
-                filterNoise(resultVector.x),
-                filterNoise(resultVector.y),
-                filterNoise(resultVector.z));
+        if (cFilterPerAxis) {
+            resultVector.set(
+                    filterNoise(resultVector.x),
+                    filterNoise(resultVector.y),
+                    filterNoise(resultVector.z));
+        } else {
+            resultVector = filterNoise(resultVector);
+        }
 
         cBaseVector = readings;
         return resultVector;
+    }
+
+    /**
+     * Helper method that should not be called outside of this class.
+     * Returns the input if the absolute input is higher than the noise threshold. 0 Otherwise.
+     *
+     * @param scalar Accelerometer component
+     * @return Input if scalar > noise threshold. 0 Otherwise.
+     */
+    protected final float filterNoise(final float scalar) {
+        float result = 0f;
+        if (Math.abs(scalar) > cNoiseThreshold) {
+            result = scalar;
+        }
+        return result;
+    }
+
+    /**
+     * Filters the vector of noise.
+     * @param vector The vector to filter.
+     * @return The filtered vector.
+     */
+    protected Vector3 filterNoise(final Vector3 vector) {
+        if (vector.epsilonEquals(cBaseVector, cNoiseThreshold)) {
+            return cBaseVector;
+        }
+        return vector;
     }
 
     /**
@@ -89,26 +136,11 @@ public class Accelerometer {
     }
 
     /**
-     * Helper method that should not be called outside of this class.
-     * Returns the input if the absolute input is higher than the noise threshold. 0 Otherwise.
-     *
-     * @param scalar Accelerometer component
-     * @return Input if scalar > noise threshold. 0 Otherwise.
-     */
-    protected final float filterNoise(final float scalar) {
-        float result = 0f;
-        if (Math.abs(scalar) > cNoiseThreshold) {
-            result = scalar;
-        }
-        return result;
-    }
-
-    /**
      * Sets the filtering of the gravity from the accelerometer on/off.
      *
      * @param mode Default is off.
      */
-    public final void filterGravity(final boolean mode) {
+    public void filterGravity(final boolean mode) {
         cFilterGravity = mode;
     }
 
@@ -122,7 +154,7 @@ public class Accelerometer {
      */
     protected final boolean isGravity(final float scalar) {
         float absoluteValue = Math.abs(scalar);
-        return (absoluteValue > 9f) && (absoluteValue < 12f);
+        return (absoluteValue >= cGravity);
     }
 
     /**
@@ -133,5 +165,9 @@ public class Accelerometer {
      */
     public final void setNoiseThreshold(final float threshold) {
         this.cNoiseThreshold = threshold;
+    }
+
+    public void setFilterPerAxis(boolean filterPerAxis) {
+        cFilterPerAxis = filterPerAxis;
     }
 }

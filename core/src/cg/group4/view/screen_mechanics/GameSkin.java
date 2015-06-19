@@ -30,6 +30,10 @@ public class GameSkin extends Skin {
      */
     protected final float cDevSize = 720;
     /**
+     * Default width for the cursor in TextFields.
+     */
+    protected final float cCursorWidth = 3f;
+    /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
@@ -48,12 +52,6 @@ public class GameSkin extends Skin {
      * Default border width.
      */
     protected int cDefaultBorderWidth = 2;
-
-    /**
-     * Default width for the cursor in TextFields.
-     */
-    protected final float cCursorWidth = 3f;
-
     /**
      * Container for all the assets.
      */
@@ -89,6 +87,144 @@ public class GameSkin extends Skin {
         this.add("default_selectboxStyle", generateDefaultSelectboxStyle());
         this.add("default_listStyle", generateDefaultListStyle());
         this.add("default_textFieldStyle", generateDefaultTextFieldStyle());
+    }
+
+    /**
+     * The default text font.
+     *
+     * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
+     * has been used to fix this issue.
+     */
+    protected final BitmapFont generateDefaultFont() {
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.borderColor = Color.BLACK;
+        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
+        fontParameter.color = Color.WHITE;
+        fontParameter.size = (int) (cDefaultFontSize * cUiScalar);
+        return cFontGenerator.generateFont(fontParameter);
+    }
+
+    /**
+     * The default text button skin.
+     *
+     * @return TextButtonStyle
+     */
+    protected final TextButton.TextButtonStyle generateDefaultTextButtonStyle() {
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.fontColor = Color.GREEN;
+        buttonStyle.font = this.get("default_font", BitmapFont.class);
+        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
+        Sprite disabled = new Sprite(cAssets.getTexture("images/wooden_sign_gray.png"));
+        final float scalar = 0.42f;
+        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
+        disabled.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
+        buttonStyle.up = new SpriteDrawable(sprite);
+        sprite = new Sprite(sprite);
+        sprite.setColor(.8f, .8f, .8f, 1);
+        buttonStyle.over = new SpriteDrawable(sprite);
+        sprite = new Sprite(sprite);
+        sprite.setColor(.6f, .6f, .6f, 1);
+        buttonStyle.down = new SpriteDrawable(sprite);
+        buttonStyle.disabled = new SpriteDrawable(disabled);
+        return buttonStyle;
+    }
+
+    /**
+     * The default title font.
+     *
+     * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
+     * has been used to fix this issue.
+     */
+    protected final BitmapFont generateDefaultTitleFont() {
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.borderColor = Color.BLACK;
+        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
+        fontParameter.color = Color.WHITE;
+
+        final float scale = 1.2f;
+        fontParameter.size = (int) (cDefaultFontSize * cUiScalar * scale);
+        return cFontGenerator.generateFont(fontParameter);
+    }
+
+    /**
+     * The default label style.
+     *
+     * @return LabelStyle
+     */
+    protected final Label.LabelStyle generateDefaultLabelStyle() {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = this.get("default_titleFont", BitmapFont.class);
+        return labelStyle;
+    }
+
+    /**
+     * The default Checkbox style.
+     *
+     * @return CheckBoxStyle
+     */
+    protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
+    	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+    	checkboxStyle.checkboxOff = new TextureRegionDrawable(
+    			new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
+    	checkboxStyle.checkboxOn = new TextureRegionDrawable(
+    			new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
+
+    	checkboxStyle.font = this.get("default_font", BitmapFont.class);
+    	checkboxStyle.fontColor = Color.GREEN;
+
+    	return checkboxStyle;
+    }
+
+    /**
+     * The default Selectbox style.
+     *
+     * @return SelectBoxStyle
+     */
+    protected final SelectBox.SelectBoxStyle generateDefaultSelectboxStyle() {
+        SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
+        selectboxStyle.font = this.get("default_font", BitmapFont.class);
+        selectboxStyle.fontColor = Color.GREEN;
+        selectboxStyle.listStyle = this.generateDefaultListStyle();
+        selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
+        selectboxStyle.background = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
+        selectboxStyle.background.setLeftWidth(10);
+        return selectboxStyle;
+    }
+
+    /**
+     * The default List style.
+     *
+     * @return ListStyle
+     */
+    protected final List.ListStyle generateDefaultListStyle() {
+    	List.ListStyle listStyle = new List.ListStyle();
+    	listStyle.font = this.get("default_font", BitmapFont.class);
+    	listStyle.fontColorSelected = Color.GREEN;
+    	listStyle.fontColorUnselected = Color.WHITE;
+        listStyle.background = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
+        listStyle.selection = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/wooden_sign.png"))).tint(new Color(0, 0, 0, .3f));
+
+        listStyle.selection.setLeftWidth(10);
+        listStyle.selection.setRightWidth(10);
+        return listStyle;
+    }
+
+    /**
+     * Creates a default TextField Style.
+     *
+     * @return The style for the TextField.
+     */
+    protected final TextField.TextFieldStyle generateDefaultTextFieldStyle() {
+        BaseDrawable empty = new BaseDrawable();
+        BitmapFont font = this.get("default_font", BitmapFont.class);
+        Color color = Color.GREEN;
+        Drawable cursor = new SpriteDrawable(new Sprite(cAssets.getTexture("images/blackpixel.jpg")));
+        cursor.setMinWidth(cCursorWidth * cUiScalar);
+        Drawable background = new SpriteDrawable(new Sprite(cAssets.getTexture("images/debugpixel.png")));
+        return new TextField.TextFieldStyle(font, color, cursor, background, empty);
     }
 
     /**
@@ -137,131 +273,6 @@ public class GameSkin extends Skin {
     }
 
     /**
-     * The default text button skin.
-     *
-     * @return TextButtonStyle
-     */
-    protected final TextButton.TextButtonStyle generateDefaultTextButtonStyle() {
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.fontColor = Color.GREEN;
-        buttonStyle.font = this.get("default_font", BitmapFont.class);
-
-        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
-        final float scalar = 0.42f;
-        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
-
-        buttonStyle.up = new SpriteDrawable(sprite);
-
-        return buttonStyle;
-    }
-
-    /**
-     * The default Checkbox style.
-     *
-     * @return CheckBoxStyle
-     */
-    protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
-    	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-    	checkboxStyle.checkboxOff = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
-    	checkboxStyle.checkboxOn = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
-    	
-    	checkboxStyle.font = this.get("default_font", BitmapFont.class);
-    	checkboxStyle.fontColor = Color.GREEN;
-        
-    	return checkboxStyle;
-    }
-
-    /**
-     * The default Selectbox style.
-     *
-     * @return SelectBoxStyle
-     */
-    protected final SelectBox.SelectBoxStyle generateDefaultSelectboxStyle() {
-        SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
-        selectboxStyle.font = this.get("default_font", BitmapFont.class);
-        selectboxStyle.fontColor = Color.GREEN;
-        selectboxStyle.listStyle = this.generateDefaultListStyle();
-        selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
-        return selectboxStyle;
-    }
-
-    /**
-     * The default List style.
-     *
-     * @return ListStyle
-     */
-    protected final List.ListStyle generateDefaultListStyle() {
-    	List.ListStyle listStyle = new List.ListStyle();
-    	listStyle.font = this.get("default_font", BitmapFont.class);
-    	listStyle.fontColorSelected = Color.GREEN;
-    	listStyle.fontColorUnselected = Color.WHITE;
-    	listStyle.selection = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/FishD.png")));
-    	return listStyle;
-    }
-
-    /**
-     * The default title font.
-     *
-     * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
-     * has been used to fix this issue.
-     */
-    protected final BitmapFont generateDefaultTitleFont() {
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
-        fontParameter.color = Color.WHITE;
-
-        final float scale = 1.2f;
-        fontParameter.size = (int) (cDefaultFontSize * cUiScalar * scale);
-        return cFontGenerator.generateFont(fontParameter);
-    }
-
-    /**
-     * The default label style.
-     *
-     * @return LabelStyle
-     */
-    protected final Label.LabelStyle generateDefaultLabelStyle() {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = this.get("default_titleFont", BitmapFont.class);
-        return labelStyle;
-    }
-
-    /**
-     * The default text font.
-     *
-     * @return BitmapFont; Downside of the BitmapFont is that it does not scale by default. However, a ui scalar
-     * has been used to fix this issue.
-     */
-    protected final BitmapFont generateDefaultFont() {
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
-        fontParameter.color = Color.WHITE;
-        fontParameter.size = (int) (cDefaultFontSize * cUiScalar);
-        return cFontGenerator.generateFont(fontParameter);
-    }
-
-    /**
-     * Creates a default TextField Style.
-     *
-     * @return The style for the TextField.
-     */
-    protected final TextField.TextFieldStyle generateDefaultTextFieldStyle() {
-        BaseDrawable empty = new BaseDrawable();
-        BitmapFont font = this.get("default_font", BitmapFont.class);
-        Color color = Color.GREEN;
-        Drawable cursor = new SpriteDrawable(new Sprite(cAssets.getTexture("images/blackpixel.jpg")));
-        cursor.setMinWidth(cCursorWidth * cUiScalar);
-        Drawable background = new SpriteDrawable(new Sprite(cAssets.getTexture("images/debugpixel.png")));
-        TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle(font, color, cursor, background, empty);
-        return textFieldStyle;
-    }
-
-    /**
      * Generates a TextField using default settings and supplied text.
      *
      * @param initialText The text to initially display.
@@ -304,24 +315,13 @@ public class GameSkin extends Skin {
     }
 
     /**
-     * Used to generate checkboxes using the default checkbox style.
-     *
-     * @param text text explaning the function of the checkbox
-     * @return CheckBox
-     */
-    public final CheckBox generateDefaultCheckbox(final String text) {
-        return new CheckBox(text, this.get("default_checkboxStyle", CheckBox.CheckBoxStyle.class));
-
-    }
-
-    /**
      * Used to generate lists using the default list style.
      *
      * @param <T> Objects or primitives
      * @return List
      */
     public final <T> List<T> generateDefaultList() {
-        return new List<T>(this.get("default_listStyle", List.ListStyle.class));
+        return new List<T>(generateDefaultListStyle());
     }
 
     /**

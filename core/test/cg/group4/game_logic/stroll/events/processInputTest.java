@@ -10,39 +10,35 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Tests the processInput method of TestStrollEvent.
+ * Tests the processInput method of FollowTheFishEvent.
  */
 @RunWith(Parameterized.class)
 public class processInputTest {
 
-
-    float x;
-    float y;
-    float z;
-    float max;
-    int calls;
-    int oper;
 
     /**
      * Constants used for each task case.
      */
     protected static final int MOVE_LEFT = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_UP = 3,
             MOVE_AWAY = 4, MOVE_TOWARDS = 5, NOT_EXISTING_TASK = 6;
-
     /**
      * Value used for the vectors which makes the equality statements true.
      */
     protected static final float DELTA = 2.5f;
-
     /**
      * Value used for the vectors which make the equality statements false.
      */
     protected static final float NOT_OVER_DELTA = 2.4f;
-
     /**
      * Value used for the vectors which doesn't change the result at all.
      */
     protected static final float BASE = 2.0f;
+    float x;
+    float y;
+    float z;
+    float max;
+    int calls;
+    int oper;
 
     /**
      * Constructor, creates a new test.
@@ -95,7 +91,7 @@ public class processInputTest {
         Accelerometer mock = Mockito.mock(Accelerometer.class);
         Mockito.when(mock.highestAccelerationComponent(vec)).thenReturn(max);
 
-        TestStrollEvent test = Mockito.spy(new TestStrollEvent());
+        FollowTheFishEvent test = Mockito.spy(new FollowTheFishEvent());
         test.cAccelMeter = mock;
         test.cOperationNr = oper;
 

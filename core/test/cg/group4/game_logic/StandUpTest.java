@@ -4,7 +4,6 @@ import cg.group4.GdxTestRunner;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.FishA;
 import cg.group4.data_structures.subscribe.Subject;
-import cg.group4.server.Server;
 import cg.group4.util.sensor.AccelerationState;
 import cg.group4.util.sensor.AccelerationStatus;
 import com.badlogic.gdx.Gdx;
@@ -73,7 +72,7 @@ public class StandUpTest {
      */
     @Test
     public void testGetInstance() {
-        assertEquals(cStandUp, cStandUp.getInstance());
+        assertEquals(cStandUp, StandUp.getInstance());
     }
 
     /**

@@ -17,7 +17,7 @@ public class FishingStrollEvent extends StrollEvent {
     /**
      * Amount of points that you should gain when completing this event.
      */
-    protected static final int REWARDS = 10;
+    protected static final int REWARDS = 2;
 
     /**
      * Sound played when the task is completed.
@@ -59,19 +59,7 @@ public class FishingStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final int getReward() {
-        return REWARDS;
-    }
-
-    @Override
     protected void clearEvent() {
-        superDispose();
-    }
-
-    /**
-     * Method that calls super.dispose() to make it more testable.
-     */
-    public void superDispose() {
         super.dispose();
     }
 
@@ -81,12 +69,17 @@ public class FishingStrollEvent extends StrollEvent {
         cState = new CastForwardState(this);
     }
 
+    @Override
+    public final int getReward() {
+        return REWARDS;
+    }
+
     /**
      * Sets the text of the label.
      *
      * @param text The text of the label.
      */
     public void setText(final String text) {
-        cLabelSubject.update(text);
+        cDataSubject.update(text);
     }
 }

@@ -39,33 +39,20 @@ public class Collection extends HashSet<Collectible> implements Serializable {
     }
 
     /**
-     * String representation of collection.
-     *
-     * @return String representation
-     */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Collection<");
-
-        int counter = 0;
-        for (Collectible c : this) {
-            counter++;
-            sb.append(c.toString());
-            if (counter < this.size()) {
-                sb.append(", ");
-            }
-        }
-        sb.append(">");
-        return sb.toString();
-    }
-
-    /**
      * Returns the identifier of this collection.
      *
-     * @return identifier
+     * @return The identifier.
      */
     public String getId() {
         return cId;
+    }
+
+    /**
+     * Sets the id of this collection.
+     * @param groupId The id the collection belongs to.
+     */
+    public void setId(final String groupId) {
+        cId = groupId;
     }
 
     /**
@@ -87,6 +74,27 @@ public class Collection extends HashSet<Collectible> implements Serializable {
         return result;
     }
 
+    /**
+     * String representation of collection.
+     *
+     * @return String representation
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Collection<");
+
+        int counter = 0;
+        for (Collectible c : this) {
+            counter++;
+            sb.append(c.toString());
+            if (counter < this.size()) {
+                sb.append(", ");
+            }
+        }
+        sb.append(">");
+        return sb.toString();
+    }
+
     public void resetCollection(){
         super.clear();
     }
@@ -100,12 +108,5 @@ public class Collection extends HashSet<Collectible> implements Serializable {
         return cChangeAddSubject;
     }
 
-    /**
-     * Sets the group id of this collection.
-     *
-     * @param groupId The id of the group.
-     */
-    public void setGroupId(final String groupId) {
-        cId = groupId;
-    }
+
 }

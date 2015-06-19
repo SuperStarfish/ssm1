@@ -70,7 +70,6 @@ public class StrollTest {
     public void testGeneratePossibleEvent() {
         cStroll.cEventThreshold = 1f;
         cStroll.cNewEventSubject = spy(cStroll.cNewEventSubject);
-
         cStroll.generatePossibleEvent();
 
         assertTrue(cStroll.cEventGoing);

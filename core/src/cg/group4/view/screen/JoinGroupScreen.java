@@ -57,26 +57,18 @@ public class JoinGroupScreen extends ScreenLogic {
         };
     }
 
-    private boolean naiveVerify() {
-        if (!cGroupNameField.getText().matches("^-?\\d+$")) {
-            cStatusLabel.setText("Unable to join group (non-decimal value)");
-            return false;
-        }
-        return true;
-    }
-
     private void tryJoin() {
-        Client.getRemoteInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
+        Client.getInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
 
             @Override
             public void handleResponse(Response response) {
 
                 if (response.isSuccess()) {
                     cStatusLabel.setText("Successfully joined a group");
+                    StandUp.getInstance().getPlayer().updatePlayerData();
                 } else {
                     cStatusLabel.setText("Unable to join group");
                 }
-                StandUp.getInstance().getPlayer().update();
             }
         });
     }
@@ -92,5 +84,13 @@ public class JoinGroupScreen extends ScreenLogic {
     @Override
     protected String setPreviousScreenName() {
         return "Groups";
+    }
+
+    private boolean naiveVerify() {
+        if (!cGroupNameField.getText().matches("^-?\\d+$")) {
+            cStatusLabel.setText("Unable to join group (non-decimal value)");
+            return false;
+        }
+        return true;
     }
 }

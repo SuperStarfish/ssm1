@@ -1,7 +1,6 @@
 package cg.group4.util.audio;
 
 import cg.group4.data_structures.subscribe.Subject;
-import cg.group4.view.screen_mechanics.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -55,11 +54,27 @@ public class AudioPlayer {
     }
 
     /**
-     * Returns the singleton instance.
-     * @return The AudioPlayer singleton.
+     * Sets the last played Music.
+     * @param music Music to be set as last played.
      */
-    public static AudioPlayer getInstance() {
-        return INSTANCE;
+    public final void setLastPlayed(Music music) {
+        cLastPlayed = music;
+    }
+
+    /**
+     * Plays a music file using the AudioPlayer. Stops the previous
+     * @param music The music file to be played.
+     */
+    public final void playAudio(Music music) {
+        if (cAudioEnabled) {
+            if (cLastPlayed.isPlaying()) {
+                cLastPlayed.stop();
+            }
+            music.play();
+            if (!music.equals(cLastPlayed)) {
+                cLastPlayed = music;
+            }
+        }
     }
 
     /**
@@ -87,44 +102,28 @@ public class AudioPlayer {
     }
 
     /**
-     * Sets the last played Music.
-     * @param music Music to be set as last played.
-     */
-    public final void setLastPlayed(Music music) {
-        cLastPlayed = music;
-    }
-
-    /**
      * Gets run after the audio enabled gets toggled. Updates every observer, stops or plays a new track
      * according to the cAudioEnabled variable. Finally updates the value stored in the preferences.
      */
     protected final void afterChange() {
         cAudioChangedSubject.update();
 
-        if(!cAudioEnabled){
+        if (!cAudioEnabled) {
             cLastPlayed.stop();
         } else {
             AudioPlayer.getInstance().playAudio(cDefaultMusic);
         }
 
-        cPreferences.putBoolean("ENABLED",cAudioEnabled);
+        cPreferences.putBoolean("ENABLED", cAudioEnabled);
         cPreferences.flush();
     }
 
     /**
-     * Plays a music file using the AudioPlayer. Stops the previous
-     * @param music The music file to be played.
+     * Returns the singleton instance.
+     * @return The AudioPlayer singleton.
      */
-    public final void playAudio(Music music) {
-        if (cAudioEnabled){
-            if (cLastPlayed.isPlaying()) {
-                cLastPlayed.stop();
-            }
-            music.play();
-            if(!music.equals(cLastPlayed)){
-                cLastPlayed = music;
-            }
-        }
+    public static AudioPlayer getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -132,7 +131,7 @@ public class AudioPlayer {
      * @param sound The sound file to be played
      */
     public final void playAudio(Sound sound) {
-        if(cAudioEnabled){
+        if (cAudioEnabled) {
             sound.play();
         }
     }

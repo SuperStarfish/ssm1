@@ -3,12 +3,13 @@ package cg.group4.client.connection;
 import cg.group4.client.Client;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * A state in which the Client is connected to the server.
@@ -29,7 +30,12 @@ public final class RemoteConnection implements Connection {
     /**
      * Boolean whether the connection is currently accepting new requests (not waiting for response).
      */
-    protected boolean cAcceptingRequest;
+    protected boolean cWaiting;
+    /**
+     * A queue that is used as buffer/storage for connection packets that must be sent but is no room for yet.
+     */
+    protected ConcurrentLinkedQueue<ConnectionPacket> cBuffer;
+
     /**
      * Attempts to create a new connection with the server. Fails after cConnectionTimeOut milliseconds.
      *
@@ -41,7 +47,8 @@ public final class RemoteConnection implements Connection {
         cConnection = new Socket(ip, port);
         cOutputStream = new ObjectOutputStream(cConnection.getOutputStream());
         cInputStream = new ObjectInputStream(cConnection.getInputStream());
-        cAcceptingRequest = true;
+        cWaiting = true;
+        cBuffer = new ConcurrentLinkedQueue<ConnectionPacket>();
     }
 
     /**
@@ -58,32 +65,44 @@ public final class RemoteConnection implements Connection {
     }
 
     @Override
-    public void send(final Serializable data, final ResponseHandler responseHandler) {
-        if (cAcceptingRequest) {
-            cAcceptingRequest = false;
+    public void send(final Query query, final ResponseHandler responseHandler) {
+        cBuffer.add(new ConnectionPacket(query, responseHandler));
+        if (cWaiting) {
+            cWaiting = false;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        cOutputStream.writeObject(data);
-                        cOutputStream.flush();
-                        final Response response = (Response) cInputStream.readObject();
-                        Client.getRemoteInstance().addPostRunnables(new Runnable() {
-                            @Override
-                            public void run() {
-                                cAcceptingRequest = true;
-                                if (responseHandler != null) {
-                                    responseHandler.handleResponse(response);
-                                }
-                            }
-                        });
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    while (!cBuffer.isEmpty()) {
+                        sendPacket(cBuffer.poll());
                     }
+                    cWaiting = true;
                 }
             }).start();
+        }
+    }
+
+    /**
+     * Handles the transfer of a single connection packet.
+     *
+     * @param connectionPacket the connection packet to be handled.
+     */
+    protected void sendPacket(final ConnectionPacket connectionPacket) {
+        try {
+            cOutputStream.writeObject(connectionPacket.getQuery());
+            cOutputStream.flush();
+            final Response response = (Response) cInputStream.readObject();
+            Client.getInstance().addPostRunnables(new Runnable() {
+                @Override
+                public void run() {
+                    if (connectionPacket.getResponseHandler() != null) {
+                        connectionPacket.getResponseHandler().handleResponse(response);
+                    }
+                }
+            });
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

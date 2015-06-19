@@ -102,8 +102,6 @@ project(":client") {
     }
 }
 
-
-
 project(":data_structures") {
     apply plugin: "java"
 
@@ -121,6 +119,7 @@ project(":android") {
 
     dependencies {
         compile project(":core")
+        compile "org.sqldroid:sqldroid:1.0.3"
 
         // the libgdx platform
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
@@ -143,12 +142,20 @@ project(":android") {
     }
 }
 
-subprojects {
+project(":aquarium") {
+    apply plugin: "java"
 
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
+    }
 }
 
 tasks.eclipse.doLast {
     delete ".project"
 }
 
-test.finalizedBy {project.tasks.cobertura}
+test.finalizedBy { project.tasks.cobertura }

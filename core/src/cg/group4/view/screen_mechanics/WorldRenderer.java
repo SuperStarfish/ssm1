@@ -1,5 +1,7 @@
 package cg.group4.view.screen_mechanics;
 
+import cg.group4.data_structures.subscribe.Subject;
+import cg.group4.view.screen.EventScreen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -73,7 +75,6 @@ public class WorldRenderer extends InputAdapter implements Screen {
      * Defines if the application is in 'landscape' or in 'portrait'.
      */
     protected boolean cIsLandscape;
-
     /**
      * All assets are stored here.
      */
@@ -84,51 +85,6 @@ public class WorldRenderer extends InputAdapter implements Screen {
         initDefaults();
         captureInput();
         initBackgroundAndUI();
-    }
-
-    /**
-     * Initializes the necessary components for this class to function.
-     */
-    protected final void initDefaults() {
-        cCamera = new OrthographicCamera();
-        cViewport = new ExtendViewport(
-                cMinViewportRatio,
-                cMinViewportRatio,
-                cMaxViewportRatio,
-                cMaxViewportRatio,
-                cCamera);
-        cBatch = new SpriteBatch();
-        cStage = new Stage();
-        cAssets = Assets.getInstance();
-        cScreenStore = ScreenStore.getInstance();
-    }
-
-    /**
-     * Sets the input to be captured by the stage and handles this WorldRenderer.
-     */
-    protected final void captureInput() {
-        Gdx.input.setCatchBackKey(true);
-        cInputMultiplexer = new InputMultiplexer();
-        cInputMultiplexer.addProcessor(this);
-        cInputMultiplexer.addProcessor(cStage);
-        Gdx.input.setInputProcessor(cInputMultiplexer);
-    }
-
-    /**
-     * Sets the default background and UI. First determines if the application is in Landscape or Portrait.
-     * Then uses this to get the default background and set the initial UI scale.
-     */
-    protected final void initBackgroundAndUI() {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
-        cIsLandscape = width > height;
-        setDefaultBackground();
-        if (cIsLandscape) {
-            cScreenStore.getGameSkin().createUIElements(height);
-        } else {
-            cScreenStore.getGameSkin().createUIElements(width);
-        }
-
     }
 
     @Override
@@ -168,6 +124,73 @@ public class WorldRenderer extends InputAdapter implements Screen {
         if (cScreen != null) {
             setScreen(cScreen);
         }
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+    	cScreenStore.rebuild();
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public final void dispose() {
+        cBackgroundSprite.getTexture().dispose();
+        cBatch.dispose();
+        cStage.dispose();
+    }
+
+    /**
+     * Initializes the necessary components for this class to function.
+     */
+    protected final void initDefaults() {
+        cCamera = new OrthographicCamera();
+        cViewport = new ExtendViewport(
+                cMinViewportRatio,
+                cMinViewportRatio,
+                cMaxViewportRatio,
+                cMaxViewportRatio,
+                cCamera);
+        cBatch = new SpriteBatch();
+        cStage = new Stage();
+        cAssets = Assets.getInstance();
+        cScreenStore = ScreenStore.getInstance();
+    }
+
+    /**
+     * Sets the input to be captured by the stage and handles this WorldRenderer.
+     */
+    protected final void captureInput() {
+        Gdx.input.setCatchBackKey(true);
+        cInputMultiplexer = (InputMultiplexer) Gdx.input.getInputProcessor();
+        cInputMultiplexer.addProcessor(this);
+        cInputMultiplexer.addProcessor(cStage);
+        Gdx.input.setInputProcessor(cInputMultiplexer);
+    }
+
+    /**
+     * Sets the default background and UI. First determines if the application is in Landscape or Portrait.
+     * Then uses this to get the default background and set the initial UI scale.
+     */
+    protected final void initBackgroundAndUI() {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        cIsLandscape = width > height;
+        setDefaultBackground();
+        if (cIsLandscape) {
+            cScreenStore.getGameSkin().createUIElements(height);
+        } else {
+            cScreenStore.getGameSkin().createUIElements(width);
+        }
+
     }
 
     /**
@@ -238,30 +261,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cStage = new Stage();
         cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
-        cScreen.display();
         cInputMultiplexer.addProcessor(cStage);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public final void dispose() {
-        cBackgroundSprite.getTexture().dispose();
-        cBatch.dispose();
-        cStage.dispose();
     }
 
     @Override
@@ -270,7 +270,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
             String previousScreenName = cScreen.getPreviousScreenName();
             if (previousScreenName == null) {
                 Gdx.app.exit();
-            } else {
+            } else if (!(cScreen instanceof EventScreen)) {
                 cScreenStore.setScreen(previousScreenName);
             }
         }
