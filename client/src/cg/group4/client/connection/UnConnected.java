@@ -3,9 +3,9 @@ package cg.group4.client.connection;
 import cg.group4.client.Client;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
+import cg.group4.server.database.query.Query;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.logging.Logger;
 
 /**
@@ -48,6 +48,18 @@ public class UnConnected implements Connection {
         }
     }
 
+    @Override
+    public boolean isConnected() {
+        return false;
+    }
+
+    @Override
+    public void send(final Query query, final ResponseHandler responseHandler) {
+        if (responseHandler != null) {
+            responseHandler.handleResponse(new Response(false, null));
+        }
+    }
+
     /**
      * Attempts to connect to the local server.
      * @param ip Localhost.
@@ -58,28 +70,11 @@ public class UnConnected implements Connection {
         try {
             LOGGER.info("Trying to connect to the local server");
             Connection connection = new LocalConnection(ip, port);
-            Client.getLocalInstance().setConnection(connection);
+            Client.getInstance().setLocalConnection(connection);
         } catch (IOException e) {
             LOGGER.info("Connection failed!");
         }
         cConnecting = false;
-    }
-
-    /**
-     *
-     * @param ip
-     * @param port
-     */
-    public void aquariumConnect(final String ip, final int port) {
-        try {
-            LOGGER.info("Trying to connect to the remote server (aquarium)");
-            final Connection connection = new RemoteConnection(ip, port);
-            Client.getRemoteInstance().setConnection(connection);
-            cConnecting = false;
-            System.out.println("REMOTE INSTANCE: " + Client.getRemoteInstance().toString());
-        } catch (IOException e) {
-            LOGGER.info("Connection failed!");
-        }
     }
 
     /**
@@ -95,16 +90,13 @@ public class UnConnected implements Connection {
                 try {
                     LOGGER.info("Trying to connect to the remote server");
                     final Connection connection = new RemoteConnection(ip, port);
-                    System.out.println("REMOTE INSTANCE: " + Client.getRemoteInstance());
-                    Client.getRemoteInstance().addPostRunnables(new Runnable() {
+                    Client.getInstance().addPostRunnables(new Runnable() {
                         @Override
                         public void run() {
-                            Client.getRemoteInstance().setConnection(connection);
+                            Client.getInstance().setRemoteConnection(connection);
                             cConnecting = false;
-                            System.out.println("REMOTE INSTANCE: " + Client.getRemoteInstance());
                         }
                     });
-
                 } catch (IOException e) {
                     LOGGER.info("Failed to connect to remote server, retrying.");
                     cConnecting = false;
@@ -112,17 +104,5 @@ public class UnConnected implements Connection {
                 }
             }
         }).start();
-    }
-
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
-
-    @Override
-    public void send(final Serializable data, final ResponseHandler responseHandler) {
-        if (responseHandler != null) {
-            responseHandler.handleResponse(new Response(false, null));
-        }
     }
 }

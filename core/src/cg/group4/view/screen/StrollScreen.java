@@ -15,11 +15,7 @@ import cg.group4.view.screen.mp_fishingboat.CraneFishingScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -65,18 +61,6 @@ public final class StrollScreen extends ScreenLogic {
             cScreenStore.setScreen("Event");
         }
     };
-
-    /**
-     * Observer that gets called when the stroll ends.
-     */
-    protected Observer cEndEventObserver = new Observer() {
-        @Override
-        public void update(final Observable o, final Object arg) {
-            cScreenStore.setScreen("Stroll");
-            cScreenStore.removeScreen("Event");
-        }
-    };
-
     /**
      * Observer that gets called when the stroll ends.
      */
@@ -87,24 +71,35 @@ public final class StrollScreen extends ScreenLogic {
             cScreenStore.setScreen("Reward");
         }
     };
-
     /**
      * Listener to when the connection state with the remote server changes.
      */
     protected Observer cRemoteConnectObserver = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            boolean isConnected = (Boolean) arg;
+            boolean isConnected = (boolean) arg;
             cHost.setDisabled(!isConnected);
             cJoin.setDisabled(!isConnected);
         }
     };
-
     /**
      * Connection to the remote server.
      */
-    protected Client cRemoteHost;
-
+    protected Client cClient;
+    /**
+     * Observer that gets called when the stroll ends.
+     */
+    protected Observer cEndEventObserver = new Observer() {
+        @Override
+        public void update(final Observable o, final Object arg) {
+            cScreenStore.setScreen("Stroll");
+            cScreenStore.removeScreen("Event");
+            if (!cClient.isRemoteConnected()) {
+                cHost.setDisabled(true);
+                cJoin.setDisabled(true);
+            }
+        }
+    };
     /**
      * The stroll timer of the game.
      */
@@ -120,13 +115,13 @@ public final class StrollScreen extends ScreenLogic {
      */
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
-        cRemoteHost = Client.getRemoteInstance();
+        cClient = Client.getInstance();
         cText = cGameSkin.generateDefaultLabel("Waiting for event");
         cCode = cGameSkin.generateDefaultTextField("Enter code");
         cHost = cGameSkin.generateDefaultMenuButton("Host");
         cJoin = cGameSkin.generateDefaultMenuButton("Join");
-        if (!cRemoteHost.isConnected()) {
-            cRemoteHost.getChangeSubject().addObserver(cRemoteConnectObserver);
+        if (!cClient.isRemoteConnected()) {
+            cClient.getRemoteChangeSubject().addObserver(cRemoteConnectObserver);
             cHost.setDisabled(true);
             cJoin.setDisabled(true);
         }
@@ -141,8 +136,8 @@ public final class StrollScreen extends ScreenLogic {
         initRemainingTime();
         cCode.setAlignment(Align.center);
 
-        cHost.setDisabled(!cRemoteHost.isConnected());
-        cJoin.setDisabled(!cRemoteHost.isConnected());
+        cHost.setDisabled(!cClient.isRemoteConnected());
+        cJoin.setDisabled(!cClient.isRemoteConnected());
 
         cHost.addListener(hostButtonClicked());
         cJoin.addListener(joinButtonClicked());
@@ -150,7 +145,24 @@ public final class StrollScreen extends ScreenLogic {
     }
 
     /**
+     * Initializes the label to display the time remaining of the stroll.
+     */
+    protected void initRemainingTime() {
+        cTimeRemaining = cGameSkin.generateDefaultLabel(Integer.toString(Timer.Global.STROLL.getDuration()));
+        cStrollTickObserver = new Observer() {
+            @Override
+            public void update(final Observable o, final Object arg) {
+                cTimeRemaining.setText(arg.toString());
+            }
+        };
+
+        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
+    }
+
+    /**
      * Fires when the host button is clicked.
+     *
      * @return The behaviour to execute when clicked.
      */
     protected ChangeListener hostButtonClicked() {
@@ -172,39 +184,28 @@ public final class StrollScreen extends ScreenLogic {
 
     /**
      * Adds behaviour when the join button is clicked.
-     * @return
+     *
+     * @return The change listener.
      */
     protected ChangeListener joinButtonClicked() {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getStroll().joinMultiPlayerEvent(
-                        Integer.parseInt(cCode.getText()), new ResponseHandler() {
-                            @Override
-                            public void handleResponse(Response response) {
-                                if (!response.isSuccess()) {
-                                    cCode.setText("Wrong code!");
-                                }
+                try {
+                    int code = Integer.parseInt(cCode.getText());
+                    StandUp.getInstance().getStroll().joinMultiPlayerEvent(code, new ResponseHandler() {
+                        @Override
+                        public void handleResponse(Response response) {
+                            if (!response.isSuccess()) {
+                                cCode.setText("Wrong code!");
                             }
-                        });
+                        }
+                    });
+                } catch (NumberFormatException e) {
+                    cCode.setText("Not a valid code.");
+                }
             }
         };
-    }
-
-    /**
-     * Initializes the label to display the time remaining of the stroll.
-     */
-    protected void initRemainingTime() {
-        cTimeRemaining = cGameSkin.generateDefaultLabel(Integer.toString(Timer.Global.STROLL.getDuration()));
-        cStrollTickObserver = new Observer() {
-            @Override
-            public void update(final Observable o, final Object arg) {
-                cTimeRemaining.setText(arg.toString());
-            }
-        };
-
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
-        cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
     }
 
     /**
@@ -239,4 +240,5 @@ public final class StrollScreen extends ScreenLogic {
     protected String setPreviousScreenName() {
         return "Home";
     }
+
 }

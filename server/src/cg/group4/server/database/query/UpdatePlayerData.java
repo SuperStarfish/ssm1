@@ -16,6 +16,10 @@ public class UpdatePlayerData extends Query {
      * Player data containing he changes to be made to the server. The players id should be the same.
      */
     protected final PlayerData cPlayerData;
+    /**
+     * Connection to the database to run the query on.
+     */
+    protected Connection cDatabaseConnection;
 
     /**
      * Constructs a new query based on the player data to be changed.
@@ -25,33 +29,27 @@ public class UpdatePlayerData extends Query {
     public UpdatePlayerData(final PlayerData playerData) {
         cPlayerData = playerData;
     }
-    /**
-     * Connection to the database to run the query on.
-     */
-    protected Connection cDatabaseConnection;
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
         cDatabaseConnection = databaseConnection;
 
-        if (cPlayerData.getUsername() != null) {
-            updateData("Username", cPlayerData.getUsername());
+        new MakePlayerEntry(cPlayerData.getId()).query(databaseConnection);
+
+        if (cPlayerData.toString() != null) {
+            updateData("Username", cPlayerData.toString());
         }
 
-        if (cPlayerData.getIntervalTimeStamp() != 0) {
-            updateData("Interval", cPlayerData.getIntervalTimeStamp());
+        if (cPlayerData.getIntervalTimestamp() != 0) {
+            updateData("Interval", cPlayerData.getIntervalTimestamp());
         }
 
-        if (cPlayerData.getStrollTimeStamp() != 0) {
-            updateData("Stroll", cPlayerData.getStrollTimeStamp());
+        if (cPlayerData.getStrollTimestamp() != 0) {
+            updateData("Stroll", cPlayerData.getStrollTimestamp());
         }
 
         if (cPlayerData.getGroupId() != null) {
             updateData("GroupId", cPlayerData.getGroupId());
-        }
-
-        if (cPlayerData.getCollection() != null) {
-            new AddCollection(cPlayerData.getCollection()).query(databaseConnection);
         }
 
         return null;
@@ -64,9 +62,12 @@ public class UpdatePlayerData extends Query {
      * @throws SQLException Throws if something went wrong while updating.
      */
     protected void updateData(final String column, final Object newValue) throws SQLException {
-        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ?")) {
+        try (PreparedStatement statement = cDatabaseConnection.prepareStatement("UPDATE USER SET " + column + " = ? "
+                + "WHERE Id = ?")) {
             statement.setObject(1, newValue);
+            statement.setObject(2, cPlayerData.getId());
             statement.executeUpdate();
+            statement.close();
         }
     }
 

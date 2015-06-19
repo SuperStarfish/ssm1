@@ -2,8 +2,8 @@ package cg.group4.data_structures.mp_fishingboat;
 
 import java.io.Serializable;
 
-public class Coordinate implements Serializable{
-    protected float cX,cY;
+public class Coordinate implements Serializable {
+    protected float cX, cY;
 
     public Coordinate(float x, float y) {
         cX = x;

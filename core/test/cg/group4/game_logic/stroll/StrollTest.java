@@ -2,7 +2,6 @@ package cg.group4.game_logic.stroll;
 
 import cg.group4.GdxTestRunner;
 import cg.group4.game_logic.StandUp;
-import cg.group4.util.orientation.Portrait;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

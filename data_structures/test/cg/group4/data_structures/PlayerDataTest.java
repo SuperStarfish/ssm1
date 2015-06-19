@@ -1,12 +1,10 @@
 package cg.group4.data_structures;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import cg.group4.data_structures.collection.Collection;
+import static org.junit.Assert.assertEquals;
 
 public class PlayerDataTest {
 	
@@ -29,7 +27,6 @@ public class PlayerDataTest {
 	public void constructorTest() {
 		final String playerID = "Group4";
 		assertEquals(playerID, cData.getId());
-		assertEquals(new Collection(playerID), cData.getCollection());
 	}
 
 }

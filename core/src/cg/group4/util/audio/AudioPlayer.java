@@ -54,11 +54,27 @@ public class AudioPlayer {
     }
 
     /**
-     * Returns the singleton instance.
-     * @return The AudioPlayer singleton.
+     * Sets the last played Music.
+     * @param music Music to be set as last played.
      */
-    public static AudioPlayer getInstance() {
-        return INSTANCE;
+    public final void setLastPlayed(Music music) {
+        cLastPlayed = music;
+    }
+
+    /**
+     * Plays a music file using the AudioPlayer. Stops the previous
+     * @param music The music file to be played.
+     */
+    public final void playAudio(Music music) {
+        if (cAudioEnabled) {
+            if (cLastPlayed.isPlaying()) {
+                cLastPlayed.stop();
+            }
+            music.play();
+            if (!music.equals(cLastPlayed)) {
+                cLastPlayed = music;
+            }
+        }
     }
 
     /**
@@ -86,14 +102,6 @@ public class AudioPlayer {
     }
 
     /**
-     * Sets the last played Music.
-     * @param music Music to be set as last played.
-     */
-    public final void setLastPlayed(Music music) {
-        cLastPlayed = music;
-    }
-
-    /**
      * Gets run after the audio enabled gets toggled. Updates every observer, stops or plays a new track
      * according to the cAudioEnabled variable. Finally updates the value stored in the preferences.
      */
@@ -111,19 +119,11 @@ public class AudioPlayer {
     }
 
     /**
-     * Plays a music file using the AudioPlayer. Stops the previous
-     * @param music The music file to be played.
+     * Returns the singleton instance.
+     * @return The AudioPlayer singleton.
      */
-    public final void playAudio(Music music) {
-        if (cAudioEnabled) {
-            if (cLastPlayed.isPlaying()) {
-                cLastPlayed.stop();
-            }
-            music.play();
-            if (!music.equals(cLastPlayed)) {
-                cLastPlayed = music;
-            }
-        }
+    public static AudioPlayer getInstance() {
+        return INSTANCE;
     }
 
     /**

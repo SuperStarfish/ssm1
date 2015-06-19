@@ -17,6 +17,7 @@ public class FishingBoatClient extends FishingBoatEvent {
 
     /**
      * Creates a new CraneFishingEvent Client.
+     *
      * @param host the connection with the other host.
      */
     public FishingBoatClient(Host host) {

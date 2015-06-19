@@ -7,8 +7,9 @@ public interface OrientationReader {
 
     /**
      * Current device orientation.
+     *
      * @return Orientation of the device.
      */
-	Orientation getOrientation();
+    Orientation getOrientation();
 
 }

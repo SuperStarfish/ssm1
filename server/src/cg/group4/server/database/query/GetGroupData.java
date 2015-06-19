@@ -31,7 +31,6 @@ public class GetGroupData extends Query {
                 ));
             }
         }
-
         return list;
     }
 }

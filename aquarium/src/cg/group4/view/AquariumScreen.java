@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
@@ -26,18 +27,14 @@ public class AquariumScreen implements Screen {
      * Stage for the content.
      */
     protected final Stage cStage;
-
-    /**
-     * Set containing all displayed elements.
-     */
-    protected HashSet<CollectibleRenderer> cDisplayRendererSet,
-        cInitialSet;
-
     /**
      * Style for layout items.
      */
     protected final GameSkin cStyle;
-
+    /**
+     * Set containing all displayed elements.
+     */
+    protected HashSet<CollectibleRenderer> cDisplayRendererSet, cInitialSet;
     /**
      * Label to display owner information after having clicked on a collectible.
      */
@@ -53,16 +50,14 @@ public class AquariumScreen implements Screen {
      */
     protected Label cStatusLabel;
 
-
+    /**
+     * Converts the users ids to usernames.
+     */
+    protected HashMap<String, String> cIdToUserName;
     /**
      * Table to hold layout items.
      */
     protected Table cLabelTable;
-
-    /**
-     * Observer for the collection.
-     */
-    protected Observer cCollectionObserver;
 
     /**
      * Observer for the info label.
@@ -74,12 +69,11 @@ public class AquariumScreen implements Screen {
      */
     public AquariumScreen() {
 
-        createCollectionObserver();
-        createLabelObserver();
 
-        cInitialSet = new HashSet<>();
-        cDisplayRendererSet = new HashSet<>();
-        cDisplayRendererSet = new HashSet<>();
+        createLabelObserver();
+        cIdToUserName = new HashMap<String, String>();
+        cInitialSet = new HashSet<CollectibleRenderer>();
+        cDisplayRendererSet = new HashSet<CollectibleRenderer>();
 
         cStyle = new GameSkin();
         final int fontSize = 720;
@@ -90,36 +84,6 @@ public class AquariumScreen implements Screen {
         initTooltipLabels();
     }
 
-    /**
-     * Adds an observer for the collection update, which is received from the server.
-     */
-    public void createCollectionObserver() {
-        cCollectionObserver = new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
-                Collection collection = (Collection) arg;
-                Gdx.app.log(this.getClass().getName(), "Received Collection update: " + collection.toString());
-
-
-                if (collection.isEmpty()) {
-                    notifyUserEmptyContainerReceived();
-                } else {
-
-                    for (Collectible c : collection) {
-                        addCollectibleRendererItem(c);
-                    }
-
-                    for (CollectibleRenderer cr : cInitialSet) {
-                        if (!isInDisplaySet(cr)) {
-                            cDisplayRendererSet.add(cr);
-
-                            cStage.addActor(cr.getActor());
-                        }
-                    }
-                }
-            }
-        };
-    }
 
     /**
      * Creates the observer for the label.
@@ -130,38 +94,20 @@ public class AquariumScreen implements Screen {
             public void update(final Observable o, final Object arg) {
                 Pair<String> pair = (Pair<String>) arg;
 
-                cOwnerLabel.setText("owner cId: " + pair.getElement1());
-                cDateLabel.setText("date of achievement: " + pair.getElement2());
+                cOwnerLabel.setText("Owner: " + convertToUsername(pair.getElement1()));
+                cDateLabel.setText("Date of achievement: " + pair.getElement2());
             }
         };
     }
 
     /**
-     * Checks whether the display set already contains the given collectible.
-     * @param collectibleRenderer check whether this element exists in the already displayed set.
-     * @return true if in the set, false if not.
+     * To be executed only after initialization of the collectible renderer entities.
      */
-    public boolean isInDisplaySet(final CollectibleRenderer collectibleRenderer) {
-        return cDisplayRendererSet.contains(collectibleRenderer);
-    }
-
-
-    /**
-     * For a single collectible renderer, add an object to the set which will be used to render.
-     * @param collectible Collectible to render
-     */
-    public void addCollectibleRendererItem(Collectible collectible) {
-        CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
-        collectibleRenderer.getSubject().addObserver(cLabelObserver);
-        cInitialSet.add(collectibleRenderer);
-    }
-
-    /**
-     * Notifies the user an empty collection has been received from the server.
-     * Does this by setting the status label.
-     */
-    public void notifyUserEmptyContainerReceived() {
-        cStatusLabel.setText("Received an empty collection from the server!");
+    public void initStage() {
+        for (CollectibleRenderer cr : cDisplayRendererSet) {
+            cStage.addActor(cr.getActor());
+        }
+        Gdx.input.setInputProcessor(cStage);
     }
 
     /**
@@ -185,6 +131,19 @@ public class AquariumScreen implements Screen {
     }
 
     /**
+     * Converts the id to s username.
+     *
+     * @param id The id.
+     * @return The username.
+     */
+    public String convertToUsername(String id) {
+        if (cIdToUserName.containsKey(id)) {
+            return cIdToUserName.get(id);
+        }
+        return id;
+    }
+
+    /**
      * Initializes the status label.
      */
     protected void initStatusLabel() {
@@ -192,29 +151,15 @@ public class AquariumScreen implements Screen {
         cLabelTable.add(cStatusLabel).expandX();
     }
 
-    /**
-     * To be executed only after initialization of the collectible renderer entities.
-     */
-    public void initStage() {
-        for (CollectibleRenderer cr : cDisplayRendererSet) {
-            cStage.addActor(cr.getActor());
-        }
-        Gdx.input.setInputProcessor(cStage);
-    }
-
-
     @Override
     public void show() {
     }
 
     @Override
     public void render(float delta) {
-
-        //System.out.println("Fps -> " + (1/delta));
         for (CollectibleRenderer c : cDisplayRendererSet) {
             c.render();
         }
-
         cStage.act();
 
         final float alpha = 1f;
@@ -227,6 +172,7 @@ public class AquariumScreen implements Screen {
 
     /**
      * Returns the background colour.
+     *
      * @return Blue background colour.
      */
     private Vector3f backgroundColour() {
@@ -234,7 +180,6 @@ public class AquariumScreen implements Screen {
         final float x = 63 / maxColour;
         final float y = 67 / maxColour;
         final float z = 173f / maxColour;
-
         return new Vector3f(x, y, z);
     }
 
@@ -262,9 +207,78 @@ public class AquariumScreen implements Screen {
     /**
      * Observer for the collection.
      * Used for updating the displayed collection of fish.
+     *
      * @return Observer
      */
     public Observer getCollectionObserver() {
-        return cCollectionObserver;
+        return new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                Collection collection = (Collection) arg;
+                Gdx.app.log(this.getClass().getName(), "Received Collection update: " + collection.toString());
+
+
+                if (collection.isEmpty()) {
+                    notifyUserEmptyContainerReceived();
+                } else {
+
+                    for (Collectible c : collection) {
+                        addCollectibleRendererItem(c);
+                    }
+
+                    for (CollectibleRenderer cr : cInitialSet) {
+                        if (!isInDisplaySet(cr)) {
+                            cDisplayRendererSet.add(cr);
+
+                            cStage.addActor(cr.getActor());
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * Notifies the user an empty collection has been received from the server.
+     * Does this by setting the status label.
+     */
+    public void notifyUserEmptyContainerReceived() {
+        cStatusLabel.setText("Received an empty collection from the server!");
+    }
+
+    /**
+     * For a single collectible renderer, add an object to the set which will be used to render.
+     *
+     * @param collectible Collectible to render
+     */
+    public void addCollectibleRendererItem(Collectible collectible) {
+        CollectibleRenderer collectibleRenderer = new CollectibleRenderer(collectible);
+        collectibleRenderer.getSubject().addObserver(cLabelObserver);
+        cInitialSet.add(collectibleRenderer);
+    }
+
+    /**
+     * Checks whether the display set already contains the given collectible.
+     *
+     * @param collectibleRenderer check whether this element exists in the already displayed set.
+     * @return true if in the set, false if not.
+     */
+    public boolean isInDisplaySet(final CollectibleRenderer collectibleRenderer) {
+        return cDisplayRendererSet.contains(collectibleRenderer);
+    }
+
+    /**
+     * Observer for the collection.
+     * Used for updating the displayed collection of fish.
+     *
+     * @return Observer
+     */
+    public Observer getMembersObserver() {
+        return new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                cIdToUserName = (HashMap<String, String>) arg;
+            }
+        };
     }
 }

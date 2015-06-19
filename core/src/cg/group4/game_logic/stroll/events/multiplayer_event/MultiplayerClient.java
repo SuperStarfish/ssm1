@@ -9,16 +9,17 @@ import java.net.UnknownHostException;
  */
 public class MultiplayerClient extends Host {
     /**
-     * The IP to connect to.
-     */
-    protected String cIP;
-    /**
      * The port to connect to.
      */
     protected final int cPortToUse = 56151;
+    /**
+     * The IP to connect to.
+     */
+    protected String cIP;
 
     /**
      * Creates a new Client that connects to the given port.
+     *
      * @param ip The port to connect to.
      * @throws IOException When connection couldn't be established.
      */

@@ -39,35 +39,20 @@ public class GroupData implements Serializable {
         cOwnerName = ownerName;
     }
 
-    public String getOwnerName() {
-        return cOwnerName;
-    }
-
-    public void setOwnerName(final String ownerName) {
-        cOwnerName = ownerName;
-    }
-
-    public int getGroupId() {
-        return cGroupId;
+    public String getGroupId() {
+        return Integer.toString(cGroupId);
     }
 
     public void setGroupId(final int groupId) {
         cGroupId = groupId;
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return cName;
     }
 
     public void setName(final String name) {
         cName = name;
-    }
-
-    public String getOwnerId() {
-        return cOwnerId;
-    }
-
-    public void setOwnerId(final String ownerId) {
-        cOwnerId = ownerId;
     }
 }

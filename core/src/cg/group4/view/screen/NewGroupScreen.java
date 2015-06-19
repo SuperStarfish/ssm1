@@ -9,11 +9,7 @@ import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -64,21 +60,21 @@ public class NewGroupScreen extends ScreenLogic {
     }
 
     private void addNewGroup() {
-        Client.getRemoteInstance().createGroup(cGroupNameField.getText(), new ResponseHandler() {
+        Client.getInstance().createGroup(cGroupNameField.getText(), new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
                 final Group group = (Group) response.getData();
-                final int groupId = group.getGroupData().getGroupId();
+                final String groupId = group.getGroupData().getGroupId();
 
                 final Player player = StandUp.getInstance().getPlayer();
-                player.setPlayerDataGroupId(groupId);
+                player.setGroupId(groupId);
 
                 if (response.isSuccess()) {
                     cStatusLabel.setText("Successfully created new group");
+                    StandUp.getInstance().getPlayer().updatePlayerData();
                 } else {
                     cStatusLabel.setText("Failed to create group");
                 }
-                StandUp.getInstance().getPlayer().update();
             }
         });
     }

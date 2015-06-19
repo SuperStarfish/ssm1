@@ -28,7 +28,7 @@ public class Accelerometer {
      * Reader that reads the sensor values from the device.
      */
     protected SensorReader cReader;
-    
+
     /**
      * Whether to filter the noise per axis or on all three.
      */
@@ -75,16 +75,43 @@ public class Accelerometer {
         }
 
         if (cFilterPerAxis) {
-        	resultVector.set(
+            resultVector.set(
                     filterNoise(resultVector.x),
                     filterNoise(resultVector.y),
                     filterNoise(resultVector.z));
-        } else  {
-        	resultVector = filterNoise(resultVector);
+        } else {
+            resultVector = filterNoise(resultVector);
         }
 
         cBaseVector = readings;
         return resultVector;
+    }
+
+    /**
+     * Helper method that should not be called outside of this class.
+     * Returns the input if the absolute input is higher than the noise threshold. 0 Otherwise.
+     *
+     * @param scalar Accelerometer component
+     * @return Input if scalar > noise threshold. 0 Otherwise.
+     */
+    protected final float filterNoise(final float scalar) {
+        float result = 0f;
+        if (Math.abs(scalar) > cNoiseThreshold) {
+            result = scalar;
+        }
+        return result;
+    }
+
+    /**
+     * Filters the vector of noise.
+     * @param vector The vector to filter.
+     * @return The filtered vector.
+     */
+    protected Vector3 filterNoise(final Vector3 vector) {
+        if (vector.epsilonEquals(cBaseVector, cNoiseThreshold)) {
+            return cBaseVector;
+        }
+        return vector;
     }
 
     /**
@@ -106,33 +133,6 @@ public class Accelerometer {
         }
 
         return highestComponent;
-    }
-
-    /**
-     * Helper method that should not be called outside of this class.
-     * Returns the input if the absolute input is higher than the noise threshold. 0 Otherwise.
-     *
-     * @param scalar Accelerometer component
-     * @return Input if scalar > noise threshold. 0 Otherwise.
-     */
-    protected final float filterNoise(final float scalar) {
-        float result = 0f;
-        if (Math.abs(scalar) > cNoiseThreshold) {
-            result = scalar;
-        }
-        return result;
-    }
-    
-    /**
-     * 
-     * @param vector
-     * @return
-     */
-    protected Vector3  filterNoise(final Vector3 vector) {
-        if (vector.epsilonEquals(cBaseVector, cNoiseThreshold)) {
-        	return cBaseVector;
-        }
-        return vector;
     }
 
     /**
@@ -166,8 +166,8 @@ public class Accelerometer {
     public final void setNoiseThreshold(final float threshold) {
         this.cNoiseThreshold = threshold;
     }
-    
+
     public void setFilterPerAxis(boolean filterPerAxis) {
-    	cFilterPerAxis = filterPerAxis;
+        cFilterPerAxis = filterPerAxis;
     }
 }

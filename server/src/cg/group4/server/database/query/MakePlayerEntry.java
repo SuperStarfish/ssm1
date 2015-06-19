@@ -6,31 +6,33 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Resets the data of a player on the remote server.
+ * Object that will retrieve user data from the server with the given id.
  */
-public class ResetPlayerData extends Query {
+public class MakePlayerEntry extends Query {
 
     /**
-     * The player ID to reset.
+     * The PlayerData constructed from given id. Will be filled and returned.
      */
     protected String cId;
 
     /**
-     * Creates a new ResetPlayerData Query using the ID of that player.
-     * @param id The ID of the Player.
+     * Constructor for the request.
+     *
+     * @param id The id of the player to be retrieved.
      */
-    public ResetPlayerData(final String id) {
+    public MakePlayerEntry(final String id) {
         cId = id;
     }
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
-        String preparedStatement = "DELETE FROM Collectible WHERE GroupId = ?";
+        String preparedStatement = "INSERT OR IGNORE INTO User (ID) VALUES (?)";
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
             statement.setString(1, cId);
             statement.executeUpdate();
+            statement.close();
         }
-
         return null;
     }
+
 }

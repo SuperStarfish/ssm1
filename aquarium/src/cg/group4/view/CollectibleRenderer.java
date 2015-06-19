@@ -30,12 +30,10 @@ public class CollectibleRenderer {
      * Current angle for the direction in which the fish moves.
      */
     protected int cCurrentAngle;
-
     /**
      * Id for comparison.
      */
     protected String cId;
-
     /**
      * Subject to send information of the owner and achievement date of the collectible.
      */
@@ -51,34 +49,8 @@ public class CollectibleRenderer {
         initCollectibleEntity(collectible);
         randomInitialization();
 
-        addCollectibleDialog(collectible);
-
-    }
-
-    /**
-     * Actor to be added to a stage.
-     *
-     * @return actor
-     */
-    public Actor getActor() {
-        return cCollectibleActor;
-    }
-
-    /**
-     * Method which is called every frame to render the collectible to the screen.
-     */
-    public void render() {
-        move();
-        boundaryCheck();
-    }
-
-
-    /**
-     * Executed addCollectibleDialog on creation.
-     * @param collectible Adds tooltip to collectible.
-     */
-    public void addCollectibleDialog(Collectible collectible) {
         addClickableArea(collectible);
+
     }
 
     /**
@@ -101,20 +73,6 @@ public class CollectibleRenderer {
     }
 
     /**
-     * Sets the cId of the collectible renderer.
-     * Used for comparison of this class' objects.
-     * @param owner Owner cId of the collectible.
-     * @param date Date of the collectible.
-     * @param rarity Rarity based on  form and hue.
-     */
-    public void setId(String owner, String date, double rarity) {
-        final String sep = ",";
-        this.cId = owner + sep
-                + date + sep
-                + Double.toString(rarity);
-    }
-
-    /**
      * Initializes the collectible actor to position with a random angle.
      * Flips the image if required (if upside down).
      */
@@ -132,6 +90,70 @@ public class CollectibleRenderer {
     }
 
     /**
+     * Adds a clickable area which when clicked on will update the owner/date information labels.
+     * @param collectible Collectible
+     */
+    public void addClickableArea(final Collectible collectible) {
+        cCollectibleActor.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String date = collectible.getDateAsString();
+                String owner = collectible.getOwnerId();
+                cCollectibleInformationSubject.update(new Pair<String>(owner, date));
+            }
+        });
+    }
+
+    /**
+     * Sets the cId of the collectible renderer.
+     * Used for comparison of this class' objects.
+     *
+     * @param owner  Owner cId of the collectible.
+     * @param date   Date of the collectible.
+     * @param rarity Rarity based on  form and hue.
+     */
+    public void setId(String owner, String date, double rarity) {
+        final String sep = ",";
+        this.cId = owner + sep
+                + date + sep
+                + Double.toString(rarity);
+    }
+
+    /**
+     * Normalizes the input angle.
+     *
+     * @param angle input angle
+     * @return normalized angle
+     */
+    protected int normalizeAngle(int angle) {
+        final int halfCircle = 180;
+        final int fullCircle = 360;
+
+        if (angle > halfCircle) {
+            angle = angle - fullCircle;
+        }
+        if (angle < -halfCircle) {
+            angle = angle + fullCircle;
+        }
+        return angle;
+    }
+
+    /**
+     * Assures the angle of a rotation so the flipping of the images goes correct.
+     * This is to assure no fish are swimming backwards.
+     *
+     * @param angle angle to validate
+     * @return angle between coordinates
+     */
+    protected boolean validateAngle(int angle) {
+        final int min = 25; // 25 default
+        final int max = 155; // 155 default
+
+        angle = Math.abs(angle);
+        return min < angle && angle < max;
+    }
+
+    /**
      * Flips the image on the Y axis.
      */
     public void flipImageY() {
@@ -139,44 +161,20 @@ public class CollectibleRenderer {
     }
 
     /**
-     * Verifies whether the actor to be inside the boundary box, which is the window frame.
+     * Actor to be added to a stage.
+     *
+     * @return actor
      */
-    public void boundaryCheck() {
-        final int halfCircle = 180;
-
-        // horizontal check
-        if (getOriginX() < 0) {
-            flipImageY();
-            cCurrentAngle *= -1;
-        } else if (getOriginX() > Gdx.graphics.getWidth()) {
-            flipImageY();
-            cCurrentAngle *= -1;
-        }
-
-        // vertical check
-        if (getOriginY() > Gdx.graphics.getHeight()) {
-            cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
-        } else if (getOriginY() < 0) {
-            cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
-        }
+    public Actor getActor() {
+        return cCollectibleActor;
     }
 
     /**
-     * Determines the x-axis origin of the collectible image.
-     *
-     * @return x-axis origin
+     * Method which is called every frame to render the collectible to the screen.
      */
-    private float getOriginX() {
-        return (cCollectibleActor.getX() + cCollectibleActor.getOriginX());
-    }
-
-    /**
-     * Determines the y-axis origin of the collectible image.
-     *
-     * @return y-axis origin
-     */
-    private float getOriginY() {
-        return (cCollectibleActor.getY() + cCollectibleActor.getOriginY());
+    public void render() {
+        move();
+        boundaryCheck();
     }
 
     /**
@@ -186,6 +184,24 @@ public class CollectibleRenderer {
         final int angle = 4;
         generateAngle(angle);
         moveToDestination(cSpeed);
+    }
+
+    /**
+     * Verifies whether the actor to be inside the boundary box, which is the window frame.
+     */
+    public void boundaryCheck() {
+        final int halfCircle = 180;
+
+        // horizontal check
+        if (getOriginX() < 0 || Gdx.graphics.getWidth() < getOriginX()) {
+            flipImageY();
+            cCurrentAngle *= -1;
+        }
+
+        // vertical check
+        if (getOriginY() < 0 || getOriginY() > Gdx.graphics.getHeight()) {
+            cCurrentAngle = normalizeAngle(halfCircle - cCurrentAngle);
+        }
     }
 
     /**
@@ -209,40 +225,6 @@ public class CollectibleRenderer {
     }
 
     /**
-     * Assures the angle of a rotation so the flipping of the images goes correct.
-     * This is to assure no fish are swimming backwards.
-     *
-     * @param angle angle to validate
-     * @return angle between coordinates
-     */
-    protected boolean validateAngle(int angle) {
-        final int min = 25; // 25 default
-        final int max = 155; // 155 default
-
-        angle = Math.abs(angle);
-        return min < angle && angle < max;
-    }
-
-    /**
-     * Normalizes the input angle.
-     *
-     * @param angle input angle
-     * @return normalized angle
-     */
-    protected int normalizeAngle(int angle) {
-        final int halfCircle = 180;
-        final int fullCircle = 360;
-
-        if (angle > halfCircle) {
-            angle = angle - fullCircle;
-        }
-        if (angle < -halfCircle) {
-            angle = angle + fullCircle;
-        }
-        return angle;
-    }
-
-    /**
      * Randomly moves a fish in the direction of the {#code cCurrentAngle}.
      *
      * @param speed Amount of pixels to move per step
@@ -259,21 +241,26 @@ public class CollectibleRenderer {
     }
 
     /**
-     * TODO
-     * Adds a clickable area which when clicked on will update the owner/date information labels.
+     * Determines the x-axis origin of the collectible image.
      *
-     * @param collectible Collectible
+     * @return x-axis origin
      */
-    public void addClickableArea(final Collectible collectible) {
-        cCollectibleActor.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String date = collectible.getDateAsString();
-                String owner = collectible.getOwnerId();
-                cCollectibleInformationSubject.update(new Pair<>(owner, date));
-            }
-        });
+    private float getOriginX() {
+        return (cCollectibleActor.getX() + cCollectibleActor.getOriginX());
+    }
 
+    /**
+     * Determines the y-axis origin of the collectible image.
+     *
+     * @return y-axis origin
+     */
+    private float getOriginY() {
+        return (cCollectibleActor.getY() + cCollectibleActor.getOriginY());
+    }
+
+    @Override
+    public int hashCode() {
+        return cId.hashCode();
     }
 
     @Override
@@ -291,13 +278,9 @@ public class CollectibleRenderer {
 
     }
 
-    @Override
-    public int hashCode() {
-        return cId.hashCode();
-    }
-
     /**
      * Returns the subject on collectible information.
+     *
      * @return collectible information.
      */
     public Subject getSubject() {

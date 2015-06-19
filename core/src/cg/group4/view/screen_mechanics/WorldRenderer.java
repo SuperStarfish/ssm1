@@ -1,10 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -90,6 +86,67 @@ public class WorldRenderer extends InputAdapter implements Screen {
         initBackgroundAndUI();
     }
 
+    @Override
+    public final void render(final float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        cCamera.update();
+        cBatch.setProjectionMatrix(cCamera.combined);
+        cBatch.begin();
+        cBackgroundSprite.draw(cBatch);
+        cBatch.end();
+        cStage.act();
+        cStage.draw();
+    }
+
+    /**
+     * Upon resizing checks to see if the orientation is changed. If so, it will change the background to default.
+     * Resizing always resets the GameSkin and ScreenLogic to match the new size.
+     *
+     * @param width  New width of the application.
+     * @param height New height of the application.
+     */
+    @Override
+    public final void resize(final int width, final int height) {
+        cViewport.update(width, height);
+        if (width > height != cIsLandscape) {
+            cIsLandscape = !cIsLandscape;
+            setDefaultBackground();
+        }
+
+        if (cIsLandscape) {
+            cScreenStore.rebuild(height);
+        } else {
+            cScreenStore.rebuild(width);
+        }
+
+        if (cScreen != null) {
+            setScreen(cScreen);
+        }
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+    	cScreenStore.rebuild();
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public final void dispose() {
+        cBackgroundSprite.getTexture().dispose();
+        cBatch.dispose();
+        cStage.dispose();
+    }
+
     /**
      * Initializes the necessary components for this class to function.
      */
@@ -133,45 +190,6 @@ public class WorldRenderer extends InputAdapter implements Screen {
             cScreenStore.getGameSkin().createUIElements(width);
         }
 
-    }
-
-    @Override
-    public final void render(final float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        cCamera.update();
-        cBatch.setProjectionMatrix(cCamera.combined);
-        cBatch.begin();
-        cBackgroundSprite.draw(cBatch);
-        cBatch.end();
-        cStage.act();
-        cStage.draw();
-    }
-
-    /**
-     * Upon resizing checks to see if the orientation is changed. If so, it will change the background to default.
-     * Resizing always resets the GameSkin and ScreenLogic to match the new size.
-     *
-     * @param width  New width of the application.
-     * @param height New height of the application.
-     */
-    @Override
-    public final void resize(final int width, final int height) {
-        cViewport.update(width, height);
-        if (width > height != cIsLandscape) {
-            cIsLandscape = !cIsLandscape;
-            setDefaultBackground();
-        }
-
-        if (cIsLandscape) {
-            cScreenStore.rebuild(height);
-        } else {
-            cScreenStore.rebuild(width);
-        }
-
-        if (cScreen != null) {
-            setScreen(cScreen);
-        }
     }
 
     /**
@@ -240,32 +258,9 @@ public class WorldRenderer extends InputAdapter implements Screen {
         cScreen = screen;
         cStage.dispose();
         cStage = new Stage();
-        cStage.setDebugAll(true);
+        cStage.setDebugAll(false);
         cStage.addActor(cScreen.getWidgetGroup());
-        cScreen.display();
         cInputMultiplexer.addProcessor(cStage);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public final void dispose() {
-        cBackgroundSprite.getTexture().dispose();
-        cBatch.dispose();
-        cStage.dispose();
     }
 
     @Override

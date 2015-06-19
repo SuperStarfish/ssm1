@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class CraneHitbox extends Image {
     /**
      * Creates a new Image using the given Texture.
+     *
      * @param texture The texture to use for the Sprite.
      */
     public CraneHitbox(Texture texture) {

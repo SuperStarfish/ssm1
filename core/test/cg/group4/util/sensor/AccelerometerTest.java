@@ -65,7 +65,7 @@ public class AccelerometerTest {
      */
     @Test
     public final void isGravity() {
-        cAccelMeter.cGravity  = 9.81f;
+        cAccelMeter.cGravity = 9.81f;
         float scalar = 10f;
         assertTrue(cAccelMeter.isGravity(scalar));
         scalar = 9f;

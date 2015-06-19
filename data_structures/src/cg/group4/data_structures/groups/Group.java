@@ -34,8 +34,8 @@ public class Group implements Serializable {
         return cGroupData;
     }
 
-    public void setGroupData(final GroupData cGroupData) {
-        this.cGroupData = cGroupData;
+    public void setGroupData(final GroupData groupData) {
+        cGroupData = groupData;
     }
 
     // collections
@@ -43,8 +43,8 @@ public class Group implements Serializable {
         return cCollection;
     }
 
-    public void setCollection(final Collection cCollection) {
-        this.cCollection = cCollection;
+    public void setCollection(final Collection collection) {
+        cCollection = collection;
     }
 
 

@@ -39,7 +39,7 @@ public class FollowTheFishEvent extends StrollEvent {
      * The string values belonging to each direction.
      */
     protected final String[] cDirections = {"to the left", "to the right", "down", "up",
-    		"away from you", "towards you"};
+            "away from you", "towards you"};
     
     /**
      * operationNr: Movement operation that must be done.
@@ -67,7 +67,14 @@ public class FollowTheFishEvent extends StrollEvent {
             cDelayNewInput = true;
         }
     };
-   
+    /**
+     * Configurable accelerometer that reads and filters the accelerations of the device.
+     */
+    protected Accelerometer cAccelMeter;
+    /**
+     * Integer representing the current orientation. 0 = undefined, 1 = portrait, 2 = landscape.
+     */
+    protected Orientation cOrientation;
     /**
      * Tasks which will execute when a delay is stopped.
      */
@@ -78,17 +85,6 @@ public class FollowTheFishEvent extends StrollEvent {
             cDelayNewInput = false;
         }
     };
-
-    /**
-     * Configurable accelerometer that reads and filters the accelerations of the device.
-     */
-    protected Accelerometer cAccelMeter;
-    
-    /**
-     * Integer representing the current orientation. 0 = undefined, 1 = portrait, 2 = landscape.
-     */
-    protected Orientation cOrientation;
-
     /**
      * Creates random variables for the class.
      */
@@ -170,28 +166,28 @@ public class FollowTheFishEvent extends StrollEvent {
         if (highestAccel >= delta) {
             Boolean success;
             switch (cOperationNr) {
-			case MOVE_LEFT:
-				success = accelData.y >= delta;
-				break;
-			case MOVE_RIGHT:
-				success = accelData.y <= -delta;
-				break;
-			case MOVE_DOWN:
-				success = accelData.x <= -delta;
-				break;
-			case MOVE_UP:
-				success = accelData.x >= delta;
-				break;
-			case MOVE_AWAY:
-				success = accelData.z <= -delta;
-				break;
-			case MOVE_TOWARDS:
-				success = accelData.z >= delta;
-				break;
-			default:
-				success = false;
-				break;
-			}
+                case MOVE_LEFT:
+                    success = accelData.y >= delta;
+                    break;
+                case MOVE_RIGHT:
+                    success = accelData.y <= -delta;
+                    break;
+                case MOVE_DOWN:
+                    success = accelData.x <= -delta;
+                    break;
+                case MOVE_UP:
+                    success = accelData.x >= delta;
+                    break;
+                case MOVE_AWAY:
+                    success = accelData.z <= -delta;
+                    break;
+                case MOVE_TOWARDS:
+                    success = accelData.z >= delta;
+                    break;
+                default:
+                    success = false;
+                    break;
+            }
             if (success) {
                 taskCompleted();
             } else {
@@ -215,15 +211,15 @@ public class FollowTheFishEvent extends StrollEvent {
             processInput(readings);
         }
     }
-    
+
     /**
      * Detects if the orientation of the screen changed and updates the operationNr and texts displayed accordingly.
      */
     public final void determineAxes() {
-    	if (StandUp.getInstance().getOrientation().getOrientationNumber() != cOrientation.getOrientationNumber()) {
-    		cDelayInputTimer.reset();
-    		this.cOrientation = StandUp.getInstance().getOrientation();
-    		this.cOperationNr = cOrientation.transformOperation(cOperationNr);
-    	}
+        if (StandUp.getInstance().getOrientation().getOrientationNumber() != cOrientation.getOrientationNumber()) {
+            cDelayInputTimer.reset();
+            this.cOrientation = StandUp.getInstance().getOrientation();
+            this.cOperationNr = cOrientation.transformOperation(cOperationNr);
+        }
     }
 }

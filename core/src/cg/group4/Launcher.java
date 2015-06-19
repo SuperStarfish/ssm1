@@ -59,7 +59,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
      * Used to determine where the local server lives.
      */
     protected LocalStorageResolver cLocalStorageResolver;
-    
+
     /**
      * Reads the device's current orientation.
      */
@@ -98,12 +98,10 @@ public class Launcher extends Game implements AssetsLoadingHandler {
         Server server = new Server(cLocalStorageResolver);
         server.start();
 
-        Client.getLocalInstance().setUserIDResolver(cIDResolver);
-        Client.getLocalInstance().connectToServer(null, server.getSocketPort());
-        
-        Client.getRemoteInstance().setUserIDResolver(cIDResolver);
-        Client.getRemoteInstance().connectToServer();
-        
+        Client.getInstance().setUserIDResolver(cIDResolver);
+        Client.getInstance().connectToLocalServer(server.getSocketPort());
+        Client.getInstance().connectToRemoteServer();
+
         setScreen(new LoadingScreen(this));
     }
 
@@ -167,10 +165,10 @@ public class Launcher extends Game implements AssetsLoadingHandler {
             cStandUp.update();
         }
 
-        for (Runnable toRunBeforeNextCycle : Client.getRemoteInstance().getPostRunnables()) {
+        for (Runnable toRunBeforeNextCycle : Client.getInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
-        Client.getRemoteInstance().resetPostRunnables();
+        Client.getInstance().resetPostRunnables();
     }
 
 }

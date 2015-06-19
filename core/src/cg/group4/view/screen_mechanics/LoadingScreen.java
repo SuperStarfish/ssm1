@@ -1,6 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.Launcher;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,35 +13,29 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class LoadingScreen implements Screen {
     /**
+     * Scale is based on largest screen size we developed on.
+     */
+    protected final float cScaleOnMax = 1440;
+    /**
      * The assets that have to be loaded.
      */
     protected Assets cAssets;
-
     /**
      * The launcher, used to tell the assets are done.
      */
     protected AssetsLoadingHandler cLauncher;
-
     /**
      * The SpriteBatch used to draw the logo.
      */
     protected SpriteBatch cBatch;
-
     /**
      * The logo that is to be drawn.
      */
     protected Sprite cLogo;
-
     /**
      * Scales to logo to fit different resolutions.
      */
     protected float cLogoScalar;
-
-    /**
-     * Scale is based on largest screen size we developed on.
-     */
-    protected final float cScaleOnMax = 1440;
-
     /**
      * The width of the game.
      */

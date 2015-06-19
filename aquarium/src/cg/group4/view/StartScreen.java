@@ -21,13 +21,12 @@ import java.util.Observer;
 /**
  * Screen which is shown at startup of the aquarium application.
  * Gives the possibility to fill in a group cId so your aquarium will be shown.
- *
+ * <p/>
  * Layout overview:
- *
+ * <p/>
  * Your group cId:                label
- *  (   ...   )                  textfield
- *  [Show aquarium]              button
- *
+ * (   ...   )                  textfield
+ * [Show aquarium]              button
  */
 public class StartScreen implements Screen, Observer {
 
@@ -84,6 +83,19 @@ public class StartScreen implements Screen, Observer {
         cGameSkin.createUIElements(textScale);
     }
 
+    @Override
+    public void show() {
+        cContainer.setFillParent(true);
+
+        createGroupIdLabel();
+        createGroupIdTextField();
+        createButton();
+        createStatusLabel();
+
+        cStage.addActor(cContainer);
+        Gdx.input.setInputProcessor(cStage);
+    }
+
     /**
      * Creates the group cId info label.
      */
@@ -91,16 +103,6 @@ public class StartScreen implements Screen, Observer {
         final String welcomeText = "Fill in your Group Id to show your group aquarium: ";
         cGroupIdLabel = new Label(welcomeText, cGameSkin.getDefaultLabelStyle());
         cContainer.add(cGroupIdLabel);
-        cContainer.row();
-    }
-
-    /**
-     * Creates the status label.
-     */
-    public void createStatusLabel() {
-        final String statusText = "";
-        cStatusLabel = new Label(statusText, cGameSkin.getDefaultLabelStyle());
-        cContainer.add(cStatusLabel);
         cContainer.row();
     }
 
@@ -128,14 +130,25 @@ public class StartScreen implements Screen, Observer {
     }
 
     /**
+     * Creates the status label.
+     */
+    public void createStatusLabel() {
+        final String statusText = "";
+        cStatusLabel = new Label(statusText, cGameSkin.getDefaultLabelStyle());
+        cContainer.add(cStatusLabel);
+        cContainer.row();
+    }
+
+    /**
      * Returns the ChangeListener which starts the Aquarium Screen.
+     *
      * @return ChangeListener
      */
     public ChangeListener startScreenButtonListener() {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                String input =  cGroupIdTextField.getText();
+                String input = cGroupIdTextField.getText();
 
                 if (input.length() <= 0) {
                     cStatusLabel.setText("Input insufficient (group cId can not be empty)");
@@ -150,19 +163,6 @@ public class StartScreen implements Screen, Observer {
 
             }
         };
-    }
-
-    @Override
-    public void show() {
-        cContainer.setFillParent(true);
-
-        createGroupIdLabel();
-        createGroupIdTextField();
-        createButton();
-        createStatusLabel();
-
-        cStage.addActor(cContainer);
-        Gdx.input.setInputProcessor(cStage);
     }
 
     @Override

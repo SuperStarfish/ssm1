@@ -3,7 +3,7 @@ package cg.group4.data_structures;
 /**
  * Data class which holds a Pair of type T.
  */
-public class Pair<T>  {
+public class Pair<T> {
 
     /**
      * First element of the pair.
@@ -18,6 +18,7 @@ public class Pair<T>  {
 
     /**
      * Initializes a pair of two elements.
+     *
      * @param elem1 first element
      * @param elem2 second element
      */
@@ -28,6 +29,7 @@ public class Pair<T>  {
 
     /**
      * Returns the first element of the pair.
+     *
      * @return T first element
      */
     public T getElement1() {
@@ -36,6 +38,7 @@ public class Pair<T>  {
 
     /**
      * Sets the first element of the pair.
+     *
      * @param elem first element
      */
     public void setElement1(final T elem) {
@@ -44,6 +47,7 @@ public class Pair<T>  {
 
     /**
      * gets the second element of the pair.
+     *
      * @return T second element
      */
     public T getElement2() {
@@ -52,7 +56,8 @@ public class Pair<T>  {
 
     /**
      * Sets the second element of the pair.
-     * @param elem
+     *
+     * @param elem The second element;
      */
     public void setElement2(final T elem) {
         this.cElement2 = elem;

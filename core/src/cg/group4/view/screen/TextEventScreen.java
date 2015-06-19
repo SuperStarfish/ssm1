@@ -44,12 +44,12 @@ public final class TextEventScreen extends EventScreen {
     }
 
     @Override
-    protected void rebuildWidgetGroup() {
-        cTaskToPerform.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
+    protected String setPreviousScreenName() {
+        return "Stroll";
     }
 
     @Override
-    protected String setPreviousScreenName() {
-        return "Stroll";
+    protected void rebuildWidgetGroup() {
+        cTaskToPerform.setStyle(cGameSkin.get("default_labelStyle", Label.LabelStyle.class));
     }
 }

@@ -1,10 +1,6 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.client.Client;
 import cg.group4.view.screen.*;
-
-import cg.group4.view.screen.HomeScreen;
-import cg.group4.view.screen.SettingsScreen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,13 +61,9 @@ public final class ScreenStore {
     public void init() {
         addScreen("Home", new HomeScreen());
         addScreen("Settings", new SettingsScreen());
-        //addScreen("Network", new NetworkScreen());
-//        addScreen("Groups", new GroupScreen());
         addScreen("Network", new NetworkScreen());
         addScreen("Collection", new CollectiblesScreen());
-        if (Client.getRemoteInstance().isConnected()) {
-            addScreen("Groups", new GroupScreen());
-        }
+        addScreen("Groups", new GroupScreen());
     }
 
     /**
@@ -100,7 +92,9 @@ public final class ScreenStore {
      * @param tag Tag of the screen to be displayed.
      */
     public void setScreen(final String tag) {
-        cWorldRenderer.setScreen(cScreens.get(tag));
+        ScreenLogic screen = cScreens.get(tag);
+        screen.display();
+        cWorldRenderer.setScreen(screen);
     }
 
     /**
@@ -140,8 +134,15 @@ public final class ScreenStore {
      */
     public void rebuild(final int uiSize) {
         cGameSkin.createUIElements(uiSize);
-        for (ScreenLogic screen : cScreens.values()) {
-            screen.rebuildWidgetGroup();
-        }
+        rebuild();
+    }
+    
+    /**
+     * Updates all the UI Elements.
+     */
+    public void rebuild() {
+    	for (ScreenLogic screen : cScreens.values()) {
+    		screen.rebuildWidgetGroup();
+    	}
     }
 }

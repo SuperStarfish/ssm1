@@ -59,19 +59,19 @@ public class FishingStrollEvent extends StrollEvent {
     }
 
     @Override
-    public final int getReward() {
-        return REWARDS;
-    }
-
-    @Override
     protected void clearEvent() {
-        
+
     }
 
     @Override
     public void start() {
         cAccelMeter.filterGravity(true);
         cState = new CastForwardState(this);
+    }
+
+    @Override
+    public final int getReward() {
+        return REWARDS;
     }
 
     /**

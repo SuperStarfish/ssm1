@@ -39,6 +39,7 @@ public abstract class EventScreen extends ScreenLogic {
 
     /**
      * Is called every time there is a change in the event logic.
+     *
      * @param updatedData Object containing all the updated data.
      */
     protected abstract void onEventChange(Object updatedData);

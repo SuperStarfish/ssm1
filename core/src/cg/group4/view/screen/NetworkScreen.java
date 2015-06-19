@@ -39,8 +39,8 @@ public final class NetworkScreen extends ScreenLogic {
 
     @Override
     protected WidgetGroup createWidgetGroup() {
-        Client client = Client.getRemoteInstance();
-        client.connectToServer();
+        Client client = Client.getInstance();
+        client.connectToRemoteServer();
 
         ScreenStore screenStore = ScreenStore.getInstance();
         screenStore.addScreen("Change-Username", new ChangeUsernameScreen());
@@ -48,7 +48,7 @@ public final class NetworkScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-        if (client.isConnected()) {
+        if (client.isRemoteConnected()) {
             addLabel("Connected to remote!");
 
         } else {
@@ -69,21 +69,14 @@ public final class NetworkScreen extends ScreenLogic {
     }
 
     /**
-     * If the connection state changes, this will handle the proper behaviour.
+     * Adds the label with the message the user should at first.
+     *
+     * @param text The text for the message.
      */
-    protected void addConnectionChangeListener() {
-        Client.getRemoteInstance().getChangeSubject().addObserver(new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
-                boolean isConnected = (Boolean) arg;
-                if (isConnected) {
-                    cMessage.setText("Connected to remote!");
-                } else {
-                    cMessage.setText("Not connected to remote!");
-                }
-                cChangeUsername.setDisabled(!isConnected);
-            }
-        });
+    protected void addLabel(final String text) {
+        cMessage = cGameSkin.generateDefaultLabel(text);
+        cTable.row().expandY();
+        cTable.add(cMessage);
     }
 
     /**
@@ -107,42 +100,19 @@ public final class NetworkScreen extends ScreenLogic {
     }
 
     /**
-     * When the reset collection button is clicked.
-     * @return The behaviour to execute.
+     * If the connection state changes, this will handle the proper behaviour.
      */
-    protected ChangeListener resetPlayerDataBehaviour() {
-        return new ChangeListener() {
+    protected void addConnectionChangeListener() {
+        Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Player player = StandUp.getInstance().getPlayer();
-
-                Client.getRemoteInstance().resetPlayerData(new ResponseHandler() {
-                    @Override
-                    public void handleResponse(Response response) {
-                        if (response.isSuccess()) {
-                            cMessage.setText("Your account has been reset.");
-                            StandUp.getInstance().getPlayer().update();
-                        } else {
-                            cMessage.setText("Something went wrong.");
-                        }
-
-                    }
-                });
-
-                player.getCollection().resetCollection();
+            public void update(Observable o, Object arg) {
+                if ((boolean) arg) {
+                    cMessage.setText("Connected to remote!");
+                } else {
+                    cMessage.setText("Not connected to remote!");
+                }
             }
-        };
-    }
-
-    /**
-     * Adds the label with the message the user should at first.
-     *
-     * @param text The text for the message.
-     */
-    protected void addLabel(final String text) {
-        cMessage = cGameSkin.generateDefaultLabel(text);
-        cTable.row().expandY();
-        cTable.add(cMessage);
+        });
     }
 
     /**
@@ -159,9 +129,40 @@ public final class NetworkScreen extends ScreenLogic {
         };
     }
 
+    /**
+     * When the reset collection button is clicked.
+     *
+     * @return The behaviour to execute.
+     */
+    protected ChangeListener resetPlayerDataBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Player player = StandUp.getInstance().getPlayer();
+
+                Client.getInstance().deletePlayerData(new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+                        if (response.isSuccess()) {
+                            cMessage.setText("Your account has been reset.");
+                            StandUp.getInstance().getPlayer().updatePlayerData();
+                        } else {
+                            cMessage.setText("Something went wrong.");
+                        }
+
+                    }
+                });
+
+                player.getCollection().resetCollection();
+            }
+        };
+    }
+
     @Override
     protected void rebuildWidgetGroup() {
         cBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cChangeUsername.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cResetUser.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override

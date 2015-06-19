@@ -1,19 +1,20 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
-import cg.group4.data_structures.groups.Group;
+import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.groups.GroupData;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.ArrayList;
 
@@ -22,12 +23,11 @@ import java.util.ArrayList;
  */
 public class GroupScreen extends ScreenLogic {
 
-    protected Label cTitle;
+    protected Label cTitle, cGroupLabel;
     protected TextButton cNewGroupButton, cJoinGroupButton, cBackButton;
     protected Table cTable;
-    protected Table cInnerTable;
-    protected ScrollPane cScrollPane;
-    protected ArrayList<Group> cGroupsDisplayList;
+    protected List<GroupData> cGroups;
+    protected List<PlayerData> cMembers;
 
     @Override
     protected WidgetGroup createWidgetGroup() {
@@ -38,14 +38,13 @@ public class GroupScreen extends ScreenLogic {
         cTable = new Table();
         cTable.setFillParent(true);
 
-        cGroupsDisplayList = new ArrayList<Group>();
-
         createTitle();
-        createGroupsOverview();
+        createGroupLabel();
+        createMemberOverview();
         createNewGroupButton();
         createJoinGroupButton();
-
         cBackButton = createBackButton();
+
         cTable.row().expandY();
         cTable.add(cBackButton).colspan(2);
 
@@ -53,35 +52,44 @@ public class GroupScreen extends ScreenLogic {
 
     }
 
+    /**
+     * Creates the title of the screen.
+     */
     protected void createTitle() {
         cTitle = cGameSkin.generateDefaultLabel("Groups");
         cTable.row().expandY();
         cTable.add(cTitle).colspan(2);
     }
 
-    protected void createGroupsOverview() {
-        cInnerTable = new Table();
-        cScrollPane = new ScrollPane(cInnerTable);
-        cScrollPane.setForceScroll(false, true);
+    /**
+     * Label that displays the players group.
+     */
+    protected void createGroupLabel() {
+        cGroupLabel = cGameSkin.generateDefaultLabel("You are not yet a member of a group.");
         cTable.row().expandY();
-        cTable.add(cScrollPane).colspan(2);
-        getGroups();
+        cTable.add(cGroupLabel).colspan(2);
+        setGroupLabel();
     }
 
-    protected void getGroups() {
-        Client.getRemoteInstance().getGroupData(new ResponseHandler() {
-            @Override
-            public void handleResponse(Response response) {
-                cInnerTable.clear();
-                ArrayList<GroupData> groups = (ArrayList<GroupData>) response.getData();
-                for (GroupData groupData : groups) {
-                    cInnerTable.row().expandY();
-                    cInnerTable.add(cGameSkin.generateDefaultLabel(groupData.getName()));
-                }
-            }
-        });
+    /**
+     * Displays the members of the selected group.
+     */
+    protected void createMemberOverview() {
+        cMembers = cGameSkin.generateDefaultList();
+        Drawable selection = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/wooden_sign.png"))).tint(new Color(0, 0, 0, 0));
+        selection.setLeftWidth(10);
+        selection.setRightWidth(10);
+        cMembers.getStyle().selection = selection;
+        cMembers.getStyle().fontColorSelected = cMembers.getStyle().fontColorUnselected;
+        cTable.row();
+        createGroupsOverview();
+        cTable.add(new ScrollPane(cMembers)).fill();
     }
 
+    /**
+     * Displays al the groups.
+     */
     protected void createNewGroupButton() {
         cNewGroupButton = cGameSkin.generateDefaultMenuButton("Create group");
         cNewGroupButton.addListener(new ChangeListener() {
@@ -94,6 +102,9 @@ public class GroupScreen extends ScreenLogic {
         cTable.add(cNewGroupButton);
     }
 
+    /**
+     * Button to join a group.
+     */
     protected void createJoinGroupButton() {
         cJoinGroupButton = cGameSkin.generateDefaultMenuButton("Join group");
         cJoinGroupButton.addListener(new ChangeListener() {
@@ -106,10 +117,70 @@ public class GroupScreen extends ScreenLogic {
 
     }
 
+    /**
+     * Sets the text of the group label.
+     */
+    protected void setGroupLabel() {
+        String groupId = StandUp.getInstance().getPlayer().getGroupId();
+        if (groupId != null) {
+            cGroupLabel.setText("Retrieving group data..");
+            Client.getInstance().getGroup(groupId, new ResponseHandler() {
+                @Override
+                public void handleResponse(Response response) {
+                    if (response.isSuccess()) {
+                        GroupData groupData = (GroupData) response.getData();
+                        cGroupLabel.setText("Group: " + groupData.toString() + " (" + groupData.getGroupId() + ")");
+                    } else {
+                        cGroupLabel.setText("Could not retrieve group data.");
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Button to create a new group.
+     */
+    protected void createGroupsOverview() {
+        cGroups = cGameSkin.generateDefaultList();
+        cGroups.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Client.getInstance().getMembers(cGroups.getSelected().getGroupId(), new ResponseHandler() {
+                    @Override
+                    public void handleResponse(Response response) {
+                        if (response.isSuccess()) {
+                            ArrayList<PlayerData> list = (ArrayList<PlayerData>) response.getData();
+                            cMembers.setItems(list.toArray(new PlayerData[list.size()]));
+                        }
+                    }
+                });
+            }
+        });
+        cTable.add(new ScrollPane(cGroups)).fill();
+        fillGroups();
+    }
+
+    /**
+     * Fill group display.
+     */
+    protected void fillGroups() {
+        Client.getInstance().getGroupData(new ResponseHandler() {
+            @Override
+            public void handleResponse(Response response) {
+                if (response.isSuccess()) {
+                    ArrayList<GroupData> list = (ArrayList<GroupData>) response.getData();
+                    cGroups.setItems(list.toArray(new GroupData[list.size()]));
+                }
+            }
+        });
+    }
 
     @Override
     protected void rebuildWidgetGroup() {
         cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cNewGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
+        cJoinGroupButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
     @Override
@@ -117,21 +188,9 @@ public class GroupScreen extends ScreenLogic {
         return "Home";
     }
 
-    protected void addDisplayedGroup(final Group group) {
-        cGroupsDisplayList.add(group);
-    }
-
-    protected void addDisplayedGroups(final ArrayList<Group> groups) {
-        cGroupsDisplayList.addAll(groups);
-    }
-
-    // fills the scroll pane with all listed groups
-    protected void fillGroupPanel() {
-
-    }
-
     @Override
     public void display() {
-        getGroups();
+        fillGroups();
+        setGroupLabel();
     }
 }
