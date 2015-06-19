@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 
 /**
  * Utility class that converts a wavelength to a RGB colour.
- *
- *         Sources:
- *         http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm
- *         http://stackoverflow.com/questions/1472514/convert-light-frequency-to-rgb
+ * <p/>
+ * Sources:
+ * http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm
+ * http://stackoverflow.com/questions/1472514/convert-light-frequency-to-rgb
  */
 public final class RewardUtil {
     /**

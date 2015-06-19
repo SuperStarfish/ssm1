@@ -28,7 +28,7 @@ public class AndroidStorageResolver extends LocalStorageResolver {
             e.printStackTrace();
         }
         return new org.sqldroid.SQLDroidDriver()
-        			.connect("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db", new Properties());
+                .connect("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db", new Properties());
     }
 
     @Override

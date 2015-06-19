@@ -11,10 +11,10 @@ public class HueComparator implements Comparator<Collectible> {
 
     @Override
     public int compare(final Collectible o1, final Collectible o2) {
-    	if (o1 == null || o2 == null) { //In case there is only one collectible.
-    		return 0;
-    	}
-    	
+        if (o1 == null || o2 == null) { //In case there is only one collectible.
+            return 0;
+        }
+
         if (o1.getHue() < o2.getHue()) {
             return 1;
         }

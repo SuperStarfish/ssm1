@@ -1,34 +1,28 @@
 package cg.group4.view.screen;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-
 import cg.group4.client.Client;
-import cg.group4.core.game_logic.Player;
-import cg.group4.core.game_logic.StandUp;
 import cg.group4.data_structures.Selection;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.HueComparator;
 import cg.group4.data_structures.collection.collectibles.collectible_comparators.RarityComparator;
 import cg.group4.data_structures.groups.GroupData;
+import cg.group4.game_logic.Player;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.rewards.CollectibleDrawer;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Screen to be displayed when pressing the "Collection" button on the home screen.
@@ -40,6 +34,10 @@ public class CollectiblesScreen extends ScreenLogic {
      * checkboxes in the menu.
      */
     protected final int cItemsOnScreen = 10, cNumberOfTopBarItems = 3;
+    /**
+     * The number of columns to display on the collectiblescreen.
+     */
+    protected final float cColSpan = 6f;
     /**
      * cContentTable contains the collectibles of the collection.
      * cContainer contains the scrollpane displaying the collectibles.
@@ -53,10 +51,6 @@ public class CollectiblesScreen extends ScreenLogic {
      * Button that takes the player back to the home screen.
      */
     protected TextButton cBackButton;
-    /**
-     * The number of columns to display on the collectiblescreen.
-     */
-    protected final float cColSpan = 6f;
     /**
      * SelectBox that contains the groups that the user is currently in.
      */
@@ -135,6 +129,7 @@ public class CollectiblesScreen extends ScreenLogic {
 
     /**
      * Fills the dropdown box to select the collection to display.
+     *
      * @param groups The groups with which the box should be filled.
      */
     protected void fillGroupBox(final ArrayList<GroupData> groups) {

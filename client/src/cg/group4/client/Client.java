@@ -1,12 +1,5 @@
 package cg.group4.client;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
-
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.UnConnected;
 import cg.group4.data_structures.PlayerData;
@@ -14,22 +7,15 @@ import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.MultiResponseHandler;
-import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.AddCollectible;
-import cg.group4.server.database.query.AddCollection;
-import cg.group4.server.database.query.CreateGroup;
-import cg.group4.server.database.query.DeletePlayerData;
-import cg.group4.server.database.query.GetGroup;
-import cg.group4.server.database.query.GetGroupData;
-import cg.group4.server.database.query.GetMembers;
-import cg.group4.server.database.query.RemoveCollectible;
-import cg.group4.server.database.query.RequestCollection;
-import cg.group4.server.database.query.RequestGroupId;
-import cg.group4.server.database.query.RequestHostCode;
-import cg.group4.server.database.query.RequestHostIp;
-import cg.group4.server.database.query.RequestPlayerData;
-import cg.group4.server.database.query.UpdatePlayerData;
+import cg.group4.server.database.query.*;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Client that connects to the server.
@@ -99,15 +85,6 @@ public final class Client {
     }
 
     /**
-     * Returns if connected to the local server or not.
-     *
-     * @return Is connected or not.
-     */
-    public boolean isLocalConnected() {
-        return cLocalConnection.isConnected();
-    }
-
-    /**
      * Connects to the default remote server. Behaviour depends on the state.
      */
     public void connectToRemoteServer() {
@@ -116,6 +93,7 @@ public final class Client {
 
     /**
      * Connects to a server given an IP and port.
+     *
      * @param port Port to connect to.
      */
     public void connectToLocalServer(final int port) {
@@ -124,6 +102,7 @@ public final class Client {
 
     /**
      * Returns the list of Runnable that need to be processed in the Gdx.app.postRunnable().
+     *
      * @return ArrayList with the Runnables.
      */
     public ArrayList<Runnable> getPostRunnables() {
@@ -132,6 +111,7 @@ public final class Client {
 
     /**
      * Adds another Runnable to the PostRunnable list.
+     *
      * @param runnable The task to run.
      */
     public void addPostRunnables(final Runnable runnable) {
@@ -147,6 +127,7 @@ public final class Client {
 
     /**
      * Returns the RemoteChangeSubject that notifies whenever a change in the remote connection status occurs.
+     *
      * @return Subject that can be subscribed on.
      */
     public Subject getRemoteChangeSubject() {
@@ -155,6 +136,7 @@ public final class Client {
 
     /**
      * Sets the local connection to the new connection.
+     *
      * @param connection The connection that needs to be set.
      */
     public void setLocalConnection(final Connection connection) {
@@ -164,6 +146,7 @@ public final class Client {
 
     /**
      * Sets the remote connection to the new connection.
+     *
      * @param connection The connection that needs to be set.
      */
     public void setRemoteConnection(final Connection connection) {
@@ -174,6 +157,7 @@ public final class Client {
 
     /**
      * Sets the userid using the device ID.
+     *
      * @param idResolver Tool used for getting the proper device ID.
      */
     public void setUserIDResolver(final UserIDResolver idResolver) {
@@ -182,6 +166,7 @@ public final class Client {
 
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
+     *
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void getPlayerData(final ResponseHandler responseHandler) {
@@ -192,6 +177,7 @@ public final class Client {
 
     /**
      * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
+     *
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void getGroupId(final ResponseHandler responseHandler) {
@@ -200,7 +186,8 @@ public final class Client {
 
     /**
      * Updates the username on both the local server.
-     * @param username The username.
+     *
+     * @param username        The username.
      * @param responseHandler The task to execute once a reply is received.
      */
     public void updateLocalUsername(final String username, final ResponseHandler responseHandler) {
@@ -212,6 +199,7 @@ public final class Client {
 
     /**
      * Returns the user ID from the supplied UserIDResolver.
+     *
      * @return The ID belonging to the current player.
      */
     public String getUserID() {
@@ -233,6 +221,7 @@ public final class Client {
 
     /**
      * Updates the stroll timestamp on the local server.
+     *
      * @param strollTimestamp The timestamp the stroll timer should end.
      * @param responseHandler The task to execute once a reply is received.
      */
@@ -256,6 +245,7 @@ public final class Client {
 
     /**
      * Resets the player data.
+     *
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void deletePlayerData(final ResponseHandler responseHandler) {
@@ -266,6 +256,7 @@ public final class Client {
 
     /**
      * Gets the collection belonging to the player.
+     *
      * @param responseHandler The task to execute once a reply is received.
      */
     public void getPlayerCollection(final ResponseHandler responseHandler) {
@@ -274,7 +265,8 @@ public final class Client {
 
     /**
      * Updates the collection belonging to the player.
-     * @param collection The collection with which will be updated.
+     *
+     * @param collection      The collection with which will be updated.
      * @param responseHandler The task to execute once a reply is received.
      */
     public void updatePlayerCollection(final Collection collection, final ResponseHandler responseHandler) {
@@ -284,7 +276,8 @@ public final class Client {
 
     /**
      * Adds the player to the specified group.
-     * @param groupId The group to join.
+     *
+     * @param groupId         The group to join.
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void joinGroup(final String groupId, final ResponseHandler responseHandler) {
@@ -296,23 +289,20 @@ public final class Client {
     /**
      * Donates a collectible from the server.
      *
-     * @param collectible The collectible to be donated.
-     * @param groupId     The group to which the collectible should be donated.
+     * @param collectible     The collectible to be donated.
+     * @param groupId         The group to which the collectible should be donated.
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void donateCollectible(final Collectible collectible, final String groupId,
                                   final ResponseHandler responseHandler) {
-        if (isRemoteConnected()) {
-            MultiResponseHandler multiResponseHandler = new MultiResponseHandler(responseHandler, 2);
-            cLocalConnection.send(new RemoveCollectible(collectible, getUserID()), multiResponseHandler);
-            cRemoteConnection.send(new AddCollectible(collectible, groupId), multiResponseHandler);
-        } else {
-            responseHandler.handleResponse(new Response(false, null));
-        }
+        MultiResponseHandler multiResponseHandler = new MultiResponseHandler(responseHandler, 2);
+        cLocalConnection.send(new RemoveCollectible(collectible, getUserID()), multiResponseHandler);
+        cRemoteConnection.send(new AddCollectible(collectible, groupId), multiResponseHandler);
     }
 
     /**
      * Returns if connected to the remote server or not.
+     *
      * @return Is connected or not.
      */
     public boolean isRemoteConnected() {
@@ -321,7 +311,8 @@ public final class Client {
 
     /**
      * Gets the collection belonging to the specified group.
-     * @param groupId The group to get the collection from.
+     *
+     * @param groupId         The group to get the collection from.
      * @param responseHandler The task to execute once a reply is received.
      */
     public void getGroupCollection(final String groupId, final ResponseHandler responseHandler) {
@@ -330,6 +321,7 @@ public final class Client {
 
     /**
      * Gets the group data from the server. Behaviour depends on the state.
+     *
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void getGroupData(final ResponseHandler responseHandler) {
@@ -359,6 +351,7 @@ public final class Client {
 
     /**
      * Retrieves the usernames of all the members of the given group.
+     *
      * @param groupId         The group to fetch the members from.
      * @param responseHandler The task to execute once a reply is received.
      */
@@ -368,6 +361,7 @@ public final class Client {
 
     /**
      * Stores the host ip on the server with a generated code that it will return to let the client connect.
+     *
      * @param responseHandler The task to execute once a reply is received completed.
      */
     public void hostEvent(final ResponseHandler responseHandler) {
@@ -375,11 +369,12 @@ public final class Client {
     }
 
     /**
+     * Found implementation.
      * Android returns 127.0.0.1 for Inet4Address.getLocalHost().getHostName(), so using a method found at:
      * http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device
      *
      * @param useIPv4 boolean whether or not to use IPv4.
-+    * @return String representing the IP address.
+     *                +    * @return String representing the IP address.
      */
     public static String getIPAddress(boolean useIPv4) {
         try {
@@ -399,9 +394,9 @@ public final class Client {
                                 int delim = sAddr.indexOf('%'); // drop ip6 port suffix
                                 String ip;
                                 if (delim < 0) {
-                                	ip = sAddr;
+                                    ip = sAddr;
                                 } else {
-                                	ip = sAddr.substring(0, delim);
+                                    ip = sAddr.substring(0, delim);
                                 }
                                 return ip;
                             }
@@ -437,11 +432,8 @@ public final class Client {
                     return false;
                 }
             }
-            if (ip.endsWith(".")) {
-                return false;
-            }
+            return !ip.endsWith(".");
 
-            return true;
         } catch (NumberFormatException nfe) {
             return false;
         }

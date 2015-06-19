@@ -6,14 +6,15 @@ import android.content.Context;
  * Orientation reader for android devices.
  */
 public class AndroidOrientationReader implements OrientationReader {
-	
-	/**
-	 * Current context of the application.
-	 */
+
+    /**
+     * Current context of the application.
+     */
     protected Context cContext;
-    
+
     /**
      * Constructs a new android orientation reader object.
+     *
      * @param context current context of the application
      */
     public AndroidOrientationReader(Context context) {

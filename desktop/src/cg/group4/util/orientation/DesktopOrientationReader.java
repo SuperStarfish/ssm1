@@ -8,6 +8,7 @@ public class DesktopOrientationReader implements OrientationReader {
     /**
      * Since the events dependent on the orientation do not work on the desktop
      * this method simply returns a Portrait orientation.
+     * @return returns the orientation.
      */
     @Override
     public Orientation getOrientation() {

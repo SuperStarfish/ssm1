@@ -115,14 +115,14 @@ project(":view") {
     apply plugin: "java"
 
     dependencies {
-        compile project(":core")
+        compile project(":game_logic")
 
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-core:$mockitoVersion"
     }
 }
 
-project(":core") {
+project(":game_logic") {
     apply plugin: "java"
 
     dependencies {

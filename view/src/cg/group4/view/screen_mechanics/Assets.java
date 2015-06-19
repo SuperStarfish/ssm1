@@ -38,6 +38,7 @@ public class Assets extends AssetManager {
 
     /**
      * Method that loads the Texture found at the given location.
+     *
      * @param file The location where the Texture can be found.
      */
     public void loadTexture(final String file) {
@@ -46,6 +47,7 @@ public class Assets extends AssetManager {
 
     /**
      * Method that loads the Music found at the given location.
+     *
      * @param file The location where the Music can be found.
      */
     public void loadMusic(final String file) {
@@ -66,6 +68,7 @@ public class Assets extends AssetManager {
 
     /**
      * Method that returns the Texture that has been loaded.
+     *
      * @param file The location of the Texture.
      * @return A Texture instance belonging to that texture.
      */
@@ -79,6 +82,7 @@ public class Assets extends AssetManager {
 
     /**
      * Method that returns the Music that has been loaded.
+     *
      * @param file The location of the Music.
      * @return A Music instance belonging to that texture.
      */

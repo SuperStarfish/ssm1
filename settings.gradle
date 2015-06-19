@@ -1,2 +1,2 @@
-include 'core', 'desktop', 'android', 'server', 'data_structures', 'client', 'aquarium', 'view', 'launcher'
+include 'game_logic', 'desktop', 'android', 'server', 'data_structures', 'client', 'aquarium', 'view', 'launcher'
 

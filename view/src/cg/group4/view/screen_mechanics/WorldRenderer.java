@@ -132,7 +132,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
 
     @Override
     public void resume() {
-    	cScreenStore.rebuild();
+        cScreenStore.rebuild();
     }
 
     @Override

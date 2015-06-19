@@ -33,14 +33,15 @@ public class AndroidAccelerationStatus implements MovementEventListener, Acceler
     protected Subject cUpdateMovementSubject;
 
     /**
-     *  State to return to the application (which will be obtained from the accel library for android).
-     *  Standard set to resting to avoid NullPointerExceptions when referenced from the stroll
-     *  constructor. Changes accordingly to the movementChanged method below.
+     * State to return to the application (which will be obtained from the accel library for android).
+     * Standard set to resting to avoid NullPointerExceptions when referenced from the stroll
+     * constructor. Changes accordingly to the movementChanged method below.
      */
     protected AccelerationState cAccelerationState = AccelerationState.RESTING;
 
     /**
      * Constructs the class for android devices which will return the state of the movement by the user.
+     *
      * @param sensorManager Sensor
      */
     public AndroidAccelerationStatus(final SensorManager sensorManager) {
@@ -59,6 +60,7 @@ public class AndroidAccelerationStatus implements MovementEventListener, Acceler
 
     /**
      * Will return the state of the accelerometer from the accel library android to the main application.
+     *
      * @return One of the four predeined states.
      */
     @Override
@@ -74,6 +76,7 @@ public class AndroidAccelerationStatus implements MovementEventListener, Acceler
 
     /**
      * Event listener for the accelerometer.
+     *
      * @param movement Amount of movement.
      */
     @Override

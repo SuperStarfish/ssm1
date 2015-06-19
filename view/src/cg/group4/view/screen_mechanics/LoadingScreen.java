@@ -47,6 +47,7 @@ public class LoadingScreen implements Screen {
 
     /**
      * Creates a new LoadingScreen with a reference back to the launcher.
+     *
      * @param launcher Reference back to the launcher.
      */
     public LoadingScreen(final AssetsLoadingHandler launcher) {
@@ -74,6 +75,7 @@ public class LoadingScreen implements Screen {
 
     /**
      * Properly sets the scalar for the logo so it fits different resolutions.
+     *
      * @param lowestRatio The lowest resolution, either height or width.
      */
     protected void setScalar(final int lowestRatio) {
@@ -91,6 +93,7 @@ public class LoadingScreen implements Screen {
 
     /**
      * Used to fit the width and height of the logo Sprite to proper position.
+     *
      * @param originalSize The original width.
      * @return The width scaled against the screen resolution.
      */

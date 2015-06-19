@@ -10,11 +10,11 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Theories.class)
-public class RewardUtilTest {	
-	
+public class RewardUtilTest {
+
 	@DataPoints
 	public static Object[][] params() {
-		return new Object[][] {
+		return new Object[][]{
 				{0f, new Color(1, 0, 0, 1)},
 				{0.1f, new Color(1, 0.5f, 0, 1)},
 				{0.2f, new Color(1, 1, 0, 1)},
@@ -27,14 +27,14 @@ public class RewardUtilTest {
 				{0.9f, new Color(0.5f, 0, 1, 1)},
 				{1f, new Color(1, 0, 1, 1)},
 				{2f, new Color(0, 0, 0, 1)} //Default case
-				};
+		};
 	}
 
 	@Theory
 	public void generateColorTest(final Object[] param) {
 		float hue = (float) param[0];
 		Color ans = (Color) param[1];
-		
+
 		Color generatedColour = RewardUtil.generateColor(hue);
 		assertEquals(ans, generatedColour);
 	}

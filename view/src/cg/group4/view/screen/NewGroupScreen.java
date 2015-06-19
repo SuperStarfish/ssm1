@@ -1,9 +1,9 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
-import cg.group4.core.game_logic.Player;
-import cg.group4.core.game_logic.StandUp;
 import cg.group4.data_structures.groups.Group;
+import cg.group4.game_logic.Player;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -17,22 +17,22 @@ import com.badlogic.gdx.utils.Align;
  * Players can add new groups here.
  */
 public class NewGroupScreen extends ScreenLogic {
-	
-	/**
-	 * Table containing all the elements to be displayed.
-	 */
+
+    /**
+     * Table containing all the elements to be displayed.
+     */
     protected Table cTable;
-    
+
     /**
      * Textfield to fill in the desired group name.
      */
     protected TextField cGroupNameField;
-    
+
     /**
      * Buttons to create the group and go back to the previous screen.
      */
     protected TextButton cAddGroupButton, cBack;
-    
+
     /**
      * Label that displays the current status of the group creation.
      */
@@ -76,20 +76,21 @@ public class NewGroupScreen extends ScreenLogic {
 
         return cTable;
     }
-    
+
     /**
      * Returns a EventListener which tries to create a group when pressed.
+     *
      * @return EventListener which tries to create a group when pressed.
      */
     private EventListener addGroupListener() {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-               addNewGroup();
+                addNewGroup();
             }
         };
     }
-    
+
     /**
      * Creates a new group.
      */

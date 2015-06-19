@@ -62,6 +62,7 @@ public class Server {
 
     /**
      * Creates a server using the settings provided by the LocalStorageResolver.
+     *
      * @param storageResolver Container of settings and database connection.
      */
     public Server(final LocalStorageResolver storageResolver) {
@@ -222,6 +223,7 @@ public class Server {
 
     /**
      * Returns the socket on which the server lives. This is used to create a local connection with the server.
+     *
      * @return The port the socket lives on.
      */
     public int getSocketPort() {

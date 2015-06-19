@@ -7,6 +7,7 @@ package cg.group4.server.database;
 public interface ResponseHandler {
     /**
      * Method invoked when a reply is received from the server.
+     *
      * @param response The Response given by the server.
      */
     void handleResponse(Response response);

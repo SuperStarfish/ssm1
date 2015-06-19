@@ -6,9 +6,9 @@ package cg.group4.view.screen_mechanics;
  * @see LoadingScreen
  */
 public interface AssetsLoadingHandler {
-	
-	/**
-	 * Called when the assets are finished loading.
-	 */
+
+    /**
+     * Called when the assets are finished loading.
+     */
     void assetsDone();
 }

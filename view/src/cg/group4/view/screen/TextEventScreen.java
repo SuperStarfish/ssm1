@@ -1,6 +1,6 @@
 package cg.group4.view.screen;
 
-import cg.group4.core.game_logic.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.events.StrollEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -17,6 +17,7 @@ public final class TextEventScreen extends EventScreen {
 
     /**
      * Creates a new Text Event.
+     *
      * @param event The event logic.
      */
     public TextEventScreen(final StrollEvent event) {

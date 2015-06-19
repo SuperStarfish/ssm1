@@ -1,15 +1,12 @@
 package cg.group4.view.screen;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import cg.group4.client.Client;
-import cg.group4.core.game_logic.StandUp;
-import cg.group4.core.game_logic.stroll.Stroll;
-import cg.group4.core.game_logic.stroll.events.StrollEvent;
-import cg.group4.core.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
-import cg.group4.core.game_logic.stroll.events.mp_fishingboat.FishingBoatHost;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.game_logic.StandUp;
+import cg.group4.game_logic.stroll.Stroll;
+import cg.group4.game_logic.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatClient;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.FishingBoatHost;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.util.timer.Timer;
@@ -17,15 +14,13 @@ import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen.mp_fishingboat.CraneFishingScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Screen to be displayed during an event.

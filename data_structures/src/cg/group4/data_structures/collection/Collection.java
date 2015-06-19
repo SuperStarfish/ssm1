@@ -49,6 +49,7 @@ public class Collection extends HashSet<Collectible> implements Serializable {
 
     /**
      * Sets the id of this collection.
+     *
      * @param groupId The id the collection belongs to.
      */
     public void setId(final String groupId) {
@@ -94,12 +95,12 @@ public class Collection extends HashSet<Collectible> implements Serializable {
         sb.append(">");
         return sb.toString();
     }
-    
+
     /**
-     * Resets the current collection. In other words, deletes all the 
+     * Resets the current collection. In other words, deletes all the
      * collectibles in this collection.
      */
-    public void resetCollection(){
+    public void resetCollection() {
         super.clear();
     }
 

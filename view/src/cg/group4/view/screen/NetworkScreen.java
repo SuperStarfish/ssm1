@@ -1,8 +1,8 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
-import cg.group4.core.game_logic.Player;
-import cg.group4.core.game_logic.StandUp;
+import cg.group4.game_logic.Player;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;

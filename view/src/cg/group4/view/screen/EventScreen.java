@@ -1,6 +1,6 @@
 package cg.group4.view.screen;
 
-import cg.group4.core.game_logic.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.events.StrollEvent;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
@@ -24,6 +24,7 @@ public abstract class EventScreen extends ScreenLogic {
 
     /**
      * Creates a new event and adds an observer to the event logic.
+     *
      * @param eventLogic The event logic.
      */
     public EventScreen(final StrollEvent eventLogic) {

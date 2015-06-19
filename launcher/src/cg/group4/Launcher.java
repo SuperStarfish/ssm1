@@ -2,7 +2,7 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
-import cg.group4.core.game_logic.StandUp;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
 import cg.group4.util.notification.NotificationController;
@@ -91,15 +91,8 @@ public class Launcher extends Game implements AssetsLoadingHandler {
     @Override
     public final void create() {
         debugSetup();
-
-        Server server = new Server(cLocalStorageResolver);
-        server.start();
-
+        initClient();
         Gdx.input.setInputProcessor(new InputMultiplexer());
-
-        Client.getInstance().setUserIDResolver(cIDResolver);
-        Client.getInstance().connectToLocalServer(server.getSocketPort());
-        Client.getInstance().connectToRemoteServer();
 
         setScreen(new LoadingScreen(this));
     }
@@ -117,28 +110,44 @@ public class Launcher extends Game implements AssetsLoadingHandler {
     }
 
     /**
+     * Initializes the client.
+     */
+    protected void initClient() {
+        Server server = new Server(cLocalStorageResolver);
+        server.start();
+        Client.getInstance().setUserIDResolver(cIDResolver);
+        Client.getInstance().connectToLocalServer(server.getSocketPort());
+        Client.getInstance().connectToRemoteServer();
+    }
+
+    /**
      * Once the Assets are done loading, this method is called to properly initialize the game.
      */
     public void assetsDone() {
         cTimeKeeper = TimerStore.getInstance().getTimeKeeper();
-
         cStandUp = StandUp.getInstance();
         cStandUp.setAccelerationStatus(cAccelerationStatus);
         cStandUp.setOrientationReader(cOrientationReader);
 
-        ScreenStore cScreenStore = ScreenStore.getInstance();
-        setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init();
-        cScreenStore.setScreen("Home");
-        TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).stop();
+        initScreens();
 
         notificationInitialization();
     }
 
     /**
+     * Initiates the screens.
+     */
+    protected void initScreens() {
+        ScreenStore cScreenStore = ScreenStore.getInstance();
+        setScreen(cScreenStore.getWorldRenderer());
+        cScreenStore.init();
+        cScreenStore.setScreen("Home");
+    }
+
+    /**
      * Initializes the game to send notifications.
      */
-    private void notificationInitialization() {
+    protected void notificationInitialization() {
         final Timer intervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
 
         intervalTimer.getStartSubject().addObserver(new Observer() {
@@ -163,11 +172,9 @@ public class Launcher extends Game implements AssetsLoadingHandler {
             cTimeKeeper.update();
             cStandUp.update();
         }
-
         for (Runnable toRunBeforeNextCycle : Client.getInstance().getPostRunnables()) {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getInstance().resetPostRunnables();
     }
-
 }

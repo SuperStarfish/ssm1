@@ -1,11 +1,11 @@
 package cg.group4.view.screen.mp_fishingboat;
 
-import cg.group4.core.game_logic.stroll.events.StrollEvent;
-import cg.group4.core.game_logic.stroll.events.mp_fishingboat.SmallFish;
 import cg.group4.data_structures.mp_fishingboat.BoatData;
 import cg.group4.data_structures.mp_fishingboat.Coordinate;
 import cg.group4.data_structures.mp_fishingboat.FishingBoatEventData;
 import cg.group4.data_structures.mp_fishingboat.SmallFishData;
+import cg.group4.game_logic.stroll.events.StrollEvent;
+import cg.group4.game_logic.stroll.events.mp_fishingboat.SmallFish;
 import cg.group4.view.screen.EventScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

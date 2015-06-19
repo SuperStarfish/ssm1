@@ -6,14 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -167,16 +160,16 @@ public class GameSkin extends Skin {
      * @return CheckBoxStyle
      */
     protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
-    	CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-    	checkboxStyle.checkboxOff = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
-    	checkboxStyle.checkboxOn = new TextureRegionDrawable(
-    			new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
+        CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+        checkboxStyle.checkboxOff = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
+        checkboxStyle.checkboxOn = new TextureRegionDrawable(
+                new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
 
-    	checkboxStyle.font = this.get("default_font", BitmapFont.class);
-    	checkboxStyle.fontColor = Color.GREEN;
+        checkboxStyle.font = this.get("default_font", BitmapFont.class);
+        checkboxStyle.fontColor = Color.GREEN;
 
-    	return checkboxStyle;
+        return checkboxStyle;
     }
 
     /**
@@ -202,10 +195,10 @@ public class GameSkin extends Skin {
      * @return ListStyle
      */
     protected final List.ListStyle generateDefaultListStyle() {
-    	List.ListStyle listStyle = new List.ListStyle();
-    	listStyle.font = this.get("default_font", BitmapFont.class);
-    	listStyle.fontColorSelected = Color.GREEN;
-    	listStyle.fontColorUnselected = Color.WHITE;
+        List.ListStyle listStyle = new List.ListStyle();
+        listStyle.font = this.get("default_font", BitmapFont.class);
+        listStyle.fontColorSelected = Color.GREEN;
+        listStyle.fontColorUnselected = Color.WHITE;
         listStyle.background = new TextureRegionDrawable(
                 new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
         listStyle.selection = new TextureRegionDrawable(

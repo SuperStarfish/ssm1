@@ -1,7 +1,7 @@
 package cg.group4.view.screen;
 
 import cg.group4.client.Client;
-import cg.group4.core.game_logic.StandUp;
+import cg.group4.game_logic.StandUp;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
@@ -15,22 +15,22 @@ import com.badlogic.gdx.utils.Align;
  * Players can join groups here.
  */
 public class JoinGroupScreen extends ScreenLogic {
-	
-	/**
-	 * Table containing all the elements to be displayed.
-	 */
+
+    /**
+     * Table containing all the elements to be displayed.
+     */
     protected Table cTable;
-    
+
     /**
      * Textfield where the user can fill the group name the user wants to join.
      */
     protected TextField cGroupNameField;
-    
+
     /**
      * Buttons to join the groups and to go back to the previous screen.
      */
     protected TextButton cJoinGroupButton, cBack;
-    
+
     /**
      * Label that displays the current status of the group joining.
      */
@@ -74,9 +74,10 @@ public class JoinGroupScreen extends ScreenLogic {
 
         return cTable;
     }
-    
+
     /**
      * Returns a EventListener which tries to join a group when pressed.
+     *
      * @return EventListener which tries to join a group when pressed.
      */
     private EventListener addGroupListener() {
@@ -87,7 +88,7 @@ public class JoinGroupScreen extends ScreenLogic {
             }
         };
     }
-    
+
     /**
      * Tries to join a group and updates the status label whether this has been succesfull or not.
      */
@@ -106,9 +107,10 @@ public class JoinGroupScreen extends ScreenLogic {
             }
         });
     }
-    
+
     /**
      * Verifies if the entered group name does not contain invalid characters.
+     *
      * @return boolean whether the group name does not contain invalid characters.
      */
     private boolean naiveVerify() {
