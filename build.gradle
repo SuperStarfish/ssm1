@@ -158,4 +158,4 @@ tasks.eclipse.doLast {
     delete ".project"
 }
 
-test.finalizedBy {project.tasks.cobertura}
+test.finalizedBy { project.tasks.cobertura }
