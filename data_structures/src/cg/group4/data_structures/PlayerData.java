@@ -66,6 +66,9 @@ public class PlayerData implements Serializable {
      */
     @Override
     public String toString() {
+        if (cUsername == null) {
+             return "";
+        }
         return cUsername;
     }
 
@@ -75,7 +78,7 @@ public class PlayerData implements Serializable {
      * @param username The new username.
      */
     public void setUsername(final String username) {
-        cUsername = username;
+
     }
 
     /**
