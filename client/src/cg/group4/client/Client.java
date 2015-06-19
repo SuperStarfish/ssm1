@@ -362,8 +362,8 @@ public final class Client {
      * Android returns 127.0.0.1 for Inet4Address.getLocalHost().getHostName(), so using a method found at:
      * http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device
      *
-     * @param useIPv4
-     * @return
+     * @param useIPv4 boolean whether or not to use IPv4.
++    * @return String representing the IP address.
      */
     public static String getIPAddress(boolean useIPv4) {
         try {
@@ -375,12 +375,19 @@ public final class Client {
                         String sAddr = addr.getHostAddress().toUpperCase();
                         boolean isIPv4 = validIP(sAddr);
                         if (useIPv4) {
-                            if (isIPv4)
+                            if (isIPv4) {
                                 return sAddr;
+                            }
                         } else {
                             if (!isIPv4) {
                                 int delim = sAddr.indexOf('%'); // drop ip6 port suffix
-                                return delim < 0 ? sAddr : sAddr.substring(0, delim);
+                                String ip;
+                                if (delim < 0) {
+                                	ip = sAddr;
+                                } else {
+                                	ip = sAddr.substring(0, delim);
+                                }
+                                return ip;
                             }
                         }
                     }
@@ -394,8 +401,8 @@ public final class Client {
     /**
      * http://stackoverflow.com/questions/4581877/validating-ipv4-string-in-java
      *
-     * @param ip
-     * @return
+     * @param ip input string
+     * @return boolean if the input string is a valid IP.
      */
     public static boolean validIP(String ip) {
         try {

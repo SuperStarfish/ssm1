@@ -156,27 +156,38 @@ public abstract class Collectible implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Float.floatToIntBits(cHue);
-		result = prime * result
-				+ ((cOwnerId == null) ? 0 : cOwnerId.hashCode());
+		int res;
+		if (cOwnerId == null) {
+			res = 0;
+		} else {
+			res = cOwnerId.hashCode();
+		}
+		result = prime * result + res;
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Collectible other = (Collectible) obj;
-		if (Float.floatToIntBits(cHue) != Float.floatToIntBits(other.cHue))
+		if (Float.floatToIntBits(cHue) != Float.floatToIntBits(other.cHue)) {
 			return false;
+		}
 		if (cOwnerId == null) {
-			if (other.cOwnerId != null)
+			if (other.cOwnerId != null) {
 				return false;
-		} else if (!cOwnerId.equals(other.cOwnerId))
+			}
+		} else if (!cOwnerId.equals(other.cOwnerId)) {
 			return false;
+		}
 		return true;
 	}
 }

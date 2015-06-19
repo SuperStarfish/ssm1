@@ -94,7 +94,11 @@ public class Collection extends HashSet<Collectible> implements Serializable {
         sb.append(">");
         return sb.toString();
     }
-
+    
+    /**
+     * Resets the current collection. In other words, deletes all the 
+     * collectibles in this collection.
+     */
     public void resetCollection(){
         super.clear();
     }
