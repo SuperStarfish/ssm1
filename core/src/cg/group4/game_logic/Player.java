@@ -38,6 +38,19 @@ public class Player {
     };
 
     /**
+     * Observers the remote connection.
+     */
+    protected Observer cRemoteConnectionObserver = new Observer() {
+        @Override
+        public void update(Observable o, Object arg) {
+            if ((boolean) arg) {
+                updatePlayerData();
+                updatePlayerCollection();
+            }
+        }
+    };
+
+    /**
      * Constructs a player object.
      */
     public Player() {
@@ -45,6 +58,7 @@ public class Player {
         updatePlayerData();
         cCollection = new Collection(Client.getInstance().getUserID());
         updatePlayerCollection();
+        Client.getInstance().getRemoteChangeSubject().addObserver(cRemoteConnectionObserver);
     }
 
     /**

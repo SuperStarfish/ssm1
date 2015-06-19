@@ -242,20 +242,13 @@ public class Stroll implements Observer {
         return new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
-                if (response.isSuccess()) {
+                if (response.isSuccess() && response.getData() != null) {
                     createMultiPlayerClient((String) response.getData());
                 } else {
                     updateUI.handleResponse(response);
                 }
             }
         };
-    }
-
-    @Override
-    public final void update(final Observable o, final Object arg) {
-        if (!cEventGoing) {
-            generatePossibleEvent();
-        }
     }
 
     /**
@@ -284,6 +277,13 @@ public class Stroll implements Observer {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        if (!cEventGoing) {
+            generatePossibleEvent();
+        }
     }
 
     /**
