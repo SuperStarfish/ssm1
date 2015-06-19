@@ -1,8 +1,8 @@
 package cg.group4.aquarium;
 
 import cg.group4.client.Client;
-import cg.group4.view.AquariumScreen;
-import cg.group4.view.StartScreen;
+import cg.group4.core.view.AquariumScreen;
+import cg.group4.core.view.StartScreen;
 import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import com.badlogic.gdx.Game;

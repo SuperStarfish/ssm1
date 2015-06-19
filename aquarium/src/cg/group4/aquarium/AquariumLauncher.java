@@ -20,7 +20,7 @@ public class AquariumLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
         config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
-        config.fullscreen = true;
+        config.fullscreen = false;
 
         // set the border to undecorated (no minus/resize/close and thinner borders) to better emulate fullscreen,
         // without actually setting fullscreen mode on.

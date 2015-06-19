@@ -86,17 +86,6 @@ public class Timer implements Observer {
     }
 
     /**
-     * Initializes the new Timer using the {@link #init(String, int, boolean) init} with false.
-     *
-     * @param name       The name of the new Timer.
-     * @param duration   The duration this Timer will run in seconds.
-     * @param persistent Does the timer have to exist after exiting the game.
-     */
-    public Timer(final String name, final int duration, final boolean persistent) {
-        init(name, duration, persistent);
-    }
-
-    /**
      * Initializes the timer using settings provided as well as some default settings.
      *
      * @param name       The name of the new Timer.
@@ -139,12 +128,58 @@ public class Timer implements Observer {
     }
 
     /**
+     * Stops the current timer.
+     */
+    public final void stop() {
+        if (cRunning) {
+            cPreferences.remove(cName);
+            cPreferences.flush();
+            cRunning = false;
+            cStopSubject.update();
+        }
+    }
+
+    /**
+     * Resets the current timer.
+     */
+    public void reset() {
+        resetFinishTime();
+        Gdx.app.debug(TAG, "Set " + getName()
+                + "-Timer to finish " + ((cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC)
+                + " seconds from now.");
+        cRunning = true;
+        cStartSubject.update();
+    }
+
+    /**
+     * Resets the time it should end.
+     */
+    protected final void resetFinishTime() {
+        cFinishTime = System.currentTimeMillis() + cDuration * MILLISEC_IN_SEC;
+        if (cPersistent) {
+            cPreferences.putLong(cName, cFinishTime);
+            cPreferences.flush();
+        }
+    }
+
+    /**
      * Returns the name of this timer.
      *
      * @return The name of the timer.
      */
     public final String getName() {
         return cName;
+    }
+
+    /**
+     * Initializes the new Timer using the {@link #init(String, int, boolean) init} with false.
+     *
+     * @param name       The name of the new Timer.
+     * @param duration   The duration this Timer will run in seconds.
+     * @param persistent Does the timer have to exist after exiting the game.
+     */
+    public Timer(final String name, final int duration, final boolean persistent) {
+        init(name, duration, persistent);
     }
 
     @Override
@@ -171,18 +206,6 @@ public class Timer implements Observer {
     }
 
     /**
-     * Stops the current timer.
-     */
-    public final void stop() {
-        if (cRunning) {
-            cPreferences.remove(cName);
-            cPreferences.flush();
-            cRunning = false;
-            cStopSubject.update();
-        }
-    }
-
-    /**
      * Disposes the current timer.
      */
     public final void dispose() {
@@ -190,29 +213,6 @@ public class Timer implements Observer {
         cStartSubject.deleteObservers();
         cStopSubject.deleteObservers();
         cTickSubject.deleteObservers();
-    }
-
-    /**
-     * Resets the current timer.
-     */
-    public void reset() {
-        resetFinishTime();
-        Gdx.app.debug(TAG, "Set " + getName()
-                + "-Timer to finish " + ((cFinishTime - System.currentTimeMillis()) / MILLISEC_IN_SEC)
-                + " seconds from now.");
-        cRunning = true;
-        cStartSubject.update();
-    }
-
-    /**
-     * Resets the time it should end.
-     */
-    protected final void resetFinishTime() {
-        cFinishTime = System.currentTimeMillis() + cDuration * MILLISEC_IN_SEC;
-        if (cPersistent) {
-            cPreferences.putLong(cName, cFinishTime);
-            cPreferences.flush();
-        }
     }
 
     /**
