@@ -196,7 +196,7 @@ public final class StrollScreen extends ScreenLogic {
                     StandUp.getInstance().getStroll().joinMultiPlayerEvent(code, new ResponseHandler() {
                         @Override
                         public void handleResponse(Response response) {
-                            if (!response.isSuccess()) {
+                            if (!response.isSuccess() || response.getData() == null) {
                                 cCode.setText("Wrong code!");
                             }
                         }
