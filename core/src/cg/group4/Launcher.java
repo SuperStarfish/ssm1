@@ -17,6 +17,7 @@ import cg.group4.view.screen_mechanics.ScreenStore;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 
 import java.util.Observable;
@@ -97,6 +98,8 @@ public class Launcher extends Game implements AssetsLoadingHandler {
 
         Server server = new Server(cLocalStorageResolver);
         server.start();
+
+        Gdx.input.setInputProcessor(new InputMultiplexer());
 
         Client.getInstance().setUserIDResolver(cIDResolver);
         Client.getInstance().connectToLocalServer(server.getSocketPort());
