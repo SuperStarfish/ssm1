@@ -1,8 +1,18 @@
 package cg.group4.util.orientation;
 
+/**
+ * Object that defines the accelerometer axes for portrait orientation.
+ */
 public class Portrait implements Orientation {
-
+	
+	/**
+	 * Number corresponding to the portrait orientation.
+	 */
     public static final int ORIENTATION_NUMBER = 1;
+    
+    /**
+     * Integers used for the transformation between axes in portrait mode and axes in portrait mode.
+     */
     protected final int cMoveLeft = 0, cMoveRight = 1, cMoveDown = 2, cMoveUp = 3;
 
     @Override

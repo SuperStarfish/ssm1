@@ -32,7 +32,10 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
      * Subject to detect event changes.
      */
     protected Subject cDataSubject;
-
+    
+    /**
+     * Inputprocessor of the strollevent. 
+     */
     protected InputProcessor cProcessor;
 
     /**
@@ -49,8 +52,8 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
         cEventTimer.reset();
 
         cProcessor = Gdx.input.getInputProcessor();
-        if(cProcessor instanceof InputMultiplexer) {
-            ((InputMultiplexer)cProcessor).addProcessor(this);
+        if (cProcessor instanceof InputMultiplexer) {
+            ((InputMultiplexer) cProcessor).addProcessor(this);
         }
     }
 

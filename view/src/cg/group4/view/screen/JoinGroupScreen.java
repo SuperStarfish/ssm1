@@ -15,10 +15,25 @@ import com.badlogic.gdx.utils.Align;
  * Players can join groups here.
  */
 public class JoinGroupScreen extends ScreenLogic {
-
+	
+	/**
+	 * Table containing all the elements to be displayed.
+	 */
     protected Table cTable;
+    
+    /**
+     * Textfield where the user can fill the group name the user wants to join.
+     */
     protected TextField cGroupNameField;
+    
+    /**
+     * Buttons to join the groups and to go back to the previous screen.
+     */
     protected TextButton cJoinGroupButton, cBack;
+    
+    /**
+     * Label that displays the current status of the group joining.
+     */
     protected Label cStatusLabel;
 
     @Override
@@ -59,7 +74,11 @@ public class JoinGroupScreen extends ScreenLogic {
 
         return cTable;
     }
-
+    
+    /**
+     * Returns a EventListener which tries to join a group when pressed.
+     * @return EventListener which tries to join a group when pressed.
+     */
     private EventListener addGroupListener() {
         return new ChangeListener() {
             @Override
@@ -68,7 +87,10 @@ public class JoinGroupScreen extends ScreenLogic {
             }
         };
     }
-
+    
+    /**
+     * Tries to join a group and updates the status label whether this has been succesfull or not.
+     */
     private void tryJoin() {
         Client.getInstance().joinGroup(cGroupNameField.getText(), new ResponseHandler() {
 
@@ -84,7 +106,11 @@ public class JoinGroupScreen extends ScreenLogic {
             }
         });
     }
-
+    
+    /**
+     * Verifies if the entered group name does not contain invalid characters.
+     * @return boolean whether the group name does not contain invalid characters.
+     */
     private boolean naiveVerify() {
         if (!cGroupNameField.getText().matches("^-?\\d+$")) {
             cStatusLabel.setText("Unable to join group (non-decimal value)");

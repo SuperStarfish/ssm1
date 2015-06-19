@@ -6,6 +6,9 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Object that is responsible for the audio.
+ */
 public class AudioPlayer {
 
     /**

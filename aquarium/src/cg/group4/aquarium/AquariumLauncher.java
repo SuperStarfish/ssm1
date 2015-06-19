@@ -8,8 +8,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
  * This class is mostly used for displaying a group collection aquarium on a display.
  */
 public class AquariumLauncher {
-
-
+	
     /**
      * Starts the application.
      * Uses a borderless fullscreen window.

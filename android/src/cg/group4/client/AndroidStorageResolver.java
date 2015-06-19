@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Storage resolver for android devices.
+ */
 public class AndroidStorageResolver extends LocalStorageResolver {
 
     @Override
@@ -24,7 +27,8 @@ public class AndroidStorageResolver extends LocalStorageResolver {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return new org.sqldroid.SQLDroidDriver().connect("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db", new Properties());
+        return new org.sqldroid.SQLDroidDriver()
+        			.connect("jdbc:sqldroid:/data/data/cg.group4.android/databases/local.db", new Properties());
     }
 
     @Override

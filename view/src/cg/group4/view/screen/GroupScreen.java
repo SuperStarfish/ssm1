@@ -22,11 +22,31 @@ import java.util.ArrayList;
  * Screen to be displayed when a player wants to look at groups.
  */
 public class GroupScreen extends ScreenLogic {
-
+	
+	/**
+	 * cTitle: Label that displays the title of the screen.
+	 * cGroupLabel: Label that displays the name of the group.
+	 */
     protected Label cTitle, cGroupLabel;
+    
+    /**
+     * Buttons to create new groupsm join groups, and go back to the previous screen.
+     */
     protected TextButton cNewGroupButton, cJoinGroupButton, cBackButton;
+    
+    /**
+     * Table containing all the elements to be displayed.
+     */
     protected Table cTable;
+    
+    /**
+     * List containing all the different groups.
+     */
     protected List<GroupData> cGroups;
+    
+    /**
+     * List containing all the members of the groups.
+     */
     protected List<PlayerData> cMembers;
 
     @Override

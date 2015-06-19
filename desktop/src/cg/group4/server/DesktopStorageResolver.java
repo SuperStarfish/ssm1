@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Gets the user id's from the desktop application.
+ */
 public class DesktopStorageResolver extends LocalStorageResolver {
     @Override
     protected String[] createDatabases() {

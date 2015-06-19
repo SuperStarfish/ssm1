@@ -203,7 +203,12 @@ public class Stroll implements Observer {
             }
         });
     }
-
+    
+    /**
+     * Generates a multi player event.
+     * @param event integer representing the multiplayer event to be generated.
+     * @param host Hoster of the multiplayer event.
+     */
     protected void generatePossibleMultiplayerEvent(int event, Host host) {
         cEventGoing = true;
         switch (event) {

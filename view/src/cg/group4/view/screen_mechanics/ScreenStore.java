@@ -1,9 +1,13 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.view.screen.*;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import cg.group4.view.screen.CollectiblesScreen;
+import cg.group4.view.screen.GroupScreen;
+import cg.group4.view.screen.HomeScreen;
+import cg.group4.view.screen.NetworkScreen;
+import cg.group4.view.screen.SettingsScreen;
 
 /**
  * Keeps track of all the screens throughout the game.

@@ -47,9 +47,9 @@ public abstract class Host {
      */
     protected long cPreviousTime = 0L;
     /**
-     * Limit the sending of data to 30 messages per second.
+     * Limit the sending of data to 33 messages per second.
      */
-    protected int cMessagePerSecond = 33;
+    protected final int cMessagePerSecond = 33;
 
     /**
      * Notifies listeners when disconnected from the other party.
@@ -111,7 +111,10 @@ public abstract class Host {
             }
         }
     }
-
+    
+    /**
+     * Notifies the observer when connection is lost.
+     */
     protected void disconnect() {
         cIsAlive = false;
         Gdx.app.postRunnable(new Runnable() {

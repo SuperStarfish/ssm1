@@ -17,10 +17,25 @@ import com.badlogic.gdx.utils.Align;
  * Players can add new groups here.
  */
 public class NewGroupScreen extends ScreenLogic {
-
+	
+	/**
+	 * Table containing all the elements to be displayed.
+	 */
     protected Table cTable;
+    
+    /**
+     * Textfield to fill in the desired group name.
+     */
     protected TextField cGroupNameField;
+    
+    /**
+     * Buttons to create the group and go back to the previous screen.
+     */
     protected TextButton cAddGroupButton, cBack;
+    
+    /**
+     * Label that displays the current status of the group creation.
+     */
     protected Label cStatusLabel;
 
     @Override
@@ -61,7 +76,11 @@ public class NewGroupScreen extends ScreenLogic {
 
         return cTable;
     }
-
+    
+    /**
+     * Returns a EventListener which tries to create a group when pressed.
+     * @return EventListener which tries to create a group when pressed.
+     */
     private EventListener addGroupListener() {
         return new ChangeListener() {
             @Override
@@ -70,7 +89,10 @@ public class NewGroupScreen extends ScreenLogic {
             }
         };
     }
-
+    
+    /**
+     * Creates a new group.
+     */
     private void addNewGroup() {
         Client.getInstance().createGroup(cGroupNameField.getText(), new ResponseHandler() {
             @Override

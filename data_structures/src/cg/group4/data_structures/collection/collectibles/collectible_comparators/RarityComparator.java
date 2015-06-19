@@ -12,7 +12,7 @@ public class RarityComparator implements Comparator<Collectible> {
 
     @Override
     public int compare(final Collectible o1, final Collectible o2) {
-        if(o1 == null || o2 == null) {
+        if (o1 == null || o2 == null) { //In case there is only one collectible.
             return 0;
         }
 

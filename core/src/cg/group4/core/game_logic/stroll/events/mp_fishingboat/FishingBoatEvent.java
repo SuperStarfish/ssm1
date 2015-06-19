@@ -38,8 +38,11 @@ public abstract class FishingBoatEvent extends StrollEvent {
      * ArrayList to avoid concurrent modification exception when deleting fish (when caught).
      */
     protected ArrayList<Integer> cToRemove = new ArrayList<Integer>();
-
-    protected Observer cDisconnectObserver = new Observer(){
+    
+    /**
+     * Observer that will be notified when one of the sides disconnects.
+     */
+    protected Observer cDisconnectObserver = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
             disconnectFromEvent();

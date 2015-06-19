@@ -160,11 +160,19 @@ public final class StandUp {
     public SensorReader getSensorReader() {
         return cSensorReader;
     }
-
+    
+    /**
+     * Returns the current acceleration status.
+     * @return AccelerationStatus object
+     */
     public AccelerationStatus getAccelerationStatus() {
         return cAccelerationStatus;
     }
-
+    
+    /**
+     * Sets the current acceleration status to the given acceleration status.
+     * @param status new acceleration status.
+     */
     public void setAccelerationStatus(AccelerationStatus status) {
         cAccelerationStatus = status;
     }

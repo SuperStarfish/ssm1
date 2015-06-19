@@ -1,5 +1,12 @@
 package cg.group4.client;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
+
 import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.UnConnected;
 import cg.group4.data_structures.PlayerData;
@@ -9,15 +16,24 @@ import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.server.database.MultiResponseHandler;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
-import cg.group4.server.database.query.*;
+import cg.group4.server.database.query.AddCollectible;
+import cg.group4.server.database.query.AddCollection;
+import cg.group4.server.database.query.CreateGroup;
+import cg.group4.server.database.query.DeletePlayerData;
+import cg.group4.server.database.query.GetGroup;
+import cg.group4.server.database.query.GetGroupData;
+import cg.group4.server.database.query.GetMembers;
+import cg.group4.server.database.query.RemoveCollectible;
+import cg.group4.server.database.query.RequestCollection;
+import cg.group4.server.database.query.RequestGroupId;
+import cg.group4.server.database.query.RequestHostCode;
+import cg.group4.server.database.query.RequestHostIp;
+import cg.group4.server.database.query.RequestPlayerData;
+import cg.group4.server.database.query.UpdatePlayerData;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
-
+/**
+ * Client that connects to the server.
+ */
 public final class Client {
     /**
      * Default Logger in Java used for the purpose of logging changes in the Server.

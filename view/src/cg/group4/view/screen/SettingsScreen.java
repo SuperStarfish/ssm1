@@ -213,7 +213,12 @@ public final class SettingsScreen extends ScreenLogic {
             }
         };
     }
-
+    
+    /**
+     * Enables/Disables the audio.
+     * 
+     * @return ChangeListener
+     */
     private ChangeListener volumeBehavior() {
         return new ChangeListener() {
             @Override

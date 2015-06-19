@@ -1,5 +1,9 @@
 package cg.group4.view.screen;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+
 import cg.group4.client.Client;
 import cg.group4.core.game_logic.Player;
 import cg.group4.core.game_logic.StandUp;
@@ -14,15 +18,17 @@ import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.rewards.CollectibleDrawer;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * Screen to be displayed when pressing the "Collection" button on the home screen.
@@ -50,7 +56,7 @@ public class CollectiblesScreen extends ScreenLogic {
     /**
      * The number of columns to display on the collectiblescreen.
      */
-    protected float cColSpan = 6f;
+    protected final float cColSpan = 6f;
     /**
      * SelectBox that contains the groups that the user is currently in.
      */

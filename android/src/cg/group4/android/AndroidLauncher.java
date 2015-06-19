@@ -31,7 +31,7 @@ public class AndroidLauncher extends AndroidApplication {
         super.onCreate(savedInstanceState);
 
         File dbFile = getContext().getDatabasePath("local.db");
-        if(!dbFile.exists()) {
+        if (!dbFile.exists()) {
             if (!dbFile.getParentFile().exists()) {
                 dbFile.getParentFile().mkdirs();
             }
