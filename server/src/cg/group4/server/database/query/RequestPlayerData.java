@@ -29,40 +29,20 @@ public class RequestPlayerData extends Query {
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
+        new MakePlayerEntry(cPlayerData.getId()).query(databaseConnection);
 
         String preparedQuery = "SELECT * FROM User WHERE ID = ? LIMIT 1";
-
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
             statement.setString(1, cPlayerData.getId());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     cPlayerData.setUsername(resultSet.getString("Username"));
-                    cPlayerData.setIntervalTimeStamp(resultSet.getInt("Interval"));
-                    cPlayerData.setStrollTimeStamp(resultSet.getInt("Stroll"));
-                    cPlayerData.setGroupId(resultSet.getString("GroupId"));
-
-                } else {
-                    insertUser(databaseConnection);
+                    cPlayerData.setIntervalTimestamp(resultSet.getInt("Interval"));
+                    cPlayerData.setStrollTimestamp(resultSet.getInt("Stroll"));
                 }
             }
+            statement.close();
         }
-
-        cPlayerData.setCollection(new RequestCollection(cPlayerData.getId()).query(databaseConnection));
-
         return cPlayerData;
-    }
-
-    /**
-     * Inserts the user in the database.
-     * @param databaseConnection Connection with the database.
-     * @throws SQLException If something went wrong with the insertion.
-     */
-    protected void insertUser(final Connection databaseConnection) throws SQLException {
-        String preparedStatement = "INSERT INTO User (ID,Username) VALUES (?, ?)";
-        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
-            statement.setString(1, cPlayerData.getId());
-            statement.setString(2, cPlayerData.getUsername());
-            statement.executeUpdate();
-        }
     }
 }

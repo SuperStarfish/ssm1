@@ -19,8 +19,9 @@ public abstract class LocalStorageResolver {
     /**
      * Query that creates a 'User' table, if it does not exist.
      */
-    protected String cUserTable = "CREATE TABLE IF NOT EXISTS 'User' (Key INTEGER PRIMARY KEY NOT NULL, "
-            + "Id TEXT NOT NULL, Username TEXT, Interval INTEGER, Stroll INTEGER, GroupId TEXT NULL);";
+    protected String cUserTable = "CREATE TABLE IF NOT EXISTS 'User' (Key INTEGER PRIMARY KEY NOT NULL UNIQUE, "
+            + "Id TEXT NOT NULL UNIQUE, Username TEXT DEFAULT 'Unknown',"
+            + " Interval INTEGER, Stroll INTEGER, GroupId TEXT NULL);";
 
     /**
      * Query that creates a 'Collectible' table, if it does not exist.
@@ -82,13 +83,29 @@ public abstract class LocalStorageResolver {
     }
 
     /**
+     * Child has to define if the server is remote or local. This is needed for some minor setup differences in
+     * the two implementations.
+     *
+     * @return If the database is on a remote or local server.
+     */
+    protected abstract boolean setLocal();
+
+    /**
+     * Child class has to properly create the database connection using the methods appropriate to its platform.
+     *
+     * @return The connection with the database
+     * @throws SQLException If the database connection could not be established.
+     */
+    protected abstract Connection createDatabaseConnection() throws SQLException;
+
+    /**
      * Drops all the supplied databases.  !!!!! ONLY USE FOR DEVELOPMENT !!!!!
+     *
      * @param dbs Databases to drop.
      */
-    protected void dropDatabase(final String ... dbs) {
+    protected void dropDatabase(final String... dbs) {
         for (String database : dbs) {
-            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS ?")) {
-                statement.setString(1, database);
+            try (PreparedStatement statement = cConnection.prepareStatement("DROP TABLE IF EXISTS " + database)) {
                 statement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -97,7 +114,15 @@ public abstract class LocalStorageResolver {
     }
 
     /**
+     * Child class has to define which databases are needed to function properly.
+     *
+     * @return An array of queries that construct databases.
+     */
+    protected abstract String[] createDatabases();
+
+    /**
      * Method that creates a database by executing the supplied query.
+     *
      * @param query The query to create the database.
      */
     protected void createDatabase(final String query) {
@@ -111,20 +136,8 @@ public abstract class LocalStorageResolver {
     }
 
     /**
-     * Child class has to define which databases are needed to function properly.
-     * @return An array of queries that construct databases.
-     */
-    protected abstract String[] createDatabases();
-
-    /**
-     * Child class has to properly create the database connection using the methods appropriate to its platform.
-     * @return The connection with the database
-     * @throws SQLException If the database connection could not be established.
-     */
-    protected abstract Connection createDatabaseConnection() throws SQLException;
-
-    /**
      * Returns the Connection with the database.
+     *
      * @return The database connection.
      */
     public Connection getConnection() {
@@ -132,14 +145,8 @@ public abstract class LocalStorageResolver {
     }
 
     /**
-     * Child has to define if the server is remote or local. This is needed for some minor setup differences in
-     * the two implementations.
-     * @return If the database is on a remote or local server.
-     */
-    protected abstract boolean setLocal();
-
-    /**
      * Returns if the database exists on a remote or local server.
+     *
      * @return If the database is on a remote or local server.
      */
     boolean isLocal() {

@@ -1,6 +1,5 @@
 package cg.group4.server.database.query;
 
-import cg.group4.data_structures.groups.Group;
 import cg.group4.data_structures.groups.GroupData;
 
 import java.sql.Connection;
@@ -27,28 +26,29 @@ public class GetGroup extends Query {
     }
 
     @Override
-    public Group query(final Connection databaseConnection) throws SQLException {
-        String preparedStatement = "SELECT * FROM 'Group' INNER JOIN User ON 'Group'.OwnerId = User.Id "
-                + "WHERE 'Group'.Key = ? LIMIT 1";
+    public GroupData query(final Connection databaseConnection) throws SQLException {
+        String query = "SELECT G.Key AS GroupId, Name, OwnerId, Username, U.Id "
+                + "FROM 'Group' G INNER JOIN User U ON OwnerId = Id WHERE G.Key = ? ";
 
-        Group group = new Group(cGroupId);
-
-        try (PreparedStatement statement = databaseConnection.prepareStatement(preparedStatement)) {
+        GroupData groupData;
+        try (PreparedStatement statement = databaseConnection.prepareStatement(query)) {
             statement.setString(1, cGroupId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    group.setGroupData(new GroupData(
-                            resultSet.getInt("Key"),
+                    groupData = new GroupData(
+                            resultSet.getInt("GroupId"),
                             resultSet.getString("Name"),
                             resultSet.getString("OwnerId"),
                             resultSet.getString("Username")
-                    ));
+                    );
+                    resultSet.close();
+                } else {
+                    groupData = null;
                 }
             }
+            statement.close();
         }
 
-        group.setCollection(new RequestCollection(cGroupId).query(databaseConnection));
-
-        return group;
+        return groupData;
     }
 }

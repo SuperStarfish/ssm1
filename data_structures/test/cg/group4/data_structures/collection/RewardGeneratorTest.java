@@ -1,16 +1,18 @@
 package cg.group4.data_structures.collection;
 
+import cg.group4.data_structures.collection.collectibles.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Tests to ensure proper behaviour of the RewardGenerator.
- *
- * @author Jean de Leeuw
  */
 public class RewardGeneratorTest {
 
@@ -29,7 +31,7 @@ public class RewardGeneratorTest {
      */
     @Before
     public void setUp() {
-        cGenerator = new RewardGenerator("");
+        cGenerator = new RewardGenerator("Group4");
     }
 
     /**
@@ -47,6 +49,82 @@ public class RewardGeneratorTest {
     public void constructorTest() {
         assertTrue(cGenerator.cRNG != null);
         assertTrue(cGenerator.cCollectibleFactory != null);
+        assertEquals("Group4", cGenerator.cOwnerId);
+    }
+
+    @Test
+    public void generateOneCollectibleTest1() {
+        Random rngMock = Mockito.mock(Random.class);
+        Mockito.when(rngMock.nextInt(Mockito.anyInt())).thenReturn(0);
+        Mockito.when(rngMock.nextFloat()).thenReturn(0.5f);
+
+        cGenerator.cRNG = rngMock;
+
+        float hue = (float) cGenerator.rewardFunction(0.5f);
+
+        Collectible generatedFish = cGenerator.generateOneCollectible();
+        assertEquals(new FishA(hue, "Group4"), generatedFish);
+        Mockito.verify(rngMock, Mockito.times(1)).nextInt(Mockito.anyInt());
+        Mockito.verify(rngMock, Mockito.times(1)).nextFloat();
+    }
+
+    @Test
+    public void getMostRareTest1() {
+        FishA fA = new FishA(1f, "ABC");
+        FishB fB = new FishB(1f, "ABC");
+
+        Collectible mostRare = cGenerator.getMostRare(fA, fB);
+        assertEquals(fB, mostRare);
+    }
+
+    @Test
+    public void getMostRareTest2() {
+        FishC fC = new FishC(1f, "ABC");
+        FishB fB = new FishB(1f, "ABC");
+
+        Collectible mostRare = cGenerator.getMostRare(fC, fB);
+        assertEquals(fC, mostRare);
+    }
+
+    @Test
+    public void generateOneCollectibleTest2() {
+        Random rngMock = Mockito.mock(Random.class);
+        Mockito.when(rngMock.nextInt(Mockito.anyInt())).thenReturn(2);
+        Mockito.when(rngMock.nextFloat()).thenReturn(1f);
+
+        cGenerator.cRNG = rngMock;
+
+        float hue = (float) cGenerator.rewardFunction(1f);
+
+        Collectible generatedFish = cGenerator.generateOneCollectible();
+        assertEquals(new FishC(hue, "Group4"), generatedFish);
+        Mockito.verify(rngMock, Mockito.times(1)).nextInt(Mockito.anyInt());
+        Mockito.verify(rngMock, Mockito.times(1)).nextFloat();
+    }
+
+    @Test
+    public void generateCollectibleTest1() {
+        RewardGenerator genSpy = Mockito.spy(cGenerator);
+        final int eventScore = 20;
+
+        genSpy.generateCollectible(eventScore);
+
+        Mockito.verify(genSpy, Mockito.times(eventScore)).generateOneCollectible();
+        Mockito.verify(genSpy, Mockito.times(eventScore)).getMostRare(
+                Mockito.any(Collectible.class),
+                Mockito.any(Collectible.class));
+    }
+
+    @Test
+    public void generateCollectibleTest2() {
+        FishA fishA = new FishA(1f, "Group4");
+        CollectibleFactory factorySpy = Mockito.spy(CollectibleFactory.class);
+        Mockito.when(factorySpy.generateCollectible(Mockito.anyString(), Mockito.anyFloat(), Mockito.eq("Group4")))
+                .thenReturn(fishA);
+
+        cGenerator.cCollectibleFactory = factorySpy;
+        Collectible generatedCollectible = cGenerator.generateCollectible(1);
+        assertEquals(fishA, generatedCollectible);
     }
 
     /**

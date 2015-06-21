@@ -7,14 +7,12 @@ import java.util.Random;
 
 /**
  * Objects that generates the rewards.
- *
- * @author Jean de Leeuw
  */
 public class RewardGenerator {
     /**
      * Object that creates collectibles.
      */
-    protected final CollectibleFactory cCollectibleFactory;
+    protected CollectibleFactory cCollectibleFactory;
     /**
      * Generates random numbers used in the generation of the rewards.
      */
@@ -44,14 +42,13 @@ public class RewardGenerator {
      */
     public final Collectible generateCollectible(final int eventScore) {
         Collectible mostValuable = null;
-        double mostRare = -Double.MAX_VALUE;
 
         for (int i = 0; i < eventScore; i++) {
             Collectible c = generateOneCollectible();
-            if (c.getRarity() > mostRare) {
+            if (mostValuable == null) {
                 mostValuable = c;
-                mostRare = c.getRarity();
             }
+            mostValuable = getMostRare(c, mostValuable);
         }
         return mostValuable;
     }
@@ -62,11 +59,25 @@ public class RewardGenerator {
      *
      * @return Collectible object.
      */
-    protected final Collectible generateOneCollectible() {
+    protected Collectible generateOneCollectible() {
         String[] collectibleList = cCollectibleFactory.getCollectiblesList();
         int nr = cRNG.nextInt(collectibleList.length);
         float hue = (float) rewardFunction(cRNG.nextFloat());
         return cCollectibleFactory.generateCollectible(collectibleList[nr], hue, cOwnerId);
+    }
+
+    /**
+     * Returns the most valuable of two collectibles.
+     *
+     * @param c1 Collectible 1
+     * @param c2 Collectible 2
+     * @return most rare collectible
+     */
+    protected Collectible getMostRare(final Collectible c1, final Collectible c2) {
+        if (c1.getRarity() > c2.getRarity()) {
+            return c1;
+        }
+        return c2;
     }
 
     /**

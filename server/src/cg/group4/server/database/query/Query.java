@@ -23,13 +23,14 @@ public abstract class Query implements Serializable {
 
     /**
      * Inserts all the objects in the prepared statement, in order.
+     *
      * @param preparedStatement The statement on which to add the objects.
-     * @param values The Objects to add to the statement.
+     * @param values            The Objects to add to the statement.
      * @throws SQLException If something went wrong while preparing the statement.
      */
-    protected void setValues(final PreparedStatement preparedStatement, final Object ... values) throws SQLException {
+    protected void setValues(final PreparedStatement preparedStatement, final Object... values) throws SQLException {
         for (int i = 1; i <= values.length; i++) {
-            preparedStatement.setObject(i, values[i]);
+            preparedStatement.setObject(i, values[i - 1]);
         }
     }
 }

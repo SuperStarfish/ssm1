@@ -1,7 +1,5 @@
 package cg.group4.data_structures;
 
-import cg.group4.data_structures.collection.Collection;
-
 import java.io.Serializable;
 
 /**
@@ -22,22 +20,17 @@ public class PlayerData implements Serializable {
     /**
      * The last time a stroll was started.
      */
-    protected long cStrollTimeStamp;
+    protected long cStrollTimestamp;
 
     /**
      * The last time an interval was started.
      */
-    protected long cIntervalTimeStamp;
+    protected long cIntervalTimestamp;
 
     /**
      * The id of the group the member is from.
      */
     protected String cGroupId;
-
-    /**
-     * The collection of the player.
-     */
-    protected Collection cCollection;
 
     /**
      * A new UserData object containing the id for the current user.
@@ -46,7 +39,6 @@ public class PlayerData implements Serializable {
      */
     public PlayerData(final String id) {
         cId = id;
-        cCollection = new Collection(cId);
     }
 
     /**
@@ -72,7 +64,8 @@ public class PlayerData implements Serializable {
      *
      * @return The username that belongs to the user.
      */
-    public String getUsername() {
+    @Override
+    public String toString() {
         return cUsername;
     }
 
@@ -90,17 +83,17 @@ public class PlayerData implements Serializable {
      *
      * @return The timestamp for the stroll.
      */
-    public long getStrollTimeStamp() {
-        return cStrollTimeStamp;
+    public long getStrollTimestamp() {
+        return cStrollTimestamp;
     }
 
     /**
      * Sets the stroll timestamp to the new timestamp.
      *
-     * @param strollTimeStamp The new timestamp;
+     * @param strollTimestamp The new timestamp;
      */
-    public void setStrollTimeStamp(final long strollTimeStamp) {
-        cStrollTimeStamp = strollTimeStamp;
+    public void setStrollTimestamp(final long strollTimestamp) {
+        cStrollTimestamp = strollTimestamp;
     }
 
     /**
@@ -108,17 +101,17 @@ public class PlayerData implements Serializable {
      *
      * @return The timestamp for the interval.
      */
-    public long getIntervalTimeStamp() {
-        return cIntervalTimeStamp;
+    public long getIntervalTimestamp() {
+        return cIntervalTimestamp;
     }
 
     /**
      * Sets the interval timestamp to the new timestamp.
      *
-     * @param intervalTimeStamp The new timestamp.
+     * @param intervalTimestamp The new timestamp.
      */
-    public void setIntervalTimeStamp(final long intervalTimeStamp) {
-        cIntervalTimeStamp = intervalTimeStamp;
+    public void setIntervalTimestamp(final long intervalTimestamp) {
+        cIntervalTimestamp = intervalTimestamp;
     }
 
     /**
@@ -139,22 +132,4 @@ public class PlayerData implements Serializable {
         cGroupId = groupId;
     }
 
-    /**
-     * Gets the players collection.
-     *
-     * @return The players collection.
-     */
-    public Collection getCollection() {
-        return cCollection;
-    }
-
-
-    /**
-     * Sets the players collection.
-     *
-     * @param collection The players collection.
-     */
-    public void setCollection(final Collection collection) {
-        cCollection = collection;
-    }
 }

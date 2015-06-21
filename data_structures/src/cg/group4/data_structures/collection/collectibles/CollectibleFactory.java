@@ -4,8 +4,6 @@ import java.util.Date;
 
 /**
  * Creates and returns collectible objects.
- *
- * @author Jean de Leeuw
  */
 public class CollectibleFactory {
 
@@ -26,7 +24,7 @@ public class CollectibleFactory {
      * @param ownerId The owner of the collectible.
      * @return Collectible object
      */
-    public final Collectible generateCollectible(final String type, final float hue, final String ownerId) {
+    public Collectible generateCollectible(final String type, final float hue, final String ownerId) {
         Collectible result = null;
 
         switch (type) {

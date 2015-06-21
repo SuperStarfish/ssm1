@@ -3,11 +3,7 @@ package cg.group4.server;
 import cg.group4.server.database.Response;
 import cg.group4.server.database.query.Query;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.sql.Connection;
@@ -56,7 +52,7 @@ public final class ServerThread implements Runnable {
     /**
      * Creates a new ServerThread for communication with the server and the client.
      *
-     * @param connection The connection with the Client.
+     * @param connection           The connection with the Client.
      * @param localStorageResolver The LocalStorage resolver containing database connection and if it is remote
      *                             or local.
      */
@@ -95,19 +91,6 @@ public final class ServerThread implements Runnable {
     }
 
     /**
-     * Closes the ObjectInput- and ObjectOutputStream as well as the connection with the Client.
-     *
-     * @throws IOException IOException
-     */
-    protected void cleanUp() throws IOException {
-        String hostName = cConnection.getInetAddress().getHostName();
-        cOutputStream.close();
-        cInputStream.close();
-        cConnection.close();
-        LOGGER.info("Closed connection with: " + hostName);
-    }
-
-    /**
      * This method is used for incoming messages from the client.
      */
     protected void interactWithClient() {
@@ -127,6 +110,19 @@ public final class ServerThread implements Runnable {
                 e.printStackTrace();
             }
         } while (cKeepAlive);
+    }
+
+    /**
+     * Closes the ObjectInput- and ObjectOutputStream as well as the connection with the Client.
+     *
+     * @throws IOException IOException
+     */
+    protected void cleanUp() throws IOException {
+        String hostName = cConnection.getInetAddress().getHostName();
+        cOutputStream.close();
+        cInputStream.close();
+        cConnection.close();
+        LOGGER.info("Closed connection with: " + hostName);
     }
 
     /**

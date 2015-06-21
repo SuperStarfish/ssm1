@@ -4,17 +4,21 @@ import cg.group4.client.connection.Connection;
 import cg.group4.client.connection.UnConnected;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.Collection;
+import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
+import cg.group4.server.database.MultiResponseHandler;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.server.database.query.*;
-import cg.group4.util.IpResolver;
 
-import java.net.UnknownHostException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * @author Jurgen van Schagen
+ * Client that connects to the server.
  */
 public final class Client {
     /**
@@ -25,12 +29,7 @@ public final class Client {
      * The Client connection with the internal storage server.
      * FindBugs: cg.group4.client.Client.cLocalInstance should be package protected
      */
-    protected static Client cLocalInstance;
-    /**
-     * The Client connection with the remote server.
-     * FindBugs: cg.group4.client.Client.cRemoteInstance should be package protected
-     */
-    protected static Client cRemoteInstance;
+    protected static Client cInstance;
     /**
      * The default IP to connect to.
      */
@@ -40,9 +39,13 @@ public final class Client {
      */
     protected final int cDefaultPort = 56789;
     /**
-     * The connection state with the server.
+     * The local connection state with the server.
      */
-    protected Connection cConnection;
+    protected Connection cLocalConnection;
+    /**
+     * The remote connection state with the server.
+     */
+    protected Connection cRemoteConnection;
     /**
      * The user id. Android Phone ID or Desktop name.
      */
@@ -51,7 +54,6 @@ public final class Client {
      * Notifies all listeners that the server has either connected or disconnected.
      */
     protected Subject cRemoteChangeSubject;
-
     /**
      * A list of Runnable that have to be run at the end of a render cycle.
      * These are added to the Gdx.app.postRunnable().
@@ -63,7 +65,8 @@ public final class Client {
      * Constructs a new Client and sets the state to unconnected.
      */
     public Client() {
-        cConnection = new UnConnected();
+        cLocalConnection = new UnConnected();
+        cRemoteConnection = new UnConnected();
         cUserIDResolver = new DummyUserIdResolver();
         cRemoteChangeSubject = new Subject();
         cPostRunnables = new ArrayList<Runnable>();
@@ -74,35 +77,32 @@ public final class Client {
      *
      * @return The Client.
      */
-    public static Client getLocalInstance() {
-        if (cLocalInstance == null) {
-            cLocalInstance = new Client();
+    public static Client getInstance() {
+        if (cInstance == null) {
+            cInstance = new Client();
         }
-        return cLocalInstance;
+        return cInstance;
     }
 
     /**
-     * Gets the Singleton instance.
+     * Connects to the default remote server. Behaviour depends on the state.
+     */
+    public void connectToRemoteServer() {
+        cRemoteConnection.connect(cDefaultIp, cDefaultPort);
+    }
+
+    /**
+     * Connects to a server given an IP and port.
      *
-     * @return The Client.
+     * @param port Port to connect to.
      */
-    public static Client getRemoteInstance() {
-        if (cRemoteInstance == null) {
-            cRemoteInstance = new Client();
-        }
-        return cRemoteInstance;
-    }
-
-    /**
-     * Returns the RemoteChangeSubject that notifies whenever a change in the remote connection status occurs.
-     * @return Subject that can be subscribed on.
-     */
-    public Subject getRemoteChangeSubject() {
-        return cRemoteChangeSubject;
+    public void connectToLocalServer(final int port) {
+        cLocalConnection.connect(null, port);
     }
 
     /**
      * Returns the list of Runnable that need to be processed in the Gdx.app.postRunnable().
+     *
      * @return ArrayList with the Runnables.
      */
     public ArrayList<Runnable> getPostRunnables() {
@@ -111,6 +111,7 @@ public final class Client {
 
     /**
      * Adds another Runnable to the PostRunnable list.
+     *
      * @param runnable The task to run.
      */
     public void addPostRunnables(final Runnable runnable) {
@@ -125,169 +126,38 @@ public final class Client {
     }
 
     /**
-     * Connects to the default server. Behaviour depends on the state.
+     * Returns the RemoteChangeSubject that notifies whenever a change in the remote connection status occurs.
+     *
+     * @return Subject that can be subscribed on.
      */
-    public void connectToServer() {
-        cConnection.connect(cDefaultIp, cDefaultPort);
+    public Subject getRemoteChangeSubject() {
+        return cRemoteChangeSubject;
     }
 
     /**
-     * Connects to a server given an IP and port. If the server is null, it will connect to localhost.
-     * @param ip Ip to connect to. If null localhost.
-     * @param port Port to connect to.
-     */
-    public void connectToServer(final String ip, final int port) {
-            cConnection.connect(ip, port);
-    }
-
-
-    /**
-     * Sets the connection to the new connection.
+     * Sets the local connection to the new connection.
+     *
      * @param connection The connection that needs to be set.
      */
-    public void setConnection(final Connection connection) {
-        cConnection = connection;
+    public void setLocalConnection(final Connection connection) {
+        cLocalConnection = connection;
+        LOGGER.info("Managed to locally connect: " + connection.isConnected());
+    }
+
+    /**
+     * Sets the remote connection to the new connection.
+     *
+     * @param connection The connection that needs to be set.
+     */
+    public void setRemoteConnection(final Connection connection) {
+        cRemoteConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
-        LOGGER.info("Managed to connect: " + connection.isConnected());
-    }
-
-    /**
-     * Updates the stroll timers in the database.
-     * @param timeStamp The timestamp when the timer should end.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void updateStrollTimer(final Long timeStamp, final ResponseHandler responseHandler) {
-        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
-        playerData.setStrollTimeStamp(timeStamp);
-        tryToSend(new UpdatePlayerData(playerData), responseHandler);
-    }
-
-    /**
-     * Sends the given query to the server, if there has not already been made a previous request.
-     * @param query The query to the server.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    protected void tryToSend(final Query query, final ResponseHandler responseHandler) {
-        cConnection.send(query, responseHandler);
-    }
-
-    /**
-     * Creates a CreateGroup Query that will be send to the server.
-     * @param groupId The group if to create.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void createGroup(final String groupId, final ResponseHandler responseHandler) {
-        tryToSend(new CreateGroup(groupId, cUserIDResolver.getID()), responseHandler);
-    }
-
-    /**
-     * Updates the interval timers in the database.
-     * @param timeStamp The timestamp when the timer should end.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void updateIntervalTimer(final Long timeStamp, final ResponseHandler responseHandler) {
-        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
-        playerData.setIntervalTimeStamp(timeStamp);
-        tryToSend(new UpdatePlayerData(playerData), responseHandler);
-    }
-
-    /**
-     * Updates the username in the server. Behaviour depends on the state.
-     * @param username The new username.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void updatePlayer(final String username, final ResponseHandler responseHandler) {
-        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
-        playerData.setUsername(username);
-        tryToSend(new UpdatePlayerData(playerData), responseHandler);
-    }
-
-    /**
-     * Gets the collection belonging to the specified group.
-     * @param groupId The group to get the collection from.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void getCollection(final String groupId, final ResponseHandler responseHandler) {
-        tryToSend(new RequestCollection(groupId), responseHandler);
-    }
-
-    /**
-     * Adds the player to the specified group.
-     * @param groupId The group to join.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void joinGroup(final String groupId, final ResponseHandler responseHandler) {
-        PlayerData playerData = new PlayerData(cUserIDResolver.getID());
-        playerData.setGroupId(groupId);
-        tryToSend(new UpdatePlayerData(playerData), responseHandler);
-    }
-
-    /**
-     * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void getPlayerData(final ResponseHandler responseHandler) {
-        tryToSend(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
-    }
-
-    /**
-     * Adds the collection to the server. Behaviour depends on the state.
-     * @param collection The collection to add to the server.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void addCollection(final Collection collection, final ResponseHandler responseHandler) {
-        tryToSend(new AddCollection(collection), responseHandler);
-    }
-
-    /**
-     * Removes the given collection from the database.
-     * @param collection Collection to delete.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void removeCollection(final Collection collection, final ResponseHandler responseHandler) {
-        tryToSend(new RemoveCollection(collection), responseHandler);
-    }
-
-    /**
-     * Gets the group data from the server. Behaviour depends on the state.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void getGroupData(final ResponseHandler responseHandler) {
-    	tryToSend(new GetGroupData(), responseHandler);
-    }
-
-    /**
-     * Stores the host ip on the server with a generated code that it will return to let the client connect.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void hostEvent(final ResponseHandler responseHandler) {
-        IpResolver ipResolver = new IpResolver();
-        try {
-            tryToSend(new RequestHostCode(ipResolver.getExternalIP()), responseHandler);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Retrieves the ip of the host.
-     * @param code code of the connection.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void getHost(final Integer code, final ResponseHandler responseHandler) {
-        tryToSend(new RequestHostIp(code), responseHandler);
-    }
-
-    /**
-     * Resets the player data.
-     * @param responseHandler The task to execute once a reply is received completed.
-     */
-    public void resetPlayerData(final ResponseHandler responseHandler) {
-        tryToSend(new ResetPlayerData(cUserIDResolver.getID()), responseHandler);
+        LOGGER.info("Managed to remotely connect: " + connection.isConnected());
     }
 
     /**
      * Sets the userid using the device ID.
+     *
      * @param idResolver Tool used for getting the proper device ID.
      */
     public void setUserIDResolver(final UserIDResolver idResolver) {
@@ -295,7 +165,41 @@ public final class Client {
     }
 
     /**
+     * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
+     *
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getPlayerData(final ResponseHandler responseHandler) {
+        cLocalConnection.send(new RequestPlayerData(cUserIDResolver.getID()), responseHandler);
+    }
+
+    // --------------- Only queries follow below.--------------
+
+    /**
+     * Gets the userdata from the server. Uses UserIDResolver to get the data. Behaviour depends on the state.
+     *
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getGroupId(final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestGroupId(cUserIDResolver.getID()), responseHandler);
+    }
+
+    /**
+     * Updates the username on both the local server.
+     *
+     * @param username        The username.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void updateLocalUsername(final String username, final ResponseHandler responseHandler) {
+        PlayerData playerData = new PlayerData(getUserID());
+        playerData.setUsername(username);
+
+        cLocalConnection.send(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
      * Returns the user ID from the supplied UserIDResolver.
+     *
      * @return The ID belonging to the current player.
      */
     public String getUserID() {
@@ -303,10 +207,245 @@ public final class Client {
     }
 
     /**
-     * Returns if connected to the server or not.
+     * Updates the username on both the remote server.
+     *
+     * @param username        The username.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void updateRemoteUsername(final String username, final ResponseHandler responseHandler) {
+        PlayerData playerData = new PlayerData(getUserID());
+        playerData.setUsername(username);
+
+        cRemoteConnection.send(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Updates the stroll timestamp on the local server.
+     *
+     * @param strollTimestamp The timestamp the stroll timer should end.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void updateStrollTimestamp(final Long strollTimestamp, final ResponseHandler responseHandler) {
+        PlayerData playerData = new PlayerData(getUserID());
+        playerData.setStrollTimestamp(strollTimestamp);
+        cLocalConnection.send(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Updates the interval timestamp on the local server.
+     *
+     * @param intervalTimestamp The timestamp the interval timer should end.
+     * @param responseHandler   The task to execute once a reply is received.
+     */
+    public void updateIntervalTimestamp(final Long intervalTimestamp, final ResponseHandler responseHandler) {
+        PlayerData playerData = new PlayerData(getUserID());
+        playerData.setIntervalTimestamp(intervalTimestamp);
+        cLocalConnection.send(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Resets the player data.
+     *
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void deletePlayerData(final ResponseHandler responseHandler) {
+        MultiResponseHandler multiResponseHandler = new MultiResponseHandler(responseHandler, 2);
+        cLocalConnection.send(new DeletePlayerData(cUserIDResolver.getID()), multiResponseHandler);
+        cRemoteConnection.send(new DeletePlayerData(cUserIDResolver.getID()), multiResponseHandler);
+    }
+
+    /**
+     * Gets the collection belonging to the player.
+     *
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getPlayerCollection(final ResponseHandler responseHandler) {
+        cLocalConnection.send(new RequestCollection(getUserID()), responseHandler);
+    }
+
+    /**
+     * Updates the collection belonging to the player.
+     *
+     * @param collection      The collection with which will be updated.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void updatePlayerCollection(final Collection collection, final ResponseHandler responseHandler) {
+        collection.setId(getUserID());
+        cLocalConnection.send(new AddCollection(collection), responseHandler);
+    }
+
+    /**
+     * Adds the player to the specified group.
+     *
+     * @param groupId         The group to join.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void joinGroup(final String groupId, final ResponseHandler responseHandler) {
+        PlayerData playerData = new PlayerData(getUserID());
+        playerData.setGroupId(groupId);
+        cRemoteConnection.send(new UpdatePlayerData(playerData), responseHandler);
+    }
+
+    /**
+     * Donates a collectible from the server.
+     *
+     * @param collectible     The collectible to be donated.
+     * @param groupId         The group to which the collectible should be donated.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void donateCollectible(final Collectible collectible, final String groupId,
+                                  final ResponseHandler responseHandler) {
+        MultiResponseHandler multiResponseHandler = new MultiResponseHandler(responseHandler, 2);
+        cLocalConnection.send(new RemoveCollectible(collectible, getUserID()), multiResponseHandler);
+        cRemoteConnection.send(new AddCollectible(collectible, groupId), multiResponseHandler);
+    }
+
+    /**
+     * Returns if connected to the remote server or not.
+     *
      * @return Is connected or not.
      */
-    public boolean isConnected() {
-        return cConnection.isConnected();
+    public boolean isRemoteConnected() {
+        return cRemoteConnection.isConnected();
+    }
+
+    /**
+     * Gets the collection belonging to the specified group.
+     *
+     * @param groupId         The group to get the collection from.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getGroupCollection(final String groupId, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestCollection(groupId), responseHandler);
+    }
+
+    /**
+     * Gets the group data from the server. Behaviour depends on the state.
+     *
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getGroupData(final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetGroupData(), responseHandler);
+    }
+
+    /**
+     * Retrieves the data of the given group id.
+     *
+     * @param groupId         The group id.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getGroup(final String groupId, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetGroup(groupId), responseHandler);
+    }
+
+
+    /**
+     * Creates a CreateGroup Query that will be send to the server.
+     *
+     * @param groupId         The group if to create.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void createGroup(final String groupId, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new CreateGroup(groupId, cUserIDResolver.getID()), responseHandler);
+    }
+
+    /**
+     * Retrieves the usernames of all the members of the given group.
+     *
+     * @param groupId         The group to fetch the members from.
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getMembers(final String groupId, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetMembers(groupId), responseHandler);
+    }
+
+    /**
+     * Stores the host ip on the server with a generated code that it will return to let the client connect.
+     *
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void hostEvent(final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestHostCode(getIPAddress(true)), responseHandler);
+    }
+
+    /**
+     * Found implementation.
+     * Android returns 127.0.0.1 for Inet4Address.getLocalHost().getHostName(), so using a method found at:
+     * http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device
+     *
+     * @param useIPv4 boolean whether or not to use IPv4.
+     *                +    * @return String representing the IP address.
+     */
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress().toUpperCase();
+                        boolean isIPv4 = validIP(sAddr);
+                        if (useIPv4) {
+                            if (isIPv4) {
+                                return sAddr;
+                            }
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 port suffix
+                                String ip;
+                                if (delim < 0) {
+                                    ip = sAddr;
+                                } else {
+                                    ip = sAddr.substring(0, delim);
+                                }
+                                return ip;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        } // for now eat exceptions
+        return "";
+    }
+
+    /**
+     * http://stackoverflow.com/questions/4581877/validating-ipv4-string-in-java
+     *
+     * @param ip input string
+     * @return boolean if the input string is a valid IP.
+     */
+    public static boolean validIP(String ip) {
+        try {
+            if (ip == null || ip.isEmpty()) {
+                return false;
+            }
+
+            String[] parts = ip.split("\\.");
+            if (parts.length != 4) {
+                return false;
+            }
+
+            for (String s : parts) {
+                int i = Integer.parseInt(s);
+                if ((i < 0) || (i > 255)) {
+                    return false;
+                }
+            }
+            return !ip.endsWith(".");
+
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    /**
+     * Retrieves the ip of the host.
+     *
+     * @param code            code of the connection.
+     * @param responseHandler The task to execute once a reply is received completed.
+     */
+    public void getHost(final Integer code, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestHostIp(code), responseHandler);
     }
 }

@@ -24,8 +24,9 @@ public class CreateGroup extends Query {
 
     /**
      * Creates a new CreateGroup Query using the supplied group name and ownerID.
+     *
      * @param groupName The group name.
-     * @param ownerId The owner ID.
+     * @param ownerId   The owner ID.
      */
     public CreateGroup(final String groupName, final String ownerId) {
         cGroupName = groupName;
@@ -68,11 +69,9 @@ public class CreateGroup extends Query {
             }
 
             group = new Group(Integer.toString(groupId), groupData);
+
             PlayerData playerData = new PlayerData(cOwnerId);
-            playerData.setUsername(null);
-
             playerData.setGroupId(Integer.toString(groupId));
-
             new UpdatePlayerData(playerData).query(databaseConnection);
         }
 

@@ -11,8 +11,8 @@ import java.sql.SQLException;
 public class RemoteStorageResolver extends LocalStorageResolver {
 
     @Override
-    public String[] createDatabases() {
-        return new String[] {cUserTable, cCollectibleTable, cEventHostsTable, cGroupTable};
+    protected boolean setLocal() {
+        return false;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class RemoteStorageResolver extends LocalStorageResolver {
     }
 
     @Override
-    protected boolean setLocal() {
-        return false;
+    public String[] createDatabases() {
+        return new String[]{cUserTable, cCollectibleTable, cEventHostsTable, cGroupTable};
     }
 }
