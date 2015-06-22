@@ -1,6 +1,6 @@
 package cg.group4.server;
 
-import cg.group4.server.database.query.Event_Host_Clean;
+import cg.group4.server.database.query.EventHostCleaner;
 import cg.group4.server.database.query.Query;
 import cg.group4.util.IpResolver;
 import cg.group4.util.StaticsCaller;
@@ -63,11 +63,11 @@ public class Server {
      * The task that will clean the database tables.
      */
     protected final Runnable cCleanTask = new Runnable() {
-        final Query query = new Event_Host_Clean();
+        protected final Query cQuery = new EventHostCleaner();
         @Override
         public void run() {
             try {
-                query.query(cLocalStorageResolver.getConnection());
+                cQuery.query(cLocalStorageResolver.getConnection());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

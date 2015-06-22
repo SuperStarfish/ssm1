@@ -19,13 +19,16 @@ public class RequestHostCode extends Query {
      * The ip of the host.
      */
     protected String cIp;
-
+    /**
+     * The port to connect to.
+     */
     protected int cPort;
 
     /**
      * Creates a new host.
      *
      * @param ip The ip of the host.
+     * @param port The port to use.
      */
     public RequestHostCode(final String ip, final int port) {
         cIp = ip;
@@ -55,9 +58,7 @@ public class RequestHostCode extends Query {
         preparedQuery = "INSERT INTO Event_Hosts (Code, Ip, Port) VALUES (?, ?, ?)";
 
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
-            statement.setInt(1, code);
-            statement.setString(2, cIp);
-            statement.setInt(3, cPort);
+            setValues(statement, code, cIp, cPort);
             statement.executeUpdate();
         }
 
