@@ -28,4 +28,9 @@ public interface Connection {
      * @param responseHandler The task to execute once a reply is received completed.
      */
     void send(Query data, final ResponseHandler responseHandler);
+
+    /**
+     * Disconnect the server.
+     */
+    void disconnect();
 }

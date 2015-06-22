@@ -92,6 +92,13 @@ public final class Client {
     }
 
     /**
+     * Closes the connection with the remote server.
+     */
+    public void closeRemoteConnection() {
+        cRemoteConnection.disconnect();
+    }
+
+    /**
      * Connects to a server given an IP and port.
      *
      * @param port Port to connect to.
@@ -447,6 +454,9 @@ public final class Client {
     public void getHost(final Integer code, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new RequestHostIp(code), responseHandler);
     }
+
+    // --------------- Helper methods follow below.--------------
+
 
     /**
      * Changes the host IP address.

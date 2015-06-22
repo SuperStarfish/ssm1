@@ -105,4 +105,13 @@ public final class RemoteConnection implements Connection {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void disconnect() {
+        try {
+            cConnection.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

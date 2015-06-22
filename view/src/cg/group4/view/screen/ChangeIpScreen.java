@@ -190,7 +190,7 @@ public class ChangeIpScreen extends ScreenLogic {
      * @return valid (true) or invalid (false) port
      */
     private boolean isValidPort(String port) {
-        final int minRange = 0;
+        final int minRange = 1;
         final int maxRange = 65535;
 
         Integer res = -1;
@@ -220,10 +220,12 @@ public class ChangeIpScreen extends ScreenLogic {
 
     /**
      * Reconnects the to the remote server.
-     * TODO
      */
     private void reconnect() {
+        System.out.println("Reconnect @ screen");
+        Client.getInstance().closeRemoteConnection();
         Client.getInstance().connectToRemoteServer();
+        System.out.println("Reconnect @ screen |end|");
     }
 
 }

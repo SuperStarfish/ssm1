@@ -105,4 +105,10 @@ public class UnConnected implements Connection {
             }
         }).start();
     }
+
+    @Override
+    public void disconnect() {
+        // TODO send to local or remote disconnect()
+        System.out.println("UNCONNECTED disconnect");
+    }
 }
