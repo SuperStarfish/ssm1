@@ -5,6 +5,7 @@ import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.groups.GroupData;
 import cg.group4.view.screen_mechanics.GameSkin;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -85,17 +86,20 @@ public class AquariumScreen implements Screen {
      * Initializes the aquarium.
      */
     public AquariumScreen() {
+        final int fontSize = 720;
+        cStyle.createUIElements(fontSize);
+        cChangeIpButton = cStyle.generateDefaultMenuButton("Change server ip");
+        cGroupsBox = cStyle.generateDefaultSelectbox();
+        cDateLabel = cStyle.generateDefaultLabel("Date: ");
+        cOwnerLabel = cStyle.generateDefaultLabel("Owner: ");
+        initFishTable();
+        initMenuTable();
         initBackgroundColour();
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(cStage);
-        final int fontSize = 720;
-        cStyle.createUIElements(fontSize);
-
-        initFishTable();
-        initMenuTable();
     }
 
     protected void initFishTable() {
@@ -126,18 +130,22 @@ public class AquariumScreen implements Screen {
      *
      */
     protected void createChangeIpButton() {
-        cChangeIpButton = cStyle.generateDefaultMenuButton("Change server ip");
+        cChangeIpButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new AquariumIpScreen());
+            }
+        });
     }
     /**
      * Creates the group box.
      */
     protected void createGroupBox() {
-        cGroupsBox = cStyle.generateDefaultSelectbox();
         cGroupsBox.setVisible(false);
         cGroupsBox.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                if(cGroupsBox.getItems().size == 0) {
+                if (cGroupsBox.getItems().size == 0) {
                     cGroupsBox.setVisible(false);
                 } else {
                     cGroupsBox.setVisible(true);
@@ -155,10 +163,8 @@ public class AquariumScreen implements Screen {
     protected Table initTooltipLabels() {
         Table table = new Table();
 
-        cOwnerLabel = cStyle.generateDefaultLabel("Owner: ");
         table.add(cOwnerLabel);
         table.row();
-        cDateLabel = cStyle.generateDefaultLabel("Date: ");
         table.add(cDateLabel);
         table.row();
 
