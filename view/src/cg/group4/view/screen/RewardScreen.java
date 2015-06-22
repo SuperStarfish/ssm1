@@ -103,7 +103,6 @@ public final class RewardScreen extends ScreenLogic {
         DecimalFormat format = new DecimalFormat("0.##");
         java.util.List<Collectible> list = collection.sort(new RarityComparator());
         cContentTable.clear();
-        System.out.println(list);
         for (final Collectible collectible : list) {
             cContentTable.add(new Image(CollectibleDrawer.drawCollectible(collectible))).space(30);
         }
