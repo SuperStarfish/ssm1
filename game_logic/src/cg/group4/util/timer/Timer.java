@@ -277,7 +277,6 @@ public class Timer implements Observer {
          * Set the duration of a global timer.
          *
          * @param duration The duration in seconds
-         * @param persistence Whether the timer should be persistent
          */
         Global(final int duration) {
             cDuration = duration;
