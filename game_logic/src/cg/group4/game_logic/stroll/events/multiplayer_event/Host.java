@@ -54,6 +54,14 @@ public abstract class Host {
      * Notifies listeners when disconnected from the other party.
      */
     protected Subject cDisconnectSubject = new Subject();
+    /**
+     * Determines if the host is connected or not.
+     */
+    protected boolean cIsConnected = false;
+    /**
+     * After 5 minutes of not being able to connect, make sure to disconnect.
+     */
+    protected final int cFiveMinutes = 300_000;
 
     /**
      * Creates a new Host.
@@ -66,20 +74,31 @@ public abstract class Host {
      */
     public void connect() {
         cSocket = createSocket();
-        cOtherClient = cSocket.getInetAddress();
-        try {
-            cDatagramSocket = new DatagramSocket(cSocket.getLocalPort());
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        if(cSocket != null) {
+            cIsConnected = true;
+            cOtherClient = cSocket.getInetAddress();
+            try {
+                cDatagramSocket = new DatagramSocket(cSocket.getLocalPort());
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
 
-        try {
-            cOutputStream = new ObjectOutputStream(cSocket.getOutputStream());
-            cOutputStream.flush();
-            cInputStream = new ObjectInputStream(cSocket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                cOutputStream = new ObjectOutputStream(cSocket.getOutputStream());
+                cOutputStream.flush();
+                cInputStream = new ObjectInputStream(cSocket.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    /**
+     * Returns if the host is connected or not.
+     * @return If the host is connected or not.
+     */
+    public boolean isConnected() {
+        return cIsConnected;
     }
 
     /**
@@ -117,6 +136,7 @@ public abstract class Host {
      */
     protected void disconnect() {
         cIsAlive = false;
+        Gdx.app.debug("Host", "Lost connection, attempting to disconnect!");
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -237,9 +257,9 @@ public abstract class Host {
         cIsAlive = false;
         cDatagramSocket.close();
         try {
+            cSocket.close();
             cOutputStream.close();
             cInputStream.close();
-            cSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

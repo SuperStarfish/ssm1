@@ -152,25 +152,9 @@ public class TimerTest {
     /**
      * Test for the enum INTERVAL.
      */
-    @Ignore
+    @Test
     public final void testTimerEnumINTERVAL() {
         assertEquals(cTimeInMinute * cTimeInMinute, Timer.Global.INTERVAL.getDuration());
-    }
-
-    /**
-     * Test for the enum STROLL.
-     */
-    @Ignore
-    public final void testTimerEnumSTROLL() {
-        assertEquals(5 * cTimeInMinute, Timer.Global.STROLL.getDuration());
-    }
-
-    /**
-     * Test for the enum EVENT.
-     */
-    @Test
-    public final void testTimerEnumEVENT() {
-        assertEquals(cTimeInMinute, Timer.Global.EVENT.getDuration());
     }
 
     /**

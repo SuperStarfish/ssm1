@@ -34,6 +34,11 @@ public final class HomeScreen extends ScreenLogic {
      * Labels for cTitle, timer.
      */
     protected Label cTitle, cTimer;
+    
+    /**
+     * Boolean whether a stroll is currently running.
+     */
+    protected boolean cOnGoingStroll;
 
     /**
      * Observer that gets called on the start of a new stroll.
@@ -41,6 +46,7 @@ public final class HomeScreen extends ScreenLogic {
     protected Observer cNewStrollObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
+        	cOnGoingStroll = (boolean) arg;
             ScreenStore.getInstance().addScreen("Stroll", new StrollScreen());
         }
     };
@@ -51,7 +57,7 @@ public final class HomeScreen extends ScreenLogic {
     protected Observer cIntervalTickObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            if (!cStrollTimer.isRunning()) {
+            if (!cOnGoingStroll) {
                 cTimer.setText(arg.toString());
             }
         }
@@ -62,7 +68,7 @@ public final class HomeScreen extends ScreenLogic {
     protected Observer cIntervalStopObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            if (!cStrollTimer.isRunning()) {
+            if (!cOnGoingStroll) {
                 cStrollButton.setDisabled(false);
                 cTimer.setText("Ready!");
             }
@@ -71,16 +77,16 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * The interval timer of the game.
      */
-    protected Timer cIntervalTimer, cStrollTimer;
+    protected Timer cIntervalTimer;
     /**
      * Observer to subscribe to the start subject of the interval timer.
      */
     protected Observer cIntervalStartObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            if (!cStrollTimer.isRunning()) {
+            if (!cOnGoingStroll) {
                 cStrollButton.setDisabled(true);
-                cTimer.setText(Integer.toString(Timer.Global.INTERVAL.getDuration()));
+                cTimer.setText("Stroll running!");
             }
         }
     };
@@ -89,7 +95,7 @@ public final class HomeScreen extends ScreenLogic {
      * Creates the home screen.
      */
     public HomeScreen() {
-        StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
+        StandUp.getInstance().getOngoingStrollSubject().addObserver(cNewStrollObserver);
     }
 
     @Override
@@ -109,7 +115,7 @@ public final class HomeScreen extends ScreenLogic {
 
     @Override
     public void display() {
-        cStrollButton.setDisabled(!cStrollTimer.isRunning() && cIntervalTimer.isRunning());
+        cStrollButton.setDisabled(!cOnGoingStroll && cIntervalTimer.isRunning());
     }
 
     @Override
@@ -143,7 +149,6 @@ public final class HomeScreen extends ScreenLogic {
      */
     protected void initTimers() {
         cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
     }
 
     /**
@@ -158,7 +163,7 @@ public final class HomeScreen extends ScreenLogic {
      */
     protected void initStrollButton() {
         cStrollButton = cGameSkin.generateDefaultMenuButton("Stroll");
-        cStrollButton.setDisabled(!cStrollTimer.isRunning() && cIntervalTimer.isRunning());
+        cStrollButton.setDisabled(!cOnGoingStroll && cIntervalTimer.isRunning());
         cStrollButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
@@ -215,11 +220,9 @@ public final class HomeScreen extends ScreenLogic {
      * Gets the IntervalTimer and initializes buttons and behaviour. Then adds the label to the WidgetGroup.
      */
     protected void initStrollIntervalTimer() {
-        String textToDisplay;
-        if (cStrollButton.isDisabled()) {
-            textToDisplay = Integer.toString(Timer.Global.INTERVAL.getDuration());
-        } else {
-            if (cStrollTimer.isRunning()) {
+        String textToDisplay = "";
+        if (!cStrollButton.isDisabled()) {
+            if (cOnGoingStroll) {
                 textToDisplay = "Stroll running!";
             } else {
                 textToDisplay = "Ready!";

@@ -1,6 +1,7 @@
 package cg.group4.game_logic.stroll;
 
 import cg.group4.client.Client;
+import cg.group4.data_structures.HostData;
 import cg.group4.data_structures.collection.Collection;
 import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.data_structures.subscribe.Subject;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A stroll will generate events for the player based on the players activity.
@@ -50,6 +53,10 @@ public class Stroll implements Observer {
      * The number of MultiPlayer events.
      */
     protected final int cNumberOfMultiPlayerEvents = 1;
+    /**
+     * The amount of time in seconds that a stroll takes.
+     */
+    protected final int STROLL_DURATION = 5 * 60;
     /**
      * The chance an event occurs.
      */
@@ -77,7 +84,7 @@ public class Stroll implements Observer {
     /**
      * The stroll timer.
      */
-    protected Timer cStrollTimer;
+    protected Timer cStrollTimer = new Timer("STROLL", STROLL_DURATION);
     /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
@@ -132,7 +139,7 @@ public class Stroll implements Observer {
         StandUp.getInstance().getAccelerationStatus().
                 getSubject().addObserver(cUpdateMovementObserver);
 
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        TimerStore.getInstance().addTimer(cStrollTimer);
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
@@ -162,17 +169,18 @@ public class Stroll implements Observer {
         if (Client.getInstance().isRemoteConnected()) {
             Gdx.app.log(TAG, "Start hosting multi-player event!");
             cEventGoing = true;
-            Client.getInstance().hostEvent(whenHostCodeReceived(responseHandler));
+            MultiplayerHost host = new MultiplayerHost();
+            Client.getInstance().hostEvent(host.getPort(), whenHostCodeReceived(host, responseHandler));
         }
     }
 
     /**
      * Defines behaviour that is executed when a Code is received from the server.
-     *
+     * @param host The host connection.
      * @param updateUI ResponseHandler that updates the UI.
      * @return A ResponseHandler with extra behaviour.
      */
-    protected ResponseHandler whenHostCodeReceived(final ResponseHandler updateUI) {
+    protected ResponseHandler whenHostCodeReceived(final MultiplayerHost host, final ResponseHandler updateUI) {
         return new ResponseHandler() {
             @Override
             public void handleResponse(Response response) {
@@ -180,7 +188,7 @@ public class Stroll implements Observer {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        createMultiPlayerHost();
+                        createMultiPlayerHost(host);
                     }
                 }).start();
             }
@@ -189,19 +197,21 @@ public class Stroll implements Observer {
 
     /**
      * Creates a MultiPlayer host.
+     * @param host The host connection.
      */
-    protected void createMultiPlayerHost() {
-        final MultiplayerHost host = new MultiplayerHost();
+    protected void createMultiPlayerHost(final MultiplayerHost host) {
         host.connect();
-        Random rng = new Random();
-        final int event = rng.nextInt(cNumberOfMultiPlayerEvents);
-        host.sendTCP(event);
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                generatePossibleMultiplayerEvent(event, host);
-            }
-        });
+        if(host.isConnected()) {
+            Random rng = new Random();
+            final int event = rng.nextInt(cNumberOfMultiPlayerEvents);
+            host.sendTCP(event);
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    generatePossibleMultiplayerEvent(event, host);
+                }
+            });
+        }
     }
 
     /**
@@ -249,7 +259,7 @@ public class Stroll implements Observer {
             @Override
             public void handleResponse(Response response) {
                 if (response.isSuccess() && response.getData() != null) {
-                    createMultiPlayerClient((String) response.getData());
+                    createMultiPlayerClient((HostData) response.getData());
                 } else {
                     updateUI.handleResponse(response);
                 }
@@ -260,22 +270,23 @@ public class Stroll implements Observer {
     /**
      * Creates a MultiPlayer Client.
      *
-     * @param ip The IP to connect to.
+     * @param hostData The host data to connect to.
      */
-    protected void createMultiPlayerClient(final String ip) {
+    protected void createMultiPlayerClient(final HostData hostData) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final MultiplayerClient client = new MultiplayerClient(ip);
+                    final MultiplayerClient client = new MultiplayerClient(hostData);
                     client.connect();
-
-                    client.receiveTCP(new MessageHandler() {
-                        @Override
-                        public void handleMessage(Object message) {
-                            generatePossibleMultiplayerEvent((Integer) message, client);
-                        }
-                    }, false);
+                    if(client.isConnected()) {
+                        client.receiveTCP(new MessageHandler() {
+                            @Override
+                            public void handleMessage(Object message) {
+                                generatePossibleMultiplayerEvent((Integer) message, client);
+                            }
+                        }, false);
+                    }
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -328,12 +339,12 @@ public class Stroll implements Observer {
         }
 
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
-
         cEndStrollSubject.update(collection);
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
-
+        
+        TimerStore.getInstance().removeTimer(cStrollTimer);
         StandUp.getInstance().endStroll(collection);
     }
 

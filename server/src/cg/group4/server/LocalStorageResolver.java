@@ -20,8 +20,8 @@ public abstract class LocalStorageResolver {
      * Query that creates a 'User' table, if it does not exist.
      */
     protected String cUserTable = "CREATE TABLE IF NOT EXISTS 'User' (Key INTEGER PRIMARY KEY NOT NULL UNIQUE, "
-            + "Id TEXT NOT NULL, Username TEXT DEFAULT 'Unknown',"
-            + " Interval INTEGER, Stroll INTEGER);";
+            + "Id TEXT NOT NULL UNIQUE, Username TEXT DEFAULT 'Unknown',"
+            + " Interval INTEGER, Stroll INTEGER, GroupId TEXT NULL);";
 
     /**
      * Query that creates a 'Collectible' table, if it does not exist.
@@ -61,7 +61,7 @@ public abstract class LocalStorageResolver {
         }
 
         if (cResetDBs) {
-            dropDatabase("User", "Collectible", "group", "Event_Host");
+            dropDatabase("User", "Collectible", "Group", "Event_Hosts");
         }
 
         for (String table : createDatabases()) {
