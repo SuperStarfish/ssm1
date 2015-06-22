@@ -75,4 +75,13 @@ public final class LocalConnection implements Connection {
             }
         }
     }
+
+    @Override
+    public void disconnect() {
+        try {
+            cConnection.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

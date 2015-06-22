@@ -22,8 +22,6 @@ public final class CollectibleDrawer {
      * @return Texture image with the collectible.
      */
     public static SpriteDrawable drawCollectible(final Collectible c) {
-    	System.out.println("Collectible: " + c);
-    	System.out.println("Image Path: " + c.getImagePath());
         Sprite sprite = new Sprite(Assets.getInstance().getTexture(c.getImagePath()));
         sprite.setColor(RewardUtil.generateColor(c.getHue()));
 

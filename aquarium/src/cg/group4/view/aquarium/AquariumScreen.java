@@ -1,15 +1,20 @@
 package cg.group4.view.aquarium;
 
-import cg.group4.data_structures.Pair;
+import cg.group4.aquarium.Aquarium;
 import cg.group4.data_structures.PlayerData;
 import cg.group4.data_structures.collection.collectibles.Collectible;
+import cg.group4.data_structures.groups.GroupData;
 import cg.group4.view.screen_mechanics.GameSkin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -30,43 +35,49 @@ public class AquariumScreen implements Screen {
      */
     protected final GameSkin cStyle = new GameSkin();
     /**
-     * Set containing all displayed elements.
+     * Table to hold layout items.
      */
-    protected HashSet<CollectibleRenderer> cDisplayRendererSet = new HashSet<CollectibleRenderer>();
+    protected Table cMenuTable;
+    /**
+     * Table to hold fish.
+     */
+    protected Table cFishTable;
+
+    protected TextButton cChangeIpButton;
     /**
      * Label to display owner information after having clicked on a collectible.
      */
     protected Label cOwnerLabel;
-
     /**
      * Label to display catch date information after having clicked on a collectible.
      */
     protected Label cDateLabel;
-
     /**
-     * Label to display catch date information after having clicked on a collectible.
+     * SelectBox that contains the groups.
      */
-    protected Label cStatusLabel;
-
+    protected SelectBox<GroupData> cGroupsBox;
+    /**
+     * The background colour.
+     */
+    protected Vector3f cBackgroundColour;
+    /**
+     * Set containing all displayed elements.
+     */
+    protected HashSet<CollectibleRenderer> cDisplayRendererSet = new HashSet<CollectibleRenderer>();
     /**
      * Converts the users ids to usernames.
      */
     protected HashMap<String, String> cIdToUserName = new HashMap<String, String>();
-    /**
-     * Table to hold layout items.
-     */
-    protected Table cLabelTable = new Table();
-
     /**
      * Observer for the info label.
      */
     protected Observer cLabelObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
-            Pair<String> pair = (Pair<String>) arg;
+            Collectible collectible = (Collectible) arg;
 
-            cOwnerLabel.setText("Owner: " + convertToUsername(pair.getElement1()));
-            cDateLabel.setText("Date of achievement: " + pair.getElement2());
+            cOwnerLabel.setText("Owner: " + convertToUsername(collectible.getOwnerId()));
+            cDateLabel.setText("Date: " + collectible.getDateAsString());
         }
     };
 
@@ -74,31 +85,97 @@ public class AquariumScreen implements Screen {
      * Initializes the aquarium.
      */
     public AquariumScreen() {
+        initBackgroundColour();
+    }
+
+    @Override
+    public void show() {
         Gdx.input.setInputProcessor(cStage);
         final int fontSize = 720;
         cStyle.createUIElements(fontSize);
 
-        cOwnerLabel = cStyle.generateDefaultLabel("");
-        cDateLabel = cStyle.generateDefaultLabel("");
-        cStatusLabel = cStyle.generateDefaultLabel("");
-
-        initTooltipLabels();
+        initFishTable();
+        initMenuTable();
     }
 
+    protected void initFishTable() {
+        cFishTable = new Table();
+        cFishTable.setFillParent(true);
+        cFishTable.setZIndex(0);
+        cFishTable.row().fill();
+
+        cStage.addActor(cFishTable);
+    }
+
+    protected void initMenuTable() {
+        cMenuTable = new Table();
+        cMenuTable.setFillParent(true);
+        cMenuTable.align(Align.top);
+        cMenuTable.setZIndex(1);
+
+        createGroupBox();
+        cMenuTable.add(cGroupsBox).expandX();
+        cMenuTable.add(initTooltipLabels()).expandX();
+        createChangeIpButton();
+        cMenuTable.add(cChangeIpButton).expandX();
+
+        cStage.addActor(cMenuTable);
+    }
+
+    /**
+     *
+     */
+    protected void createChangeIpButton() {
+        cChangeIpButton = cStyle.generateDefaultMenuButton("Change server ip");
+    }
+    /**
+     * Creates the group box.
+     */
+    protected void createGroupBox() {
+        cGroupsBox = cStyle.generateDefaultSelectbox();
+        cGroupsBox.setVisible(false);
+        cGroupsBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                if(cGroupsBox.getItems().size == 0) {
+                    cGroupsBox.setVisible(false);
+                } else {
+                    cGroupsBox.setVisible(true);
+                    if (cGroupsBox.getSelected() != null) {
+                        Aquarium.getInstance().setGroupId(cGroupsBox.getSelected().getGroupId());
+                    }
+                }
+            }
+        });
+    }
 
     /**
      * Initializes tooltip labels.
      */
-    protected void initTooltipLabels() {
-        cLabelTable.setFillParent(true);
+    protected Table initTooltipLabels() {
+        Table table = new Table();
 
-        cLabelTable.align(Align.topLeft);
-        cLabelTable.add(cOwnerLabel).expandX();
-        cLabelTable.row();
-        cLabelTable.add(cDateLabel).expandX();
-        cLabelTable.row();
-        cLabelTable.add(cStatusLabel).expandX();
-        cStage.addActor(cLabelTable);
+        cOwnerLabel = cStyle.generateDefaultLabel("Owner: ");
+        table.add(cOwnerLabel);
+        table.row();
+        cDateLabel = cStyle.generateDefaultLabel("Date: ");
+        table.add(cDateLabel);
+        table.row();
+
+        return table;
+    }
+
+    /**
+     * Returns the background colour.
+     *
+     * @return Blue background colour.
+     */
+    private void initBackgroundColour() {
+        final float maxColour = 255f;
+        final float x = 149f / maxColour;
+        final float y = 221f / maxColour;
+        final float z = 226f / maxColour;
+        cBackgroundColour =  new Vector3f(x, y, z);
     }
 
     /**
@@ -115,33 +192,16 @@ public class AquariumScreen implements Screen {
     }
 
     @Override
-    public void show() {
-    }
-
-    @Override
     public void render(float delta) {
         for (CollectibleRenderer c : cDisplayRendererSet) {
             c.render();
         }
         cStage.act();
-        final Vector3f background = backgroundColour();
+        final Vector3f background = cBackgroundColour;
 
         Gdx.gl.glClearColor(background.getX(), background.getY(), background.getZ(), 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         cStage.draw();
-    }
-
-    /**
-     * Returns the background colour.
-     *
-     * @return Blue background colour.
-     */
-    private Vector3f backgroundColour() {
-        final float maxColour = 255f;
-        final float x = 149f / maxColour;
-        final float y = 221f / maxColour;
-        final float z = 226f / maxColour;
-        return new Vector3f(x, y, z);
     }
 
     @Override
@@ -204,6 +264,22 @@ public class AquariumScreen implements Screen {
     }
 
     /**
+     * Observer for the groupdata.
+     * Used for updating the groupbox.
+     *
+     * @return Observer
+     */
+    public Observer getGroupDataObserver() {
+        return new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                ArrayList<GroupData> list = (ArrayList<GroupData>) arg;
+                cGroupsBox.setItems(list.toArray(new GroupData[list.size()]));
+            }
+        };
+    }
+
+    /**
      * Converts each collectible from a collection to a CollectibleRenderer.
      *
      * @param collection The collectibles.
@@ -245,8 +321,9 @@ public class AquariumScreen implements Screen {
 
         for (CollectibleRenderer collectibleRenderer : newSet) {
             collectibleRenderer.getSubject().addObserver(cLabelObserver);
+            collectibleRenderer.getActor().setZIndex(1);
             cDisplayRendererSet.add(collectibleRenderer);
-            cStage.addActor(collectibleRenderer.getActor());
+            cFishTable.addActor(collectibleRenderer.getActor());
         }
     }
 }

@@ -8,6 +8,7 @@ import java.sql.SQLException;
  * Gets the user id's from the desktop application.
  */
 public class DesktopStorageResolver extends LocalStorageResolver {
+
     @Override
     public boolean setLocal() {
         return true;
@@ -25,6 +26,6 @@ public class DesktopStorageResolver extends LocalStorageResolver {
 
     @Override
     protected String[] createDatabases() {
-        return new String[]{cUserTable, cCollectibleTable, cEventHostsTable, cGroupTable};
+        return new String[]{cUserTable, cCollectibleTable};
     }
 }

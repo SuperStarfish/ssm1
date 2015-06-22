@@ -1,6 +1,5 @@
 package cg.group4.view.aquarium;
 
-import cg.group4.data_structures.Pair;
 import cg.group4.data_structures.collection.collectibles.Collectible;
 import cg.group4.data_structures.subscribe.Subject;
 import cg.group4.view.rewards.CollectibleDrawer;
@@ -94,13 +93,11 @@ public class CollectibleRenderer {
      */
     public void addClickableArea(final Collectible collectible) {
         cCollectibleActor.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String date = collectible.getDateAsString();
-                String owner = collectible.getOwnerId();
-                cCollectibleInformationSubject.update(new Pair<String>(owner, date));
-            }
-        });
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        cCollectibleInformationSubject.update(collectible);
+                    }
+                });
     }
 
     /**

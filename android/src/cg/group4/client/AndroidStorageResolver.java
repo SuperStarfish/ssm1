@@ -33,6 +33,6 @@ public class AndroidStorageResolver extends LocalStorageResolver {
 
     @Override
     protected String[] createDatabases() {
-        return new String[]{cUserTable, cCollectibleTable, cEventHostsTable, cGroupTable};
+        return new String[]{cUserTable, cCollectibleTable};
     }
 }

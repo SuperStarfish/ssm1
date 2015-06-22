@@ -31,19 +31,6 @@ public abstract class LocalStorageResolver {
             + "Date DATE NOT NULL, GroupId INTEGER);";
 
     /**
-     * Query that creates a 'Group' table, if it does not exist.
-     */
-    protected String cGroupTable = "CREATE TABLE IF NOT EXISTS 'Group' (Key INTEGER PRIMARY KEY NOT NULL, "
-            + "OwnerId TEXT NOT NULL, Name TEXT NOT NULL);";
-
-    /**
-     * Query that creates an 'Event_Hosts' table, if it does not exist. This table is used primarily for remote servers
-     * to connect two clients with each other.
-     */
-    protected String cEventHostsTable = "CREATE TABLE IF NOT EXISTS 'Event_Hosts' (Code SMALLINT PRIMARY KEY NOT NULL, "
-            + "Ip TEXT NOT NULL, Port INT NOT NULL, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
-
-    /**
      * The database connection. This can be used to make queries on. Child class determines how this connection
      * is created.
      */

@@ -4,15 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 /**
@@ -22,21 +22,21 @@ public class GameSkin extends Skin {
     /**
      * Default font size.
      */
-    protected static final int FONT_SIZE = 42;
+    protected final int cDefaultFontSize = 42;
     /**
      * Default dev size.
      * It is used to scale the current screen size against the size used to develop the skin for.
      */
-    protected static final float DEV_SIZE = 720;
+    protected final float cDevSize = 720;
     /**
      * Default width for the cursor in TextFields.
      */
-    protected static final float CURSOR_WIDTH = 3f;
+    protected final float cCursorWidth = 3f;
     /**
      * UI Scalar used to scale UI components.
      * This is needed because otherwise components will always have the same size. Higher resolution devices
      * will have a tiny UI if not scaled properly.
-     * It is calculated by taking the height of the screen divided by the default size (DEV_SIZE).
+     * It is calculated by taking the height of the screen divided by the default size (cDevSize).
      */
     protected float cUiScalar;
     /**
@@ -50,27 +50,11 @@ public class GameSkin extends Skin {
     /**
      * Default border width.
      */
-    protected static final int BORDERWIDTH = 2;
+    protected int cDefaultBorderWidth = 2;
     /**
      * Container for all the assets.
      */
     protected Assets cAssets;
-    /**
-     * Margin to be used in ui elements.
-     */
-    protected static final int MARGIN = 10;
-    /**
-     * When tinting something, use a low alpha.
-     */
-    protected static final float SMALL_ALPHA = 0.3f;
-    /**
-     * When tinting something, use a medium alpha.
-     */
-    protected static final float GREY = 0.6f;
-    /**
-     * When tinting something, use a high alpha.
-     */
-    protected static final float DARK_GREY = 0.8f;
 
     /**
      * Initializes the skin.
@@ -86,7 +70,7 @@ public class GameSkin extends Skin {
      * @param newSize New size of the game window.
      */
     public final void createUIElements(final int newSize) {
-        cUiScalar = newSize / DEV_SIZE;
+        cUiScalar = newSize / cDevSize;
         addDefaults();
     }
 
@@ -98,7 +82,6 @@ public class GameSkin extends Skin {
         this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
-        this.add("default_checkboxStyle", generateDefaultCheckboxStyle());
         this.add("default_selectboxStyle", generateDefaultSelectboxStyle());
         this.add("default_listStyle", generateDefaultListStyle());
         this.add("default_textFieldStyle", generateDefaultTextFieldStyle());
@@ -113,9 +96,9 @@ public class GameSkin extends Skin {
     protected final BitmapFont generateDefaultFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (BORDERWIDTH * cUiScalar);
+        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
         fontParameter.color = Color.WHITE;
-        fontParameter.size = (int) (FONT_SIZE * cUiScalar);
+        fontParameter.size = (int) (cDefaultFontSize * cUiScalar);
         return cFontGenerator.generateFont(fontParameter);
     }
 
@@ -135,10 +118,10 @@ public class GameSkin extends Skin {
         disabled.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
         buttonStyle.up = new SpriteDrawable(sprite);
         sprite = new Sprite(sprite);
-        sprite.setColor(DARK_GREY, DARK_GREY, DARK_GREY, 1);
+        sprite.setColor(.8f, .8f, .8f, 1);
         buttonStyle.over = new SpriteDrawable(sprite);
         sprite = new Sprite(sprite);
-        sprite.setColor(GREY, GREY, GREY, 1);
+        sprite.setColor(.6f, .6f, .6f, 1);
         buttonStyle.down = new SpriteDrawable(sprite);
         buttonStyle.disabled = new SpriteDrawable(disabled);
         return buttonStyle;
@@ -153,11 +136,11 @@ public class GameSkin extends Skin {
     protected final BitmapFont generateDefaultTitleFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.borderWidth = (int) (BORDERWIDTH * cUiScalar);
+        fontParameter.borderWidth = (int) (cDefaultBorderWidth * cUiScalar);
         fontParameter.color = Color.WHITE;
 
         final float scale = 1.2f;
-        fontParameter.size = (int) (FONT_SIZE * cUiScalar * scale);
+        fontParameter.size = (int) (cDefaultFontSize * cUiScalar * scale);
         return cFontGenerator.generateFont(fontParameter);
     }
 
@@ -173,24 +156,6 @@ public class GameSkin extends Skin {
     }
 
     /**
-     * The default Checkbox style.
-     *
-     * @return CheckBoxStyle
-     */
-    protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
-        CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-        checkboxStyle.checkboxOff = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
-        checkboxStyle.checkboxOn = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
-
-        checkboxStyle.font = this.get("default_font", BitmapFont.class);
-        checkboxStyle.fontColor = Color.GREEN;
-
-        return checkboxStyle;
-    }
-
-    /**
      * The default Selectbox style.
      *
      * @return SelectBoxStyle
@@ -199,11 +164,15 @@ public class GameSkin extends Skin {
         SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
         selectboxStyle.font = this.get("default_font", BitmapFont.class);
         selectboxStyle.fontColor = Color.GREEN;
+
+        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
+        final float scalar = 0.42f;
+        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
+
         selectboxStyle.listStyle = this.generateDefaultListStyle();
         selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
-        selectboxStyle.background = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
-        selectboxStyle.background.setLeftWidth(MARGIN);
+        selectboxStyle.background = new SpriteDrawable(sprite);
+        selectboxStyle.background.setLeftWidth(10);
         return selectboxStyle;
     }
 
@@ -217,13 +186,17 @@ public class GameSkin extends Skin {
         listStyle.font = this.get("default_font", BitmapFont.class);
         listStyle.fontColorSelected = Color.GREEN;
         listStyle.fontColorUnselected = Color.WHITE;
-        listStyle.background = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
-        listStyle.selection = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/wooden_sign.png"))).tint(new Color(0, 0, 0, SMALL_ALPHA));
 
-        listStyle.selection.setLeftWidth(MARGIN);
-        listStyle.selection.setRightWidth(MARGIN);
+        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
+        final float scalar = 0.42f;
+        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
+
+        listStyle.background = new SpriteDrawable(sprite);
+        sprite = new Sprite(sprite);
+        sprite.setColor(.8f, .8f, .8f, 1);
+        listStyle.selection = new SpriteDrawable(sprite);
+        listStyle.selection.setLeftWidth(10);
+        listStyle.selection.setRightWidth(10);
         return listStyle;
     }
 
@@ -237,7 +210,7 @@ public class GameSkin extends Skin {
         BitmapFont font = this.get("default_font", BitmapFont.class);
         Color color = Color.GREEN;
         Drawable cursor = new SpriteDrawable(new Sprite(cAssets.getTexture("images/blackpixel.jpg")));
-        cursor.setMinWidth(CURSOR_WIDTH * cUiScalar);
+        cursor.setMinWidth(cCursorWidth * cUiScalar);
         Drawable background = new SpriteDrawable(new Sprite(cAssets.getTexture("images/debugpixel.png")));
         return new TextField.TextFieldStyle(font, color, cursor, background, empty);
     }
@@ -258,15 +231,6 @@ public class GameSkin extends Skin {
      */
     public final Label.LabelStyle getDefaultLabelStyle() {
         return get("default_labelStyle", Label.LabelStyle.class);
-    }
-
-    /**
-     * Easy method to return the default CheckboxStyle as a proper class.
-     *
-     * @return CheckboxStyle object
-     */
-    public final CheckBox.CheckBoxStyle getDefaultCheckboxStyle() {
-        return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
     }
 
     /**

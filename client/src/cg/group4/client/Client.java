@@ -33,11 +33,11 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "192.168.1.35";
+    protected String cCurrentIp = defaultIp();
     /**
      * The default port to connect to.
      */
-    protected final int cDefaultPort = 56789;
+    protected int cCurrentPort = defaultPort();
     /**
      * The local connection state with the server.
      */
@@ -88,7 +88,14 @@ public final class Client {
      * Connects to the default remote server. Behaviour depends on the state.
      */
     public void connectToRemoteServer() {
-        cRemoteConnection.connect(cDefaultIp, cDefaultPort);
+        cRemoteConnection.connect(cCurrentIp, cCurrentPort);
+    }
+
+    /**
+     * Closes the connection with the remote server.
+     */
+    public void closeRemoteConnection() {
+        cRemoteConnection.disconnect();
     }
 
     /**
@@ -152,7 +159,7 @@ public final class Client {
     public void setRemoteConnection(final Connection connection) {
         cRemoteConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
-        LOGGER.info("Managed to remotely connect: " + connection.isConnected());
+        LOGGER.info("Remote connection running: " + connection.isConnected());
     }
 
     /**
@@ -338,7 +345,6 @@ public final class Client {
         cRemoteConnection.send(new GetGroup(groupId), responseHandler);
     }
 
-
     /**
      * Creates a CreateGroup Query that will be send to the server.
      *
@@ -357,6 +363,15 @@ public final class Client {
      */
     public void getMembers(final String groupId, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new GetMembers(groupId), responseHandler);
+    }
+
+    /**
+     * Retrieves the usernames of all the players.
+     *
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getAllPlayerData(final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetAllPlayerData(), responseHandler);
     }
 
     /**
@@ -447,5 +462,58 @@ public final class Client {
      */
     public void getHost(final Integer code, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new RequestHostIp(code), responseHandler);
+    }
+
+    // --------------- Helper methods follow below.--------------
+
+
+    /**
+     * Changes the host IP address.
+     * @param ip new default ip
+     */
+    public void setIp(String ip) {
+        this.cCurrentIp = ip;
+    }
+
+    /**
+     * Changes the host port
+     * @param port new port
+     */
+    public void setPort(int port) {
+        this.cCurrentPort = port;
+    }
+
+    /**
+     * Gets the host IP address.
+     * @return ip
+     */
+    public String getIp() {
+        return cCurrentIp;
+    }
+
+    /**
+     * Gets the host port.
+     * @return host port number
+     */
+    public int getPort() {
+        return cCurrentPort;
+    }
+
+    /**
+     * Returns the default ip. This method is used as storage for the defaults in case overwritten by
+     * user preferences.
+     * @return default ip
+     */
+    public String defaultIp() {
+        return "127.0.0.1";
+    }
+
+    /**
+     * Returns the default port. This method is used as storage for the defaults in case overwritten by
+     * user preferences.
+     * @return default port
+     */
+    public int defaultPort() {
+        return 56789;
     }
 }

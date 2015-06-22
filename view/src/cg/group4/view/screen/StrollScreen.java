@@ -14,7 +14,6 @@ import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen.mp_fishingboat.CraneFishingScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -117,7 +116,8 @@ public final class StrollScreen extends ScreenLogic {
     public StrollScreen() {
         cScreenStore = ScreenStore.getInstance();
         cClient = Client.getInstance();
-        cText = cGameSkin.generateDefaultLabel("Waiting for event");
+        cText = cGameSkin.generateDefaultLabel("Move around to generate an event!\n"
+                + "Or start a multi player event below.");
         cCode = cGameSkin.generateDefaultTextField("Enter code");
         cHost = cGameSkin.generateDefaultMenuButton("Host");
         cJoin = cGameSkin.generateDefaultMenuButton("Join");
@@ -162,7 +162,7 @@ public final class StrollScreen extends ScreenLogic {
      * Initializes the label to display the time remaining of the stroll.
      */
     protected void initRemainingTime() {
-        cTimeRemaining = cGameSkin.generateDefaultLabel(Integer.toString(Timer.Global.STROLL.getDuration()));
+        cTimeRemaining = cGameSkin.generateDefaultLabel("");
         cStrollTickObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
@@ -170,7 +170,7 @@ public final class StrollScreen extends ScreenLogic {
             }
         };
 
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer("STROLL");
         cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
     }
 
@@ -183,15 +183,6 @@ public final class StrollScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-//                StandUp.getInstance().getStroll().startMultiPlayerEvent(new ResponseHandler() {
-//                    @Override
-//                    public void handleResponse(Response response) {
-//                        cCode.setText(Integer.toString((Integer) response.getData()));
-//                        cText.setText("Waiting for other player...");
-//                        cHost.setDisabled(true);
-//                        cJoin.setDisabled(true);
-//                    }
-//                });
             	cScreenStore.addScreen("Host", new MultiplayerHostScreen());
             	cScreenStore.setScreen("Host");
             }

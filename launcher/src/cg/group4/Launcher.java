@@ -11,6 +11,7 @@ import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
@@ -113,6 +114,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
      * Initializes the client.
      */
     protected void initClient() {
+        useCustomIp();
         Server server = new Server(cLocalStorageResolver);
         server.start();
         Client.getInstance().setUserIDResolver(cIDResolver);
@@ -140,7 +142,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
     protected void initScreens() {
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init();
+        cScreenStore.addScreen("Home", new HomeScreen());
         cScreenStore.setScreen("Home");
     }
 
@@ -176,5 +178,26 @@ public class Launcher extends Game implements AssetsLoadingHandler {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getInstance().resetPostRunnables();
+    }
+
+    /**
+     * Sets the default IP or port to the IP / port set in the preferences, if existent.
+     */
+    protected void useCustomIp() {
+        final String prefKey = "CUSTOM_IP";
+
+        if (Gdx.app.getPreferences(prefKey) != null) {
+            Preferences preferences = Gdx.app.getPreferences(prefKey);
+
+            if (preferences.contains("ssm-ip")) {
+                Client.getInstance().setIp(preferences.getString("ssm-ip"));
+                System.out.println(preferences.getString("ssm-ip"));
+            }
+            if (preferences.contains("ssm-port")) {
+                System.out.println(preferences.getInteger("ssm-port"));
+                Client.getInstance().setPort(preferences.getInteger("ssm-port"));
+            }
+        }
+
     }
 }

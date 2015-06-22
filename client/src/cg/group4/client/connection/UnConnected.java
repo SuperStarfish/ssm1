@@ -87,22 +87,33 @@ public class UnConnected implements Connection {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                final Client client = Client.getInstance();
                 try {
                     LOGGER.info("Trying to connect to the remote server");
                     final Connection connection = new RemoteConnection(ip, port);
-                    Client.getInstance().addPostRunnables(new Runnable() {
+                    client.addPostRunnables(new Runnable() {
                         @Override
                         public void run() {
-                            Client.getInstance().setRemoteConnection(connection);
+                            client.setRemoteConnection(connection);
                             cConnecting = false;
                         }
                     });
                 } catch (IOException e) {
                     LOGGER.info("Failed to connect to remote server, retrying.");
                     cConnecting = false;
-                    connect(ip, port);
+                    client.addPostRunnables(new Runnable() {
+                        @Override
+                        public void run() {
+                            client.connectToRemoteServer();
+                        }
+                    });
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void disconnect() {
+        System.out.println("Disconnect: Not even connected");
     }
 }

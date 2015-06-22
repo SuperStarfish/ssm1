@@ -1,7 +1,5 @@
 package cg.group4.view.screen_mechanics;
 
-import cg.group4.view.screen.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,18 +51,6 @@ public final class ScreenStore {
     }
 
     /**
-     * Initializes the Home Screen, Settings Screen and the Collection Screen,
-     * since those are highly likely to be opened.
-     */
-    public void init() {
-        addScreen("Home", new HomeScreen());
-        addScreen("Settings", new SettingsScreen());
-        addScreen("Network", new NetworkScreen());
-        addScreen("Collection", new CollectiblesScreen());
-        addScreen("Groups", new GroupScreen());
-    }
-
-    /**
      * Stores the screen in the store under the given tag.
      *
      * @param tag    Tag of the screen.
@@ -93,16 +79,6 @@ public final class ScreenStore {
         ScreenLogic screen = cScreens.get(tag);
         screen.display();
         cWorldRenderer.setScreen(screen);
-    }
-
-    /**
-     * Returns the screen of the given tag from the store.
-     *
-     * @param tag Tag of the screen to be returned.
-     * @return Returns the screen belonging to the given tag.
-     */
-    public ScreenLogic getScreen(final String tag) {
-        return cScreens.get(tag);
     }
 
     /**
