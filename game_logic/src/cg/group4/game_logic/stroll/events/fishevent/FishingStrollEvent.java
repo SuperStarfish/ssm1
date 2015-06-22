@@ -55,12 +55,12 @@ public class FishingStrollEvent extends StrollEvent {
      * Gets called when the event is completed.
      */
     public final void eventCompleted() {
-        clearEvent();
+        dispose(true);
     }
 
     @Override
     protected void clearEvent() {
-        super.dispose();
+        dispose(false);
     }
 
     @Override

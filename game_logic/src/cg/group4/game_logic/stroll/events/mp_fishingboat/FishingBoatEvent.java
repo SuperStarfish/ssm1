@@ -83,14 +83,8 @@ public abstract class FishingBoatEvent extends StrollEvent {
 
     @Override
     protected void clearEvent() {
-        super.dispose();
+        super.dispose(cFishingBoatEventData.getcSmallFishCoordinates().size() == 0);
         cOtherClient.dispose();
-    }
-
-    @Override
-    public void dispose(boolean eventCompleted) {
-        cOtherClient.dispose();
-        super.dispose(eventCompleted);
     }
 
     @Override
