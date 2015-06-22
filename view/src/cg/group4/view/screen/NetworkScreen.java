@@ -29,7 +29,7 @@ public final class NetworkScreen extends ScreenLogic {
     /**
      * The buttons that are seen on this screen.
      */
-    protected TextButton cChangeUsername, cResetUser, cBack;
+    protected TextButton cChangeUsername, cChangeIp, cResetUser, cBack;
 
     /**
      * The label containing if we are connected with the server or not.
@@ -55,6 +55,7 @@ public final class NetworkScreen extends ScreenLogic {
 
         ScreenStore screenStore = ScreenStore.getInstance();
         screenStore.addScreen("Change-Username", new ChangeUsernameScreen());
+        screenStore.addScreen("Change-IP", new ChangeIpScreen());
 
         cTable = new Table();
         cTable.setFillParent(true);
@@ -67,7 +68,7 @@ public final class NetworkScreen extends ScreenLogic {
         }
 
         addChangeUserName();
-
+        addChangeIp();
         addResetCollection();
 
         cBack = createBackButton();
@@ -98,6 +99,13 @@ public final class NetworkScreen extends ScreenLogic {
         cChangeUsername.addListener(usernameBehaviour());
         cTable.row().expandY();
         cTable.add(cChangeUsername);
+    }
+
+    protected void addChangeIp() {
+        cChangeIp = cGameSkin.generateDefaultMenuButton("Change IP");
+        cChangeIp.addListener(ipChangeBehaviour());
+        cTable.row().expandY();
+        cTable.add(cChangeIp);
     }
 
     /**
@@ -136,6 +144,16 @@ public final class NetworkScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 ScreenStore.getInstance().setScreen("Change-Username");
+            }
+        };
+    }
+
+
+    protected ChangeListener ipChangeBehaviour() {
+        return new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenStore.getInstance().setScreen("Change-IP");
             }
         };
     }
