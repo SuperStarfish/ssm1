@@ -152,6 +152,15 @@ project(":client") {
 project(":server") {
     apply plugin: "java"
 
+    jar {
+        manifest {
+            attributes 'Main-Class': 'cg.group4.server.Server'
+        }
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+
     dependencies {
         compile project(":data_structures")
         compile "org.xerial:sqlite-jdbc:3.8.6"
