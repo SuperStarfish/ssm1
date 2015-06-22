@@ -93,7 +93,7 @@ public final class StandUp {
             Gdx.app.log(TAG, "Starting up stroll, created new one.");
             TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
-            cNewStrollSubject.update(null);
+            cNewStrollSubject.update(true);
         }
     }
 
@@ -105,6 +105,7 @@ public final class StandUp {
     public void endStroll(final Collection rewardsCollection) {
         Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
+        cNewStrollSubject.update(false);
 
         cPlayer.getCollection().addAll(rewardsCollection);
     }

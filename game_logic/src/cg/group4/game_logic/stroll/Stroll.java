@@ -77,7 +77,7 @@ public class Stroll implements Observer {
     /**
      * The stroll timer.
      */
-    protected Timer cStrollTimer;
+    protected Timer cStrollTimer = new Timer("STROLL", 60);
     /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
@@ -132,7 +132,9 @@ public class Stroll implements Observer {
         StandUp.getInstance().getAccelerationStatus().
                 getSubject().addObserver(cUpdateMovementObserver);
 
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        //cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        //cStrollTimer = new Timer("STROLL", 60);
+        TimerStore.getInstance().addTimer(cStrollTimer);
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
@@ -333,6 +335,8 @@ public class Stroll implements Observer {
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
+        
+        TimerStore.getInstance().removeTimer(cStrollTimer);
 
         StandUp.getInstance().endStroll(collection);
     }

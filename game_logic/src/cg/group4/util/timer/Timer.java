@@ -266,18 +266,7 @@ public class Timer implements Observer {
         /**
          * Length definition of one interval.
          */
-        INTERVAL(60 * 60),
-
-        /**
-         * Length definition of one stroll.
-         * (5 * 60 seconds = 5 minutes)
-         */
-        STROLL(5 * 60),
-
-        /**
-         * Max length of an event is 1 min (60 seconds).
-         */
-        EVENT(60);
+        INTERVAL(2 * 60);
 
         /**
          * Duration of the global timer.
@@ -288,11 +277,12 @@ public class Timer implements Observer {
          * Set the duration of a global timer.
          *
          * @param duration The duration in seconds
+         * @param persistence Whether the timer should be persistent
          */
         Global(final int duration) {
             cDuration = duration;
         }
-
+       
         /**
          * Get the duration of a global timer.
          *
