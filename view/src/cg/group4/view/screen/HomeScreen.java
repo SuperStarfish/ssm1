@@ -43,11 +43,13 @@ public final class HomeScreen extends ScreenLogic {
     /**
      * Observer that gets called on the start of a new stroll.
      */
-    protected Observer cNewStrollObserver = new Observer() {
+    protected Observer cChangeStrollObserver = new Observer() {
         @Override
         public void update(final Observable o, final Object arg) {
         	cOnGoingStroll = (boolean) arg;
-            ScreenStore.getInstance().addScreen("Stroll", new StrollScreen());
+            if (cOnGoingStroll) {
+                ScreenStore.getInstance().addScreen("Stroll", new StrollScreen());
+            }
         }
     };
 
@@ -95,7 +97,7 @@ public final class HomeScreen extends ScreenLogic {
      * Creates the home screen.
      */
     public HomeScreen() {
-        StandUp.getInstance().getOngoingStrollSubject().addObserver(cNewStrollObserver);
+        StandUp.getInstance().getOngoingStrollSubject().addObserver(cChangeStrollObserver);
     }
 
     @Override
