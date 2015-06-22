@@ -20,13 +20,16 @@ public class RequestHostCode extends Query {
      */
     protected String cIp;
 
+    protected int cPort;
+
     /**
      * Creates a new host.
      *
      * @param ip The ip of the host.
      */
-    public RequestHostCode(final String ip) {
+    public RequestHostCode(final String ip, final int port) {
         cIp = ip;
+        cPort = port;
     }
 
     @Override
@@ -49,11 +52,12 @@ public class RequestHostCode extends Query {
             while (exists);
         }
 
-        preparedQuery = "INSERT INTO Event_Hosts (Code, Ip) VALUES (?, ?)";
+        preparedQuery = "INSERT INTO Event_Hosts (Code, Ip, Port) VALUES (?, ?, ?)";
 
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
             statement.setInt(1, code);
             statement.setString(2, cIp);
+            statement.setInt(3, cPort);
             statement.executeUpdate();
         }
 

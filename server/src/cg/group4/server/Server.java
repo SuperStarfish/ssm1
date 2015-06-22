@@ -1,5 +1,7 @@
 package cg.group4.server;
 
+import cg.group4.server.database.query.Event_Host_Clean;
+import cg.group4.server.database.query.Query;
 import cg.group4.util.IpResolver;
 import cg.group4.util.StaticsCaller;
 
@@ -11,8 +13,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,9 +56,32 @@ public class Server {
      */
     protected ExecutorService cPool;
     /**
+     * Service that cleans the tables on regular intervals.
+     */
+    protected ScheduledExecutorService cCleaner;
+    /**
+     * The task that will clean the database tables.
+     */
+    protected final Runnable cCleanTask = new Runnable() {
+        final Query query = new Event_Host_Clean();
+        @Override
+        public void run() {
+            try {
+                query.query(cLocalStorageResolver.getConnection());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    /**
+     * Interval with which the database is cleaned (in minutes).
+     */
+    protected final int cCleanupInterval = 30;
+    /**
      * Used to make calls to static methods. Primarily used for mocking in tests.
      */
     protected StaticsCaller cStaticsCaller;
+
 
     /**
      * This defines the database connection and if the server is remote or local.
@@ -96,6 +124,8 @@ public class Server {
             createServerSocket(cDefaultPort);
             createExternalIP();
             validateExternalConnection();
+
+            initCleaner();
         }
 
         new Thread(new Runnable() {
@@ -107,6 +137,14 @@ public class Server {
                 }
             }
         }).start();
+    }
+
+    /**
+     * This initializes the ExecutorService that set intervals cleans database tables.
+     */
+    public void initCleaner() {
+        cCleaner = Executors.newSingleThreadScheduledExecutor();
+        cCleaner.scheduleAtFixedRate(cCleanTask, 0, cCleanupInterval, TimeUnit.MINUTES);
     }
 
     /**

@@ -14,7 +14,9 @@ import cg.group4.util.timer.TimerStore;
 import cg.group4.view.screen.mp_fishingboat.CraneFishingScreen;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 import cg.group4.view.screen_mechanics.ScreenStore;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -182,15 +184,17 @@ public final class StrollScreen extends ScreenLogic {
         return new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                StandUp.getInstance().getStroll().startMultiPlayerEvent(new ResponseHandler() {
-                    @Override
-                    public void handleResponse(Response response) {
-                        cCode.setText(Integer.toString((Integer) response.getData()));
-                        cText.setText("Waiting for other player...");
-                        cHost.setDisabled(true);
-                        cJoin.setDisabled(true);
-                    }
-                });
+//                StandUp.getInstance().getStroll().startMultiPlayerEvent(new ResponseHandler() {
+//                    @Override
+//                    public void handleResponse(Response response) {
+//                        cCode.setText(Integer.toString((Integer) response.getData()));
+//                        cText.setText("Waiting for other player...");
+//                        cHost.setDisabled(true);
+//                        cJoin.setDisabled(true);
+//                    }
+//                });
+            	cScreenStore.addScreen("Host", new MultiplayerHostScreen());
+            	cScreenStore.setScreen("Host");
             }
         };
     }
