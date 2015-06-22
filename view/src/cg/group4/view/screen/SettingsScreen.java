@@ -1,6 +1,5 @@
 package cg.group4.view.screen;
 
-import cg.group4.client.Client;
 import cg.group4.util.audio.AudioPlayer;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
@@ -28,9 +27,7 @@ public final class SettingsScreen extends ScreenLogic {
     /**
      * Buttons for the options in the settings menu.
      */
-    protected TextButton cButtonResetInterval,
-            cButtonVolume,
-            cButtonStopInterval,
+    protected TextButton cButtonVolume,
             cNetworkScreen,
             cButtonBack;
     /**
@@ -64,8 +61,6 @@ public final class SettingsScreen extends ScreenLogic {
 
     @Override
     protected void rebuildWidgetGroup() {
-        cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonVolume.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
@@ -95,15 +90,6 @@ public final class SettingsScreen extends ScreenLogic {
     protected void createGUI() {
 
         cTable.row().expandY();
-        cButtonResetInterval = cGameSkin.generateDefaultMenuButton("Reset Interval");
-        cTable.add(cButtonResetInterval);
-        cButtonResetInterval.addListener(resetIntervalBehaviour());
-
-        cButtonStopInterval = cGameSkin.generateDefaultMenuButton("Stop Interval");
-        cTable.add(cButtonStopInterval);
-        cButtonStopInterval.addListener(stopIntervalBehaviour());
-
-        cTable.row().expandY();
         cNetworkScreen = cGameSkin.generateDefaultMenuButton("Network");
         cTable.add(cNetworkScreen).colspan(2);
         cNetworkScreen.addListener(networkScreenBehaviour());
@@ -126,35 +112,6 @@ public final class SettingsScreen extends ScreenLogic {
         cTable.add(cButtonBack).colspan(2);
         cButtonBack.addListener(backBehaviour());
 
-    }
-
-    /**
-     * Resets the interval timer to its default time.
-     *
-     * @return ChangeListener
-     */
-    protected ChangeListener resetIntervalBehaviour() {
-        return new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                cIntervalTimer.reset();
-            }
-        };
-    }
-
-    /**
-     * Stops the interval timer.
-     * Resets the internal preferences. By doing so it won't be able to start off the time on which it stopped.
-     *
-     * @return ChangeListener
-     */
-    protected ChangeListener stopIntervalBehaviour() {
-        return new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                cIntervalTimer.stop();
-            }
-        };
     }
 
     /**

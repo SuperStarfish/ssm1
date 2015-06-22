@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -111,7 +110,7 @@ public class TimerTest {
         cTimer = new Timer(cTimer.getName(), cTimeInMinute, true);
         cTimer = new Timer(cTimer.getName(), cTimeInMinute);
         cTimer = new Timer(cTimer.getName(), cTimeInMinute, true);
-        assertTrue(cTimer.cRunning);
+        assertFalse(cTimer.cRunning);
     }
 
     /**

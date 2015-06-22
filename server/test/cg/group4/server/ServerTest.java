@@ -57,20 +57,4 @@ public class ServerTest {
         cServer.createLocalIP();
         assertNull(cServer.cIp);
     }
-
-    /**
-     * Checks port validity.
-     */
-    @Test
-    public void testIsValidPortNegative() {
-        assertFalse(cServer.isValidPort(-1));
-    }
-
-    /**
-     * Checks port validity.
-     */
-    @Test
-    public void testIsValidPort() {
-        assertTrue(cServer.isValidPort(20));
-    }
 }

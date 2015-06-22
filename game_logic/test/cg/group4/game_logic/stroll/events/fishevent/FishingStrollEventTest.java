@@ -63,16 +63,6 @@ public class FishingStrollEventTest {
     }
 
     /**
-     * The event should be disposed/cleared when you complete it.
-     */
-    @Test
-    public void eventCompletedTest() {
-        cSpyEvent.eventCompleted();
-
-        Mockito.verify(cSpyEvent).clearEvent();
-    }
-
-    /**
      * The event should be completed when you pull in the fish.
      */
     @Test

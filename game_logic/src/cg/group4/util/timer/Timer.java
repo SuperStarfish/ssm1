@@ -108,6 +108,7 @@ public class Timer implements Observer {
         if (cRemainingTime < 0) {
             cRemainingTime = 0;
         }
+        System.out.println(cRemainingTime);
     }
 
     /**
@@ -122,6 +123,9 @@ public class Timer implements Observer {
             } else {
                 cRunning = true;
             }
+        } else if (cPersistent) {
+            cFinishTime = 0;
+            cRunning = false;
         } else {
             reset();
         }
