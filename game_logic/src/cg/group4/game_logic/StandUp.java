@@ -44,9 +44,9 @@ public final class StandUp {
     protected Subject cUpdateSubject;
 
     /**
-     * Subject for new stroll.
+     * Subject that notifies whether there is an ongoing stroll.
      */
-    protected Subject cNewStrollSubject;
+    protected Subject cOngoingStrollSubject;
 
     /**
      * Reads sensor input of the device.
@@ -68,7 +68,7 @@ public final class StandUp {
      */
     protected StandUp() {
         cUpdateSubject = new Subject();
-        cNewStrollSubject = new Subject();
+        cOngoingStrollSubject = new Subject();
         cSensorReader = new SensorReader();
         cPlayer = new Player();
     }
@@ -93,7 +93,7 @@ public final class StandUp {
             Gdx.app.log(TAG, "Starting up stroll, created new one.");
             TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name()).reset();
             cStroll = new Stroll();
-            cNewStrollSubject.update(true);
+            cOngoingStrollSubject.update(true);
         }
     }
 
@@ -105,7 +105,7 @@ public final class StandUp {
     public void endStroll(final Collection rewardsCollection) {
         Gdx.app.log(TAG, "Ending stroll");
         cStroll = null;
-        cNewStrollSubject.update(false);
+        cOngoingStrollSubject.update(false);
 
         cPlayer.getCollection().addAll(rewardsCollection);
     }
@@ -145,12 +145,12 @@ public final class StandUp {
     }
 
     /**
-     * Getter for the subject to subscribe to to get updated for new stroll.
+     * Getter for the subject to subscribe to to get updated whether a stroll is going on or not.
      *
      * @return Subject to subscribe to.
      */
-    public Subject getNewStrollSubject() {
-        return cNewStrollSubject;
+    public Subject getOngoingStrollSubject() {
+        return cOngoingStrollSubject;
     }
 
     /**
