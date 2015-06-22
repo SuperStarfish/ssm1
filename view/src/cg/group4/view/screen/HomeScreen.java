@@ -114,6 +114,8 @@ public final class HomeScreen extends ScreenLogic {
 
     @Override
     protected WidgetGroup createWidgetGroup() {
+        initScreens();
+
         initTimers();
         initHomeScreenTitle();
 
@@ -126,6 +128,14 @@ public final class HomeScreen extends ScreenLogic {
 
         fillTable();
         return cTable;
+    }
+
+    protected void initScreens() {
+        ScreenStore screenStore = ScreenStore.getInstance();
+        screenStore.addScreen("Settings", new SettingsScreen());
+        screenStore.addScreen("Network", new NetworkScreen());
+        screenStore.addScreen("Collection", new CollectiblesScreen());
+        screenStore.addScreen("Groups", new GroupScreen());
     }
 
     /**

@@ -19,7 +19,7 @@ public class AquariumLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
         config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
-        config.fullscreen = true;
+        config.fullscreen = false;
 
         new LwjglApplication(Aquarium.getInstance(), config);
     }

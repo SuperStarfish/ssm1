@@ -2,7 +2,6 @@ package cg.group4.aquarium;
 
 import cg.group4.client.Client;
 import cg.group4.view.aquarium.AquariumScreen;
-import cg.group4.view.aquarium.StartScreen;
 import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import com.badlogic.gdx.Game;
@@ -72,7 +71,13 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
      * Called by the loading screen when the asset loading is finished.
      */
     public void assetsDone() {
-        setScreen(new StartScreen());
+        cConnector = new Connector();
+        cAquariumScreen = new AquariumScreen();
+        cConnector.getMembersSubject().addObserver(cAquariumScreen.getMembersObserver());
+        cConnector.getGroupDataSubject().addObserver(cAquariumScreen.getGroupDataObserver());
+        cConnector.getCollectionSubject().addObserver(cAquariumScreen.getCollectionObserver());
+
+        setScreen(cAquariumScreen);
     }
 
     /**
@@ -80,13 +85,8 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
      *
      * @param groupNumber group cId
      */
-    public void initAquarium(String groupNumber) {
-        cConnector = new Connector(groupNumber);
-        cAquariumScreen = new AquariumScreen();
-        cConnector.getMembersSubject().addObserver(cAquariumScreen.getMembersObserver());
-        cConnector.getCollectionSubject().addObserver(cAquariumScreen.getCollectionObserver());
-        cConnector.connect();
-        setScreen(cAquariumScreen);
+    public void setGroupId(String groupNumber) {
+        cConnector.setGroupId(groupNumber);
     }
 
 

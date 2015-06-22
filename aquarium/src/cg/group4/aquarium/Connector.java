@@ -25,6 +25,10 @@ public class Connector {
      */
     protected Subject cCollectionFromServerSubject;
     /**
+     * Subject with goal being the Observable for the Connector for the group data.
+     */
+    protected Subject cGroupDataFromServerSubject;
+    /**
      * Subject with goal being the Observable for the Connector for the members.
      */
     protected Subject cMembersFromServerSubject;
@@ -35,8 +39,10 @@ public class Connector {
     protected final Runnable cFetcher = new Runnable() {
         @Override
         public void run() {
-            fetchMembers();
-            fetchCollection();
+            if(cGroupId != null) {
+                fetchMembers();
+                fetchCollection();
+            }
         }
     };
     /**
@@ -46,16 +52,27 @@ public class Connector {
 
     /**
      * Initializes the connection.
-     *
-     * @param groupId cId of the group to display as aquarium.
      */
-    public Connector(final String groupId) {
+    public Connector() {
         cCollectionUpdateExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         cCollectionFromServerSubject = new Subject();
+        cGroupDataFromServerSubject = new Subject();
         cMembersFromServerSubject = new Subject();
 
-        cGroupId = groupId;
+        final long delay = 3;
+        cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, delay, delay, TimeUnit.SECONDS);
+
+
+        Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                fetchGroupData();
+                cFetcher.run();
+            }
+        });
+
+        connect();
     }
 
     /**
@@ -63,26 +80,15 @@ public class Connector {
      */
     public void connect() {
         Client.getInstance().connectToRemoteServer();
-        checkConnected();
     }
 
     /**
-     * Checks whether connection is already made with remote.
+     * Sets the group to retrieve.
+     * @param groupId cId of the group to display as aquarium.
      */
-    protected void checkConnected() {
-        Client.getInstance().getRemoteChangeSubject().addObserver(new Observer() {
-            @Override
-            public void update(final Observable o, final Object arg) {
-                if ((boolean) arg) {
-                    final long delay = 3;
-
-                    cCollectionUpdateExecutorService.scheduleAtFixedRate(cFetcher, delay, delay, TimeUnit.SECONDS);
-                } else {
-                    Client.getInstance().getRemoteChangeSubject().deleteObserver(this);
-                    checkConnected();
-                }
-            }
-        });
+    public void setGroupId(final String groupId){
+        cGroupId = groupId;
+        cFetcher.run();
     }
 
     /**
@@ -94,6 +100,20 @@ public class Connector {
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {
                     cMembersFromServerSubject.update(response.getData());
+                }
+            }
+        });
+    }
+
+    /**
+     * Fetches the group data from the server.
+     */
+    public void fetchGroupData() {
+        Client.getInstance().getGroupData(new ResponseHandler() {
+            @Override
+            public void handleResponse(final Response response) {
+                if (response.isSuccess()) {
+                    cGroupDataFromServerSubject.update(response.getData());
                 }
             }
         });
@@ -121,6 +141,15 @@ public class Connector {
      */
     public Subject getCollectionSubject() {
         return cCollectionFromServerSubject;
+    }
+
+    /**
+     * Observable of the collection.
+     *
+     * @return cCollectionFromServerSubject
+     */
+    public Subject getGroupDataSubject() {
+        return cGroupDataFromServerSubject;
     }
 
     /**

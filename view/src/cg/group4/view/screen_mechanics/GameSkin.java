@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 /**
@@ -80,7 +78,6 @@ public class GameSkin extends Skin {
         this.add("default_textButtonStyle", generateDefaultTextButtonStyle());
         this.add("default_titleFont", generateDefaultTitleFont());
         this.add("default_labelStyle", generateDefaultLabelStyle());
-        this.add("default_checkboxStyle", generateDefaultCheckboxStyle());
         this.add("default_selectboxStyle", generateDefaultSelectboxStyle());
         this.add("default_listStyle", generateDefaultListStyle());
         this.add("default_textFieldStyle", generateDefaultTextFieldStyle());
@@ -155,24 +152,6 @@ public class GameSkin extends Skin {
     }
 
     /**
-     * The default Checkbox style.
-     *
-     * @return CheckBoxStyle
-     */
-    protected final CheckBox.CheckBoxStyle generateDefaultCheckboxStyle() {
-        CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
-        checkboxStyle.checkboxOff = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/CheckBoxOff.png")));
-        checkboxStyle.checkboxOn = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/CheckBoxOn.png")));
-
-        checkboxStyle.font = this.get("default_font", BitmapFont.class);
-        checkboxStyle.fontColor = Color.GREEN;
-
-        return checkboxStyle;
-    }
-
-    /**
      * The default Selectbox style.
      *
      * @return SelectBoxStyle
@@ -181,10 +160,14 @@ public class GameSkin extends Skin {
         SelectBox.SelectBoxStyle selectboxStyle = new SelectBox.SelectBoxStyle();
         selectboxStyle.font = this.get("default_font", BitmapFont.class);
         selectboxStyle.fontColor = Color.GREEN;
+
+        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
+        final float scalar = 0.42f;
+        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
+
         selectboxStyle.listStyle = this.generateDefaultListStyle();
         selectboxStyle.scrollStyle = new ScrollPane.ScrollPaneStyle();
-        selectboxStyle.background = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
+        selectboxStyle.background = new SpriteDrawable(sprite);
         selectboxStyle.background.setLeftWidth(10);
         return selectboxStyle;
     }
@@ -199,11 +182,15 @@ public class GameSkin extends Skin {
         listStyle.font = this.get("default_font", BitmapFont.class);
         listStyle.fontColorSelected = Color.GREEN;
         listStyle.fontColorUnselected = Color.WHITE;
-        listStyle.background = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/wooden_sign.png")));
-        listStyle.selection = new TextureRegionDrawable(
-                new TextureRegion(cAssets.getTexture("images/wooden_sign.png"))).tint(new Color(0, 0, 0, .3f));
 
+        Sprite sprite = new Sprite(cAssets.getTexture("images/wooden_sign.png"));
+        final float scalar = 0.42f;
+        sprite.setSize(sprite.getWidth() * scalar * cUiScalar, sprite.getHeight() * scalar * cUiScalar);
+
+        listStyle.background = new SpriteDrawable(sprite);
+        sprite = new Sprite(sprite);
+        sprite.setColor(.8f, .8f, .8f, 1);
+        listStyle.selection = new SpriteDrawable(sprite);
         listStyle.selection.setLeftWidth(10);
         listStyle.selection.setRightWidth(10);
         return listStyle;
@@ -240,15 +227,6 @@ public class GameSkin extends Skin {
      */
     public final Label.LabelStyle getDefaultLabelStyle() {
         return get("default_labelStyle", Label.LabelStyle.class);
-    }
-
-    /**
-     * Easy method to return the default CheckboxStyle as a proper class.
-     *
-     * @return CheckboxStyle object
-     */
-    public final CheckBox.CheckBoxStyle getDefaultCheckboxStyle() {
-        return get("default_checkboxStyle", CheckBox.CheckBoxStyle.class);
     }
 
     /**
