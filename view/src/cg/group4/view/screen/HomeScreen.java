@@ -95,7 +95,7 @@ public final class HomeScreen extends ScreenLogic {
      * Creates the home screen.
      */
     public HomeScreen() {
-        StandUp.getInstance().getNewStrollSubject().addObserver(cNewStrollObserver);
+        StandUp.getInstance().getOngoingStrollSubject().addObserver(cNewStrollObserver);
     }
 
     @Override
