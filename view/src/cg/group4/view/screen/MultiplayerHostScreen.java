@@ -117,7 +117,7 @@ public class MultiplayerHostScreen extends ScreenLogic implements InputProcessor
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				cScreenStore.setScreen(getPreviousScreenName());
-                dispose();
+                StandUp.getInstance().getStroll().cancelEvent();
 			}
 		});
 	}
