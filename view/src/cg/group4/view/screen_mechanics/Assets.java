@@ -27,11 +27,8 @@ public class Assets extends AssetManager {
         loadTexture("images/FishA.png");
         loadTexture("images/FishB.png");
         loadTexture("images/FishC.png");
-        loadTexture("images/FishD.png");
         loadTexture("images/Boat.png");
         loadTexture("images/Crane.png");
-        loadTexture("images/CheckBoxOff.png");
-        loadTexture("images/CheckBoxOn.png");
         loadMusic("music/Summer Day.mp3");
 
     }

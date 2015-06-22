@@ -31,14 +31,12 @@ public final class SettingsScreen extends ScreenLogic {
     protected TextButton cButtonResetInterval,
             cButtonVolume,
             cButtonStopInterval,
-            cButtonResetStroll,
-            cButtonStopStroll,
             cNetworkScreen,
             cButtonBack;
     /**
      * References to the STROLL Timer and INTERVAL Timer.
      */
-    protected Timer cIntervalTimer, cStrollTimer;
+    protected Timer cIntervalTimer;
     /**
      * Whether or not the audio should be enabled or disable.
      */
@@ -67,11 +65,9 @@ public final class SettingsScreen extends ScreenLogic {
     @Override
     protected void rebuildWidgetGroup() {
         cButtonResetInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonResetStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonStopInterval.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonBack.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cButtonVolume.setStyle(cGameSkin.getDefaultTextButtonStyle());
-        cButtonStopStroll.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cNetworkScreen.setStyle(cGameSkin.getDefaultTextButtonStyle());
     }
 
@@ -91,7 +87,6 @@ public final class SettingsScreen extends ScreenLogic {
      */
     protected void getTimers() {
         cIntervalTimer = TimerStore.getInstance().getTimer(Timer.Global.INTERVAL.name());
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
     }
 
     /**
@@ -107,15 +102,6 @@ public final class SettingsScreen extends ScreenLogic {
         cButtonStopInterval = cGameSkin.generateDefaultMenuButton("Stop Interval");
         cTable.add(cButtonStopInterval);
         cButtonStopInterval.addListener(stopIntervalBehaviour());
-
-        cTable.row().expandY();
-        cButtonResetStroll = cGameSkin.generateDefaultMenuButton("Reset Stroll");
-        cTable.add(cButtonResetStroll);
-        cButtonResetStroll.addListener(resetStrollBehaviour());
-
-        cButtonStopStroll = cGameSkin.generateDefaultMenuButton("Stop Stroll");
-        cTable.add(cButtonStopStroll);
-        cButtonStopStroll.addListener(stopStrollBehaviour());
 
         cTable.row().expandY();
         cNetworkScreen = cGameSkin.generateDefaultMenuButton("Network");
@@ -167,34 +153,6 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 cIntervalTimer.stop();
-            }
-        };
-    }
-
-    /**
-     * Resets the scroll timer to its default time.
-     *
-     * @return ChangeListener
-     */
-    protected ChangeListener resetStrollBehaviour() {
-        return new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                cStrollTimer.reset();
-            }
-        };
-    }
-
-    /**
-     * Stops the stroll timer.
-     *
-     * @return ChangeListener
-     */
-    protected ChangeListener stopStrollBehaviour() {
-        return new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                cStrollTimer.stop();
             }
         };
     }

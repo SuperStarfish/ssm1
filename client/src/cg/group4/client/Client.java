@@ -366,12 +366,21 @@ public final class Client {
     }
 
     /**
+     * Retrieves the usernames of all the players.
+     *
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getAllPlayerData(final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetAllPlayerData(), responseHandler);
+    }
+
+    /**
      * Stores the host ip on the server with a generated code that it will return to let the client connect.
      *
      * @param responseHandler The task to execute once a reply is received completed.
      */
-    public void hostEvent(final ResponseHandler responseHandler) {
-        cRemoteConnection.send(new RequestHostCode(getIPAddress(true)), responseHandler);
+    public void hostEvent(int port, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestHostCode(getIPAddress(true), port), responseHandler);
     }
 
     /**

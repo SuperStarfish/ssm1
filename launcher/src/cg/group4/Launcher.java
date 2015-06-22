@@ -11,6 +11,7 @@ import cg.group4.util.sensor.AccelerationStatus;
 import cg.group4.util.timer.TimeKeeper;
 import cg.group4.util.timer.Timer;
 import cg.group4.util.timer.TimerStore;
+import cg.group4.view.screen.HomeScreen;
 import cg.group4.view.screen_mechanics.AssetsLoadingHandler;
 import cg.group4.view.screen_mechanics.LoadingScreen;
 import cg.group4.view.screen_mechanics.ScreenStore;
@@ -141,7 +142,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
     protected void initScreens() {
         ScreenStore cScreenStore = ScreenStore.getInstance();
         setScreen(cScreenStore.getWorldRenderer());
-        cScreenStore.init();
+        cScreenStore.addScreen("Home", new HomeScreen());
         cScreenStore.setScreen("Home");
     }
 

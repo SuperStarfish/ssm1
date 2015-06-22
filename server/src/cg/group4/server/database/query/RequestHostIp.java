@@ -1,5 +1,7 @@
 package cg.group4.server.database.query;
 
+import cg.group4.data_structures.HostData;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,19 +29,21 @@ public class RequestHostIp extends Query {
 
     @Override
     public Serializable query(final Connection databaseConnection) throws SQLException {
-        String preparedQuery = "SELECT Ip FROM Event_Hosts WHERE Code = ?";
+        String preparedQuery = "SELECT Ip, Port FROM Event_Hosts WHERE Code = ?";
 
-        String ip = null;
+        HostData hostData = null;
 
         try (PreparedStatement statement = databaseConnection.prepareStatement(preparedQuery)) {
             statement.setInt(1, cCode);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    ip = resultSet.getString("Ip");
+                    String ip = resultSet.getString("Ip");
+                    int port = resultSet.getInt("Port");
+                    hostData = new HostData(ip, port);
                 }
             }
         }
 
-        return ip;
+        return hostData;
     }
 }

@@ -24,10 +24,16 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
             clearEvent();
         }
     };
+    
+    /**
+     * The amount of time in seconds an event takes. 
+     */
+    protected int EVENT_DURATION = 60;
+    
     /**
      * Every strollEvent has a respective timer.
      */
-    protected Timer cEventTimer;
+    protected Timer cEventTimer = new Timer("EVENT", EVENT_DURATION);
     /**
      * Subject to detect event changes.
      */
@@ -47,7 +53,7 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        cEventTimer = TimerStore.getInstance().getTimer(Timer.Global.EVENT.name());
+        TimerStore.getInstance().addTimer(cEventTimer);
         cEventTimer.getStopSubject().addObserver(cEventStopObserver);
         cEventTimer.reset();
 
@@ -88,16 +94,18 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
      *
      * @param eventCompleted If the event is completed or not.
      */
-    public final void dispose(boolean eventCompleted) {
+    public void dispose(boolean eventCompleted) {
         StandUp.getInstance().getUpdateSubject().deleteObserver(this);
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         cEventTimer.getStopSubject().deleteObserver(cEventStopObserver);
         cEventTimer.dispose();
-        int reward = 0;
         if (eventCompleted) {
-            reward = getReward();
+        	StandUp.getInstance().getStroll().eventFinished(getReward());
+        } else {
+        	StandUp.getInstance().getStroll().cancelEvent();
         }
-        StandUp.getInstance().getStroll().eventFinished(reward);
+        
+        TimerStore.getInstance().removeTimer(cEventTimer);
     }
 
     /**
@@ -119,7 +127,7 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
                     }
                 });
             }
-            dispose(false);
+            this.dispose(false);
         }
         return false;
     }

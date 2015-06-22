@@ -52,7 +52,7 @@ public class CollectiblesScreen extends ScreenLogic {
      */
     protected TextButton cBackButton;
     /**
-     * SelectBox that contains the groups that the user is currently in.
+     * SelectBox that contains the groups.
      */
     protected SelectBox<Selection> cGroupsBox;
     /**
