@@ -134,7 +134,7 @@ public class FollowTheFishEvent extends StrollEvent {
         cDataSubject.update("Good work!");
         cDelayInputTimer.reset();
 
-        if (this.cTasksCompleted < MAX_TASKS) {
+        if (cTasksCompleted < MAX_TASKS) {
             cPrevOperationNr = cOperationNr;
             doTask();
         } else {
@@ -146,7 +146,7 @@ public class FollowTheFishEvent extends StrollEvent {
      * Clears the current event.
      */
     public void clearEvent() {
-        super.dispose();
+        dispose(cTasksCompleted == MAX_TASKS);
         TimerStore.getInstance().removeTimer(cDelayInputTimer);
     }
 
