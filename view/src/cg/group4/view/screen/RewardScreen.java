@@ -37,6 +37,10 @@ public final class RewardScreen extends ScreenLogic {
      * The collection to display.
      */
     protected Collection cCollection;
+    /**
+     * Spacing used between rewards.
+     */
+    protected final int cSpacing = 30;
 
     /**
      * Creates a new reward screen.
@@ -104,7 +108,7 @@ public final class RewardScreen extends ScreenLogic {
         java.util.List<Collectible> list = collection.sort(new RarityComparator());
         cContentTable.clear();
         for (final Collectible collectible : list) {
-            cContentTable.add(new Image(CollectibleDrawer.drawCollectible(collectible))).space(30);
+            cContentTable.add(new Image(CollectibleDrawer.drawCollectible(collectible))).space(cSpacing);
         }
         cContentTable.row();
         for (final Collectible collectible : list) {

@@ -8,7 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 /**
  * Class that creates images from collectibles and returns these created images.
  */
-public class CollectibleDrawer {
+public final class CollectibleDrawer {
+
+    /**
+     * Utility class.
+     */
+    protected CollectibleDrawer() { }
 
     /**
      * Returns an image of the given collectible.

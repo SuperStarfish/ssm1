@@ -33,7 +33,7 @@ public class CollectiblesScreen extends ScreenLogic {
      * Numbers of collectibles displayed without scrolling, and the amount of
      * checkboxes in the menu.
      */
-    protected final int cItemsOnScreen = 10, cNumberOfTopBarItems = 3;
+    protected static final int ITEMS_ON_SCREEN = 10, TOP_BAR_ITEMS = 3;
     /**
      * The number of columns to display on the collectiblescreen.
      */
@@ -84,7 +84,7 @@ public class CollectiblesScreen extends ScreenLogic {
         cBackButton.setStyle(cGameSkin.getDefaultTextButtonStyle());
         cGroupsBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
         cSortBox.setStyle(cGameSkin.getDefaultSelectboxStyle());
-        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColSpan);
+        cContentTable.defaults().height(cScreenHeight / ITEMS_ON_SCREEN).width(cScreenWidth / cColSpan);
         constructContents();
     }
 
@@ -146,7 +146,7 @@ public class CollectiblesScreen extends ScreenLogic {
      */
     protected void fillDrawer() {
         cContentTable = new Table();
-        cContentTable.defaults().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cColSpan);
+        cContentTable.defaults().height(cScreenHeight / ITEMS_ON_SCREEN).width(cScreenWidth / cColSpan);
         cScrollPane = new ScrollPane(cContentTable);
     }
 
@@ -202,12 +202,12 @@ public class CollectiblesScreen extends ScreenLogic {
     protected void fillContainer() {
         cContainer = new Table();
         cContainer.setFillParent(true);
-        cContainer.row().height(cScreenHeight / cItemsOnScreen).width(cScreenWidth / cNumberOfTopBarItems).fill();
+        cContainer.row().height(cScreenHeight / ITEMS_ON_SCREEN).width(cScreenWidth / TOP_BAR_ITEMS).fill();
         cContainer.add(cBackButton).fill();
         cContainer.add(cSortBox).fill();
         cContainer.add(cGroupsBox).fill();
         cContainer.row();
-        cContainer.add(cScrollPane).colspan(cNumberOfTopBarItems).fill().expandY();
+        cContainer.add(cScrollPane).colspan(TOP_BAR_ITEMS).fill().expandY();
     }
 
     /**

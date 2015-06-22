@@ -14,7 +14,7 @@ public class LoadingScreen implements Screen {
     /**
      * Scale is based on largest screen size we developed on.
      */
-    protected final float cScaleOnMax = 1440;
+    protected static final float SCALE_SIZE = 1440;
     /**
      * The assets that have to be loaded.
      */
@@ -79,7 +79,7 @@ public class LoadingScreen implements Screen {
      * @param lowestRatio The lowest resolution, either height or width.
      */
     protected void setScalar(final int lowestRatio) {
-        cLogoScalar = lowestRatio / cScaleOnMax;
+        cLogoScalar = lowestRatio / SCALE_SIZE;
     }
 
     /**

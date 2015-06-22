@@ -34,15 +34,15 @@ public class Server {
     /**
      * The largest port number that can exist.
      */
-    protected final int cMaxPortNumber = 65535;
+    protected static final int cMaxPortNumber = 65535;
     /**
      * The default port to be used for the ServerSocket.
      */
-    protected final int cDefaultPort = 56789;
+    protected static final int cDefaultPort = 56789;
     /**
      * The maximum number of threads that the ExecutorService can have.
      */
-    protected final int cMaxThreads = 50;
+    protected static final int cMaxThreads = 50;
     /**
      * Ip of the server, either local or remote.
      */
@@ -76,13 +76,11 @@ public class Server {
     /**
      * Interval with which the database is cleaned (in minutes).
      */
-    protected final int cCleanupInterval = 30;
+    protected static final int cCleanupInterval = 30;
     /**
      * Used to make calls to static methods. Primarily used for mocking in tests.
      */
     protected StaticsCaller cStaticsCaller;
-
-
     /**
      * This defines the database connection and if the server is remote or local.
      */
@@ -183,40 +181,8 @@ public class Server {
             LOGGER.info("Successfully bound to port " + cServerSocket.getLocalPort() + ".");
         } catch (IOException e) {
             LOGGER.severe("Port " + port + " is already in use!");
-            createServerSocket(askForPort());
+            createServerSocket(ServerUtils.askForPort());
         }
-    }
-
-    /**
-     * Asks the user for a port. It validates if the port is within proper range.
-     *
-     * @return The port that the user provided.
-     */
-    protected final int askForPort() {
-        int port = -1;
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
-        do {
-            LOGGER.info("Please enter a port number:");
-            try {
-                String line = bufferedReader.readLine();
-                port = Integer.parseInt(line);
-            } catch (NumberFormatException e) {
-                LOGGER.severe("Bad input. Try again.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } while (!isValidPort(port));
-        return port;
-    }
-
-    /**
-     * Returns if the port is within proper range.
-     *
-     * @param port The port to check.
-     * @return Returns if the port is within valid range.
-     */
-    protected final boolean isValidPort(final int port) {
-        return port >= 0 && port <= cMaxPortNumber;
     }
 
     /**
@@ -268,4 +234,37 @@ public class Server {
         return cServerSocket.getLocalPort();
     }
 
+    public static class ServerUtils {
+        /**
+         * Asks the user for a port. It validates if the port is within proper range.
+         *
+         * @return The port that the user provided.
+         */
+        public static int askForPort() {
+            int port = -1;
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
+            do {
+                LOGGER.info("Please enter a port number:");
+                try {
+                    String line = bufferedReader.readLine();
+                    port = Integer.parseInt(line);
+                } catch (NumberFormatException e) {
+                    LOGGER.severe("Bad input. Try again.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } while (!isValidPort(port));
+            return port;
+        }
+
+        /**
+         * Returns if the port is within proper range.
+         *
+         * @param port The port to check.
+         * @return Returns if the port is within valid range.
+         */
+        protected static boolean isValidPort(final int port) {
+            return port >= 0 && port <= cMaxPortNumber;
+        }
+    }
 }

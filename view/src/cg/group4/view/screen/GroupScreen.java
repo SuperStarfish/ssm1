@@ -48,6 +48,10 @@ public class GroupScreen extends ScreenLogic {
      * List containing all the members of the groups.
      */
     protected List<PlayerData> cMembers;
+    /**
+     * margin used for groups.
+     */
+    protected final int cMargin = 10;
 
     @Override
     protected String setPreviousScreenName() {
@@ -116,8 +120,8 @@ public class GroupScreen extends ScreenLogic {
         cMembers = cGameSkin.generateDefaultList();
         Drawable selection = new TextureRegionDrawable(
                 new TextureRegion(cAssets.getTexture("images/wooden_sign.png"))).tint(new Color(0, 0, 0, 0));
-        selection.setLeftWidth(10);
-        selection.setRightWidth(10);
+        selection.setLeftWidth(cMargin);
+        selection.setRightWidth(cMargin);
         cMembers.getStyle().selection = selection;
         cMembers.getStyle().fontColorSelected = cMembers.getStyle().fontColorUnselected;
         cTable.row();

@@ -20,23 +20,23 @@ public class WorldRenderer extends InputAdapter implements Screen {
     /**
      * The minimal Viewport aspect ratio.
      */
-    protected final float cMinViewportRatio = 9f;
+    protected static final float MIN_VIEWPORT_RATIO = 9f;
     /**
      * The maximum Viewport aspect ratio.
      */
-    protected final float cMaxViewportRatio = 16f;
+    protected static final float MAX_VIEWPORT_RATIO = 16f;
     /**
      * Used to position the background to the center of the Viewport.
      */
-    protected final float cToCenter = -2f;
+    protected static final float TO_CENTER = -2f;
     /**
      * Path to the default landscape background image.
      */
-    protected final String cDefaultLandscapePath = "images/default_landscape_background.jpg";
+    protected static final String DEFAULT_LANDSCAPE_PATH = "images/default_landscape_background.jpg";
     /**
      * Path to the default portrait background image.
      */
-    protected final String cDefaultPortraitPath = "images/default_portrait_background.jpg";
+    protected static final String DEFAULT_PORTRAIT_PATH = "images/default_portrait_background.jpg";
     /**
      * The viewport for the game. Makes sure that the game is rendered between 16:9 and 4:3 aspect ratio.
      */
@@ -153,10 +153,10 @@ public class WorldRenderer extends InputAdapter implements Screen {
     protected final void initDefaults() {
         cCamera = new OrthographicCamera();
         cViewport = new ExtendViewport(
-                cMinViewportRatio,
-                cMinViewportRatio,
-                cMaxViewportRatio,
-                cMaxViewportRatio,
+                MIN_VIEWPORT_RATIO,
+                MIN_VIEWPORT_RATIO,
+                MAX_VIEWPORT_RATIO,
+                MAX_VIEWPORT_RATIO,
                 cCamera);
         cBatch = new SpriteBatch();
         cStage = new Stage();
@@ -198,9 +198,9 @@ public class WorldRenderer extends InputAdapter implements Screen {
      */
     protected final void setDefaultBackground() {
         if (cIsLandscape) {
-            setBackground(cDefaultLandscapePath);
+            setBackground(DEFAULT_LANDSCAPE_PATH);
         } else {
-            setBackground(cDefaultPortraitPath);
+            setBackground(DEFAULT_PORTRAIT_PATH);
         }
 
     }
@@ -238,14 +238,14 @@ public class WorldRenderer extends InputAdapter implements Screen {
     protected final void setBackgroundSprite(final Texture texture) {
         cBackgroundSprite = new Sprite(texture);
         if (cIsLandscape) {
-            cBackgroundSprite.setSize(cMaxViewportRatio, cMinViewportRatio);
+            cBackgroundSprite.setSize(MAX_VIEWPORT_RATIO, MIN_VIEWPORT_RATIO);
         } else {
-            cBackgroundSprite.setSize(cMinViewportRatio, cMaxViewportRatio);
+            cBackgroundSprite.setSize(MIN_VIEWPORT_RATIO, MAX_VIEWPORT_RATIO);
         }
 
         cBackgroundSprite.setOriginCenter();
         cBackgroundSprite
-                .setPosition(cBackgroundSprite.getWidth() / cToCenter, cBackgroundSprite.getHeight() / cToCenter);
+                .setPosition(cBackgroundSprite.getWidth() / TO_CENTER, cBackgroundSprite.getHeight() / TO_CENTER);
     }
 
     /**
