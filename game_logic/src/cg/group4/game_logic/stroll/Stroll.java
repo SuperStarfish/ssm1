@@ -313,8 +313,6 @@ public class Stroll implements Observer {
      * handles cancellation of an event.
      */
     public void cancelEvent() {
-        Gdx.app.log(TAG, "Event stopped!");
-
         cEndEventSubject.update();
 
         cEvent = null;

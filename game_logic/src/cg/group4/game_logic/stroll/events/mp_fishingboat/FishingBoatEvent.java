@@ -102,7 +102,6 @@ public abstract class FishingBoatEvent extends StrollEvent {
      * Called when disconnected from the other player. Clears the event without giving rewards.
      */
     protected void disconnectFromEvent() {
-        System.out.println("I SHOULD DIE HERE");
         super.dispose(false);
         cOtherClient.dispose();
     }

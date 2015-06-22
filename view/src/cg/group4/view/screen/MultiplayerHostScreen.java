@@ -5,6 +5,11 @@ import cg.group4.server.database.Response;
 import cg.group4.server.database.ResponseHandler;
 import cg.group4.view.screen_mechanics.ScreenLogic;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,10 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Screen to e displayed when hosting a multiplayer event.
  */
-public class MultiplayerHostScreen extends ScreenLogic {
+public class MultiplayerHostScreen extends ScreenLogic implements InputProcessor {
 	
 	 /**
      * Table that all the elements are added to.
@@ -31,7 +39,10 @@ public class MultiplayerHostScreen extends ScreenLogic {
 	 * Labels that display the information and the generated code.
 	 */
 	protected Label cInfo, cCode;
-	
+	/**
+	 * Inputprocessor of the strollevent.
+	 */
+	protected InputProcessor cProcessor;
 	/**
 	 * Sets the default values for the labels and the buttons.
 	 */
@@ -42,6 +53,16 @@ public class MultiplayerHostScreen extends ScreenLogic {
 				+ "Let the other player fill in the code below and press 'Join'. \nTo cancel, press 'Back'.");
 		cInfo.setWrap(true);
 		cCode = cGameSkin.generateDefaultLabel("Generating code...");
+		cProcessor = Gdx.input.getInputProcessor();
+		StandUp.getInstance().getStroll().getNewEventSubject().addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                dispose();
+            }
+        });
+		if (cProcessor instanceof InputMultiplexer) {
+			((InputMultiplexer) cProcessor).addProcessor(this);
+		}
 	}
 
 	@Override
@@ -96,8 +117,63 @@ public class MultiplayerHostScreen extends ScreenLogic {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				cScreenStore.setScreen(getPreviousScreenName());
+                dispose();
 			}
 		});
 	}
 
+	public void dispose() {
+		final InputProcessor myself = this;
+		if (cProcessor instanceof InputMultiplexer) {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					((InputMultiplexer) cProcessor).removeProcessor(myself);
+				}
+			});
+		}
+	}
+
+	@Override
+	public final boolean keyDown(final int keycode) {
+		if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
+            StandUp.getInstance().getStroll().cancelEvent();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
+	}
 }
