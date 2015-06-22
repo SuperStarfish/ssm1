@@ -159,10 +159,6 @@ public final class Client {
     public void setRemoteConnection(final Connection connection) {
         cRemoteConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
-        System.out.println(connection.isConnected());
-        System.out.println(connection.isConnected());
-        System.out.println(connection.isConnected());
-        System.out.println(connection.isConnected());
         LOGGER.info("Remote connection running: " + connection.isConnected());
     }
 
