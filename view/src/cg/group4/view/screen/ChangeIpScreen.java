@@ -167,16 +167,18 @@ public class ChangeIpScreen extends ScreenLogic {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Preferences preferences = Gdx.app.getPreferences("CUSTOM_IP");
+                preferences.clear();
+                preferences.flush();
 
                 Client client = Client.getInstance();
 
                 String ip = client.defaultIp();
                 client.setIp(ip);
-                preferences.putString("ssm-port", ip);
+                cIp.setText(ip);
 
                 int port = client.defaultPort();
                 client.setPort(port);
-                preferences.putInteger("ssm-port", port);
+                cPort.setText(Integer.toString(port));
 
                 reconnect();
             }
@@ -201,11 +203,7 @@ public class ChangeIpScreen extends ScreenLogic {
             cMessage.setText("Invalid port");
         }
 
-        if (res != -1) {
-            return minRange <= res && res <= maxRange;
-        } else {
-            return false;
-        }
+        return minRange <= res && res <= maxRange;
     }
 
     /**
@@ -222,10 +220,8 @@ public class ChangeIpScreen extends ScreenLogic {
      * Reconnects the to the remote server.
      */
     private void reconnect() {
-        System.out.println("Reconnect @ screen");
         Client.getInstance().closeRemoteConnection();
         Client.getInstance().connectToRemoteServer();
-        System.out.println("Reconnect @ screen |end|");
     }
 
 }

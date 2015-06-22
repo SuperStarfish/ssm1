@@ -94,6 +94,7 @@ public class UnConnected implements Connection {
                         @Override
                         public void run() {
                             Client.getInstance().setRemoteConnection(connection);
+                            System.out.println("Connected to: " + ip + ":" + port);
                             cConnecting = false;
                         }
                     });
@@ -108,7 +109,6 @@ public class UnConnected implements Connection {
 
     @Override
     public void disconnect() {
-        // TODO send to local or remote disconnect()
-        System.out.println("UNCONNECTED disconnect");
+        System.out.println("Disconnect: Not even connected");
     }
 }

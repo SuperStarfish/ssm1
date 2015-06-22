@@ -119,7 +119,6 @@ public class Server {
 
         if (cLocalStorageResolver.isLocal()) {
             createServerSocket(0);
-            createLocalIP();
         } else {
             createServerSocket(cDefaultPort);
             createExternalIP();

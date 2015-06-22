@@ -95,6 +95,7 @@ public final class Client {
      * Closes the connection with the remote server.
      */
     public void closeRemoteConnection() {
+        cRemoteChangeSubject.update(false);
         cRemoteConnection.disconnect();
     }
 
@@ -159,7 +160,7 @@ public final class Client {
     public void setRemoteConnection(final Connection connection) {
         cRemoteConnection = connection;
         cRemoteChangeSubject.update(connection.isConnected());
-        LOGGER.info("Managed to remotely connect: " + connection.isConnected());
+        LOGGER.info("Remote connection running: " + connection.isConnected());
     }
 
     /**
@@ -491,20 +492,20 @@ public final class Client {
     }
 
     /**
-     * Returns the default ip.
+     * Returns the default ip. This method is used as storage for the defaults in case overwritten by
+     * user preferences.
      * @return default ip
      */
     public String defaultIp() {
-        final String ip = "127.0.0.1";
-        return ip;
+        return "127.0.0.1";
     }
 
     /**
-     * Returns the default port.
+     * Returns the default port. This method is used as storage for the defaults in case overwritten by
+     * user preferences.
      * @return default port
      */
     public int defaultPort() {
-        final int port = 56789;
-        return port;
+        return 56789;
     }
 }

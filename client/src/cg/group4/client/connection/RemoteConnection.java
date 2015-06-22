@@ -110,6 +110,7 @@ public final class RemoteConnection implements Connection {
     public void disconnect() {
         try {
             cConnection.close();
+            Client.getInstance().setRemoteConnection(new UnConnected());
         } catch (IOException e) {
             e.printStackTrace();
         }

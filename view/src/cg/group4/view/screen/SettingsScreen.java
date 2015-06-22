@@ -209,7 +209,6 @@ public final class SettingsScreen extends ScreenLogic {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 ScreenStore.getInstance().setScreen("Network");
-                Client.getInstance().connectToRemoteServer();
             }
         };
     }

@@ -91,7 +91,6 @@ public class Launcher extends Game implements AssetsLoadingHandler {
     @Override
     public final void create() {
         debugSetup();
-        useCustomIp();
         initClient();
         Gdx.input.setInputProcessor(new InputMultiplexer());
 
@@ -114,6 +113,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
      * Initializes the client.
      */
     protected void initClient() {
+        useCustomIp();
         Server server = new Server(cLocalStorageResolver);
         server.start();
         Client.getInstance().setUserIDResolver(cIDResolver);
