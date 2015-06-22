@@ -272,7 +272,7 @@ public class Timer implements Observer {
          * Length definition of one stroll.
          * (5 * 60 seconds = 5 minutes)
          */
-        STROLL(5 * 60),
+        STROLL(2 * 60),
 
         /**
          * Max length of an event is 1 min (60 seconds).

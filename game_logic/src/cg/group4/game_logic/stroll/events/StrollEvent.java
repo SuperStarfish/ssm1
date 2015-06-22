@@ -93,11 +93,11 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
         Gdx.app.log(this.getClass().getSimpleName(), "Event completed!");
         cEventTimer.getStopSubject().deleteObserver(cEventStopObserver);
         cEventTimer.dispose();
-        int reward = 0;
         if (eventCompleted) {
-            reward = getReward();
+        	StandUp.getInstance().getStroll().eventFinished(getReward());
+        } else {
+        	StandUp.getInstance().getStroll().cancelEvent();
         }
-        StandUp.getInstance().getStroll().eventFinished(reward);
     }
 
     /**
