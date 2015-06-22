@@ -3,7 +3,8 @@ Context Project, Games, Group 4
 
 #### Important notes
 
-* Use Java 1.7 (supported for >= Android 4.4). Java 1.8 will not work when building for Android. Java 1.6 is not supported by LibGDX.
+[Release packages](https://github.com/foresterre/ContextProject/tree/master/release)
+[Backup release packages](https://github.com/foresterre/ContextProject/wiki/Executables)
 
 
 ##### Build:
