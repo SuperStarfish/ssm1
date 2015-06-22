@@ -91,6 +91,7 @@ public class Launcher extends Game implements AssetsLoadingHandler {
     @Override
     public final void create() {
         debugSetup();
+        useCustomIp();
         initClient();
         Gdx.input.setInputProcessor(new InputMultiplexer());
 
@@ -176,5 +177,26 @@ public class Launcher extends Game implements AssetsLoadingHandler {
             Gdx.app.postRunnable(toRunBeforeNextCycle);
         }
         Client.getInstance().resetPostRunnables();
+    }
+
+    /**
+     * Sets the default IP or port to the IP / port set in the preferences, if existent.
+     */
+    protected void useCustomIp() {
+        final String prefKey = "CUSTOM_IP";
+
+        if (Gdx.app.getPreferences(prefKey) != null) {
+            Preferences preferences = Gdx.app.getPreferences(prefKey);
+
+            if (preferences.contains("ssm-ip")) {
+                Client.getInstance().setIp(preferences.getString("ssm-ip"));
+                System.out.println(preferences.getString("ssm-ip"));
+            }
+            if (preferences.contains("ssm-port")) {
+                System.out.println(preferences.getInteger("ssm-port"));
+                Client.getInstance().setPort(preferences.getInteger("ssm-port"));
+            }
+        }
+
     }
 }

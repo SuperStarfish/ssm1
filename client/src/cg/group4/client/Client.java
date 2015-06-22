@@ -33,11 +33,11 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "82.169.19.191";
+    protected String cCurrentIp = defaultIp();
     /**
      * The default port to connect to.
      */
-    protected final int cDefaultPort = 56789;
+    protected int cCurrentPort = defaultPort();
     /**
      * The local connection state with the server.
      */
@@ -88,7 +88,7 @@ public final class Client {
      * Connects to the default remote server. Behaviour depends on the state.
      */
     public void connectToRemoteServer() {
-        cRemoteConnection.connect(cDefaultIp, cDefaultPort);
+        cRemoteConnection.connect(cCurrentIp, cCurrentPort);
     }
 
     /**
@@ -338,7 +338,6 @@ public final class Client {
         cRemoteConnection.send(new GetGroup(groupId), responseHandler);
     }
 
-
     /**
      * Creates a CreateGroup Query that will be send to the server.
      *
@@ -447,5 +446,55 @@ public final class Client {
      */
     public void getHost(final Integer code, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new RequestHostIp(code), responseHandler);
+    }
+
+    /**
+     * Changes the host IP address.
+     * @param ip new default ip
+     */
+    public void setIp(String ip) {
+        this.cCurrentIp = ip;
+    }
+
+    /**
+     * Changes the host port
+     * @param port new port
+     */
+    public void setPort(int port) {
+        this.cCurrentPort = port;
+    }
+
+    /**
+     * Gets the host IP address.
+     * @return ip
+     */
+    public String getIp() {
+        return cCurrentIp;
+    }
+
+    /**
+     * Gets the host port.
+     * @return host port number
+     */
+    public int getPort() {
+        return cCurrentPort;
+    }
+
+    /**
+     * Returns the default ip.
+     * @return default ip
+     */
+    public String defaultIp() {
+        final String ip = "127.0.0.1";
+        return ip;
+    }
+
+    /**
+     * Returns the default port.
+     * @return default port
+     */
+    public int defaultPort() {
+        final int port = 56789;
+        return port;
     }
 }
