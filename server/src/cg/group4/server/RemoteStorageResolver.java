@@ -25,7 +25,7 @@ public class RemoteStorageResolver extends LocalStorageResolver {
      * to connect two clients with each other.
      */
     protected final String cEventHostsTable = "CREATE TABLE IF NOT EXISTS 'Event_Hosts' (Code SMALLINT PRIMARY KEY NOT NULL, "
-            + "Ip TEXT NOT NULL, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
+            + "Ip TEXT NOT NULL, Port INTEGER NOT NULL, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
 
     @Override
     protected boolean setLocal() {
