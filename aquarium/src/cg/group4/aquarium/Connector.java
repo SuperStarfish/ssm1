@@ -94,8 +94,7 @@ public class Connector {
     /**
      * Fetches the members from the server.
      */
-    public void fetchMembers() {
-        Client.getInstance().getMembers(cGroupId, new ResponseHandler() {
+    public void fetchMembers() {Client.getInstance().getAllPlayerData(new ResponseHandler() {
             @Override
             public void handleResponse(final Response response) {
                 if (response.isSuccess()) {

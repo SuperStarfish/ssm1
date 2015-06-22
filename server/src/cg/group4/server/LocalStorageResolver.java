@@ -20,8 +20,8 @@ public abstract class LocalStorageResolver {
      * Query that creates a 'User' table, if it does not exist.
      */
     protected String cUserTable = "CREATE TABLE IF NOT EXISTS 'User' (Key INTEGER PRIMARY KEY NOT NULL UNIQUE, "
-            + "Id TEXT NOT NULL UNIQUE, Username TEXT DEFAULT 'Unknown',"
-            + " Interval INTEGER, Stroll INTEGER, GroupId TEXT NULL);";
+            + "Id TEXT NOT NULL, Username TEXT DEFAULT 'Unknown',"
+            + " Interval INTEGER, Stroll INTEGER);";
 
     /**
      * Query that creates a 'Collectible' table, if it does not exist.
@@ -29,19 +29,6 @@ public abstract class LocalStorageResolver {
     protected String cCollectibleTable = "CREATE TABLE IF NOT EXISTS 'Collectible' (Key INTEGER PRIMARY KEY NOT NULL, "
             + "OwnerId TEXT, Type TEXT NOT NULL, Hue REAL NOT NULL, Amount INTEGER NOT NULL, "
             + "Date DATE NOT NULL, GroupId INTEGER);";
-
-    /**
-     * Query that creates a 'Group' table, if it does not exist.
-     */
-    protected String cGroupTable = "CREATE TABLE IF NOT EXISTS 'Group' (Key INTEGER PRIMARY KEY NOT NULL, "
-            + "OwnerId TEXT NOT NULL, Name TEXT NOT NULL);";
-
-    /**
-     * Query that creates an 'Event_Hosts' table, if it does not exist. This table is used primarily for remote servers
-     * to connect two clients with each other.
-     */
-    protected String cEventHostsTable = "CREATE TABLE IF NOT EXISTS 'Event_Hosts' (Code SMALLINT PRIMARY KEY NOT NULL, "
-            + "Ip TEXT NOT NULL, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
 
     /**
      * The database connection. This can be used to make queries on. Child class determines how this connection
@@ -74,7 +61,7 @@ public abstract class LocalStorageResolver {
         }
 
         if (cResetDBs) {
-            dropDatabase("User", "Collectible", "Group", "Event_Hosts");
+            dropDatabase("User", "Collectible", "group", "Event_Host");
         }
 
         for (String table : createDatabases()) {

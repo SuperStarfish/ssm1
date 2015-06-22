@@ -2,8 +2,6 @@ package cg.group4;
 
 import cg.group4.client.Client;
 import cg.group4.client.UserIDResolver;
-import cg.group4.data_structures.collection.Collection;
-import cg.group4.data_structures.collection.RewardGenerator;
 import cg.group4.game_logic.StandUp;
 import cg.group4.server.LocalStorageResolver;
 import cg.group4.server.Server;
@@ -98,13 +96,6 @@ public class Launcher extends Game implements AssetsLoadingHandler {
         Gdx.input.setInputProcessor(new InputMultiplexer());
 
         setScreen(new LoadingScreen(this));
-
-        RewardGenerator gen = new RewardGenerator(Client.getInstance().getUserID());
-        Collection collection = new Collection("");
-        for (int i = 0; i < 20; i++) {
-            collection.add(gen.generateCollectible(1));
-        }
-        StandUp.getInstance().getPlayer().getCollection().addAll(collection);
     }
 
     /**

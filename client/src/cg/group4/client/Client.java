@@ -33,7 +33,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "182.169.19.191";
+    protected final String cDefaultIp = "128.127.39.32";
     /**
      * The default port to connect to.
      */
@@ -357,6 +357,15 @@ public final class Client {
      */
     public void getMembers(final String groupId, final ResponseHandler responseHandler) {
         cRemoteConnection.send(new GetMembers(groupId), responseHandler);
+    }
+
+    /**
+     * Retrieves the usernames of all the players.
+     *
+     * @param responseHandler The task to execute once a reply is received.
+     */
+    public void getAllPlayerData(final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new GetAllPlayerData(), responseHandler);
     }
 
     /**
