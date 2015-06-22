@@ -268,7 +268,7 @@ public class WorldRenderer extends InputAdapter implements Screen {
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.F1) {
             String previousScreenName = cScreen.getPreviousScreenName();
             if (previousScreenName == null) {
-                Gdx.app.exit();
+                cScreenStore.setScreen("Home");
             } else if (!(cScreen instanceof EventScreen)) {
                 cScreenStore.setScreen(previousScreenName);
             }
