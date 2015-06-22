@@ -41,7 +41,7 @@ public abstract class LocalStorageResolver {
      * to connect two clients with each other.
      */
     protected String cEventHostsTable = "CREATE TABLE IF NOT EXISTS 'Event_Hosts' (Code SMALLINT PRIMARY KEY NOT NULL, "
-            + "Ip TEXT NOT NULL);";
+            + "Ip TEXT NOT NULL, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
 
     /**
      * The database connection. This can be used to make queries on. Child class determines how this connection
