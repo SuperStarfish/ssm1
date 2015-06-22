@@ -51,7 +51,6 @@ public final class NetworkScreen extends ScreenLogic {
     @Override
     protected WidgetGroup createWidgetGroup() {
         Client client = Client.getInstance();
-        client.connectToRemoteServer();
 
         ScreenStore screenStore = ScreenStore.getInstance();
         screenStore.addScreen("Change-Username", new ChangeUsernameScreen());
