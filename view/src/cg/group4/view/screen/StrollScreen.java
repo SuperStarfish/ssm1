@@ -163,7 +163,7 @@ public final class StrollScreen extends ScreenLogic {
      * Initializes the label to display the time remaining of the stroll.
      */
     protected void initRemainingTime() {
-        cTimeRemaining = cGameSkin.generateDefaultLabel(Integer.toString(Timer.Global.STROLL.getDuration()));
+        cTimeRemaining = cGameSkin.generateDefaultLabel("");
         cStrollTickObserver = new Observer() {
             @Override
             public void update(final Observable o, final Object arg) {
@@ -171,7 +171,7 @@ public final class StrollScreen extends ScreenLogic {
             }
         };
 
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        cStrollTimer = TimerStore.getInstance().getTimer("STROLL");
         cStrollTimer.getTickSubject().addObserver(cStrollTickObserver);
     }
 

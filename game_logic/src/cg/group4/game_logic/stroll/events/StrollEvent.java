@@ -24,10 +24,16 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
             clearEvent();
         }
     };
+    
+    /**
+     * The amount of time in seconds an event takes. 
+     */
+    protected int EVENT_DURATION = 60;
+    
     /**
      * Every strollEvent has a respective timer.
      */
-    protected Timer cEventTimer;
+    protected Timer cEventTimer = new Timer("EVENT", EVENT_DURATION);
     /**
      * Subject to detect event changes.
      */
@@ -47,7 +53,7 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
         Gdx.app.log(this.getClass().getSimpleName(), "Event started!");
         StandUp.getInstance().getUpdateSubject().addObserver(this);
 
-        cEventTimer = TimerStore.getInstance().getTimer(Timer.Global.EVENT.name());
+        TimerStore.getInstance().addTimer(cEventTimer);
         cEventTimer.getStopSubject().addObserver(cEventStopObserver);
         cEventTimer.reset();
 
@@ -98,6 +104,8 @@ public abstract class StrollEvent extends InputAdapter implements Disposable, Ob
         } else {
         	StandUp.getInstance().getStroll().cancelEvent();
         }
+        
+        TimerStore.getInstance().removeTimer(cEventTimer);
     }
 
     /**

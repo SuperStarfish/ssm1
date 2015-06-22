@@ -83,7 +83,7 @@ public class StandUpTest {
     public void testStartStroll() {
         assertNull(cStandUp.getStroll());
         Observer mockObserver = mock(Observer.class);
-        cStandUp.getNewStrollSubject().addObserver(mockObserver);
+        cStandUp.getOngoingStrollSubject().addObserver(mockObserver);
         cStandUp.startStroll();
         verify(mockObserver, times(1)).update((Observable) any(), any());
         assertNotNull(cStandUp.getStroll());
@@ -136,7 +136,7 @@ public class StandUpTest {
      */
     @Test
     public void testGetNewStrollSubject() {
-        assertEquals(cStandUp.cNewStrollSubject, cStandUp.getNewStrollSubject());
+        assertEquals(cStandUp.cOngoingStrollSubject, cStandUp.getOngoingStrollSubject());
     }
 
     /**

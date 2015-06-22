@@ -54,6 +54,10 @@ public class Stroll implements Observer {
      */
     protected final int cNumberOfMultiPlayerEvents = 1;
     /**
+     * The amount of time in seconds that a stroll takes.
+     */
+    protected final int STROLL_DURATION = 5 * 60;
+    /**
      * The chance an event occurs.
      */
     protected double cEventThreshold;
@@ -80,7 +84,7 @@ public class Stroll implements Observer {
     /**
      * The stroll timer.
      */
-    protected Timer cStrollTimer;
+    protected Timer cStrollTimer = new Timer("STROLL", STROLL_DURATION);
     /**
      * The observer to subscribe to the stop subject of stroll timer.
      */
@@ -135,7 +139,7 @@ public class Stroll implements Observer {
         StandUp.getInstance().getAccelerationStatus().
                 getSubject().addObserver(cUpdateMovementObserver);
 
-        cStrollTimer = TimerStore.getInstance().getTimer(Timer.Global.STROLL.name());
+        TimerStore.getInstance().addTimer(cStrollTimer);
         cStrollTimer.getStopSubject().addObserver(cStrollStopObserver);
 
         cStrollTimer.reset();
@@ -339,6 +343,8 @@ public class Stroll implements Observer {
         cEndStrollSubject.deleteObservers();
 
         cStrollTimer.getStopSubject().deleteObserver(cStrollStopObserver);
+        
+        TimerStore.getInstance().removeTimer(cStrollTimer);
         StandUp.getInstance().endStroll(collection);
     }
 
