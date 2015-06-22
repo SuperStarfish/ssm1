@@ -38,9 +38,9 @@ public class MultiplayerHostScreen extends ScreenLogic {
 	public MultiplayerHostScreen() {
 		cTable = new Table();
 		cBack = cGameSkin.generateDefaultMenuButton("Back");
-		cInfo = cGameSkin.generateDefaultLabel("Waiting for other player to connect. \n"
-				 + "Let the other player fill in the code \n below and press \"Join\". \n"
-				 + "To cancel, press \"Back\" \n");
+		cInfo = cGameSkin.generateDefaultLabel("Waiting for other player to connect. Let the other player fill in the code below and press 'Join'."
+				 + "\nTo cancel, press 'Back'.");
+		cInfo.setWrap(true);
 		cCode = cGameSkin.generateDefaultLabel("Generating code...");
 	}
 
@@ -69,7 +69,7 @@ public class MultiplayerHostScreen extends ScreenLogic {
 	 */
 	protected void fillTable() {
 		cTable.setFillParent(true);
-		cTable.add(cInfo).expand();
+		cTable.add(cInfo).expand().fill();
 		cTable.row();
 		cTable.add(cCode).expand();
 		cTable.row();

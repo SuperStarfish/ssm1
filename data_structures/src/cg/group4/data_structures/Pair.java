@@ -1,5 +1,4 @@
 package cg.group4.data_structures;
-
 /**
  * Data class which holds a Pair of type T.
  *

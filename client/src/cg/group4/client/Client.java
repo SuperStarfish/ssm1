@@ -33,7 +33,7 @@ public final class Client {
     /**
      * The default IP to connect to.
      */
-    protected final String cDefaultIp = "192.168.1.83";
+    protected final String cDefaultIp = "192.168.2.20";
     /**
      * The default port to connect to.
      */
@@ -364,8 +364,8 @@ public final class Client {
      *
      * @param responseHandler The task to execute once a reply is received completed.
      */
-    public void hostEvent(final ResponseHandler responseHandler) {
-        cRemoteConnection.send(new RequestHostCode(getIPAddress(true)), responseHandler);
+    public void hostEvent(int port, final ResponseHandler responseHandler) {
+        cRemoteConnection.send(new RequestHostCode(getIPAddress(true), port), responseHandler);
     }
 
     /**
