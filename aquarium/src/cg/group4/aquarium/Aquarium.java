@@ -90,4 +90,7 @@ public class Aquarium extends Game implements AssetsLoadingHandler {
     }
 
 
+    public AquariumScreen getAquariumScreen() {
+        return cAquariumScreen;
+    }
 }
