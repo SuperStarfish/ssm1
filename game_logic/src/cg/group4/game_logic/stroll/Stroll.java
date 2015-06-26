@@ -441,7 +441,7 @@ public class Stroll implements Observer {
                     cEvent = new FollowTheFishEvent();
                     break;
             }
-            Gdx.input.vibrate(4000);
+            Gdx.input.vibrate(1500);
             cNewEventSubject.update(cEvent);
         }
     }
