@@ -2,7 +2,7 @@ Super starfish mania
 ====================
 
 #### Goal
-... to write ...
+For more information, please click [here](https://github.com/foresterre/ContextProject/blob/master/CHI%20PLAY/%5BGroup%204%5D%20CHI%20PLAY%20Paper%20Submission.pdf).
 
 #### Build status
 
@@ -18,27 +18,22 @@ Super starfish mania
 
 #### Structure
 
-The project consists of multiple sub projects. Each sub projects is included as 
-a git submodule in this main repository.
+The project consists of multiple sub modules. Each sub module is included as a directory from the root of this repository.
 
-* Starfish (the main repository)
-
-Consists of each subproject submodule. It also contains the projects root gradle
-build file, the gradle root configuration and optionally any documents.
-
-* Starfish-Android
-* Starfish-Aquarium
-* Starfish-client
-* Starfish-DataStructures
-* Starfish-Desktop (currently for debugging purposes)
-* Starfish-GameLogic 
-* Starfish-Launcher
-* Starfish-Server
-* Starfish-View (UI)
+The following sub modules currently exist:
+* android
+* aquarium
+* client
+* data_structures
+* desktop (currently for debugging purposes)
+* game_logic 
+* launcher
+* server
+* view (UI)
 
 
 
-#### Tools
+#### Tools used
 
 ###### Static analysis:
 * [PMD](http://pmd.sourceforge.net/)
@@ -47,3 +42,16 @@ build file, the gradle root configuration and optionally any documents.
 
 ###### Code coverage:
 * [Cobertura](http://cobertura.github.io/cobertura/)
+
+###### Testing
+* JUnit
+* Mockito
+
+###### Continuous Integration
+* Travis-CI
+or
+* Jenkins 
+
+###### IDE / Text editor
+* IntelliJ IDEA or Eclipse (for Gradle project files generation)
+
