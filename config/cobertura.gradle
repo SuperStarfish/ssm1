@@ -1,0 +1,15 @@
+apply plugin: 'net.saliman.cobertura'
+
+// https://github.com/stevesaliman/gradle-cobertura-plugin/blob/master/usage.md
+cobertura {
+    coberturaVersion = '2.1.1'
+    coverageFormats = ['xml', 'html']
+    coverageIgnoreTrivial = true
+    coverageReportDir = file("${buildDir}/reports/cobertura")
+
+//    rootProject.subprojects.each {
+//        coverageDirs << file("${it.name}/build/classes/main")
+//    }
+}
+
+check.finalizedBy(project.tasks.cobertura)
