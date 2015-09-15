@@ -1,8 +1,11 @@
+// Plugin for gradle, applied to each sub project
+// (Except Android due to incompatibilities)
+
 // Checkstyle
 apply plugin: 'checkstyle'
 
 checkstyleMain {
-    configFile file("checkstyle.xml")
+    configFile file("${rootProject.rootDir}/config/checkstyle.xml")
 
     reports {
         include '**/*.java'
@@ -13,7 +16,7 @@ checkstyleMain {
 }
 
 checkstyleTest {
-    configFile file("checkstyle.xml")
+    configFile file("${rootProject.rootDir}/config/checkstyle.xml")
 
     reports {
         include '**/*.java'

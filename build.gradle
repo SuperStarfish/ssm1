@@ -17,7 +17,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    // SuperStarfishMania application version
+    // SuperStarfishMania version
     version = '9.0'
 
     ext {
@@ -33,9 +33,6 @@ allprojects {
         // testing & analysis tools
         junitVersion = '4.11'
         mockitoVersion = '2.0.6-beta'
-
-        androidSupportRepository = '19'
-        androidSupportLibrary = '23.0.1'
     }
 
     repositories {
@@ -44,15 +41,14 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 
-    apply from: "${rootProject.rootDir}/config/checkstyle.gradle"
-    apply from: "${rootProject.rootDir}/config/findbugs.gradle"
-    apply from: "${rootProject.rootDir}/config/pmd.gradle"
-
     if (!"${project}".contains("android")) {
+
+        // NOTE: Do not change the order of the following configuration (otherwise in some orders building will fail)
         apply from: "${rootProject.rootDir}/config/cobertura.gradle"
+        apply from: "${rootProject.rootDir}/config/pmd.gradle"
+        apply from: "${rootProject.rootDir}/config/checkstyle.gradle"
+        apply from: "${rootProject.rootDir}/config/findbugs.gradle"
     }
-
-
 }
 
 project(":android") {
@@ -62,8 +58,6 @@ project(":android") {
 
     dependencies {
         compile project(":launcher")
-
-        // sqldroid for sqlite
         compile "org.sqldroid:sqldroid:1.0.3"
 
         // the libgdx platform
@@ -82,8 +76,7 @@ project(":android") {
         compile fileTree(dir: 'libs', include: 'accel-lib-android.jar')
 
         // android support library
-        // used for android notifications
-        compile "com.android.support:support-v4:$androidSupportLibrary"
+        compile "com.android.support:support-v4:23.0.1"
     }
 }
 
@@ -175,6 +168,7 @@ project(":data_structures") {
     apply plugin: "java"
 
     dependencies {
+
         compile "org.slf4j:slf4j-simple:$slf4jVersion"
 
         testCompile "junit:junit:$junitVersion"
@@ -185,5 +179,3 @@ project(":data_structures") {
 tasks.eclipse.doLast {
     delete ".project"
 }
-
-test.finalizedBy { project.tasks.cobertura }

@@ -1,8 +1,7 @@
-apply plugin: 'pmd'
-
 // PMD
 // config: http://gradle.org/docs/current/dsl/org.gradle.api.plugins.quality.Pmd.html
-// rule sets: http://pmd.sourceforge.net/pmd-4.3.0/rules/index.html
+// rulesets: http://pmd.sourceforge.net/pmd-4.3.0/rules/index.html
+apply plugin: 'pmd'
 
 pmdMain {
 
