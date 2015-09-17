@@ -17,6 +17,5 @@ before_script:
   - chmod +x gradlew
 
 script:
-  -
   - ./gradlew assemble
-  - ./gradlew test
+  - ./gradlew check
