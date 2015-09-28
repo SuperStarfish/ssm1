@@ -1,0 +1,27 @@
+// Plugin for gradle, applied to each sub project
+// (Except Android due to incompatibilities)
+
+// Checkstyle
+apply plugin: 'checkstyle'
+
+checkstyleMain {
+    configFile file("${rootProject.rootDir}/config/checkstyle.xml")
+
+    reports {
+        include '**/*.java'
+        exclude '**/build/**', '**/gen/**'
+        xml { destination file("${buildDir}/reports/checkstyle/main/report.xml") }
+    }
+    ignoreFailures = true
+}
+
+checkstyleTest {
+    configFile file("${rootProject.rootDir}/config/checkstyle.xml")
+
+    reports {
+        include '**/*.java'
+        exclude '**/build/**', '**/gen/**'
+        xml { destination file("${buildDir}/reports/checkstyle/test/report.xml") }
+    }
+    ignoreFailures = true
+}

@@ -4,7 +4,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.1'
         classpath 'org.slf4j:slf4j-simple:1.7.6'
     }
 }
@@ -17,9 +17,8 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    // application version
-    // for our project, the major version is incremented each week
-    version = '2.0'
+    // SuperStarfishMania version
+    version = '9.0'
 
     ext {
         appName = 'standup'
@@ -44,8 +43,11 @@ allprojects {
 
     if (!"${project}".contains("android")) {
 
-        apply from: "${rootProject.rootDir}/gradle/plugins.gradle"
-        apply from: "${rootProject.rootDir}/gradle/subprojects-plugins.gradle"
+        // NOTE: Do not change the order of the following configuration (otherwise in some orders building will fail)
+        apply from: "${rootProject.rootDir}/config/cobertura.gradle"
+        apply from: "${rootProject.rootDir}/config/pmd.gradle"
+        apply from: "${rootProject.rootDir}/config/checkstyle.gradle"
+        apply from: "${rootProject.rootDir}/config/findbugs.gradle"
     }
 }
 
@@ -70,12 +72,11 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
 
-        // currently for the AccelLibAndroid; but possibly for other libraries in the future.
-        // notice this is only added as dependency for the android module
-        compile fileTree(dir: 'libs', include: '*.jar')
+        // Add dependency for AccelLibAndroid.
+        compile fileTree(dir: 'libs', include: 'accel-lib-android.jar')
 
         // android support library
-        compile "com.android.support:support-v4:20.0.0"
+        compile "com.android.support:support-v4:23.0.1"
     }
 }
 
@@ -178,5 +179,3 @@ project(":data_structures") {
 tasks.eclipse.doLast {
     delete ".project"
 }
-
-test.finalizedBy { project.tasks.cobertura }

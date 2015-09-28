@@ -1,0 +1,17 @@
+// documentation: https://docs.gradle.org/current/userguide/jacoco_plugin.html
+
+apply plugin: "jacoco"
+
+jacoco {
+    toolVersion = "0.7.5.201505241946"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled true
+        html.destination "${buildDir}/reports/jacoco/html"
+    }
+}
+
+check.finalizedBy(project.tasks.jacocoTestReport)

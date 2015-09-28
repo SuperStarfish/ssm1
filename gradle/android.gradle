@@ -1,6 +1,0 @@
-// https://github.com/JakeWharton/sdk-manager-plugin
-
-sdkManager {
-    emulatorVersion 'android-19'
-    emulatorArchitecture 'armeabi-v7a'
-}

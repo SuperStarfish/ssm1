@@ -1,0 +1,38 @@
+// Plugin for gradle, applied to each sub project
+// (Except Android due to incompatibilities)
+
+// FindBugs
+// http://gradle.org/docs/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
+apply plugin: 'findbugs'
+
+findbugsMain {
+
+    reports {
+        html { enabled = true }
+        // find bugs can have only one report enabled at a time
+        xml.enabled = !html.enabled
+
+
+        html.destination "${buildDir}/reports/findbugs/report.html"
+        xml.destination "${buildDir}/reports/findbugs/report.xml"
+    }
+    effort = "default"
+    reportLevel = "medium"
+    ignoreFailures = true
+}
+
+findbugsTest {
+
+    reports {
+        html { enabled = true }
+        // find bugs can have only one report enabled at a time
+        xml.enabled = !html.enabled
+
+
+        html.destination "${buildDir}/reports/findbugs/report.html"
+        xml.destination "${buildDir}/reports/findbugs/report.xml"
+    }
+    effort = "default"
+    reportLevel = "medium"
+    ignoreFailures = true
+}
