@@ -6,11 +6,7 @@ For more information, please click [here](https://github.com/foresterre/ContextP
 
 #### Build status
 
-###### Master
-[![Build Status](https://travis-ci.org/foresterre/ContextProject.svg?branch=master)]()
-
-###### Dev
-[![Build Status](https://travis-ci.org/foresterre/ContextProject.svg?branch=dev)]()
+###### master: [![Build Status](https://travis-ci.org/SuperStarfish/SuperStarfishMania.svg?branch=master)](),   development: [![Build Status](https://travis-ci.org/SuperStarfish/SuperStarfishMania.svg?branch=development)]()
 
 #### Dependencies
 
@@ -31,27 +27,21 @@ The following sub modules currently exist:
 * server
 * view (UI)
 
-
-
 #### Tools used
 
 ###### Static analysis:
 * [PMD](http://pmd.sourceforge.net/)
 * [Find bugs](http://findbugs.sourceforge.net/)
-* [CheckStyle](http://checkstyle.sourceforge.net/)
+* [Checkstyle](http://checkstyle.sourceforge.net/)
 
 ###### Code coverage:
 * [Cobertura](http://cobertura.github.io/cobertura/)
+* ^ To be replaced with jacoco
 
 ###### Testing
 * JUnit
 * Mockito
 
-###### Continuous Integration
-* Travis-CI
-or
-* Jenkins 
-
-###### IDE / Text editor
+###### IDE / Text editor presets
 * IntelliJ IDEA or Eclipse (for Gradle project files generation)
 
